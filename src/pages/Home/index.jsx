@@ -1,10 +1,14 @@
 import React from 'react'
+import './index.css'
 
 const index = () => {
   return (
-    <div>
+    <main className='container-main'>
+      <div>
         <h2>Pagina Home</h2>
-    </div>
+      </div>
+    </main>
+    
   )
 }
 
