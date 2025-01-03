@@ -42,4 +42,11 @@ button {
     border: none;
     border-radius: 5px;
     background-color: #1e3a8a;
+    width: 130px;
+    cursor: pointer;
+    transition: .2s;
+
+    &:hover {
+        opacity: 0.8;
+    }
 }
