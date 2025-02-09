@@ -1,0 +1,55 @@
+.Carddiv{
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    margin: 32px;
+}
+
+.Cardform{
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border: none;
+    border-radius: 6px;
+    padding: 2px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.Cardinfo{
+    background-color: #1F1D1D;
+    padding: 12px;
+    cursor: pointer;
+}
+
+h3{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+@media (min-width:460px){
+    .Carddiv{
+        display: grid;
+        grid-template-columns: auto auto auto auto;
+        
+    }
+}
+
+@media (min-width:768px){
+    .Carddiv{
+        display: grid;
+        grid-template-columns: auto auto;
+        
+    }
+}
+
+@media (min-width:1110px){
+    .Carddiv{
+        display: grid;
+        grid-template-columns: auto auto auto auto;
+        
+    }
+}
