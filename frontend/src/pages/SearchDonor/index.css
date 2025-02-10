@@ -61,12 +61,17 @@
     border-radius: 6px;
     padding: 2px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    cursor: pointer;
+
+    &:hover{
+        opacity: 0.8;
+    }
 }
 
 .Cardinfo{
     background-color: #1F1D1D;
     padding: 12px;
-    cursor: pointer;
+    
 }
 
 h3{

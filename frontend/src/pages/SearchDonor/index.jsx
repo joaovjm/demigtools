@@ -16,7 +16,7 @@ const SearchDonor = () => {
     axios.get("http://localhost:3001/donor").then((response) => {
         setDonor(response.data);
     });
-  }, [setDonor]);
+  }, []);
 
   const handleChange = (event) => {
     setSelectValue(event.target.value);
@@ -52,8 +52,8 @@ const SearchDonor = () => {
       </form>
 
       <div className='Carddiv'>
-        {donor.map((donors, id) => (
-            <form key={id} className='Cardform'>
+        {donor.map((donors) => (
+            <form key={donors.id} className='Cardform'>
                 <header>
                     <h3><FaMoneyCheckDollar /> {donors.nome}</h3>
                 </header>
