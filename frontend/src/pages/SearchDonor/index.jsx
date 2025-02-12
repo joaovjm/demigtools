@@ -1,5 +1,5 @@
 import "./index.css";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import axios from "axios";
 
@@ -12,15 +12,7 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 const SearchDonor = () => {
   const [selectedValue, setSelectValue] = useState("todos");
   const [buscardoador, setBuscardoador] = useState("");
-  const [searchDonor, setSearchDonor] = useState("")
   const [donor, setDonor] = useState([]);
-
-
-  // useEffect(() =>{
-  //   axios.get("http://localhost:3001/donor").then((response) => {
-  //       setDonor(response.data);
-  //   });
-  // }, [setDonor]);
 
   const handleChange = (event) => {
     setSelectValue(event.target.value);
