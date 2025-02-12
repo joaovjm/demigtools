@@ -1,10 +1,17 @@
 const express = require("express");
 const router = express.Router();
 const { Donor } = require("../models");
+const { Op } = require("sequelize");
 
 router.get("/", async (req, res) => {
   try {
-    const listOfUsers = await Donor.findAll();
+    const { nome, tipo } = req.query;
+    const where = {};
+
+    if (nome) where.nome = {[Op.like]: `%${nome}%`};
+    if (tipo) where.tipo = tipo;
+
+    const listOfUsers = await Donor.findAll({where});
     res.json(listOfUsers);
   } catch (error) {
     console.error(error);
