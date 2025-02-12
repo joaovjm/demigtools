@@ -10,7 +10,7 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 
 
 const SearchDonor = () => {
-  const [selectedValue, setSelectValue] = useState("todos");
+  const [selectedValue, setSelectValue] = useState("Todos");
   const [buscardoador, setBuscardoador] = useState("");
   const [donor, setDonor] = useState([]);
 
@@ -22,8 +22,8 @@ const SearchDonor = () => {
     event.preventDefault();
 
     const params = {};
-    if (buscardoador) params.nome = buscardoador;
-    if (selectedValue) params.tipo = selectedValue;
+    if (buscardoador) params.query = buscardoador;
+    if (selectedValue && selectedValue !== "todos") params.tipo = selectedValue;
 
     axios.get("http://localhost:3001/donor", {params})
       .then((response) => {
