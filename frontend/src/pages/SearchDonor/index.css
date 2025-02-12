@@ -74,6 +74,21 @@
     
 }
 
+.iconadd{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 102px;
+    color: #FAF5E9;
+    cursor: pointer;
+    border: 1px dashed #FAF5E9;
+    border-radius: 6px;
+
+    &:hover{
+        opacity: 0.8;
+    }
+}
+
 h3{
     display: flex;
     align-items: center;

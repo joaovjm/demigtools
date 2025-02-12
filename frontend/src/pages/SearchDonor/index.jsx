@@ -1,8 +1,12 @@
 import "./index.css";
 import React, { useEffect, useState } from "react";
-import { PiMagnifyingGlassBold } from "react-icons/pi";
+
 import axios from "axios";
+
+import { PiMagnifyingGlassBold } from "react-icons/pi";
 import { FaMoneyCheckDollar } from "react-icons/fa6";
+import { IoMdAddCircleOutline } from "react-icons/io";
+
 
 
 const SearchDonor = () => {
@@ -12,24 +16,37 @@ const SearchDonor = () => {
   const [donor, setDonor] = useState([]);
 
 
-  useEffect(() =>{
-    axios.get("http://localhost:3001/donor").then((response) => {
-        setDonor(response.data);
-    });
-  }, []);
+  // useEffect(() =>{
+  //   axios.get("http://localhost:3001/donor").then((response) => {
+  //       setDonor(response.data);
+  //   });
+  // }, [setDonor]);
 
   const handleChange = (event) => {
     setSelectValue(event.target.value);
   };
 
-  const handleSearch = (event) => {
+  const onCLickSearch = (event) => {
     event.preventDefault();
-    setSearchDonor(buscardoador);
+
+    const params = {};
+    if (buscardoador) params.nome = buscardoador;
+    if (selectedValue) params.tipo = selectedValue;
+
+    axios.get("http://localhost:3001/donor", {params})
+      .then((response) => {
+        setDonor(response.data);
+    })
+    .catch((error) => {
+      console.error("Erro ao buscar doadores: ", error);
+    })
   }
+    
 
   return (
+    
     <main className="containersearch">
-      <form onSubmit={handleSearch} className="formsearch">
+      <form className="formsearch">
         <div className="search">
           <label className="label">Buscar Doador</label>
           <input 
@@ -48,9 +65,9 @@ const SearchDonor = () => {
           </select>
         </div>
 
-        <button className="btnsearch" type="submit"><PiMagnifyingGlassBold /> buscar</button>
+        <button className="btnsearch" onClick={onCLickSearch}><PiMagnifyingGlassBold /> buscar</button>
       </form>
-
+      
       <div className='Carddiv'>
         {donor.map((donors) => (
             <form key={donors.id} className='Cardform'>
@@ -65,6 +82,10 @@ const SearchDonor = () => {
                 </div>
             </form>
         ))}
+        <div className="iconadd">
+          <IoMdAddCircleOutline/>
+        </div>
+        
       </div>
     </main>
   );
