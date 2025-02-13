@@ -5,12 +5,8 @@ const { Op } = require("sequelize");
 
 router.get("/", async (req, res) => {
   try {
-    const { query, tipo} = req.query;
+    const { query, tipo, id} = req.query;
     const whereClause= {};
-
-    if (tipo && tipo !== "todos") {
-      whereClause.tipo = tipo;
-    }
 
     if(query) {
       if (/^\d{11}$/.test(query)) {
@@ -22,10 +18,13 @@ router.get("/", async (req, res) => {
       }
     }
 
-    // if (nome) where.nome = {[Op.like]: `%${nome}%`};
-    // if (telefone1) where.telefone1 = {[Op.like]: `%${telefone1}%`};
-    // if (cpf) where.cpf = cpf;
-    // if (tipo) where.tipo = tipo;
+    if(tipo && tipo !== "todos") {
+      whereClause.tipo = tipo;
+    }
+
+    if(id && id !== null){
+      whereClause.id = id;
+    }
 
     const listOfUsers = await Donor.findAll({where:whereClause});
     res.json(listOfUsers);

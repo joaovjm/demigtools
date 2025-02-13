@@ -1,5 +1,6 @@
 import "./index.css";
 import React, { useState } from "react";
+import { useNavigate } from "react-router";
 
 import axios from "axios";
 
@@ -10,15 +11,17 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 
 
 const SearchDonor = () => {
-  const [selectedValue, setSelectValue] = useState("Todos");
+  const [selectedValue, setSelectValue] = useState("todos");
   const [buscardoador, setBuscardoador] = useState("");
   const [donor, setDonor] = useState([]);
+
+  const navigate = useNavigate();
 
   const handleChange = (event) => {
     setSelectValue(event.target.value);
   };
 
-  const onCLickSearch = (event) => {
+  const onClickSearch = (event) => {
     event.preventDefault();
 
     const params = {};
@@ -32,6 +35,12 @@ const SearchDonor = () => {
     .catch((error) => {
       console.error("Erro ao buscar doadores: ", error);
     })
+  }
+
+  const onClickDonor = (donors) => {
+    const id = donors.id;
+    navigate(`/donor/${id}`);
+
   }
     
 
@@ -57,12 +66,12 @@ const SearchDonor = () => {
           </select>
         </div>
 
-        <button className="btnsearch" onClick={onCLickSearch}><PiMagnifyingGlassBold /> buscar</button>
+        <button className="btnsearch" onClick={onClickSearch}><PiMagnifyingGlassBold /> buscar</button>
       </form>
       
       <div className='Carddiv'>
-        {donor.map((donors) => (
-            <form key={donors.id} className='Cardform'>
+        {donor.map((donors, id) => (
+            <form key={id} className='Cardform' onClick={() => onClickDonor(donors)}>
                 <header>
                     <h3><FaMoneyCheckDollar /> {donors.nome}</h3>
                 </header>
