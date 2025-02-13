@@ -83,7 +83,7 @@ const SearchDonor = () => {
                 </div>
             </form>
         ))}
-        <div className="iconadd">
+        <div className="iconadd" onClick={() => navigate("/newdonor")}>
           <IoMdAddCircleOutline/>
         </div>
         
