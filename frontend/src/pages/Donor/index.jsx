@@ -7,13 +7,13 @@ import axios from "axios";
 import { useParams } from "react-router";
 
 const Donor = () => {
-  const [nome, setNome] = useState("....");
+  const [nome, setNome] = useState("");
   const [tipo, setTipo] = useState("");
-  const [cpf, setCpf] = useState("");
-  const [endereco, setEndereco] = useState("");
-  const [cidade, setCidade] = useState("");
-  const [bairro, setBairro] = useState("");
-  const [telefone1, setTelefone1] = useState("");
+  const [cpf, setCpf] = useState("....");
+  const [endereco, setEndereco] = useState("....");
+  const [cidade, setCidade] = useState("....");
+  const [bairro, setBairro] = useState("....");
+  const [telefone1, setTelefone1] = useState("....");
   const [telefone2, setTelefone2] = useState("....");
   const [telefone3, setTelefone3] = useState("....");
   const [dia, setDia] = useState("....");
@@ -30,26 +30,35 @@ const Donor = () => {
   if (id) params.id = id;
 
   useEffect(() => {
+    
     axios
       .get("http://localhost:3001/donor", { params })
       .then((response) => {
         setNome(response.data[0].nome);
-        setTipo(response.data[0].tipo);
         setCpf(response.data[0].cpf);
         setEndereco(response.data[0].endereco);
         setCidade(response.data[0].cidade);
         setBairro(response.data[0].bairro);
         setTelefone1(response.data[0].telefone1);
-        // setTelefone2(response.data[0].telefone2);
-        // setTelefone3(response.data[0].telefone3);
-        // setDia(response.data[0].dia);
-        // setMensalidade(response.data[0].mensalidade);
-        // setMedia(response.data[0].media);
-        // setObservacao(response.data[0].observacao);
+        setTelefone2(response.data[0].telefone2);
+        setTelefone3(response.data[0].telefone3);
+        setDia(response.data[0].dia);
+        setMensalidade(response.data[0].mensalidade);
+        setMedia(response.data[0].media);
+        setObservacao(response.data[0].observacao);
+
+        if(response.data[0].tipo === "Avulso") {
+          setTipo("Avulso");
+        }else if(response.data[0].tipo === "Mensal") {
+          setTipo("Mensal");
+        }else {
+          setTipo("Lista");
+        }
       })
       .catch((error) => {
         console.error("Erro ao buscar doador: ", error);
       });
+    
   }, []);
 
   return (
@@ -78,6 +87,7 @@ const Donor = () => {
             name="nome"
             value={nome}
             onChange={(e) => setNome(e.target.value)}
+            readOnly={true}
           />
         </div>
 
@@ -85,9 +95,16 @@ const Donor = () => {
           <label htmlFor="dropdown" className="label">
             Tipo
           </label>
-          <select id="dropdown" value={tipo} onChange={handleChange}>
-            <option value="avulso">Avulso</option>
-            <option value="mensal">Mensal</option>
+          <select
+            id="dropdown"
+            onChange={handleChange}
+            value={tipo}
+            readOnly={true}
+            disabled={true}
+          >
+            <option value="Avulso" >Avulso</option>
+            <option value="Mensal" >Mensal</option>
+            <option value="Lista" >Lista</option>
           </select>
         </div>
 
@@ -97,6 +114,7 @@ const Donor = () => {
             type="text"
             value={cpf}
             onChange={(e) => setCpf(e.target.value)}
+            readOnly={true}
           />
         </div>
 
@@ -106,6 +124,7 @@ const Donor = () => {
             type="text"
             value={endereco}
             onChange={(e) => setEndereco(e.target.value)}
+            readOnly={true}
           />
         </div>
 
@@ -115,6 +134,7 @@ const Donor = () => {
             type="text"
             value={cidade}
             onChange={(e) => setCidade(e.target.value)}
+            readOnly={true}
           />
         </div>
 
@@ -124,6 +144,7 @@ const Donor = () => {
             type="text"
             value={bairro}
             onChange={(e) => setBairro(e.target.value)}
+            readOnly={true}
           />
         </div>
 
@@ -133,6 +154,7 @@ const Donor = () => {
             type="text"
             value={telefone1}
             onChange={(e) => setTelefone1(e.target.value)}
+            readOnly={true}
           />
         </div>
 
@@ -141,6 +163,7 @@ const Donor = () => {
           <input
             type="text"
             value={telefone2}
+            readOnly={true}
             onChange={(e) => setTelefone2(e.target.value)}
           />
         </div>
@@ -151,6 +174,7 @@ const Donor = () => {
             type="text"
             value={telefone3}
             onChange={(e) => setTelefone3(e.target.value)}
+            readOnly={true}
           />
         </div>
 
@@ -160,6 +184,7 @@ const Donor = () => {
             type="text"
             value={dia}
             onChange={(e) => setDia(e.target.value)}
+            disabled={tipo === "Avulso" ? false : true}
           />
         </div>
 
@@ -171,6 +196,8 @@ const Donor = () => {
             type="text"
             value={mensalidade}
             onChange={(e) => setMensalidade(e.target.value)}
+            readOnly={true}
+            disabled={tipo === "Avulso" ? false : true}
           />
         </div>
 
@@ -180,6 +207,8 @@ const Donor = () => {
             type="text"
             value={media}
             onChange={(e) => setMedia(e.target.value)}
+            readOnly={true}
+            disabled={tipo === "Avulso" ? false : true}
           />
         </div>
 
@@ -188,8 +217,11 @@ const Donor = () => {
             Observação
           </label>
           {/* <input className="inputObservation" type="text"/> */}
-          <textarea value={observacao}
-            onChange={(e) => setObservacao(e.target.value)}/>
+          <textarea
+            value={observacao}
+            onChange={(e) => setObservacao(e.target.value)}
+            readOnly={true}
+          />
         </div>
       </form>
       <TableDonor />
