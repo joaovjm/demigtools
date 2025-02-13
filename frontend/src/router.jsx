@@ -13,7 +13,7 @@ const Approuter = () => {
         <Route element={<Navbar />}>
           <Route path="/" element={<App />} />
           <Route path="/login" element={<Login />} />
-          <Route path="donor" element={<Donor />} />
+          <Route path="/donor/:id" element={<Donor />} />
           <Route path="/searchdonor" element={<SearchDonor />} />
           <Route path="*" />
         </Route>
