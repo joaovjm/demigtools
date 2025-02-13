@@ -5,6 +5,7 @@ import App from "./App";
 import Login from "./pages/Login";
 import Donor from "./pages/Donor";
 import SearchDonor from "./pages/SearchDonor";
+import NewDonor from "./pages/NewDonor";
 
 const Approuter = () => {
   return (
@@ -15,6 +16,7 @@ const Approuter = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/donor/:id" element={<Donor />} />
           <Route path="/searchdonor" element={<SearchDonor />} />
+          <Route path="/newdonor" element={<NewDonor />} />
           <Route path="*" />
         </Route>
       </Routes>
