@@ -5,7 +5,7 @@ const { Op } = require("sequelize");
 
 router.get("/", async (req, res) => {
   try {
-    const { query, tipo, id} = req.query;
+    const { query, tipo, telefone1} = req.query;
     const whereClause= {};
 
     if(query) {
@@ -22,8 +22,8 @@ router.get("/", async (req, res) => {
       whereClause.tipo = tipo;
     }
 
-    if(id && id !== null){
-      whereClause.id = id;
+    if(telefone1 && telefone1 !== null){
+      whereClause.telefone1 = telefone1;
     }
 
     const listOfUsers = await Donor.findAll({where:whereClause});

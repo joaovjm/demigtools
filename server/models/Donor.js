@@ -27,6 +27,9 @@ module.exports = (sequelize, DataTypes) => {
         telefone1: {
             type: DataTypes.STRING,
             allowNull: false,
+            primaryKey: true,
+            autoIncrement: false,
+            unique: true,
         },
         telefone2: {
             type: DataTypes.STRING,
