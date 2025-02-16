@@ -11,8 +11,8 @@ router.get("/", async (req, res) => {
     if(query) {
       if (/^\d{11}$/.test(query)) {
         whereClause.cpf = query;
-      } else if (/^9\d{6,}$/.test(query)) {
-        whereClause.telefone1 = query;
+      } else if (/^9\d{1,}$/.test(query)) {
+        whereClause.telefone1 = {[Op.like]: `%${query}%`};
       } else {
         whereClause.nome = {[Op.like]: `%${query}%`};
       }

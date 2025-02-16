@@ -1,9 +1,10 @@
 module.exports = (sequelize, DataTypes) => {
     const TableDonor = sequelize.define("TableDonor", {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BIGINT,
             primaryKey: true,
             autoIncrement: false,
+            unique: true,
         },
         recibo: {
             type: DataTypes.STRING,
@@ -14,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
         },
         valor: {
-            type: DataTypes.STRING,
+            type: DataTypes.FLOAT,
             allowNull: false,
         },
         contato: {

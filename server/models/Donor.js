@@ -25,18 +25,18 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
         },
         telefone1: {
-            type: DataTypes.STRING,
+            type: DataTypes.BIGINT,
             allowNull: false,
             primaryKey: true,
             autoIncrement: false,
             unique: true,
         },
         telefone2: {
-            type: DataTypes.STRING,
+            type: DataTypes.BIGINT,
             allowNull: true,
         },
         telefone3: {
-            type: DataTypes.STRING,
+            type: DataTypes.BIGINT,
             allowNull: true,
         },
         dia: {
