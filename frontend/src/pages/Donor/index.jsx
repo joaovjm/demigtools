@@ -7,19 +7,19 @@ import axios from "axios";
 import { useParams } from "react-router";
 
 const Donor = () => {
-  const [nome, setNome] = useState("");
-  const [tipo, setTipo] = useState("");
-  const [cpf, setCpf] = useState("....");
-  const [endereco, setEndereco] = useState("....");
-  const [cidade, setCidade] = useState("....");
-  const [bairro, setBairro] = useState("....");
-  const [telefone1, setTelefone1] = useState("....");
-  const [telefone2, setTelefone2] = useState("....");
-  const [telefone3, setTelefone3] = useState("....");
-  const [dia, setDia] = useState("....");
-  const [mensalidade, setMensalidade] = useState("....");
-  const [media, setMedia] = useState("....");
-  const [observacao, setObservacao] = useState("....");
+  const [nome, setNome] = useState(null);
+  const [tipo, setTipo] = useState(null);
+  const [cpf, setCpf] = useState(null);
+  const [endereco, setEndereco] = useState(null);
+  const [cidade, setCidade] = useState(null);
+  const [bairro, setBairro] = useState(null);
+  const [telefone1, setTelefone1] = useState(null);
+  const [telefone2, setTelefone2] = useState(null);
+  const [telefone3, setTelefone3] = useState(null);
+  const [dia, setDia] = useState(null);
+  const [mensalidade, setMensalidade] = useState(null);
+  const [media, setMedia] = useState(null);
+  const [observacao, setObservacao] = useState(null);
 
   const handleChange = (event) => {
     setTipo(event.target.value);
@@ -27,7 +27,7 @@ const Donor = () => {
 
   const { id } = useParams();
   const params = {};
-  if (id) params.id = id;
+  if (id) params.telefone1 = id;
 
   useEffect(() => {
     
@@ -85,7 +85,7 @@ const Donor = () => {
           <input
             type="text"
             name="nome"
-            value={nome}
+            defaultValue={nome}
             onChange={(e) => setNome(e.target.value)}
             readOnly={true}
           />
@@ -98,7 +98,7 @@ const Donor = () => {
           <select
             id="dropdown"
             onChange={handleChange}
-            value={tipo}
+            defaultValue={tipo}
             readOnly={true}
             disabled={true}
           >
@@ -112,7 +112,7 @@ const Donor = () => {
           <label className="label">CPF</label>
           <input
             type="text"
-            value={cpf}
+            defaultValue={cpf}
             onChange={(e) => setCpf(e.target.value)}
             readOnly={true}
           />
@@ -122,7 +122,7 @@ const Donor = () => {
           <label className="label">Endereço</label>
           <input
             type="text"
-            value={endereco}
+            defaultValue={endereco}
             onChange={(e) => setEndereco(e.target.value)}
             readOnly={true}
           />
@@ -132,7 +132,7 @@ const Donor = () => {
           <label className="label">Cidade</label>
           <input
             type="text"
-            value={cidade}
+            defaultValue={cidade}
             onChange={(e) => setCidade(e.target.value)}
             readOnly={true}
           />
@@ -142,7 +142,7 @@ const Donor = () => {
           <label className="label">bairro</label>
           <input
             type="text"
-            value={bairro}
+            defaultValue={bairro}
             onChange={(e) => setBairro(e.target.value)}
             readOnly={true}
           />
@@ -152,7 +152,7 @@ const Donor = () => {
           <label className="label">Telefone 1</label>
           <input
             type="text"
-            value={telefone1}
+            defaultValue={telefone1}
             onChange={(e) => setTelefone1(e.target.value)}
             readOnly={true}
           />
@@ -162,7 +162,7 @@ const Donor = () => {
           <label className="label">Telefone 2</label>
           <input
             type="text"
-            value={telefone2}
+            defaultValue={telefone2}
             readOnly={true}
             onChange={(e) => setTelefone2(e.target.value)}
           />
@@ -172,7 +172,7 @@ const Donor = () => {
           <label className="label">Telefone 3</label>
           <input
             type="text"
-            value={telefone3}
+            defaultValue={telefone3}
             onChange={(e) => setTelefone3(e.target.value)}
             readOnly={true}
           />
@@ -182,7 +182,7 @@ const Donor = () => {
           <label className="label">dia</label>
           <input
             type="text"
-            value={dia}
+            defaultValue={dia}
             onChange={(e) => setDia(e.target.value)}
             disabled={tipo === "Avulso" ? false : true}
           />
@@ -194,7 +194,7 @@ const Donor = () => {
           </label>
           <input
             type="text"
-            value={mensalidade}
+            defaultValue={mensalidade}
             onChange={(e) => setMensalidade(e.target.value)}
             readOnly={true}
             disabled={tipo === "Avulso" ? false : true}
@@ -205,7 +205,7 @@ const Donor = () => {
           <label className="label">Media</label>
           <input
             type="text"
-            value={media}
+            defaultValue={media}
             onChange={(e) => setMedia(e.target.value)}
             readOnly={true}
             disabled={tipo === "Avulso" ? false : true}
@@ -218,7 +218,7 @@ const Donor = () => {
           </label>
           {/* <input className="inputObservation" type="text"/> */}
           <textarea
-            value={observacao}
+            defaultValue={observacao}
             onChange={(e) => setObservacao(e.target.value)}
             readOnly={true}
           />

@@ -37,10 +37,8 @@ const SearchDonor = () => {
     })
   }
 
-  const onClickDonor = (donors) => {
-    const id = donors.id;
+  const onClickDonor = (id) => {    
     navigate(`/donor/${id}`);
-
   }
     
 
@@ -70,8 +68,8 @@ const SearchDonor = () => {
       </form>
       
       <div className='Carddiv'>
-        {donor.map((donors, id) => (
-            <form key={id} className='Cardform' onClick={() => onClickDonor(donors)}>
+        {donor.map((donors) => (
+            <form key={donors.telefone1} className='Cardform' onClick={() => onClickDonor(donors.telefone1)}>
                 <header>
                     <h3><FaMoneyCheckDollar /> {donors.nome}</h3>
                 </header>

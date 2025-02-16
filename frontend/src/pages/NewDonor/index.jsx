@@ -12,9 +12,9 @@ const index = () => {
   const [telefone1, setTelefone1] = useState("");
   const [telefone2, setTelefone2] = useState("");
   const [telefone3, setTelefone3] = useState("");
-  const [dia, setDia] = useState("");
-  const [mensalidade, setMensalidade] = useState(0);
-  const [media, setMedia] = useState(0);
+  const [dia, setDia] = useState();
+  const [mensalidade, setMensalidade] = useState();
+  const [media, setMedia] = useState();
   const [observacao, setObservacao] = useState("");
 
   const handleChange = (event) => {
