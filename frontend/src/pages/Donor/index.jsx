@@ -8,7 +8,7 @@ import { useParams } from "react-router";
 
 const Donor = () => {
   const [nome, setNome] = useState(null);
-  const [tipo, setTipo] = useState(null);
+  const [tipo, setTipo] = useState("");
   const [cpf, setCpf] = useState(null);
   const [endereco, setEndereco] = useState(null);
   const [cidade, setCidade] = useState(null);
@@ -21,6 +21,11 @@ const Donor = () => {
   const [media, setMedia] = useState(null);
   const [observacao, setObservacao] = useState(null);
 
+  const [edit, setEdit] = useState(true);
+  const [btnedit, setBtnedit] = useState("Editar");
+  const [showbtn, setShowbtn] = useState(true);
+
+
   const handleChange = (event) => {
     setTipo(event.target.value);
   };
@@ -30,7 +35,6 @@ const Donor = () => {
   if (id) params.telefone1 = id;
 
   useEffect(() => {
-    
     axios
       .get("http://localhost:3001/donor", { params })
       .then((response) => {
@@ -47,19 +51,61 @@ const Donor = () => {
         setMedia(response.data[0].media);
         setObservacao(response.data[0].observacao);
 
-        if(response.data[0].tipo === "Avulso") {
+
+        if (response.data[0].tipo === "Avulso") {
           setTipo("Avulso");
-        }else if(response.data[0].tipo === "Mensal") {
+        } else if (response.data[0].tipo === "Mensal") {
           setTipo("Mensal");
-        }else {
+        } else if (response.data[0].tipo === "Lista") {
           setTipo("Lista");
         }
       })
       .catch((error) => {
         console.error("Erro ao buscar doador: ", error);
       });
-    
-  }, []);
+
+  }, [btnedit]);
+
+
+
+  // Responsável por editar e salvar as informações do doador
+  const EditDonor = async () => {
+    if (btnedit === "Salvar") {
+       try {
+        await axios
+         .put(`http://localhost:3001/donor/${telefone1}`, {
+           nome: nome,
+           tipo: tipo,
+           cpf: cpf,
+           endereco: endereco,
+           cidade: cidade,
+           bairro: bairro,
+           telefone1: telefone1,
+           telefone2: telefone2,
+           telefone3: telefone3,
+           dia: dia,
+           mensalidade: mensalidade,
+           media: media,
+           observacao: observacao,
+         });
+
+         window.alert("Doador atualizado com sucesso!");
+
+
+       }catch (error) {
+           window.alert("Erro ao atualizar doador: ", error);
+       };
+
+      setEdit(true);
+      setBtnedit("Editar");
+      setShowbtn(true);
+
+    } else {
+      setEdit(!edit);
+      setBtnedit("Salvar");
+      setShowbtn(!showbtn);
+    }
+  };
 
   return (
     <main className="containerDonor">
@@ -69,12 +115,14 @@ const Donor = () => {
           <FaMoneyCheckDollar /> Doador
         </h2>
         <div className="btns">
-          <button type="submit" className="btn-edit">
-            Editar
+          <button onClick={EditDonor} className="btn-edit">
+            {btnedit}
           </button>
-          <button type="submit" className="btn-add">
-            Criar Movimento
-          </button>
+          {showbtn ? (
+            <button type="submit" className="btn-add">
+              Criar Movimento
+            </button>
+          ) : null}
         </div>
       </header>
 
@@ -87,7 +135,7 @@ const Donor = () => {
             name="nome"
             defaultValue={nome}
             onChange={(e) => setNome(e.target.value)}
-            readOnly={true}
+            readOnly={edit}
           />
         </div>
 
@@ -98,13 +146,13 @@ const Donor = () => {
           <select
             id="dropdown"
             onChange={handleChange}
-            defaultValue={tipo}
-            readOnly={true}
-            disabled={true}
+            value={tipo}
+            readOnly={edit}
+            disabled={edit}
           >
-            <option value="Avulso" >Avulso</option>
-            <option value="Mensal" >Mensal</option>
-            <option value="Lista" >Lista</option>
+            <option value="Avulso">Avulso</option>
+            <option value="Mensal">Mensal</option>
+            <option value="Lista">Lista</option>
           </select>
         </div>
 
@@ -114,7 +162,7 @@ const Donor = () => {
             type="text"
             defaultValue={cpf}
             onChange={(e) => setCpf(e.target.value)}
-            readOnly={true}
+            readOnly={edit}
           />
         </div>
 
@@ -124,7 +172,7 @@ const Donor = () => {
             type="text"
             defaultValue={endereco}
             onChange={(e) => setEndereco(e.target.value)}
-            readOnly={true}
+            readOnly={edit}
           />
         </div>
 
@@ -134,7 +182,7 @@ const Donor = () => {
             type="text"
             defaultValue={cidade}
             onChange={(e) => setCidade(e.target.value)}
-            readOnly={true}
+            readOnly={edit}
           />
         </div>
 
@@ -154,7 +202,7 @@ const Donor = () => {
             type="text"
             defaultValue={telefone1}
             onChange={(e) => setTelefone1(e.target.value)}
-            readOnly={true}
+            readOnly={edit}
           />
         </div>
 
@@ -163,7 +211,7 @@ const Donor = () => {
           <input
             type="text"
             defaultValue={telefone2}
-            readOnly={true}
+            readOnly={edit}
             onChange={(e) => setTelefone2(e.target.value)}
           />
         </div>
@@ -174,7 +222,7 @@ const Donor = () => {
             type="text"
             defaultValue={telefone3}
             onChange={(e) => setTelefone3(e.target.value)}
-            readOnly={true}
+            readOnly={edit}
           />
         </div>
 
@@ -196,7 +244,7 @@ const Donor = () => {
             type="text"
             defaultValue={mensalidade}
             onChange={(e) => setMensalidade(e.target.value)}
-            readOnly={true}
+            readOnly={edit}
             disabled={tipo === "Avulso" ? false : true}
           />
         </div>
@@ -207,7 +255,7 @@ const Donor = () => {
             type="text"
             defaultValue={media}
             onChange={(e) => setMedia(e.target.value)}
-            readOnly={true}
+            readOnly={edit}
             disabled={tipo === "Avulso" ? false : true}
           />
         </div>
@@ -220,11 +268,11 @@ const Donor = () => {
           <textarea
             defaultValue={observacao}
             onChange={(e) => setObservacao(e.target.value)}
-            readOnly={true}
+            readOnly={edit}
           />
         </div>
       </form>
-      <TableDonor />
+      {showbtn ? <TableDonor /> : null}
     </main>
   );
 };
