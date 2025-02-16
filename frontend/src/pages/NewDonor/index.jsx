@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FaMoneyCheckDollar } from "react-icons/fa6";
+import { useNavigate } from "react-router";
 
 const index = () => {
   const [nome, setNome] = useState("");
@@ -17,11 +18,13 @@ const index = () => {
   const [media, setMedia] = useState();
   const [observacao, setObservacao] = useState("");
 
+  const navigate = useNavigate();
+  
   const handleChange = (event) => {
     setTipo(event.target.value);
   };
 
-  const OnClickNewDonor = async (event) => {
+  const OnClickNewDonor = async () => {
     const newDonor = {
       nome,
       tipo,
@@ -40,6 +43,9 @@ const index = () => {
     try{
         await axios.post("http://localhost:3001/donor", newDonor);
         window.alert("Doador criado com sucesso!");
+
+        navigate(`/donor/${telefone1}`);
+
     }catch(error){
       window.alert("Erro ao criar doador: ", error);
     }
