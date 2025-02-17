@@ -20,7 +20,7 @@ export const AdminMenu = [
     {
         id: 1,
         title: "Receber Doação",
-        path: "./receberdoacao",
+        path: "./receiverdonations",
         cName: "submenu-itens",
     },
     {
