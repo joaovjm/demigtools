@@ -14,12 +14,11 @@ import AreasToPrint from "./pages/AreasToPrint";
 import CollectorsMoviment from "./pages/CollectorsMoviment";
 import CountDonations from "./pages/CountDonations";
 import CreateMensalDonations from "./pages/CreateMensalDonations";
-// import DonationsReceived from "./pages/DonationsReceived";
-// import Operators from "./pages/Operators";
-// import OperatorWork from "./pages/OperatorWork";
-// import ReceivedDonations from "./pages/ReceivedDonations";
-// import WorkHistory from "./pages/WorkHistory";
-// import WorkList from "./pages/WorkList";
+import DonationsReceived from "./pages/DonationsReceived";
+import Operators from "./pages/Operators";
+import OperatorWork from "./pages/OperatorWork";
+import WorkHistory from "./pages/WorkHistory";
+import WorkList from "./pages/WorkList";
 
 
 const Approuter = () => {
@@ -39,13 +38,12 @@ const Approuter = () => {
           <Route path="/areastoprint" element={<AreasToPrint />} />
           <Route path="/collectorsmoviment" element={<CollectorsMoviment />} />
           <Route path="/countdonations" element={<CountDonations />} />
-          {/* <Route path="/createmensaldonations" element={<CreateMensalDonations />} />
+          <Route path="/createmensaldonations" element={<CreateMensalDonations />} />
           <Route path="/donationsreceived" element={<DonationsReceived />} />
           <Route path="/operators" element={<Operators />} />
           <Route path="/operatorwork" element={<OperatorWork />} />
-          <Route path="/receiveddonations" element={<ReceivedDonations />} />
           <Route path="/workhistory" element={<WorkHistory />} />
-          <Route path="/worklist" element={<WorkList />} /> */}
+          <Route path="/worklist" element={<WorkList />} />
          
         </Route>
       </Routes>
