@@ -11,8 +11,8 @@ const index = () => {
   const [cidade, setCidade] = useState("");
   const [bairro, setBairro] = useState("");
   const [telefone1, setTelefone1] = useState("");
-  const [telefone2, setTelefone2] = useState(null);
-  const [telefone3, setTelefone3] = useState(null);
+  const [telefone2, setTelefone2] = useState();
+  const [telefone3, setTelefone3] = useState();
   const [dia, setDia] = useState();
   const [mensalidade, setMensalidade] = useState();
   const [media, setMedia] = useState();

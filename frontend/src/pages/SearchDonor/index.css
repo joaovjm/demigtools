@@ -3,25 +3,26 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-    height: calc(100vh - 7.8vh);
+    min-height: calc(100vh - 7.8vh);
     background-color: #383838;
     color: #FAF5E9;
 }
 
 .formsearch{
-    display: flex;
-    align-items: center;
+    display: grid;
+    grid-template-columns: auto auto;
     background-color: #1F1D1D;
     border: none;
     border-radius: 6px;
     padding: 16px;
-    gap: 64px;
+    gap: 8px;
     margin-top: 32px;
 }
 
 .btnsearch{
     display: flex;
     align-items: center;
+    justify-content: center;
     padding: 6px;
     border: none;
     border-radius: 6px;
@@ -108,9 +109,14 @@ input, select{
     border: none;
     border-radius: 0px 6px 6px 0px;
     text-align: center;
+    width: 90px
     
 }
-@media (max-width:800px){
+
+.btnsearch{
+    width: 100px;
+}
+/* @media (min-width: 768px){
     .formsearch{
        display: grid;
        grid-template-columns: auto auto;
@@ -124,14 +130,21 @@ input, select{
     .btnsearch{
         width: 100px;
     }
-}
+} */
 
 @media (min-width:460px){
     .Carddiv{
         display: grid;
-        grid-template-columns: auto auto auto auto;
+        grid-template-columns: auto auto;
         
     }
+
+    .formsearch{
+        display: grid;
+        grid-template-columns: auto auto;
+        gap: 8px;
+    }
+
 }
 
 @media (min-width:768px){
@@ -140,6 +153,26 @@ input, select{
         grid-template-columns: auto auto;
         
     }
+
+    .formsearch{
+        display: flex;
+        align-items: center;
+        gap: 32px;
+     }
+ 
+     input{
+         width: 200px;
+     }
+
+     select{
+         width: 120px;
+     }
+     
+     .btnsearch{
+         width: 100px;
+     }
+
+    
 }
 
 @media (min-width:1110px){
@@ -147,6 +180,12 @@ input, select{
         display: grid;
         grid-template-columns: auto auto auto auto;
         
+    }
+
+    .formsearch{
+        display: flex;
+        align-items: center;
+        gap: 64px;
     }
 }
 
