@@ -9,6 +9,17 @@ import NewDonor from "./pages/NewDonor";
 import Page404 from "./pages/Page404";
 import ReceiverDonations from "./pages/ReceiverDonations";
 import ChangeCollector from "./pages/ChangeCollector";
+import CheckPrint from "./pages/CheckPrint";
+import AreasToPrint from "./pages/AreasToPrint";
+import CollectorsMoviment from "./pages/CollectorsMoviment";
+import CountDonations from "./pages/CountDonations";
+import CreateMensalDonations from "./pages/CreateMensalDonations";
+// import DonationsReceived from "./pages/DonationsReceived";
+// import Operators from "./pages/Operators";
+// import OperatorWork from "./pages/OperatorWork";
+// import ReceivedDonations from "./pages/ReceivedDonations";
+// import WorkHistory from "./pages/WorkHistory";
+// import WorkList from "./pages/WorkList";
 
 
 const Approuter = () => {
@@ -23,7 +34,18 @@ const Approuter = () => {
           <Route path="/newdonor" element={<NewDonor />} />
           <Route path="*" element={<Page404 />} />
           <Route path="/receiverdonations" element={<ReceiverDonations />} />
-          <Route path="changecollector" element={<ChangeCollector />} />
+          <Route path="/changecollector" element={<ChangeCollector />} />
+          <Route path="/checkprint" element={<CheckPrint />} />
+          <Route path="/areastoprint" element={<AreasToPrint />} />
+          <Route path="/collectorsmoviment" element={<CollectorsMoviment />} />
+          <Route path="/countdonations" element={<CountDonations />} />
+          {/* <Route path="/createmensaldonations" element={<CreateMensalDonations />} />
+          <Route path="/donationsreceived" element={<DonationsReceived />} />
+          <Route path="/operators" element={<Operators />} />
+          <Route path="/operatorwork" element={<OperatorWork />} />
+          <Route path="/receiveddonations" element={<ReceivedDonations />} />
+          <Route path="/workhistory" element={<WorkHistory />} />
+          <Route path="/worklist" element={<WorkList />} /> */}
          
         </Route>
       </Routes>
