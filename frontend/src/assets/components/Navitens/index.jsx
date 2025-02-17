@@ -26,31 +26,31 @@ export const AdminMenu = [
     {
         id: 2,
         title: "Mudar Coletador",
-        path: "./mudarcoletador",
+        path: "./changecollector",
         cName: "submenu-itens",
     },
     {
         id: 3,
         title: "Verificar Impressão",
-        path: "./verificarimpressao",
+        path: "./checkprint",
         cName: "submenu-itens",
     },
     {
         id: 4,
         title: "Areas a Imprimir",
-        path: "./areasaimprimir",
+        path: "./areastoprint",
         cName: "submenu-itens",
     },
     {
         id: 5,
         title: "Criar Doação Mensal",
-        path: "./criardoadormensal",
+        path: "./createmensaldonations",
         cName: "submenu-itens",
     },
     {
         id: 6,
         title: "Operadores",
-        path: "./operadores",
+        path: "./operators",
         cName: "submenu-itens",
     },
 ];
@@ -59,31 +59,31 @@ export const RelatórioMenu = [
     {
        id: 1,
        title: "Doação Recebida",
-       path: "./doacaorecebida",      
+       path: "./donationsreceived",      
        cName: "submenu-itens",
     },
     {
         id: 2,
         title:"Trabalho do Operador",
-        path: "./trabalhooperador",
+        path: "./operatorwork",
         cName: "submenu-itens",
     },
     {
         id: 3,
         title:"Histórico de Trabalho",
-        path: "./historicodetrabalho",
+        path: "./workhistory",
         cName: "submenu-itens",
     },
     {
         id: 4,
         title:"Movimento dos Coletadores",
-        path: "./movimentocoletadores",
+        path: "./collectorsmoviment",
         cName: "submenu-itens",
     },
     {
         id: 5,
         title:"Contar Doações",
-        path: "./contardoador",
+        path: "./countdonations",
         cName: "submenu-itens",
     }
 ];
@@ -98,7 +98,7 @@ export const OperadorMenu = [
     {
         id: 2,
         title: "Lista de Trabalho",
-        path: "./listadetrabalho",
+        path: "./worklist",
         cName: "submenu-itens",
     }
 ];
