@@ -1,0 +1,153 @@
+.containerDonor{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    min-height: calc(100vh - 7.8vh);
+    background-color: #383838;
+    color: #FAF5E9;
+    gap: 18px;
+}
+
+.header{
+    width: 360px;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+.btns{
+    display: flex;
+    gap: 18px;
+}
+
+.btn-edit, .btn-add{
+    padding: 8px;
+    border: none;
+    border-radius: 6px;
+    color: #FAF5E9;
+    cursor: pointer;
+
+    &:hover{
+        opacity: 0.8;
+    }
+}
+
+.btn-edit{
+    background-color: green;
+}
+
+.btn-add{
+    background-color: #385BAD;
+}
+
+.btn-delete{
+    background-color: #D60B0C;
+    border: none    ;
+    border-radius: 6px;
+    color: #FAF5E9;
+    width: 70px;
+    cursor: pointer;
+}
+
+.formDonor{
+    display: flex;
+    flex-direction: column;
+    border: none;
+    border-radius: 6px;
+    padding: 15px 20px;
+    gap: 18px;
+    background-color: #1F1D1D;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    
+    & .div-inputs{
+        display: flex;
+        align-items: center;
+    }
+
+    .label{
+        background-color: #000000;
+        border: none;
+        border-radius: 6px 0px 0px 6px;
+        padding: 6px;
+        width: 98px;
+        text-align: center;
+        font-size: 14px;
+    }
+    
+    input, textarea, select{
+        outline: none;
+        padding: 6px 15px;
+        border: none;
+        background-color: #363A3D;
+        color: #FAF5E9;
+        font-size: 14px;
+        border: none;
+        border-radius: 0px 6px 6px 0px;
+        text-align: center;
+        width: 80%;
+        word-wrap: break-word;
+    }
+
+    select{
+        width: 100px;
+    }
+}
+
+.inputObservation{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+@media (min-width: 320px){
+    .header{
+        width: 300px;
+
+        h2{
+            font-size: 18px;
+        }
+
+    }
+}
+
+
+@media (min-width: 700px){
+    .header{
+        width: 750px;
+    }   
+
+    .formDonor{
+        display: grid;
+        grid-template-columns: auto auto;
+    }
+    
+}
+
+@media (min-width: 800px){
+    .header{
+        width: 780px;
+    }
+}
+
+@media (min-width: 1200px){
+    .header{
+        width: 1120px;
+    }  
+
+    .formDonor{
+        display: grid;
+        grid-template-columns: 360px 300px auto;
+
+        & #observation{
+            width: 120%;
+        }
+     
+        
+    }
+
+}
+
+
+

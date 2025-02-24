@@ -1,0 +1,38 @@
+.tabledonor{
+    background-color: #1F1D1D;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 6px;
+    
+    tr{
+        text-align: center;
+
+        
+        td, th{
+            height: 50px;
+            border: none;
+            
+        }
+
+        td{
+            background-color: #363A3D;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        }
+
+        th{
+            background-color: #000000;
+        }
+    }
+}
+
+@media (min-width:700px){
+    .tabledonor{
+        width: 824px;
+    }
+}
+
+@media (min-width:1200px){
+    .tabledonor{
+        width: 1134px;
+    }
+}

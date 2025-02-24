@@ -1,0 +1,192 @@
+.containersearch{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    min-height: calc(100vh - 7.8vh);
+    background-color: #383838;
+    color: #FAF5E9;
+}
+
+.formsearch{
+    display: grid;
+    grid-template-columns: auto auto;
+    background-color: #1F1D1D;
+    border: none;
+    border-radius: 6px;
+    padding: 16px;
+    gap: 8px;
+    margin-top: 32px;
+}
+
+.btnsearch{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border: none;
+    border-radius: 6px;
+    gap: 4px;
+    background-color: green;
+    color: #FAF5E9;
+    cursor: pointer;
+
+    &:hover{
+        opacity: 0.8;
+    }
+}
+
+
+.label{
+    background-color: #000000;
+    border: none;
+    border-radius: 6px 0px 0px 6px;
+    padding: 7.2px;
+    width: 80px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.Carddiv{
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    margin: 32px;
+}
+
+.Cardform{
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border: none;
+    border-radius: 6px;
+    padding: 2px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    cursor: pointer;
+
+    &:hover{
+        opacity: 0.8;
+    }
+}
+
+.Cardinfo{
+    background-color: #1F1D1D;
+    padding: 12px;
+    
+}
+
+.iconadd{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 102px;
+    color: #FAF5E9;
+    cursor: pointer;
+
+    &:hover{
+        opacity: 0.8;
+    }
+}
+
+h3{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+
+
+input, select{
+    outline: none;
+    padding: 6px 15px;
+    border: none;
+    background-color: #363A3D;
+    color: #FAF5E9;
+    font-size: 14px;
+    border: none;
+    border-radius: 0px 6px 6px 0px;
+    text-align: center;
+    width: 90px
+    
+}
+
+.btnsearch{
+    width: 100px;
+}
+/* @media (min-width: 768px){
+    .formsearch{
+       display: grid;
+       grid-template-columns: auto auto;
+       gap: 8px;
+    }
+
+    input{
+        width: 90px;
+    }
+    
+    .btnsearch{
+        width: 100px;
+    }
+} */
+
+@media (min-width:460px){
+    .Carddiv{
+        display: grid;
+        grid-template-columns: auto auto;
+        
+    }
+
+    .formsearch{
+        display: grid;
+        grid-template-columns: auto auto;
+        gap: 8px;
+    }
+
+}
+
+@media (min-width:768px){
+    .Carddiv{
+        display: grid;
+        grid-template-columns: auto auto;
+        
+    }
+
+    .formsearch{
+        display: flex;
+        align-items: center;
+        gap: 32px;
+     }
+ 
+     input{
+         width: 200px;
+     }
+
+     select{
+         width: 120px;
+     }
+     
+     .btnsearch{
+         width: 100px;
+     }
+
+    
+}
+
+@media (min-width:1110px){
+    .Carddiv{
+        display: grid;
+        grid-template-columns: auto auto auto auto;
+        
+    }
+
+    .formsearch{
+        display: flex;
+        align-items: center;
+        gap: 64px;
+    }
+}
+
+        
