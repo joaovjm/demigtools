@@ -1,36 +1,42 @@
 import React, { useState } from "react";
 import './login.css'
 import { FaEye, FaEyeSlash, FaRegUser } from "react-icons/fa";
+import supabase from "../../helper/superBaseClient";
+import { useNavigate } from "react-router";
 
 
 const Login = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  const navigate = useNavigate();
   
   const togglePasswordVisibility = () => {
       setPasswordVisible(!passwordVisible);
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   setError('');
-  //   try{ 
-  //     const response = await axios.get("http://localhost:3001/username", {
-  //       username,
-  //       password
-  //     });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const {data, error} = await supabase.auth.signInWithPassword({
+      email: username,
+      password: password
+    });
 
-  //     if(response.data.token) {
-  //       localStorage.setItem('token', response.data.token);
-  //       onLogin();
-  //     }
-  //   } catch (error){
-  //     setError("Credenciais inválidas ou erro no servidor.");
-  //     console.error(error);
-  //   }
+    if(error){
+      window.alert("Erro ao logar: ", error);
+      return
+    }
+
+    if (data) {
+      navigate("/Dashboard");
+      return null;
+    }
+
+    setUsername("");
+    setPassword("");
     
-  // }
+  }
 
   return (
     <main className="page_container">

@@ -1,12 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, Outlet } from "react-router";
 import "./navbar.css";
 import { MdOutlineLogin } from "react-icons/md";
 import { AdminMenu, Navitens, OperadorMenu, RelatórioMenu } from "../Navitens";
+import supabase from "../../../helper/superBaseClient";
 
 const Navbar = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showDropdown, setShowDropdown] = useState(null);
+
+  useEffect(() => {
+    const getSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      
+      setIsAuthenticated(!!session);
+    };
+
+    getSession();
+  }, [isAuthenticated]);
 
   return (
     <>

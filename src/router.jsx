@@ -19,7 +19,7 @@ import Operators from "./pages/Operators";
 import OperatorWork from "./pages/OperatorWork";
 import WorkHistory from "./pages/WorkHistory";
 import WorkList from "./pages/WorkList";
-
+import Wrapper from "./assets/components/Wrapper";
 
 const Approuter = () => {
   return (
@@ -28,23 +28,130 @@ const Approuter = () => {
         <Route element={<Navbar />}>
           <Route path="/" element={<App />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/donor/:id" element={<Donor />} />
-          <Route path="/searchdonor" element={<SearchDonor />} />
-          <Route path="/newdonor" element={<NewDonor />} />
-          <Route path="*" element={<Page404 />} />
-          <Route path="/receiverdonations" element={<ReceiverDonations />} />
-          <Route path="/changecollector" element={<ChangeCollector />} />
-          <Route path="/checkprint" element={<CheckPrint />} />
-          <Route path="/areastoprint" element={<AreasToPrint />} />
-          <Route path="/collectorsmoviment" element={<CollectorsMoviment />} />
-          <Route path="/countdonations" element={<CountDonations />} />
-          <Route path="/createmensaldonations" element={<CreateMensalDonations />} />
-          <Route path="/donationsreceived" element={<DonationsReceived />} />
-          <Route path="/operators" element={<Operators />} />
-          <Route path="/operatorwork" element={<OperatorWork />} />
-          <Route path="/workhistory" element={<WorkHistory />} />
-          <Route path="/worklist" element={<WorkList />} />
-         
+          <Route
+            path="/searchdonor"
+            element={<Wrapper>{<SearchDonor />}</Wrapper>}
+          />
+          <Route
+            path="/donor/:id"
+            element={
+              <Wrapper>
+                <Donor />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="/newdonor"
+            element={
+              <Wrapper>
+                <NewDonor />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="*"
+            element={
+              <Wrapper>
+                <Page404 />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="/receiverdonations"
+            element={
+              <Wrapper>
+                <ReceiverDonations />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="/changecollector"
+            element={
+              <Wrapper>
+                <ChangeCollector />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="/checkprint"
+            element={
+              <Wrapper>
+                <CheckPrint />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="/areastoprint"
+            element={
+              <Wrapper>
+                <AreasToPrint />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="/collectorsmoviment"
+            element={
+              <Wrapper>
+                <CollectorsMoviment />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="/countdonations"
+            element={
+              <Wrapper>
+                <CountDonations />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="/createmensaldonations"
+            element={
+              <Wrapper>
+                <CreateMensalDonations />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="/donationsreceived"
+            element={
+              <Wrapper>
+                <DonationsReceived />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="/operators"
+            element={
+              <Wrapper>
+                <Operators />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="/operatorwork"
+            element={
+              <Wrapper>
+                <OperatorWork />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="/workhistory"
+            element={
+              <Wrapper>
+                <WorkHistory />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="/worklist"
+            element={
+              <Wrapper>
+                <WorkList />
+              </Wrapper>
+            }
+          />
         </Route>
       </Routes>
     </BrowserRouter>
