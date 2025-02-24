@@ -1,13 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { Link, Outlet } from "react-router";
+import { Link, Outlet, useNavigate } from "react-router";
 import "./navbar.css";
+
+
 import { MdOutlineLogin } from "react-icons/md";
+import { IoPersonCircleOutline } from "react-icons/io5";
+
 import { AdminMenu, Navitens, OperadorMenu, RelatórioMenu } from "../Navitens";
 import supabase from "../../../helper/superBaseClient";
 
 const Navbar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showDropdown, setShowDropdown] = useState(null);
+
+  const navigate = useNavigate();
+
+  
 
   useEffect(() => {
     const getSession = async () => {
@@ -19,7 +27,18 @@ const Navbar = () => {
     };
 
     getSession();
-  }, [isAuthenticated]);
+  }, [<Outlet/>]);
+
+  const onClickUserIcon = () => {
+    setShowDropdown("iconUser");
+  }
+
+  const sugnOut = async () => {
+    const { error } = await supabase.auth.signOut()
+    if (error) throw error
+    navigate('/')
+    setIsAuthenticated(false)
+  }
 
   return (
     <>
@@ -82,6 +101,19 @@ const Navbar = () => {
                   )}
                 </li>
               ))}
+                <div>
+                  <IoPersonCircleOutline onClick={onClickUserIcon} className="icon-user"/>
+                  
+                  {showDropdown === "iconUser" && (
+                    <ul className="dropdown-admin" title="iconUser" style={{width: "80px", minHeight: "10px"}}>
+                      <li className="nav-item" onClick={sugnOut}>
+                        Sair
+                      </li>
+                    </ul>
+                  )}
+                  
+                </div>
+                
             </ul>
           )}
         </nav>

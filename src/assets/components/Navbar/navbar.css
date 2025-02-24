@@ -90,3 +90,12 @@
     text-decoration: none;
     color: #ffffff;
 }
+
+.icon-user{
+    font-size: 36px;
+    cursor: pointer;
+
+    &:hover{
+        opacity: 0.8;
+    }
+}

@@ -93,13 +93,6 @@ const Donor = () => {
     }
   };
 
-  const DeleteDonor = async () => {
-    if (window.confirm("Tem certeza que deseja excluir o doador?")) {
-      deleteDonor(id);
-      navigate("/searchdonor");
-    }
-  }
-
   return (
     <main className="containerDonor">
       {/* Cabeçalho com botões */}
@@ -116,9 +109,7 @@ const Donor = () => {
               Criar Movimento
             </button>
           ) : (
-            <button onClick={DeleteDonor} className="btn-delete">
-              Excluir
-            </button>
+            null
           )}
         </div>
       </header>

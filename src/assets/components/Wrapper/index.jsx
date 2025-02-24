@@ -12,12 +12,16 @@ function Wrapper({ children }) {
         data: { session },
       } = await supabase.auth.getSession();
 
+      console.log({data: session});
       setIsAuthenticated(!!session);
       setLoading(false);
     };
 
     getSession();
+    console.log();
   }, []);
+
+  
 
   if (loading) {
     return <p>Loading...</p>;
@@ -27,5 +31,7 @@ function Wrapper({ children }) {
 
   return <Navigate to="/login" />;
 }
+
+
 
 export default Wrapper;
