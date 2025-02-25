@@ -20,6 +20,7 @@ import OperatorWork from "./pages/OperatorWork";
 import WorkHistory from "./pages/WorkHistory";
 import WorkList from "./pages/WorkList";
 import Wrapper from "./assets/components/Wrapper";
+import UsersManager from "./pages/UsersManager";
 
 const Approuter = () => {
   return (
@@ -149,6 +150,14 @@ const Approuter = () => {
             element={
               <Wrapper>
                 <WorkList />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="/usersmanager"
+            element={
+              <Wrapper>
+                <UsersManager />
               </Wrapper>
             }
           />
