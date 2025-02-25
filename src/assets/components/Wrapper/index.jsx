@@ -11,8 +11,6 @@ function Wrapper({ children }) {
       const {
         data: { session },
       } = await supabase.auth.getSession();
-
-      console.log({data: session});
       setIsAuthenticated(!!session);
       setLoading(false);
     };

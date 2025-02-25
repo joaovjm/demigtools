@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router";
 import "./navbar.css";
-
 
 import { MdOutlineLogin } from "react-icons/md";
 import { IoPersonCircleOutline } from "react-icons/io5";
@@ -13,40 +12,59 @@ const Navbar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showDropdown, setShowDropdown] = useState(null);
 
-  const navigate = useNavigate();
-
+  const dropdowmRef = useRef(null);
+  const [isActive, setIsActive] = useState(false);
   
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getSession = async () => {
       const {
         data: { session },
       } = await supabase.auth.getSession();
-      
+
       setIsAuthenticated(!!session);
     };
 
     getSession();
-  }, [<Outlet/>]);
+  }, [<Outlet />]);
+
+  useEffect(() => {
+    const pageClickEvent = (e) => {
+      if(dropdowmRef.current !== null && !dropdowmRef.current.contains(e.target)) {
+        setIsActive(!isActive);
+      }
+    }
+
+    if(isActive) {
+      window.addEventListener("click", pageClickEvent);
+    }
+    return() => {
+      window.removeEventListener("click", pageClickEvent);
+    }
+    
+  }, [isActive]);
 
   const onClickUserIcon = () => {
-    setShowDropdown("iconUser");
-  }
+    setIsActive(!isActive);
+  };
 
   const sugnOut = async () => {
-    const { error } = await supabase.auth.signOut()
-    if (error) throw error
-    navigate('/')
-    setIsAuthenticated(false)
-  }
+    if (window.confirm("Tem certeza que deseja sair?")) {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      navigate("/");
+      setIsAuthenticated(false);
+      setShowDropdown(null);
+    }
+  };
 
   return (
     <>
       <header>
         <nav className="nav">
-          <Link to="/">
-            logo
-          </Link>
+          <Link to="/">logo</Link>
 
           {!isAuthenticated ? (
             <Link to="/login" className="link_login">
@@ -78,15 +96,16 @@ const Navbar = () => {
 
                   {/* Dropdown Sob-menu RelatórioMenu */}
 
-                  {item.title === "Relatório" && showDropdown == "Relatório" && (
-                    <ul className="dropdown-admin">
-                      {RelatórioMenu.map((admin) => (
-                        <li key={admin.id} className={admin.cName}>
-                          <Link to={admin.path}>{admin.title}</Link>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+                  {item.title === "Relatório" &&
+                    showDropdown == "Relatório" && (
+                      <ul className="dropdown-admin">
+                        {RelatórioMenu.map((admin) => (
+                          <li key={admin.id} className={admin.cName}>
+                            <Link to={admin.path}>{admin.title}</Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
 
                   {/* Dropdown Sob-menu OperadorMenu */}
 
@@ -101,19 +120,24 @@ const Navbar = () => {
                   )}
                 </li>
               ))}
-                <div>
-                  <IoPersonCircleOutline onClick={onClickUserIcon} className="icon-user"/>
-                  
-                  {showDropdown === "iconUser" && (
-                    <ul className="dropdown-admin" title="iconUser" style={{width: "80px", minHeight: "10px"}}>
-                      <li className="nav-item" onClick={sugnOut}>
-                        Sair
-                      </li>
-                    </ul>
-                  )}
-                  
-                </div>
-                
+              <div>
+                <IoPersonCircleOutline
+                  onClick={onClickUserIcon}
+                  className="icon-user"
+                />
+
+                {isActive && (
+                  <ul
+                    className="dropdown-admin"
+                    style={{ width: "80px", minHeight: "10px" }}
+                    ref={dropdowmRef}
+                  >
+                    <li className="nav-item" onClick={sugnOut}>
+                      Sair
+                    </li>
+                  </ul>
+                )}
+              </div>
             </ul>
           )}
         </nav>
