@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { createRef, useEffect, useRef, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router";
 import "./navbar.css";
 
@@ -13,7 +13,7 @@ const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(null);
 
   const dropdowmRef = useRef(null);
-  const [isActive, setIsActive] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   
 
   const navigate = useNavigate();
@@ -30,25 +30,28 @@ const Navbar = () => {
     getSession();
   }, [<Outlet />]);
 
-  useEffect(() => {
-    const pageClickEvent = (e) => {
-      if(dropdowmRef.current !== null && !dropdowmRef.current.contains(e.target)) {
-        setIsActive(!isActive);
-      }
-    }
+  const onClickUserIcon = () => {
+    setIsOpen(!isOpen);
+    
+  };
 
-    if(isActive) {
-      window.addEventListener("click", pageClickEvent);
+  const onClickOutside = (event) => {
+    if (dropdowmRef.current && !dropdowmRef.current.contains(event.target)) {
+      setIsOpen(false);
     }
-    return() => {
-      window.removeEventListener("click", pageClickEvent);
+  }
+
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener("mousedown", onClickOutside);
+    } else {
+      document.removeEventListener("mousedown", onClickOutside);
     }
     
-  }, [isActive]);
-
-  const onClickUserIcon = () => {
-    setIsActive(!isActive);
-  };
+    return () => {
+      document.removeEventListener("mousedown", onClickOutside);
+    };
+  }, [isOpen]);
 
   const sugnOut = async () => {
     if (window.confirm("Tem certeza que deseja sair?")) {
@@ -120,17 +123,18 @@ const Navbar = () => {
                   )}
                 </li>
               ))}
-              <div>
+              <div ref={dropdowmRef} onMouseEnter={() => setShowDropdown("userIcon")}>
                 <IoPersonCircleOutline
+                  name="userIcon"
                   onClick={onClickUserIcon}
                   className="icon-user"
                 />
 
-                {isActive && (
+                {isOpen && showDropdown === "userIcon" && (
                   <ul
                     className="dropdown-admin"
                     style={{ width: "80px", minHeight: "10px" }}
-                    ref={dropdowmRef}
+                    
                   >
                     <li className="nav-item" onClick={sugnOut}>
                       Sair
