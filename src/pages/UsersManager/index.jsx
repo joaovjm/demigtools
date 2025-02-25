@@ -15,7 +15,7 @@ const UserManager = () => {
 
   return (
     <main className="container">
-      <h1>
+      <h1 className="h1">
         <BsFillPersonVcardFill />
         Gerenciador de Usuários
       </h1>
