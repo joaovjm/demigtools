@@ -7,46 +7,49 @@ import { FaMoneyCheckDollar } from "react-icons/fa6";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { searchDonor } from "../../helper/supabase";
 
-
-
 const SearchDonor = () => {
   const [selectedValue, setSelectValue] = useState("todos");
   const [buscardoador, setBuscardoador] = useState("");
   const [donor, setDonor] = useState([]);
 
   const navigate = useNavigate();
-
+  let tipo = "";
+  
   const handleChange = (event) => {
     setSelectValue(event.target.value);
+  };  
+
+  const onClickSearch = async (event) => {
+    event.preventDefault();
+    try {
+      selectedValue !== "todos" ? (tipo = selectedValue) : (tipo = "");
+      const data = await searchDonor(buscardoador, tipo);
+      setDonor(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const onClickSearch = (event) => {
-    event.preventDefault();
-    searchDonor(buscardoador).then((data) => {
-      setDonor(data);
-      
-    });
-  }
-
-  const onClickDonor = (id) => {    
+  const onClickDonor = (id) => {
     navigate(`/donor/${id}`);
-  }
-    
+  };
 
   return (
-    
     <main className="containersearch">
       <form className="formsearch">
         <div className="search">
           <label className="label">Buscar Doador</label>
-          <input 
+          <input
             type="text"
             name="buscardoador"
             value={buscardoador}
-            onChange={(e) => setBuscardoador(e.target.value)} />
+            onChange={(e) => setBuscardoador(e.target.value)}
+          />
         </div>
         <div className="type">
-          <label htmlFor="dropdown" className="label">Tipo</label>
+          <label htmlFor="dropdown" className="label">
+            Tipo
+          </label>
           <select id="dropdown" value={selectedValue} onChange={handleChange}>
             <option value="todos">Todos</option>
             <option value="avulso">Avulso</option>
@@ -55,27 +58,37 @@ const SearchDonor = () => {
           </select>
         </div>
 
-        <button className="btnsearch" onClick={onClickSearch}><PiMagnifyingGlassBold /> buscar</button>
+        <button className="btnsearch" onClick={onClickSearch}>
+          <PiMagnifyingGlassBold /> buscar
+        </button>
       </form>
-      
-      <div className='Carddiv'>
-        {donor.map((donors) => (
-            <form key={donors.telefone_1} className='Cardform' onClick={() => onClickDonor(donors.telefone_1)}>
+
+      <div className="Carddiv">
+        {donor
+          ? donor.map((donors) => (
+              <form
+                key={donors.telefone_1}
+                className="Cardform"
+                onClick={() => onClickDonor(donors.telefone_1)}
+              >
                 <header>
-                    <h3><FaMoneyCheckDollar /> {donors.nome}</h3>
+                  <h3>
+                    <FaMoneyCheckDollar /> {donors.nome}
+                  </h3>
                 </header>
-                <div className='Cardinfo'>
-                    <p>End.: {donors.endereco}</p>
-                    <p>Tel.: {donors.telefone_1}</p>
-                    <p>Bairro: {donors.bairro}</p>
-                    <p>Tipo: {donors.tipo}</p>
+                <div className="Cardinfo">
+                  <p>End.: {donors.endereco}</p>
+                  <p>Tel.: {donors.telefone_1}</p>
+                  <p>Bairro: {donors.bairro}</p>
+                  <p>Tipo: {donors.tipo}</p>
                 </div>
-            </form>
-        ))}
+              </form>
+            ))
+          : "Nenhum"}
+
         <div className="iconadd" onClick={() => navigate("/newdonor")}>
-          <IoMdAddCircleOutline/>
+          <IoMdAddCircleOutline />
         </div>
-        
       </div>
     </main>
   );
