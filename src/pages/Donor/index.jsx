@@ -1,7 +1,9 @@
 import "./index.css";
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
+
 import { FaMoneyCheckDollar } from "react-icons/fa6";
-import { useState } from "react";
+import { IoMdArrowRoundBack } from "react-icons/io";
+
 import TableDonor from "../../assets/components/TableDonor";
 import { useParams } from "react-router";
 import { editDonor, getInfoDonor } from "../../helper/supabase";
@@ -60,6 +62,11 @@ const Donor = () => {
   const EditDonor = async () => {
     if (btnedit === "Salvar") {
       try {
+        if(tipo !== "Mensal"){
+          setDia(null);
+          setMensalidade(null);
+          setMedia(null);
+        }
         editDonor(
           nome,
           tipo,
@@ -91,6 +98,10 @@ const Donor = () => {
     }
   };
 
+  const handleBack = () => {
+    window.history.back();
+  };
+
   return (
     <main className="containerDonor">
       {/* Cabeçalho com botões */}
@@ -98,6 +109,7 @@ const Donor = () => {
         <h2>
           <FaMoneyCheckDollar /> Doador
         </h2>
+        <button onClick={handleBack} className="btn-back"><IoMdArrowRoundBack /> Voltar</button>
         <div className="btns">
           <button onClick={EditDonor} className="btn-edit">
             {btnedit}
