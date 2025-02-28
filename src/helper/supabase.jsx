@@ -115,3 +115,11 @@ export const getInfoDonor = async (id) => {
     .eq("telefone_1", id);
   return data;
 };
+
+export const getDonations = async (idDonor) => {
+  const {data, error} = await supabase
+  .from("donations")
+  .select()
+  .eq("foreign_key", idDonor)
+  return data
+}

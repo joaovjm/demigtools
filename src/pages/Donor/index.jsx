@@ -22,7 +22,7 @@ const Donor = () => {
   const [mensalidade, setMensalidade] = useState(null);
   const [media, setMedia] = useState(null);
   const [observacao, setObservacao] = useState(null);
-
+  const [idDonor, setIdDonor] = useState(null);
   const [edit, setEdit] = useState(true);
   const [btnedit, setBtnedit] = useState("Editar");
   const [showbtn, setShowbtn] = useState(true);
@@ -35,6 +35,7 @@ const Donor = () => {
 
   useEffect(() => {
     getInfoDonor(id).then((data) => {
+      setIdDonor(data[0].id);
       setNome(data[0].nome);
       setCpf(data[0].cpf);
       setEndereco(data[0].endereco);
@@ -61,12 +62,7 @@ const Donor = () => {
   // Responsável por editar e salvar as informações do doador
   const EditDonor = async () => {
     if (btnedit === "Salvar") {
-      try {
-        if(tipo !== "Mensal"){
-          setDia(null);
-          setMensalidade(null);
-          setMedia(null);
-        }
+      try {        
         editDonor(
           nome,
           tipo,
@@ -270,7 +266,9 @@ const Donor = () => {
           />
         </div>
       </form>
-      {showbtn ? <TableDonor /> : null}
+      {showbtn ? 
+        <TableDonor idDonor={idDonor}/> 
+      : null}
     </main>
   );
 };
