@@ -3,8 +3,8 @@ import React, { useEffect } from "react";
 import { FaMoneyCheckDollar } from "react-icons/fa6";
 import { useState } from "react";
 import TableDonor from "../../assets/components/TableDonor";
-import { useNavigate, useParams } from "react-router";
-import { deleteDonor, editDonor, searchDonor } from "../../helper/supabase";
+import { useParams } from "react-router";
+import { editDonor, getInfoDonor } from "../../helper/supabase";
 
 const Donor = () => {
   const [nome, setNome] = useState(null);
@@ -31,10 +31,8 @@ const Donor = () => {
   const params = {};
   if (id) params.telefone1 = id;
 
-  const navigate = useNavigate();
-
   useEffect(() => {
-    searchDonor(id).then((data) => {
+    getInfoDonor(id).then((data) => {
       setNome(data[0].nome);
       setCpf(data[0].cpf);
       setEndereco(data[0].endereco);
