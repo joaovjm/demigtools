@@ -107,3 +107,11 @@ export const deleteDonor = async (id) => {
   console.log(id);
   const response = await supabase.from("donor").delete().eq("telefone_1", id);
 };
+
+export const getInfoDonor = async (id) => {
+  const { data, error } = await supabase
+    .from("donor")
+    .select()
+    .eq("telefone_1", id);
+  return data;
+};
