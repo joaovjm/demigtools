@@ -1,28 +1,44 @@
 .tabledonor{
-    background-color: #1F1D1D;
+    background-color: #000000;
     border: none;
     border-radius: 6px;
-    padding: 6px 6px;
-    
-    tr{
+    padding: 4px 4px;
+    font-size: 13px;
+    .trHead, .trBody{
         text-align: center;
 
         
-        td, th{
-            height: 50px;
+        .tableHead, .tableBody{
+            height: 40px;
             border: none;
             
         }
 
-        td{
-            background-color: #363A3D;
+        .tableBody{
+            background-color: #1F1D1D;
             box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            
+            
         }
 
-        th{
+        .tableHead{
             background-color: #000000;
         }
     }
+    .trBody{
+        cursor: pointer;
+        &:hover{
+            opacity: 0.5;
+        }
+    }
+}
+
+.obs{
+    font-size: 9px;
+    font-weight: 600;
+    background-color: #000000;
+    border: none;
+    padding-left: 10px;
 }
 
 @media (min-width:700px){
