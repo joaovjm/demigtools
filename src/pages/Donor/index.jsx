@@ -26,34 +26,34 @@ const Donor = () => {
   const [edit, setEdit] = useState(true);
   const [btnedit, setBtnedit] = useState("Editar");
   const [showbtn, setShowbtn] = useState(true);
+  const [modalShow, setModalShow] = useState(false);
 
 
 
   const { id } = useParams();
   const params = {};
-  if (id) params.telefone1 = id;
-
+  if (id) params.id = id;
   useEffect(() => {
     getInfoDonor(id).then((data) => {
-      setIdDonor(data[0].id);
-      setNome(data[0].nome);
+      setIdDonor(params.id);
+      setNome(data[0].nome_doador);
       setCpf(data[0].cpf);
       setEndereco(data[0].endereco);
       setCidade(data[0].cidade);
       setBairro(data[0].bairro);
-      setTelefone1(data[0].telefone_1);
-      setTelefone2(data[0].telefone_2);
-      setTelefone3(data[0].telefone_3);
+      setTelefone1(data[0].telefone1);
+      setTelefone2(data[0].telefone2);
+      setTelefone3(data[0].telefone3);
       setDia(data[0].dia);
-      setMensalidade(data[0].mensalidade);
+      setMensalidade(data[0].valor);
       setMedia(data[0].media);
       setObservacao(data[0].observacao);
 
-      if (data[0].tipo === "Avulso") {
+      if (data[0].tipo_doador_descricao === "Avulso") {
         setTipo("Avulso");
-      } else if (data[0].tipo === "Mensal") {
+      } else if (data[0].tipo_doador_descricao === "Mensal") {
         setTipo("Mensal");
-      } else if (data[0].tipo === "Lista") {
+      } else if (data[0].tipo_doador_descricao === "Lista") {
         setTipo("Lista");
       }
     });
@@ -97,7 +97,7 @@ const Donor = () => {
   const handleBack = () => {
     window.history.back();
   };
-
+  //console.log(modalShow)
   return (
     <main className="containerDonor">
       {/* Cabeçalho com botões */}
@@ -111,7 +111,7 @@ const Donor = () => {
             {btnedit}
           </button>
           {showbtn ? (
-            <button type="submit" className="btn-add">
+            <button onClick={() => setModalShow(true)} type="submit" className="btn-add">
               Criar Movimento
             </button>
           ) : (
@@ -227,6 +227,7 @@ const Donor = () => {
             defaultValue={dia}
             onChange={(e) => setDia(e.target.value)}
             disabled={tipo === "Mensal" ? false : true}
+            readOnly={edit}
           />
         </div>
 

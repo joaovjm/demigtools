@@ -67,20 +67,20 @@ const SearchDonor = () => {
         {donor
           ? donor.map((donors) => (
               <form
-                key={donors.telefone_1}
+                key={donors.id_doador}
                 className="Cardform"
-                onClick={() => onClickDonor(donors.telefone_1)}
+                onClick={() => onClickDonor(donors.id_doador)}
               >
                 <header>
                   <h3>
-                    <FaMoneyCheckDollar /> {donors.nome}
+                    <FaMoneyCheckDollar /> {donors.nome_doador}
                   </h3>
                 </header>
                 <div className="Cardinfo">
                   <p>End.: {donors.endereco}</p>
-                  <p>Tel.: {donors.telefone_1}</p>
+                  <p>Tel.: {donors.telefone1}</p>
                   <p>Bairro: {donors.bairro}</p>
-                  <p>Tipo: {donors.tipo}</p>
+                  <p>Tipo: {donors.tipo_doador_descricao}</p>
                 </div>
               </form>
             ))
