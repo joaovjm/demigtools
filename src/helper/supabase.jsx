@@ -77,23 +77,23 @@ export const editDonor = async (
     .eq("telefone_1", telefone1);
 };
 
-export const searchDonor = async (params, tipo) => {
+export const searchDonor = async (params, tipo_doador_descricao) => {
   try {
     let column = "";
     if (params) {
       if (/^\d{11}$/.test(params)) {
         column = "cpf";
-      } else if (/^9\d{7,}$/.test(params)) {
-        column = "telefone_1";
+      } else if (/^\d{1,9}$/.test(params)) {
+        column = "telefone1";
       } else {
-        column = "nome";
+        column = "nome_doador";
       }
     }
     const { data, error } = await supabase
-      .from("donor")
+      .from("doador")
       .select()
       .ilike(column, `${params}`)
-      .ilike("tipo", `%${tipo}%`);
+      .ilike("tipo_doador_descricao", `%${tipo_doador_descricao}%`);
       
       
     return data;
@@ -110,16 +110,17 @@ export const deleteDonor = async (id) => {
 
 export const getInfoDonor = async (id) => {
   const { data, error } = await supabase
-    .from("donor")
+    .from("doador")
     .select()
-    .eq("telefone_1", id);
+    .eq("id_doador", id);
   return data;
 };
 
 export const getDonations = async (idDonor) => {
   const {data, error} = await supabase
-  .from("donations")
+  .from("doação")
   .select()
-  .eq("foreign_key", idDonor)
+  .eq("id_doacao_doador", idDonor)
+  console.log(data)
   return data
 }
