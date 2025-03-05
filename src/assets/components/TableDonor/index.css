@@ -1,8 +1,16 @@
+.table-container{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    overflow-x: auto;
+}
+
 .tabledonor{
     background-color: #000000;
     border: none;
     border-radius: 6px;
     padding: 4px 4px;
+    min-width: 1134px;
     font-size: 13px;
     .trHead, .trBody{
         text-align: center;
@@ -34,7 +42,7 @@
 }
 
 .obs{
-    font-size: 9px;
+    font-size: 6px;
     font-weight: 600;
     background-color: #000000;
     border: none;
@@ -42,12 +50,18 @@
 }
 
 @media (min-width:700px){
+    .obs{
+        font-size: 6px;
+    }
     .tabledonor{
         width: 824px;
     }
 }
 
 @media (min-width:1200px){
+    .obs{
+        font-size: 9px;
+    }
     .tabledonor{
         width: 1134px;
     }
