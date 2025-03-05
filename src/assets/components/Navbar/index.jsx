@@ -88,7 +88,7 @@ const Navbar = () => {
                   {/* Dropdown Sob-menu AdminMenu */}
 
                   {item.title === "Admin" && showDropdown === "Admin" && (
-                    <ul className="dropdown-admin">
+                    <ul className="dropdown-admin" onClick={() => setShowDropdown(null)}>
                       {AdminMenu.map((admin) => (
                         <li key={admin.id} className={admin.cName}>
                           <Link to={admin.path}>{admin.title}</Link>
@@ -101,7 +101,7 @@ const Navbar = () => {
 
                   {item.title === "Relatório" &&
                     showDropdown == "Relatório" && (
-                      <ul className="dropdown-admin">
+                      <ul className="dropdown-admin" onClick={() => setShowDropdown(null)}>
                         {RelatórioMenu.map((admin) => (
                           <li key={admin.id} className={admin.cName}>
                             <Link to={admin.path}>{admin.title}</Link>
@@ -113,7 +113,7 @@ const Navbar = () => {
                   {/* Dropdown Sob-menu OperadorMenu */}
 
                   {item.title === "Operador" && showDropdown === "Operador" && (
-                    <ul className="dropdown-admin">
+                    <ul className="dropdown-admin" onClick={() => setShowDropdown(null)}>
                       {OperadorMenu.map((admin) => (
                         <li key={admin.id} className={admin.cName}>
                           <Link to={admin.path}>{admin.title}</Link>
