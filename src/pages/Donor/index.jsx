@@ -47,7 +47,7 @@ const Donor = () => {
       setDia(data[0].dia);
       setMensalidade(data[0].valor);
       setMedia(data[0].media);
-      setObservacao(data[0].observacao);
+      setObservacao(data[0].obs_doador);
 
       if (data[0].tipo_doador_descricao === "Avulso") {
         setTipo("Avulso");
