@@ -16,7 +16,6 @@ function Wrapper({ children }) {
     };
 
     getSession();
-    console.log();
   }, []);
 
   
