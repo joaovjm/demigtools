@@ -36,7 +36,7 @@ const SearchDonor = () => {
 
   return (
     <main className="containersearch">
-      <form className="formsearch">
+      <form onSubmit={onClickSearch} className="formsearch">
         <div className="search">
           <label className="label">Buscar Doador</label>
           <input
@@ -58,7 +58,7 @@ const SearchDonor = () => {
           </select>
         </div>
 
-        <button className="btnsearch" onClick={onClickSearch}>
+        <button className="btnsearch" type="submit">
           <PiMagnifyingGlassBold /> buscar
         </button>
       </form>
