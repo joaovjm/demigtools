@@ -1,14 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './login.css'
 import { FaEye, FaEyeSlash, FaRegUser } from "react-icons/fa";
 import supabase from "../../helper/superBaseClient";
-import { useNavigate } from "react-router";
+import { Navigate, useNavigate } from "react-router";
 
 
 const Login = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [isSession, setIsSession] = useState(null);
+  useEffect(() => {
+    const getSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      setIsSession(session);
+    };
+
+    getSession();
+  }, []);
 
   const navigate = useNavigate();
   
@@ -29,7 +40,7 @@ const Login = () => {
     }
 
     if (data) {
-      navigate("/Dashboard");
+      navigate("/dashboard");
       return null;
     }
 
@@ -39,7 +50,11 @@ const Login = () => {
   }
 
   return (
-    <main className="page_container">
+    <>
+    {isSession ? (
+      <Navigate to="/dashboard" />
+    ) : (
+      <main className="page_container">
       <div className="login_container">
         <div className="header_login">
           <h1 className="login_name">Login</h1>
@@ -97,6 +112,9 @@ const Login = () => {
         
       </div>
     </main>
+    )}
+    </>
+    
   );
 };
 
