@@ -41,38 +41,38 @@ const TableDonor = ({ idDonor }) => {
 
         {dados?.map((item) => (
           <tbody>
-            <tr className="trBody" key={item.recibo}>
-              <td data-label="Recibo" className="tableBody">
+            <tr className="trBody" key={item.id}>
+              <td className="tableBody">
                 {item.recibo}
               </td>
-              <td data-label="Operador" className="tableBody">
+              <td className="tableBody">
                 {item.operador}
               </td>
-              <td data-label="Valor" className="tableBody">
+              <td className="tableBody">
                 {item.valor}
               </td>
-              <td data-label="Comissão" className="tableBody">
+              <td className="tableBody">
                 {item.comissao}
               </td>
-              <td data-label="Contato" className="tableBody">
+              <td className="tableBody">
                 {item.data_contato}
               </td>
-              <td data-label="Receber" className="tableBody">
+              <td className="tableBody">
                 {item.receber}
               </td>
-              <td data-label="Recebida" className="tableBody">
+              <td className="tableBody">
                 {item.data_recebida}
               </td>
-              <td data-label="Impresso" className="tableBody">
+              <td className="tableBody">
                 {item.impresso}
               </td>
-              <td data-label="Recebido" className="tableBody">
+              <td className="tableBody">
                 {item.recebido}
               </td>
-              <td data-label="MesRef" className="tableBody">
-                {item.mesref}
+              <td className="tableBody">
+                {item.mes_ref}
               </td>
-              <td data-label="Coletador" className="tableBody">
+              <td className="tableBody">
                 {item.coletador}
               </td>
             </tr>
