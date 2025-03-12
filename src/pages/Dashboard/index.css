@@ -1,0 +1,89 @@
+.mainDashboard{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
+    padding: 4px;
+}
+
+.sectionHeader{
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    gap: 20px;
+}
+
+.divCard{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100px;
+    width: 220px;
+    background-color: #1F1D1D;
+    border-radius: 6px;
+    border: none;
+    padding: 20px;
+    cursor: pointer;
+
+    &:hover{
+        background-color: #2F2D2D;
+        transition: 0.3s;
+    }
+    
+}
+
+.divHeader{
+    display: flex;
+}
+
+.h3Header{
+    font-size: 14px;
+    font-weight: 800;
+    color: #FAF5E9;
+}
+
+.divBody{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;    
+}
+
+p{
+    font-size: 14px;
+    font-weight: 600;
+    color: #FAF5E9;
+}
+
+.sectionGrafico{
+    display: flex;
+    background-color: #1F1D1D;
+    padding: 10px;
+    border-radius: 6px;
+    min-width: 720px;
+    height: 50vh;
+    gap: 20px;
+}
+.cardGrafico{
+    display: flex;
+    flex-direction: column;
+    min-width: 500px;
+    margin: 4px;
+    padding: 4px;
+    gap: 10px;
+    
+    & .divHeaderGrafico{
+        display: flex;
+    }
+
+    & .h3HeaderGrafico{
+        font-size: 14px;
+        font-weight: 800;
+        color: #FAF5E9;
+    }
+}
+
+.divGrafico{
+    background-color: #2F2D2D;
+    border-radius: 6px;
+    border: none;
+}
