@@ -21,7 +21,6 @@ import WorkHistory from "./pages/WorkHistory";
 import WorkList from "./pages/WorkList";
 import Wrapper from "./assets/components/Wrapper";
 import UsersManager from "./pages/UsersManager";
-import ModalDonation from "./assets/components/ModalDonation";
 import Dashboard from "./pages/Dashboard";
 
 const Approuter = () => {
@@ -161,14 +160,6 @@ const Approuter = () => {
             element={
               <Wrapper>
                 <UsersManager />
-              </Wrapper>
-            }
-          />
-          <Route
-            path="/modaldonation"
-            element={
-              <Wrapper>
-                <ModalDonation />
               </Wrapper>
             }
           />
