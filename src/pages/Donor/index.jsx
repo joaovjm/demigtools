@@ -7,6 +7,8 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import TableDonor from "../../assets/components/TableDonor";
 import { useParams } from "react-router";
 import { editDonor, getInfoDonor } from "../../helper/supabase";
+import ModalDonation from "../../assets/components/ModalDonation";
+
 
 const Donor = () => {
   const [nome, setNome] = useState(null);
@@ -27,8 +29,6 @@ const Donor = () => {
   const [btnedit, setBtnedit] = useState("Editar");
   const [showbtn, setShowbtn] = useState(true);
   const [modalShow, setModalShow] = useState(false);
-
-
 
   const { id } = useParams();
   const params = {};
@@ -62,7 +62,7 @@ const Donor = () => {
   // Responsável por editar e salvar as informações do doador
   const EditDonor = async () => {
     if (btnedit === "Salvar") {
-      try {        
+      try {
         editDonor(
           nome,
           tipo,
@@ -105,18 +105,22 @@ const Donor = () => {
         <h2>
           <FaMoneyCheckDollar /> Doador
         </h2>
-        <button onClick={handleBack} className="btn-back"><IoMdArrowRoundBack /> Voltar</button>
+        <button onClick={handleBack} className="btn-back">
+          <IoMdArrowRoundBack /> Voltar
+        </button>
         <div className="btns">
           <button onClick={EditDonor} className="btn-edit">
             {btnedit}
           </button>
           {showbtn ? (
-            <button onClick={() => setModalShow(true)} type="submit" className="btn-add">
+            <button
+              onClick={() => setModalShow(true)}
+              type="submit"
+              className="btn-add"
+            >
               Criar Movimento
             </button>
-          ) : (
-            null
-          )}
+          ) : null}
         </div>
       </header>
 
@@ -267,9 +271,17 @@ const Donor = () => {
           />
         </div>
       </form>
-      {showbtn ? 
-        <TableDonor idDonor={idDonor}/> 
-      : null}
+      {showbtn ? <TableDonor idDonor={idDonor} /> : null}
+
+      {modalShow && (
+        <ModalDonation
+          modalShow={modalShow}
+          setModalShow={setModalShow}
+          mensalidade={mensalidade}
+          tipo={tipo}
+          idDonor={idDonor}
+        />
+      )}
     </main>
   );
 };
