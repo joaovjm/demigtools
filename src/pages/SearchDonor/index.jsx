@@ -6,11 +6,12 @@ import { PiMagnifyingGlassBold } from "react-icons/pi";
 import { FaMoneyCheckDollar } from "react-icons/fa6";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { searchDonor } from "../../helper/supabase";
-
+import Loader from "../../assets/components/Loader";
 const SearchDonor = () => {
   const [selectedValue, setSelectValue] = useState("todos");
   const [buscardoador, setBuscardoador] = useState("");
   const [donor, setDonor] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   let tipo = "";
@@ -22,9 +23,11 @@ const SearchDonor = () => {
   const onClickSearch = async (event) => {
     event.preventDefault();
     try {
+      setLoading(true);
       selectedValue !== "todos" ? (tipo = selectedValue) : (tipo = "");
       const data = await searchDonor(buscardoador, tipo);
       setDonor(data);
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -59,7 +62,7 @@ const SearchDonor = () => {
         </div>
 
         <button className="btnsearch" type="submit">
-          <PiMagnifyingGlassBold /> buscar
+          {loading ? <Loader className="loadersearch"/> : <PiMagnifyingGlassBold />} Buscar
         </button>
       </form>
 
