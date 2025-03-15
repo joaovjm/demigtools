@@ -1,4 +1,83 @@
-div{
-    
-    
+.receiver-donations-main{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    padding: 10px;
+    gap: 10px;
+}
+
+.receiver-donations-header{
+    display: flex;
+    align-items: center;
+    width: 1134px;
+    border-radius: 10px;
+}
+
+.receiver-donations-header-title-text{
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    gap: 6px;
+}
+
+.receiver-donations-form{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    background-color: #1F1D1D;
+    width: 1134px;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.receiver-donations-form-input{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    & select{
+        width: 220px;
+        text-align: start;
+    }
+}
+
+.receiver-donations-form-message{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1134px;
+    height: 30px;
+    border-radius: 6px;
+
+    & .receiver-donations-form-message-text{
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+}
+
+.receiver-donations-table{
+    width: 1134px;
+    border-radius: 10px;
+}
+
+.receiver-donations-table-header{
+    & th{
+        background-color: black;
+        border-radius: 6px;
+        text-align: start;
+        padding: 0 10px;
+    }
+}
+
+.receiver-donations-table-body{
+    & td{
+        background-color: #1F1D1D;
+        border-radius: 6px;
+        text-align: start;
+        padding: 0 10px;
+    }
 }
