@@ -3,13 +3,14 @@ import './login.css'
 import { FaEye, FaEyeSlash, FaRegUser } from "react-icons/fa";
 import supabase from "../../helper/superBaseClient";
 import { Navigate, useNavigate } from "react-router";
-
+import Loader from "../../assets/components/Loader";
 
 const Login = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isSession, setIsSession] = useState(null);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const getSession = async () => {
       const {
@@ -29,6 +30,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const {data, error} = await supabase.auth.signInWithPassword({
       email: username,
       password: password
@@ -46,7 +48,7 @@ const Login = () => {
 
     setUsername("");
     setPassword("");
-    
+    setLoading(false);
   }
 
   return (
@@ -105,7 +107,7 @@ const Login = () => {
               className="btn_design"
               type="submit"
               >
-              Entrar
+              {loading ? <Loader/> : "Entrar"}
             </button>          
           </div>
         </form>    

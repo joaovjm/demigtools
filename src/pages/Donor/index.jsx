@@ -8,7 +8,7 @@ import TableDonor from "../../assets/components/TableDonor";
 import { useParams } from "react-router";
 import { editDonor, getInfoDonor } from "../../helper/supabase";
 import ModalDonation from "../../assets/components/ModalDonation";
-
+import Loader from "../../assets/components/Loader";
 
 const Donor = () => {
   const [nome, setNome] = useState(null);
@@ -29,7 +29,7 @@ const Donor = () => {
   const [btnedit, setBtnedit] = useState("Editar");
   const [showbtn, setShowbtn] = useState(true);
   const [modalShow, setModalShow] = useState(false);
-
+  const [loading, setLoading] = useState(false);
   const { id } = useParams();
   const params = {};
   if (id) params.id = id;
@@ -61,6 +61,8 @@ const Donor = () => {
 
   // Responsável por editar e salvar as informações do doador
   const EditDonor = async () => {
+    setLoading(true);
+    setBtnedit(<Loader/>);
     if (btnedit === "Salvar") {
       try {
         editDonor(
@@ -87,6 +89,7 @@ const Donor = () => {
       setEdit(true);
       setBtnedit("Editar");
       setShowbtn(true);
+      setLoading(false);
     } else {
       setEdit(!edit);
       setBtnedit("Salvar");
