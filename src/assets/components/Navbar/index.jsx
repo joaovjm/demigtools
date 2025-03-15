@@ -1,7 +1,7 @@
 import React, { createRef, useEffect, useRef, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router";
 import "./navbar.css";
-
+import Loader from "../Loader";
 import { MdOutlineLogin } from "react-icons/md";
 import { IoPersonCircleOutline } from "react-icons/io5";
 
@@ -11,7 +11,7 @@ import supabase from "../../../helper/superBaseClient";
 const Navbar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showDropdown, setShowDropdown] = useState(null);
-
+  const [loading, setLoading] = useState(false);
   const dropdowmRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   
@@ -55,11 +55,13 @@ const Navbar = () => {
 
   const sugnOut = async () => {
     if (window.confirm("Tem certeza que deseja sair?")) {
+      setLoading(true);
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
       navigate("/");
       setIsAuthenticated(false);
       setShowDropdown(null);
+      setLoading(false);
     }
   };
 
@@ -67,7 +69,11 @@ const Navbar = () => {
     <>
       <header>
         <nav className="nav">
-          <Link to="/">logo</Link>
+          {isAuthenticated ? (
+            <Link to="/dashboard">logo</Link>
+          ) : (
+            <Link to="/">logo</Link>
+          )}
 
           {!isAuthenticated ? (
             <Link to="/login" className="link_login">
@@ -137,7 +143,7 @@ const Navbar = () => {
                     
                   >
                     <li className="nav-item" onClick={sugnOut}>
-                      Sair
+                      {loading ? <Loader/> : "Sair"}
                     </li>
                   </ul>
                 )}
