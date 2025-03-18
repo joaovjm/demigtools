@@ -69,7 +69,7 @@ const SearchDonor = () => {
       <div className="Carddiv">
         {donor
           ? donor.map((donors) => (
-              <form
+              <div
                 key={donors.id_doador}
                 className="Cardform"
                 onClick={() => onClickDonor(donors.id_doador)}
@@ -85,9 +85,9 @@ const SearchDonor = () => {
                   <p>Bairro: {donors.bairro}</p>
                   <p>Tipo: {donors.tipo_doador_descricao}</p>
                 </div>
-              </form>
+              </div>
             ))
-          : "Nenhum"}
+          : "Nenhum doador encontrado"}
 
         <div className="iconadd" onClick={() => navigate("/newdonor")}>
           <IoMdAddCircleOutline />
