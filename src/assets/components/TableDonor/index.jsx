@@ -58,7 +58,7 @@ const TableDonor = ({ idDonor }) => {
                 {item.data_contato}
               </td>
               <td className="tableBody">
-                {item.receber}
+                {item.data_receber}
               </td>
               <td className="tableBody">
                 {item.data_recebida}
