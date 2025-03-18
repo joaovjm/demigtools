@@ -14,7 +14,6 @@ const ChangeCollector = () => {
   const [search, setSearch] = useState('')
   const [message, setMessage] = useState('')
 
-  const [oudCollector, setOudCollector] = useState('Jozinei Venancio')
 
   const handleSearch = (e) => {
     e.preventDefault()
@@ -29,7 +28,6 @@ const ChangeCollector = () => {
       setMessage('')
     }, 1000)
     return () => clearTimeout(messageTimeOut)
-    console.log(searchCollector)
   }
 
   return (
