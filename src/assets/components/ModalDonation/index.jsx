@@ -7,8 +7,14 @@ import { insertDonation } from "../../../helper/supabase";
 const ModalDonation = ({ modalShow, setModalShow, mensalidade, tipo, idDonor }) => {
   const [comissao, setComissao] = useState("");
   const [valor, setValor] = useState("");
-  const [data, setData] = useState("");
+  const [data_receber, setData_receber] = useState("");
   const [descricao, setDescricao] = useState("");
+
+  const calendar = new Date();
+  const day = calendar.getDate();
+  const month = calendar.getMonth();
+  const year = calendar.getFullYear();
+  const data = `${day}/${month}/${year}`;
 
   useEffect(() => {
     if (mensalidade && comissao == "") {
@@ -20,7 +26,7 @@ const ModalDonation = ({ modalShow, setModalShow, mensalidade, tipo, idDonor }) 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    insertDonation(valor, data, descricao, idDonor);
+    insertDonation(valor, data, descricao, idDonor, comissao, data_receber);
   }
 
   return (
@@ -70,8 +76,8 @@ const ModalDonation = ({ modalShow, setModalShow, mensalidade, tipo, idDonor }) 
             <input
               type="date"
               placeholder="dd/mm/yyyy"
-              value={data}
-              onChange={(e) => setData(e.target.value)}
+              value={data_receber}
+              onChange={(e) => setData_receber(e.target.value)}
             />
           </div>
 
