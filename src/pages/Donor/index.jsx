@@ -7,7 +7,7 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 //import TableDonor from "../../assets/components/TableDonor";
 import { useParams } from "react-router";
 import { editDonor } from "../../helper/Edit";
-import { getInfoDonor } from "../../helper/Get";
+import { getInfoDonor } from "../../helper/getDonor";
 import ModalDonation from "../../assets/components/ModalDonation";
 import Loader from "../../assets/components/Loader";
 
@@ -30,7 +30,7 @@ const Donor = () => {
   const [btnedit, setBtnedit] = useState("Editar");
   const [showbtn, setShowbtn] = useState(true);
   const [modalShow, setModalShow] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [referencia, setReferencia] = useState("")
 
   const { id } = useParams();
   const params = {};
@@ -44,10 +44,41 @@ const Donor = () => {
       setBairro(data[0].donor_neighborhood);
       setTelefone1(data[0].donor_tel_1);
 
-      setCpf(data[0].donor_cpf[0].donor_cpf);
-      setTelefone2(data[0].donor_tel_2[0].donor_tel_2);
-      setTelefone3(data[0].donor_tel_3[0].donor_tel_3);
-      setObservacao(data[0].donor_observation[0].donor_observation);
+      try{
+        setCpf(data[0].donor_cpf[0].donor_cpf);
+      } catch {
+        setCpf("")
+      }
+
+      try{
+        setTelefone2(data[0].donor_tel_2[0].donor_tel_2);
+      } catch {
+        setTelefone2("")
+      }
+
+      try{
+        setTelefone3(data[0].donor_tel_3[0].donor_tel_3);
+      } catch {
+        setTelefone3("")
+      }
+
+      try{
+        setObservacao(data[0].donor_observation[0].donor_observation);
+      } catch {
+        setObservacao("")
+      }
+
+      try{
+        setReferencia(data[0].donor_reference[0].donor_reference)
+      }catch {
+        setReferencia("")
+      }
+
+      console.log(referencia)
+      
+      
+      
+      
       //setDia(data[0].dia);
       //setMensalidade(data[0].valor);
       //setMedia(data[0].media);
@@ -272,6 +303,18 @@ const Donor = () => {
           <textarea
             defaultValue={observacao}
             onChange={(e) => setObservacao(e.target.value)}
+            readOnly={edit}
+          />
+        </div>
+
+        <div className="div-inputs" id="referencia">
+          <label className="label" style={{ width: "100px" }}>
+            Referência
+          </label>
+          {/* <input className="inputObservation" type="text"/> */}
+          <textarea
+            value={referencia}
+            onChange={(e) => setReferencia(e.target.value)}
             readOnly={edit}
           />
         </div>

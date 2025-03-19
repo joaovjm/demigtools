@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaMoneyCheckDollar } from "react-icons/fa6";
 import { useNavigate } from "react-router";
-import { insertDonor, insertDonor_cpf, insertDonor_observation, insertDonor_tel_2, insertDonor_tel_3 } from "../../helper/Insert";
+import { insertDonor, insertDonor_cpf, insertDonor_observation, insertDonor_reference, insertDonor_tel_2, insertDonor_tel_3 } from "../../helper/insertDonor";
 
 const index = () => {
   const [nome, setNome] = useState("");
@@ -17,6 +17,7 @@ const index = () => {
   const [mensalidade, setMensalidade] = useState();
   const [media, setMedia] = useState();
   const [observacao, setObservacao] = useState("");
+  const [referencia, setReferencia] = useState("");
 
   const navigate = useNavigate();
 
@@ -48,9 +49,10 @@ const index = () => {
       }
       if (observacao !== ""){
         insertDonor_observation(data[0].donor_id, observacao)
-        console.log(data[0].donor_id, observacao)
       }
-      
+      if (referencia !== ""){
+        insertDonor_reference(data[0].donor_id, referencia)
+      }
       navigate("/donor/" + data[0].donor_id);
     } catch (error) { 
       window.alert("Erro ao criar doador: ", error);
@@ -206,10 +208,19 @@ const index = () => {
           <label className="label" style={{ width: "100px" }}>
             Observação
           </label>
-          {/* <input className="inputObservation" type="text"/> */}
           <textarea
             value={observacao}
             onChange={(e) => setObservacao(e.target.value)}
+          />
+        </div>
+
+        <div className="div-inputs" id="referencia">
+          <label className="label" style={{ width: "100px" }}>
+            Referência
+          </label>
+          <textarea
+            value={referencia}
+            onChange={(e) => setReferencia(e.target.value)}
           />
         </div>
       </form>
