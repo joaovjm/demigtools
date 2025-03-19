@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./index.css";
 
 import { FaDollarSign } from "react-icons/fa";
-import { insertDonation } from "../../../helper/supabase";
+import { insertDonation } from "../../../helper/insertDonation";
 
 const ModalDonation = ({ modalShow, setModalShow, mensalidade, tipo, idDonor }) => {
   const [comissao, setComissao] = useState("");

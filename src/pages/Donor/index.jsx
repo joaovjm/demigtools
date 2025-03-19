@@ -6,7 +6,7 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 
 //import TableDonor from "../../assets/components/TableDonor";
 import { useParams } from "react-router";
-import { editDonor } from "../../helper/Edit";
+import { editDonor } from "../../helper/editDonor";
 import { getInfoDonor } from "../../helper/getDonor";
 import ModalDonation from "../../assets/components/ModalDonation";
 import Loader from "../../assets/components/Loader";
@@ -73,8 +73,6 @@ const Donor = () => {
       }catch {
         setReferencia("")
       }
-
-      console.log(referencia)
       
       
       
