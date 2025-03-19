@@ -5,8 +5,10 @@ import { useNavigate } from "react-router";
 import { PiMagnifyingGlassBold } from "react-icons/pi";
 import { FaMoneyCheckDollar } from "react-icons/fa6";
 import { IoMdAddCircleOutline } from "react-icons/io";
-import { searchDonor } from "../../helper/supabase";
+import { searchDonor } from "../../helper/searchDonor";
 import Loader from "../../assets/components/Loader";
+
+
 const SearchDonor = () => {
   const [selectedValue, setSelectValue] = useState("todos");
   const [buscardoador, setBuscardoador] = useState("");
@@ -70,20 +72,20 @@ const SearchDonor = () => {
         {donor
           ? donor.map((donors) => (
               <div
-                key={donors.id_doador}
+                key={donors.donor_id}
                 className="Cardform"
-                onClick={() => onClickDonor(donors.id_doador)}
+                onClick={() => onClickDonor(donors.donor_id)}
               >
                 <header>
                   <h3>
-                    <FaMoneyCheckDollar /> {donors.nome_doador}
+                    <FaMoneyCheckDollar /> {donors.donor_name}
                   </h3>
                 </header>
                 <div className="Cardinfo">
-                  <p>End.: {donors.endereco}</p>
-                  <p>Tel.: {donors.telefone1}</p>
-                  <p>Bairro: {donors.bairro}</p>
-                  <p>Tipo: {donors.tipo_doador_descricao}</p>
+                  <p>End.: {donors.donor_address}</p>
+                  <p>Tel.: {donors.donor_tel_1}</p>
+                  <p>Bairro: {donors.donor_neighborhood}</p>
+                  <p>Tipo: {donors.donor_type}</p>
                 </div>
               </div>
             ))
