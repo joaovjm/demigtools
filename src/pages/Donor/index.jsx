@@ -4,9 +4,10 @@ import React, { useState, useEffect } from "react";
 import { FaMoneyCheckDollar } from "react-icons/fa6";
 import { IoMdArrowRoundBack } from "react-icons/io";
 
-import TableDonor from "../../assets/components/TableDonor";
+//import TableDonor from "../../assets/components/TableDonor";
 import { useParams } from "react-router";
-import { editDonor, getInfoDonor } from "../../helper/supabase";
+import { editDonor } from "../../helper/Edit";
+import { getInfoDonor } from "../../helper/Get";
 import ModalDonation from "../../assets/components/ModalDonation";
 import Loader from "../../assets/components/Loader";
 
@@ -30,30 +31,33 @@ const Donor = () => {
   const [showbtn, setShowbtn] = useState(true);
   const [modalShow, setModalShow] = useState(false);
   const [loading, setLoading] = useState(false);
+
   const { id } = useParams();
   const params = {};
   if (id) params.id = id;
   useEffect(() => {
     getInfoDonor(id).then((data) => {
       setIdDonor(params.id);
-      setNome(data[0].nome_doador);
-      setCpf(data[0].cpf);
-      setEndereco(data[0].endereco);
-      setCidade(data[0].cidade);
-      setBairro(data[0].bairro);
-      setTelefone1(data[0].telefone1);
-      setTelefone2(data[0].telefone2);
-      setTelefone3(data[0].telefone3);
-      setDia(data[0].dia);
-      setMensalidade(data[0].valor);
-      setMedia(data[0].media);
-      setObservacao(data[0].obs_doador);
+      setNome(data[0].donor_name);
+      setEndereco(data[0].donor_address);
+      setCidade(data[0].donor_city);
+      setBairro(data[0].donor_neighborhood);
+      setTelefone1(data[0].donor_tel_1);
 
-      if (data[0].tipo_doador_descricao === "Avulso") {
+      setCpf(data[0].donor_cpf[0].donor_cpf);
+      setTelefone2(data[0].donor_tel_2[0].donor_tel_2);
+      setTelefone3(data[0].donor_tel_3[0].donor_tel_3);
+      setObservacao(data[0].donor_observation[0].donor_observation);
+      //setDia(data[0].dia);
+      //setMensalidade(data[0].valor);
+      //setMedia(data[0].media);
+      
+
+      if (data[0].donor_type === "Avulso") {
         setTipo("Avulso");
-      } else if (data[0].tipo_doador_descricao === "Mensal") {
+      } else if (data[0].donor_type === "Mensal") {
         setTipo("Mensal");
-      } else if (data[0].tipo_doador_descricao === "Lista") {
+      } else if (data[0].donor_type === "Lista") {
         setTipo("Lista");
       }
     });
@@ -61,39 +65,38 @@ const Donor = () => {
 
   // Responsável por editar e salvar as informações do doador
   const EditDonor = async () => {
-    setLoading(true);
-    setBtnedit(<Loader/>);
+    setBtnedit(<Loader />);
     if (btnedit === "Salvar") {
-      try {
-        editDonor(
-          nome,
-          tipo,
-          cpf,
-          endereco,
-          cidade,
-          bairro,
-          telefone1,
-          telefone2,
-          telefone3,
-          dia,
-          mensalidade,
-          media,
-          observacao
-        );
-
-        window.alert("Doador atualizado com sucesso!");
-      } catch (error) {
-        window.alert("Erro ao atualizar doador: ", error);
+      const data = await editDonor(
+        id,
+        nome,
+        tipo,
+        endereco,
+        cidade,
+        bairro,
+        telefone1
+        //telefone2,
+        //telefone3,
+        //dia,
+        //mensalidade,
+        //media,
+        //observacao
+      );
+      
+      if (data) {
+        setEdit(true);
+        setBtnedit("Editar");
+        setShowbtn(true);
+      } else {
+        setBtnedit("Salvar");
       }
 
-      setEdit(true);
-      setBtnedit("Editar");
-      setShowbtn(true);
-      setLoading(false);
+      
     } else {
       setEdit(!edit);
       setBtnedit("Salvar");
       setShowbtn(!showbtn);
+      
     }
   };
 
@@ -149,7 +152,6 @@ const Donor = () => {
             onChange={(e) => setTipo(e.target.value)}
             value={tipo}
             disabled={edit}
-            defaultValue={setTipo}
           >
             <option value="Avulso">Avulso</option>
             <option value="Mensal">Mensal</option>
@@ -274,7 +276,7 @@ const Donor = () => {
           />
         </div>
       </form>
-      {showbtn ? <TableDonor idDonor={idDonor} /> : null}
+      {/*{showbtn ? <TableDonor idDonor={idDonor} /> : null}*/}
 
       {modalShow && (
         <ModalDonation

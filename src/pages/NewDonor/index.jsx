@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaMoneyCheckDollar } from "react-icons/fa6";
 import { useNavigate } from "react-router";
-import { insertDonor } from "../../helper/supabase";
+import { insertDonor, insertDonor_cpf, insertDonor_observation, insertDonor_tel_2, insertDonor_tel_3 } from "../../helper/Insert";
 
 const index = () => {
   const [nome, setNome] = useState("");
@@ -26,26 +26,37 @@ const index = () => {
 
   const OnClickNewDonor = async () => {
     try{
-      insertDonor(
+      const data = await insertDonor(
         nome,
         tipo,
-        cpf,
         endereco,
         cidade,
         bairro,
         telefone1,
-        telefone2,
-        telefone3,
-        dia,
-        mensalidade,
-        media,
-        observacao
+        //dia,
+        //mensalidade,
+        //media,
       );
-
-      navigate("/donor/" + telefone1);
+      if (cpf !== "") {
+        insertDonor_cpf(data[0].donor_id, cpf)
+      }
+      if (telefone2 !== ""){
+        insertDonor_tel_2(data[0].donor_id, telefone2)
+      }
+      if (telefone3 !== "") {
+        insertDonor_tel_3(data[0].donor_id, telefone3)
+      }
+      if (observacao !== ""){
+        insertDonor_observation(data[0].donor_id, observacao)
+        console.log(data[0].donor_id, observacao)
+      }
+      
+      navigate("/donor/" + data[0].donor_id);
     } catch (error) { 
       window.alert("Erro ao criar doador: ", error);
     }
+
+    
     
   };
 
