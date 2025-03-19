@@ -13,7 +13,8 @@ export const getInfoDonor = async (id) => {
         donor_cpf (donor_cpf),
         donor_tel_2 (donor_tel_2),
         donor_tel_3 (donor_tel_3),
-        donor_observation (donor_observation)`)
+        donor_observation (donor_observation),
+        donor_reference (donor_reference)`)
       .eq("donor_id", id);
     return data;
    
