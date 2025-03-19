@@ -44,7 +44,6 @@ export const editDonor = async (
       if (error) {
         window.alert("Erro ao atualizar dados do doador: ", error.message)
       }
-      console.log(id)
 
       return data;
   };
