@@ -8,7 +8,8 @@ export const insertDonation = async (
   data_receber,
   impresso,
   recebido,
-  descricao
+  descricao,
+  setModalShow
 ) => {
   let print = "";
   let received = "";
@@ -28,22 +29,26 @@ export const insertDonation = async (
     const { data, error } = await supabase.from("donation").insert([
       {
         donor_id: donor_id,
-        donation_value: valor,
+        donation_value: valor ? Number(valor): null,
         donation_day_contact: data_contato,
         donation_description: descricao,
-        donation_extra: comissao,
-        donation_day_to_receive: data_receber,
+        donation_extra: comissao ? Number(comissao) : null,
+        donation_day_to_receive: data_receber ? data_receber : null,
         donation_print: print,
         donation_received: received,
       },
     ]).select();
     
-    window.alert("Movimento criado com sucesso")
     if(error) throw error
+
+    if(!error){
+      window.alert("Movimento criado com sucesso!")
+      setModalShow(false)
+    }
 
     return data
   } catch (error){
-    console.log("Erro ao criar doação", error.message)
+    window.alert("Erro ao criar doação", error.message)
   }
   
 };

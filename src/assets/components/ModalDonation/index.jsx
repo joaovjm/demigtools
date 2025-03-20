@@ -34,13 +34,19 @@ const ModalDonation = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = insertDonation(donor_id, valor, comissao, data_contato, data_receber, impresso, recebido, descricao);
-    if(data) {
-      setModalShow(false)
-    }
-    
+    const error = insertDonation(
+      donor_id,
+      valor,
+      comissao,
+      data_contato,
+      data_receber,
+      impresso,
+      recebido,
+      descricao,
+      setModalShow
+    );
   };
-
+  console.log(data_receber)
   return (
     <main className="modal-container">
       <div className="modal">
