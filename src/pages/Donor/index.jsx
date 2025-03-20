@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { FaMoneyCheckDollar } from "react-icons/fa6";
 import { IoMdArrowRoundBack } from "react-icons/io";
 
-//import TableDonor from "../../assets/components/TableDonor";
+import TableDonor from "../../assets/components/TableDonor";
 import { useParams } from "react-router";
 import { editDonor } from "../../helper/editDonor";
 import { getInfoDonor } from "../../helper/getDonor";
@@ -104,8 +104,6 @@ const Donor = () => {
       } else if (data[0].donor_type === "Lista") {
         setTipo("Lista");
       }
-
-      console.log(data)
     });
 
     
@@ -370,7 +368,7 @@ const Donor = () => {
           />
         </div>
       </form>
-      {/*{showbtn ? <TableDonor idDonor={idDonor} /> : null}*/}
+      {showbtn ? <TableDonor idDonor={idDonor} modalShow={modalShow}/> : null}
 
       {modalShow && (
         <ModalDonation
@@ -378,7 +376,7 @@ const Donor = () => {
           setModalShow={setModalShow}
           mensalidade={mensalidade}
           tipo={tipo}
-          idDonor={idDonor}
+          donor_id={idDonor}
         />
       )}
     </main>

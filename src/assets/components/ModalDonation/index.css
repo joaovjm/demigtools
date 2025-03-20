@@ -102,3 +102,18 @@ textarea{
   color: #FAF5E9;
   padding: 8px;
 }
+
+.checkboxs{
+    display: grid;
+    grid-template-columns: auto auto;
+    
+}
+
+.label_checkbox{
+    display: grid;
+    grid-template-columns: 20px 0px;
+}
+
+.checkbox{
+    font-size: 2px;
+}

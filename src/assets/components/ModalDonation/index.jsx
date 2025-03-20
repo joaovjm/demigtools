@@ -4,17 +4,25 @@ import "./index.css";
 import { FaDollarSign } from "react-icons/fa";
 import { insertDonation } from "../../../helper/insertDonation";
 
-const ModalDonation = ({ modalShow, setModalShow, mensalidade, tipo, idDonor }) => {
+const ModalDonation = ({
+  modalShow,
+  setModalShow,
+  mensalidade,
+  tipo,
+  donor_id,
+}) => {
   const [comissao, setComissao] = useState("");
   const [valor, setValor] = useState("");
   const [data_receber, setData_receber] = useState("");
   const [descricao, setDescricao] = useState("");
+  const [impresso, setImpresso] = useState("");
+  const [recebido, setRecebido] = useState("");
 
   const calendar = new Date();
   const day = calendar.getDate();
   const month = calendar.getMonth();
   const year = calendar.getFullYear();
-  const data = `${day}/${month}/${year}`;
+  const data_contato = `${day}-${month}-${year}`;
 
   useEffect(() => {
     if (mensalidade && comissao == "") {
@@ -26,8 +34,12 @@ const ModalDonation = ({ modalShow, setModalShow, mensalidade, tipo, idDonor }) 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    insertDonation(valor, data, descricao, idDonor, comissao, data_receber);
-  }
+    const data = insertDonation(donor_id, valor, comissao, data_contato, data_receber, impresso, recebido, descricao);
+    if(data) {
+      setModalShow(false)
+    }
+    
+  };
 
   return (
     <main className="modal-container">
@@ -97,8 +109,37 @@ const ModalDonation = ({ modalShow, setModalShow, mensalidade, tipo, idDonor }) 
             />
           </div>
 
+          <div className="checkboxs">
+            <div>
+              <label className="label_checkbox">
+                {" "}
+                Impresso:{" "}
+                <input
+                  className="checkbox"
+                  type="checkbox"
+                  checked={impresso}
+                  onChange={(e) => setImpresso(e.target.checked)}
+                />
+              </label>
+            </div>
+            <div>
+              <label className="label_checkbox">
+                {" "}
+                Recebido:{" "}
+                <input
+                  className="checkbox"
+                  checked={recebido}
+                  type="checkbox"
+                  onChange={(e) => setRecebido(e.target.checked)}
+                />
+              </label>
+            </div>
+          </div>
+
           {/* Botão */}
-          <button type="submit" className="modal-form-button">Doar</button>
+          <button type="submit" className="modal-form-button">
+            Doar
+          </button>
         </form>
       </div>
     </main>

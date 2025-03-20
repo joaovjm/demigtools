@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./index.css";
 import { getDonation } from "../../../helper/getDonation";
 
-const TableDonor = ({ idDonor }) => {
+const TableDonor = ({ idDonor , modalShow}) => {
   const [dados, setDados] = useState([]);
 
   {/*const media = (
@@ -18,8 +18,7 @@ const TableDonor = ({ idDonor }) => {
           console.log(error.message);
         });
     }
-  }, [idDonor]);
-  console.log(dados)
+  }, [idDonor, modalShow]);
 
   return (
     <div className="table-container">
@@ -41,8 +40,8 @@ const TableDonor = ({ idDonor }) => {
         </thead>
 
         {dados?.map((item) => (
-          <tbody>
-            <tr className="trBody" key={item.donation_id}>
+          <tbody key={item.receipt_donation_id}>
+            <tr className="trBody" >
               <td className="tableBody">
                 {item.receipt_donation_id}
               </td>
