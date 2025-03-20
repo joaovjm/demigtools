@@ -115,30 +115,63 @@ const Donor = () => {
   const EditDonor = async () => {
     setBtnedit(<Loader />);
     if (btnedit === "Salvar") {
-      const data = await editDonor(
-        id,
-        nome,
-        tipo,
-        cpf,
-        endereco,
-        cidade,
-        bairro,
-        telefone1,
-        telefone2,
-        telefone3,
-        dia,
-        mensalidade,
-        observacao,
-        referencia
-      );
-      
-      if (data) {
-        setEdit(true);
-        setBtnedit("Editar");
-        setShowbtn(true);
+      if (tipo === "Mensal") {
+        if(dia !== null && mensalidade !== null) {
+          const data = await editDonor(
+            id,
+            nome,
+            tipo,
+            cpf,
+            endereco,
+            cidade,
+            bairro,
+            telefone1,
+            telefone2,
+            telefone3,
+            dia,
+            mensalidade,
+            observacao,
+            referencia
+          );
+          if (data) {
+            setEdit(true);
+            setBtnedit("Editar");
+            setShowbtn(true);
+          } else {
+            setBtnedit("Salvar");
+          }
+        } else {
+          window.alert("Os campos DIA e MENSALIDADE precisam ser preenchidos corretamente!")
+          setBtnedit("Salvar")
+        }
+        
+        
+        
       } else {
-        setBtnedit("Salvar");
+        const data = await editDonor(
+          id,
+          nome,
+          tipo,
+          cpf,
+          endereco,
+          cidade,
+          bairro,
+          telefone1,
+          telefone2,
+          telefone3,
+          observacao,
+          referencia
+        );
+
+        if (data) {
+          setEdit(true);
+          setBtnedit("Editar");
+          setShowbtn(true);
+        } else {
+          setBtnedit("Salvar");
+        }
       }
+      
 
       
     } else {
