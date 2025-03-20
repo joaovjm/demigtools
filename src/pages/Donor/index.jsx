@@ -44,34 +44,36 @@ const Donor = () => {
       setBairro(data[0].donor_neighborhood);
       setTelefone1(data[0].donor_tel_1);
 
+      
+
       try{
-        setCpf(data[0].donor_cpf[0].donor_cpf);
+        setCpf(data[0].donor_cpf.donor_cpf);
       } catch {
-        setCpf("")
+        setCpf(null)
       }
 
       try{
-        setTelefone2(data[0].donor_tel_2[0].donor_tel_2);
+        setTelefone2(data[0].donor_tel_2.donor_tel_2);
       } catch {
-        setTelefone2("")
+        setTelefone2(null)
       }
 
       try{
-        setTelefone3(data[0].donor_tel_3[0].donor_tel_3);
+        setTelefone3(data[0].donor_tel_3.donor_tel_3);
       } catch {
-        setTelefone3("")
+        setTelefone3(null)
       }
 
       try{
-        setObservacao(data[0].donor_observation[0].donor_observation);
+        setObservacao(data[0].donor_observation.donor_observation);
       } catch {
-        setObservacao("")
+        setObservacao(null)
       }
 
       try{
-        setReferencia(data[0].donor_reference[0].donor_reference)
+        setReferencia(data[0].donor_reference.donor_reference)
       }catch {
-        setReferencia("")
+        setReferencia(null)
       }
       
       
@@ -100,16 +102,18 @@ const Donor = () => {
         id,
         nome,
         tipo,
+        cpf,
         endereco,
         cidade,
         bairro,
-        telefone1
-        //telefone2,
-        //telefone3,
+        telefone1,
+        telefone2,
+        telefone3,
         //dia,
         //mensalidade,
         //media,
-        //observacao
+        observacao,
+        referencia
       );
       
       if (data) {

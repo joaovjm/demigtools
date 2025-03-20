@@ -19,8 +19,6 @@ export const insertDonor = async (
         donor_city: cidade,
         donor_neighborhood: bairro,
         donor_tel_1: telefone1,
-        //telefone_2: telefone2,
-        //telefone_3: telefone3,
         //dia: dia,
         //mensalidade: mensalidade,
         //media: media,
