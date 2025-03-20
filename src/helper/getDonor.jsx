@@ -20,12 +20,3 @@ export const getInfoDonor = async (id) => {
     return data;
    
 };
-  
-export const getDonations = async (idDonor) => {
-    const {data, error} = await supabase
-    .from("doação")
-    .select()
-    .eq("id_doacao_doador", idDonor)
-    return data
-}
-  
