@@ -10,6 +10,7 @@ import { editDonor } from "../../helper/editDonor";
 import { getInfoDonor } from "../../helper/getDonor";
 import ModalDonation from "../../assets/components/ModalDonation";
 import Loader from "../../assets/components/Loader";
+import { BsDatabaseAdd } from "react-icons/bs";
 
 const Donor = () => {
   const [nome, setNome] = useState(null);
@@ -49,31 +50,43 @@ const Donor = () => {
       try{
         setCpf(data[0].donor_cpf.donor_cpf);
       } catch {
-        setCpf(null)
+        setCpf("")
       }
 
       try{
         setTelefone2(data[0].donor_tel_2.donor_tel_2);
       } catch {
-        setTelefone2(null)
+        setTelefone2("")
       }
 
       try{
         setTelefone3(data[0].donor_tel_3.donor_tel_3);
       } catch {
-        setTelefone3(null)
+        setTelefone3("")
+      }
+
+      try{
+        setDia(data[0].donor_mensal.donor_mensal_day);
+      } catch {
+        setDia(null)
+      }
+
+      try{
+        setMensalidade(data[0].donor_mensal.donor_mensal_monthly_fee)
+      } catch {
+        setMensalidade(null)
       }
 
       try{
         setObservacao(data[0].donor_observation.donor_observation);
       } catch {
-        setObservacao(null)
+        setObservacao("")
       }
 
       try{
         setReferencia(data[0].donor_reference.donor_reference)
       }catch {
-        setReferencia(null)
+        setReferencia("")
       }
       
       
@@ -91,7 +104,11 @@ const Donor = () => {
       } else if (data[0].donor_type === "Lista") {
         setTipo("Lista");
       }
+
+      console.log(data)
     });
+
+    
   }, [tipo !== setTipo]);
 
   // Responsável por editar e salvar as informações do doador
@@ -109,9 +126,8 @@ const Donor = () => {
         telefone1,
         telefone2,
         telefone3,
-        //dia,
-        //mensalidade,
-        //media,
+        dia,
+        mensalidade,
         observacao,
         referencia
       );

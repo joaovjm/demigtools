@@ -6,10 +6,7 @@ export const insertDonor = async (
     endereco,
     cidade,
     bairro,
-    telefone1,
-    dia,
-    mensalidade,
-    media,
+    telefone1
   ) => {
     const { data, error } = await supabase.from("donor").insert([
       {
@@ -19,10 +16,6 @@ export const insertDonor = async (
         donor_city: cidade,
         donor_neighborhood: bairro,
         donor_tel_1: telefone1,
-        //dia: dia,
-        //mensalidade: mensalidade,
-        //media: media,
-        //observacao: observacao,
       },
     ]).select(); 
   
@@ -75,5 +68,14 @@ export const insertDonor_reference = async (donor_id, referencia) => {
   const {error} = await supabase.from("donor_reference").insert([{
     donor_id: donor_id,
     donor_reference: referencia
+  }])
+}
+
+export const insertDonor_mensal = async (donor_id, dia, mensalidade) => {
+  console.log(dia, mensalidade)
+  await supabase.from("donor_mensal").insert ([{
+    donor_id: donor_id,
+    donor_mensal_day: dia,
+    donor_mensal_monthly_fee: mensalidade
   }])
 }

@@ -11,9 +11,8 @@ export const editDonor = async (
   telefone1,
   telefone2,
   telefone3,
-  //dia,
-  //mensalidade,
-  //media,
+  dia,
+  mensalidade,
   observacao,
   referencia
 ) => {
@@ -42,7 +41,7 @@ export const editDonor = async (
     window.alert("Erro ao atualizar dados do doador: ", error.message);
   }
 
-  try{
+  try {
     await supabase.from("donor_cpf").upsert(
       [
         {
@@ -53,9 +52,8 @@ export const editDonor = async (
       { onConflict: ["donor_id"] }
     );
   } catch {
-    console.log("CPF não foi salvo")
+    console.log("CPF não foi salvo");
   }
-  
 
   try {
     await supabase.from("donor_tel_2").upsert(
@@ -110,7 +108,22 @@ export const editDonor = async (
       { onConflict: ["donor_id"] }
     );
   } catch {
-    console.log("Observação não foi salva ");
+    console.log("Referência não foi salva ");
+  }
+
+  try {
+    await supabase.from("donor_mensal").upsert(
+      [
+        {
+          donor_id: id,
+          donor_mensal_day: dia,
+          donor_mensal_monthly_fee: mensalidade,
+        },
+      ],
+      { onConflict: ["donor_id"] }
+    );
+  } catch {
+    console.log("Valores do mensal não foram salvos");
   }
 
   return data;

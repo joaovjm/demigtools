@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaMoneyCheckDollar } from "react-icons/fa6";
 import { useNavigate } from "react-router";
-import { insertDonor, insertDonor_cpf, insertDonor_observation, insertDonor_reference, insertDonor_tel_2, insertDonor_tel_3 } from "../../helper/insertDonor";
+import { insertDonor, insertDonor_cpf, insertDonor_mensal, insertDonor_observation, insertDonor_reference, insertDonor_tel_2, insertDonor_tel_3 } from "../../helper/insertDonor";
 
 const index = () => {
   const [nome, setNome] = useState("");
@@ -11,11 +11,11 @@ const index = () => {
   const [cidade, setCidade] = useState("");
   const [bairro, setBairro] = useState("");
   const [telefone1, setTelefone1] = useState("");
-  const [telefone2, setTelefone2] = useState();
-  const [telefone3, setTelefone3] = useState();
-  const [dia, setDia] = useState();
-  const [mensalidade, setMensalidade] = useState();
-  const [media, setMedia] = useState();
+  const [telefone2, setTelefone2] = useState("");
+  const [telefone3, setTelefone3] = useState("");
+  const [dia, setDia] = useState(null);
+  const [mensalidade, setMensalidade] = useState(null);
+  const [media, setMedia] = useState(null);
   const [observacao, setObservacao] = useState("");
   const [referencia, setReferencia] = useState("");
 
@@ -26,40 +26,44 @@ const index = () => {
   };
 
   const OnClickNewDonor = async () => {
-    try{
-      const data = await insertDonor(
-        nome,
-        tipo,
-        endereco,
-        cidade,
-        bairro,
-        telefone1,
-        //dia,
-        //mensalidade,
-        //media,
-      );
-      if (cpf !== "") {
-        insertDonor_cpf(data[0].donor_id, cpf)
+    if ((dia !== null && mensalidade !== null && tipo === "Mensal") || tipo === "Avulso" || tipo === "Lista"){
+      try{
+        const data = await insertDonor(
+          nome,
+          tipo,
+          endereco,
+          cidade,
+          bairro,
+          telefone1,
+          dia,
+          mensalidade,
+        );
+        if (cpf !== "") {
+          insertDonor_cpf(data[0].donor_id, cpf)
+        }
+        if (telefone2 !== ""){
+          insertDonor_tel_2(data[0].donor_id, telefone2)
+        }
+        if (telefone3 !== "") {
+          insertDonor_tel_3(data[0].donor_id, telefone3)
+        }
+        if (tipo === "Mensal") {
+          insertDonor_mensal(data[0].donor_id, dia, mensalidade)
+        }
+        if (observacao !== ""){
+          insertDonor_observation(data[0].donor_id, observacao)
+        }
+        if (referencia !== ""){
+          insertDonor_reference(data[0].donor_id, referencia)
+        }
+        navigate("/donor/" + data[0].donor_id);
+      } catch (error) { 
+        window.alert("Erro ao criar doador: ", error);
       }
-      if (telefone2 !== ""){
-        insertDonor_tel_2(data[0].donor_id, telefone2)
-      }
-      if (telefone3 !== "") {
-        insertDonor_tel_3(data[0].donor_id, telefone3)
-      }
-      if (observacao !== ""){
-        insertDonor_observation(data[0].donor_id, observacao)
-      }
-      if (referencia !== ""){
-        insertDonor_reference(data[0].donor_id, referencia)
-      }
-      navigate("/donor/" + data[0].donor_id);
-    } catch (error) { 
-      window.alert("Erro ao criar doador: ", error);
-    }
+    } else {
+      window.alert ("Os campos DIA e MENSALIDADE precisam ser preenchidos corretamente!")
+    }   
 
-    
-    
   };
 
   useEffect(() => {
