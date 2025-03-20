@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import "./index.css";
-import { getDonations } from "../../../helper/supabase";
+import { getDonation } from "../../../helper/getDonation";
 
 const TableDonor = ({ idDonor }) => {
   const [dados, setDados] = useState([]);
 
-  const media = (
+  {/*const media = (
     dados.reduce((acc, curr) => acc + curr.valor, 0) / dados.length
-  ).toFixed(2);
+  ).toFixed(2);*/}
   useEffect(() => {
     if (idDonor) {
-      getDonations(idDonor)
+      getDonation(idDonor)
         .then((data) => {
           setDados(data);
         })
@@ -19,6 +19,7 @@ const TableDonor = ({ idDonor }) => {
         });
     }
   }, [idDonor]);
+  console.log(dados)
 
   return (
     <div className="table-container">
@@ -41,36 +42,36 @@ const TableDonor = ({ idDonor }) => {
 
         {dados?.map((item) => (
           <tbody>
-            <tr className="trBody" key={item.id}>
+            <tr className="trBody" key={item.donation_id}>
               <td className="tableBody">
-                {item.recibo}
+                {item.receipt_donation_id}
               </td>
               <td className="tableBody">
                 {item.operador}
               </td>
               <td className="tableBody">
-                {item.valor}
+                {item.donation_value}
               </td>
               <td className="tableBody">
-                {item.comissao}
+                {item.donation_extra}
               </td>
               <td className="tableBody">
-                {item.data_contato}
+                {item.donation_day_contact}
               </td>
               <td className="tableBody">
-                {item.data_receber}
+                {item.donation_day_to_receive}
               </td>
               <td className="tableBody">
-                {item.data_recebida}
+                {item.donation_day_received}
               </td>
               <td className="tableBody">
-                {item.impresso}
+                {item.donation_print}
               </td>
               <td className="tableBody">
-                {item.recebido}
+                {item.donation_received}
               </td>
               <td className="tableBody">
-                {item.mes_ref}
+                {item.donation_monthref}
               </td>
               <td className="tableBody">
                 {item.coletador}
@@ -78,7 +79,7 @@ const TableDonor = ({ idDonor }) => {
             </tr>
             <tr className="trFoot">
               <td colSpan="11" className="obs">
-                {item.obs_doacao ? item.obs_doacao : "..."}
+                {item.donation_description ? item.donation_description : "..."}
               </td>
             </tr>
           </tbody>
