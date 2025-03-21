@@ -19,7 +19,7 @@ const TableDonor = ({ idDonor , modalShow}) => {
         });
     }
   }, [idDonor, modalShow]);
-
+  console.log(dados)
   return (
     <div className="table-container">
       <table border="1" className="tabledonor">
@@ -40,6 +40,7 @@ const TableDonor = ({ idDonor , modalShow}) => {
         </thead>
 
         {dados?.map((item) => (
+          
           <tbody key={item.receipt_donation_id}>
             <tr className="trBody" >
               <td className="tableBody">
@@ -73,7 +74,7 @@ const TableDonor = ({ idDonor , modalShow}) => {
                 {item.donation_monthref}
               </td>
               <td className="tableBody">
-                {item.coletador}
+                {item.collector_code_id} - {item.collector?.collector_name || ""}
               </td>
             </tr>
             <tr className="trFoot">
