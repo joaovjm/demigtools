@@ -8,47 +8,53 @@ export const receiveDonation = async (
   search,
   setTableReceipt
 ) => {
-
   if (date !== "" && collector !== "") {
-
     //Busca do Nome do Doador
     try {
       const { data, error } = await supabase
         .from("donation")
         .select(
           `     donation_value,
+                donation_received,
                 donor:donor_id (donor_name)`
         )
         .eq("receipt_donation_id", search);
 
-        if (error) throw error;
+      if (error) throw error;
 
-        if (data.length > 0) {
-            const { donation_value, donor} = data[0];
-            const name = donor?.donor_name;
-            const value = donation_value;
-    
-            const {error: updateError} = await supabase.from("donation").update({
-                donation_received: "Sim",
-                donation_day_received: date,
-                collector_code_id: collector,
-            }).eq("receipt_donation_id", search);
+      if (data.length > 0) {
+        const { donation_value, donor, donation_received } = data[0];
+        const name = donor?.donor_name;
+        const value = donation_value;
+        const received = donation_received;
 
-            if (updateError) throw updateError;
+        if (received === "Não") {
+          const { error: updateError } = await supabase
+            .from("donation")
+            .update({
+              donation_received: "Sim",
+              donation_day_received: date,
+              collector_code_id: collector,
+            })
+            .eq("receipt_donation_id", search);
 
-            const newItem = {search, name, value};
-            setTableReceipt((prev) => [...prev, newItem]);
-            setMessage("Doações recebidas com sucesso!");
-            setTypeAlert("green")
+          if (updateError) throw updateError;
+
+          const newItem = { search, name, value };
+          setTableReceipt((prev) => [...prev, newItem]);
+          setMessage("Doações recebidas com sucesso!");
+          setTypeAlert("green");
         } else {
-            setMessage("Recibo não localizado");
-            setTypeAlert("#940000");
+          setMessage("Doação já recebida")
+          setTypeAlert("#940000");
         }
-      
+      } else {
+        setMessage("Recibo não localizado");
+        setTypeAlert("#940000");
+      }
     } catch (error) {
-        console.error("Erro: ", error.message);
+      console.error("Erro: ", error.message);
     }
-
   } else {
     setMessage(
       "Os campos coletador, data e recibo, precisam ser preenchidos corretamente."
@@ -58,5 +64,5 @@ export const receiveDonation = async (
 
   setTimeout(() => {
     setMessage("");
-  }, 1000);
+  }, 2000);
 };

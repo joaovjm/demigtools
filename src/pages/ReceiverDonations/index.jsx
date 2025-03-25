@@ -26,8 +26,10 @@ const ReceiverDonations = () => {
       search,
       setTableReceipt
     );
-    console.log(tableReceipt);
   };
+  useEffect(() => {
+    setTableReceipt([]);
+  }, [collector]);
   useEffect(() => {
     getCollector().then((data) => {
       setCollectors(data);
@@ -104,13 +106,16 @@ const ReceiverDonations = () => {
       </div>
 
       <table className="receiver-donations-table">
-        <thead className="receiver-donations-table-header">
-          <tr>
-            <th style={{ width: "20%" }}>Recibo</th>
-            <th style={{ width: "60%" }}>Nome</th>
-            <th style={{ width: "20%" }}>Valor</th>
-          </tr>
-        </thead>
+        {tableReceipt.length > 0 && (
+          <thead className="receiver-donations-table-header">
+            <tr>
+              <th style={{ width: "20%" }}>Recibo</th>
+              <th style={{ width: "60%" }}>Nome</th>
+              <th style={{ width: "20%" }}>Valor</th>
+            </tr>
+          </thead>
+        )}
+
         <tbody className="receiver-donations-table-body">
           {tableReceipt.map((item) => (
             <tr key={item.search}>
