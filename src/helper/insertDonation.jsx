@@ -9,6 +9,7 @@ export const insertDonation = async (
   impresso,
   recebido,
   descricao,
+  mesref,
   setModalShow
 ) => {
   let print = "";
@@ -36,6 +37,7 @@ export const insertDonation = async (
         donation_day_to_receive: data_receber ? data_receber : null,
         donation_print: print,
         donation_received: received,
+        donation_monthref: mesref ? mesref : null
       },
     ]).select();
     

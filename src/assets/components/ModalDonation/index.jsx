@@ -17,10 +17,12 @@ const ModalDonation = ({
   const [descricao, setDescricao] = useState("");
   const [impresso, setImpresso] = useState("");
   const [recebido, setRecebido] = useState("");
+  const [mesref, setMesref] = useState("")
+
 
   const calendar = new Date();
   const day = calendar.getDate();
-  const month = calendar.getMonth();
+  const month = calendar.getMonth() + 1;
   const year = calendar.getFullYear();
   const data_contato = `${day}-${month}-${year}`;
 
@@ -43,10 +45,19 @@ const ModalDonation = ({
       impresso,
       recebido,
       descricao,
+      mesref,
       setModalShow
     );
   };
-  console.log(data_receber)
+
+  const handleDate = (e) => {
+    setData_receber(e.target.value);
+    const data = new Date (e.target.value);
+    const monthYear = `${data.getMonth() + 1}/${data.getFullYear()}`
+
+    setMesref(monthYear)
+  }
+
   return (
     <main className="modal-container">
       <div className="modal">
@@ -95,7 +106,18 @@ const ModalDonation = ({
               type="date"
               placeholder="dd/mm/yyyy"
               value={data_receber}
-              onChange={(e) => setData_receber(e.target.value)}
+              onChange={handleDate}
+            />
+          </div>
+
+          {/* Mês Referente */}
+          <div className="modal-form-imputs">
+            <label className="label">Mês Referente</label>
+            <input
+              type="text"
+              placeholder="Mês"
+              value={mesref}
+              onChange={(e) => setMesref(e.target.value)}
             />
           </div>
 
