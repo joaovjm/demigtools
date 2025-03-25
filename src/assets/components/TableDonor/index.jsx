@@ -19,7 +19,9 @@ const TableDonor = ({ idDonor , modalShow}) => {
         });
     }
   }, [idDonor, modalShow]);
+
   console.log(dados)
+  
   return (
     <div className="table-container">
       <table border="1" className="tabledonor">
@@ -47,7 +49,7 @@ const TableDonor = ({ idDonor , modalShow}) => {
                 {item.receipt_donation_id}
               </td>
               <td className="tableBody">
-                {item.operador}
+                {item.operator_code_id} - {item.operator?.operator_name}
               </td>
               <td className="tableBody">
                 {item.donation_value}
