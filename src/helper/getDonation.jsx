@@ -14,7 +14,9 @@ export const getDonation = async (donor_id) => {
             donation_monthref,
             donation_description,
             collector_code_id,
-            collector:collector_code_id (collector_name)
+            operator_code_id,
+            collector:collector_code_id (collector_name),
+            operator:operator_code_id (operator_name)
         `).eq("donor_id", donor_id).order("donation_day_to_receive", {ascending: false} )
 
         if (error) throw error
