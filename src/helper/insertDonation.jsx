@@ -21,7 +21,7 @@ export const insertDonation = async (
   }
 
   if (recebido === true) {
-    received = "sim";
+    received = "Sim";
   } else {
     received = "Não";
   }
