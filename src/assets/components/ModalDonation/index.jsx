@@ -3,6 +3,7 @@ import "./index.css";
 
 import { FaDollarSign } from "react-icons/fa";
 import { insertDonation } from "../../../helper/insertDonation";
+import { DataNow, DataSelect } from "../DataTime";
 
 const ModalDonation = ({
   modalShow,
@@ -14,17 +15,13 @@ const ModalDonation = ({
   const [comissao, setComissao] = useState("");
   const [valor, setValor] = useState("");
   const [data_receber, setData_receber] = useState("");
+  const [formatedData, setFormatedData] = useState("")
   const [descricao, setDescricao] = useState("");
   const [impresso, setImpresso] = useState("");
   const [recebido, setRecebido] = useState("");
-  const [mesref, setMesref] = useState("")
+  const [mesref, setMesref] = useState("");
 
-
-  const calendar = new Date();
-  const day = calendar.getDate();
-  const month = calendar.getMonth() + 1;
-  const year = calendar.getFullYear();
-  const data_contato = `${day}-${month}-${year}`;
+  const data_contato = DataNow();
 
   useEffect(() => {
     if (mensalidade && comissao == "") {
@@ -36,12 +33,13 @@ const ModalDonation = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const error = insertDonation(
       donor_id,
       valor,
       comissao,
       data_contato,
-      data_receber,
+      formatedData,
       impresso,
       recebido,
       descricao,
@@ -51,12 +49,19 @@ const ModalDonation = ({
   };
 
   const handleDate = (e) => {
-    setData_receber(e.target.value);
-    const data = new Date (e.target.value);
-    const monthYear = `${data.getMonth() + 1}/${data.getFullYear()}`
+    const value = e.target.value;
+    setFormatedData(`${(DataSelect(value))}`);
+    setData_receber(value);
 
-    setMesref(monthYear)
-  }
+    const monthYear = `${DataSelect(value, "month")}/${DataSelect(
+      value,
+      "year"
+    )}`;
+
+    if (tipo === "Mensal") {
+      setMesref(monthYear);
+    }
+  };
 
   return (
     <main className="modal-container">
