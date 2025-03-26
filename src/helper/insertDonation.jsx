@@ -28,15 +28,6 @@ export const insertDonation = async (
     received = "Não";
   }
 
-  console.log(donor_id,
-    valor,
-    comissao,
-    data_contato,
-    data_receber,
-    impresso,
-    recebido,
-    descricao,
-    mesref)
   try{
     const { data, error } = await supabase.from("donation").insert([
       {
