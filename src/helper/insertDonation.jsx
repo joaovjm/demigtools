@@ -26,6 +26,16 @@ export const insertDonation = async (
   } else {
     received = "Não";
   }
+
+  console.log(donor_id,
+    valor,
+    comissao,
+    data_contato,
+    data_receber,
+    impresso,
+    recebido,
+    descricao,
+    mesref)
   try{
     const { data, error } = await supabase.from("donation").insert([
       {
@@ -44,13 +54,12 @@ export const insertDonation = async (
     if(error) throw error
 
     if(!error){
-      window.alert("Movimento criado com sucesso!")
       setModalShow(false)
+      return data
     }
 
-    return data
   } catch (error){
-    window.alert("Erro ao criar doação", error.message)
+    console.log("Erro ao criar doação", error.message)
   }
   
 };
