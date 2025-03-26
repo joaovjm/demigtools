@@ -6,10 +6,12 @@ import { getCollector } from "../../helper/getCollector";
 import { receiveDonation } from "../../helper/receiveDonation";
 import { GoAlertFill } from "react-icons/go";
 import { BiSolidErrorAlt } from "react-icons/bi";
+import { DataSelect } from "../../assets/components/DataTime";
 
 const ReceiverDonations = () => {
   const [collector, setCollector] = useState("");
   const [date, setDate] = useState("");
+  const [modifiedDate, setModifiedDate] = useState("");
   const [search, setSearch] = useState("");
   const [message, setMessage] = useState("");
   const [collectors, setCollectors] = useState([]);
@@ -19,7 +21,7 @@ const ReceiverDonations = () => {
   const handleReceiverDonations = (e) => {
     e.preventDefault();
     receiveDonation(
-      date,
+      modifiedDate,
       setMessage,
       collector,
       setTypeAlert,
@@ -35,6 +37,12 @@ const ReceiverDonations = () => {
       setCollectors(data);
     });
   }, []);
+
+  const handleDate = (e) => {
+    const value = e.target.value
+    setDate(value)
+    setModifiedDate(DataSelect(value))
+  }
   return (
     <main className="receiver-donations-main">
       <div className="receiver-donations-header">
@@ -74,7 +82,7 @@ const ReceiverDonations = () => {
           <input
             type="date"
             value={date}
-            onChange={(e) => setDate(e.target.value)}
+            onChange={handleDate}
           />
         </div>
 
