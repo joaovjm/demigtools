@@ -19,8 +19,6 @@ const TableDonor = ({ idDonor , modalShow}) => {
         });
     }
   }, [idDonor, modalShow]);
-
-  console.log(dados)
   
   return (
     <div className="table-container">
