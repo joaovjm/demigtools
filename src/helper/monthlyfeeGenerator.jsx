@@ -4,6 +4,8 @@ import { insertMonthHistory } from "./insertMonthHistory";
 import supabase from "./superBaseClient";
 
 export const monthlyfeeGenerator = async (dataSelected, mesref, day, month, year) => {
+
+  let count = 0;
   try {
     const { data } = await supabase
       .from("donor")
@@ -28,8 +30,9 @@ export const monthlyfeeGenerator = async (dataSelected, mesref, day, month, year
               false,
               `Auto Criado ${DataNow().toLocaleString('pt-BR')}`,
               `${month}/${year}` //Mês Referente
-    
+              
             );
+            count = count + 1
             console.log("A inserção ocorreu normalmente")
           }
         });
@@ -38,7 +41,9 @@ export const monthlyfeeGenerator = async (dataSelected, mesref, day, month, year
     const status = await insertMonthHistory(dataSelected)
 
     if(status){
-      return true
+      
+      return count
+      
     }
 
     console.log("Tudo completado com sucesso! ")
