@@ -2,6 +2,7 @@ import supabase from "./superBaseClient";
 
 export const insertDonation = async (
   donor_id,
+  operator,
   valor,
   comissao,
   data_contato,
@@ -40,6 +41,7 @@ export const insertDonation = async (
     const { data, error } = await supabase.from("donation").insert([
       {
         donor_id: donor_id,
+        operator_code_id: operator ? operator : null,
         donation_value: valor ? Number(valor): null,
         donation_day_contact: data_contato,
         donation_description: descricao,

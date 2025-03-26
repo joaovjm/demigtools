@@ -19,6 +19,7 @@ export const monthlyfeeGenerator = async (dataSelected, mesref, day, month, year
           if (item.donation?.[0]?.donation_monthref !== mesref && item.donor_mensal.donor_mensal_day === day) {
             insertDonation(
               item.donor_id,
+              521,
               item.donor_mensal.donor_mensal_monthly_fee,
               null,
               `${DataNow().toLocaleString('pt-BR')}`, //data do contato
