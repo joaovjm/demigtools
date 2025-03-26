@@ -9,19 +9,20 @@ const MonthlyfeeGeneratorComponent = () => {
   const [mesrefGenerator, setMesrefGenerator] = useState("");
   const [isDisable, setIsDisable] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
+  const [contador, setContador] = useState(null);
 
   const onMonthHystoryChecker = async (e) => {
     const value = e.target.value;
-    const valueFormated = DataSelect(value)
     setMesrefGenerator(value);
-    setIsDisable(await monthHystoryChecker(valueFormated));
+    const formatedValue = DataSelect(value)
+    setIsDisable(await monthHystoryChecker(formatedValue));
     setConfirmed(false)
     
   };
 
   const handleGerar = async (e) => {
     e.preventDefault();
-    const status = await monthlyfeeGenerator(
+    const count = await monthlyfeeGenerator(
       DataSelect(mesrefGenerator),
       DataSelect(mesrefGenerator, "mesref"),
       DataSelect(mesrefGenerator, "day"),
@@ -29,7 +30,8 @@ const MonthlyfeeGeneratorComponent = () => {
       DataSelect(mesrefGenerator, "year")
     );
 
-    if (status === true) {
+    if (count >= 0) {
+      setContador(count)
       setConfirmed(true)
     }
     
@@ -50,7 +52,7 @@ const MonthlyfeeGeneratorComponent = () => {
         <button
           className="btn_gerar"
           onClick={handleGerar}
-          disabled={isDisable}
+          disabled={isDisable || confirmed}
         >
           Gerar
         </button>
@@ -64,7 +66,7 @@ const MonthlyfeeGeneratorComponent = () => {
         )}
         {confirmed && (
           <label className="label_status_mensal">
-            <GiConfirmed />
+            <h3>{contador} <GiConfirmed /></h3>
             <p>Mensal gerado com sucesso!</p>
           </label>
         )}

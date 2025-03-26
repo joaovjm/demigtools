@@ -13,7 +13,6 @@ import CheckPrint from "./pages/CheckPrint";
 import AreasToPrint from "./pages/AreasToPrint";
 import CollectorsMoviment from "./pages/CollectorsMoviment";
 import CountDonations from "./pages/CountDonations";
-import CreateMensalDonations from "./pages/CreateMensalDonations";
 import DonationsReceived from "./pages/DonationsReceived";
 import Operators from "./pages/Operators";
 import OperatorWork from "./pages/OperatorWork";
@@ -22,6 +21,7 @@ import WorkList from "./pages/WorkList";
 import Wrapper from "./assets/components/Wrapper";
 import UsersManager from "./pages/UsersManager";
 import Dashboard from "./pages/Dashboard";
+import CreateMensalDonation from "./pages/CreateMensalDonation";
 
 const Approuter = () => {
   return (
@@ -30,7 +30,14 @@ const Approuter = () => {
         <Route element={<Navbar />}>
           <Route path="/" element={<App />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Wrapper><Dashboard /></Wrapper>} />
+          <Route
+            path="/dashboard"
+            element={
+              <Wrapper>
+                <Dashboard />
+              </Wrapper>
+            }
+          />
           <Route
             path="/searchdonor"
             element={<Wrapper>{<SearchDonor />}</Wrapper>}
@@ -108,14 +115,6 @@ const Approuter = () => {
             }
           />
           <Route
-            path="/createmensaldonations"
-            element={
-              <Wrapper>
-                <CreateMensalDonations />
-              </Wrapper>
-            }
-          />
-          <Route
             path="/donationsreceived"
             element={
               <Wrapper>
@@ -160,6 +159,14 @@ const Approuter = () => {
             element={
               <Wrapper>
                 <UsersManager />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="/createmensaldonation"
+            element={
+              <Wrapper>
+                <CreateMensalDonation />
               </Wrapper>
             }
           />

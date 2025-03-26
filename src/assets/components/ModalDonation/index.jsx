@@ -20,6 +20,7 @@ const ModalDonation = ({
   const [impresso, setImpresso] = useState("");
   const [recebido, setRecebido] = useState("");
   const [mesref, setMesref] = useState("");
+  const [operator, setOperator] = useState(null)
 
   const data_contato = DataNow();
 
@@ -36,6 +37,7 @@ const ModalDonation = ({
 
     const error = insertDonation(
       donor_id,
+      operator,
       valor,
       comissao,
       data_contato,

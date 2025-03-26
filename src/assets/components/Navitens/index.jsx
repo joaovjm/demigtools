@@ -44,7 +44,7 @@ export const AdminMenu = [
     {
         id: 5,
         title: "Criar Doação Mensal",
-        path: "./createmensaldonations",
+        path: "./createmensaldonation",
         cName: "submenu-itens",
     },
     {
