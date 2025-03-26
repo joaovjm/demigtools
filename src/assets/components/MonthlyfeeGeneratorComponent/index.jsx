@@ -12,8 +12,9 @@ const MonthlyfeeGeneratorComponent = () => {
 
   const onMonthHystoryChecker = async (e) => {
     const value = e.target.value;
+    const valueFormated = DataSelect(value)
     setMesrefGenerator(value);
-    setIsDisable(await monthHystoryChecker(value));
+    setIsDisable(await monthHystoryChecker(valueFormated));
     setConfirmed(false)
     
   };
