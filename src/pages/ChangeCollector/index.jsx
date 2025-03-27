@@ -8,6 +8,8 @@ import { PiMagnifyingGlassBold } from "react-icons/pi";
 import { GiConfirmed } from "react-icons/gi";
 import { getCollector } from "../../helper/getCollector";
 import { changeCollector } from "../../helper/changeCollector";
+import { GoAlertFill } from "react-icons/go";
+import { DataSelect } from "../../assets/components/DataTime";
 
 const ChangeCollector = () => {
   const [collector, setCollector] = useState("");
@@ -15,6 +17,7 @@ const ChangeCollector = () => {
   const [date, setDate] = useState("");
   const [search, setSearch] = useState("");
   const [message, setMessage] = useState("");
+  const [typeAlert, setTypeAlert] = useState("")
 
   useEffect(() => {
     getCollector().then((data) => {
@@ -22,18 +25,25 @@ const ChangeCollector = () => {
     });
   }, []);
 
-  const handleChangeCollector = (e) => {
+  const handleChangeCollector = async (e) => {
     e.preventDefault();
+    const dateFormat = DataSelect(date)
+    const data = await changeCollector(collector, search, dateFormat);
 
-    const data = changeCollector(collector, search);
-
-    if (data) {
+    if (data === "Ok") {
       setMessage("Coletador alterado com sucesso!");
-      const messageTimeOut = setTimeout(() => {
-        setMessage("");
-      }, 1000);
-      return () => clearTimeout(messageTimeOut);
+      setTypeAlert("green")
+    } else if (data === "Sim") {
+      setTypeAlert("#940000")
+      setMessage("Doação já recebida")
+    } else if (data === 0) {
+      setTypeAlert("#940000")
+      setMessage("Recibo não localizado")
     }
+
+    setTimeout(() => {
+      setMessage("");
+    }, 2000);
   };
 
   return (
@@ -97,9 +107,11 @@ const ChangeCollector = () => {
       </form>
 
       {message && (
-        <div className="collector-form-message">
+        <div style={{backgroundColor: typeAlert}} className="collector-form-message">
           <p className="collector-form-message-text">
-            {message} <GiConfirmed />
+            {message} 
+            {typeAlert === "green" && <GiConfirmed />}
+            {typeAlert === "#940000" && <GoAlertFill />}
           </p>
         </div>
       )}
