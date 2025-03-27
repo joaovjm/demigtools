@@ -40,10 +40,11 @@ const ChangeCollector = () => {
       setTypeAlert("#940000")
       setMessage("Recibo não localizado")
     }
+    setSearch("")
 
     setTimeout(() => {
       setMessage("");
-    }, 2000);
+    }, 500);
   };
 
   return (
