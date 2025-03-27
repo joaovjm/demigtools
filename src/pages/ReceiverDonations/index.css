@@ -51,12 +51,38 @@
     width: 1134px;
     height: 30px;
     border-radius: 6px;
+    gap: 6px;
 
     & .receiver-donations-form-message-text{
         display: flex;
         align-items: center;
         gap: 6px;
     }
+}
+
+.btns{
+    min-width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.btn-decisionY,  .btn-decisionN{
+    width: 80px;
+    height: 28px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: #385BAD;
+    color: #FAF5E9;
+
+    &:hover{
+        opacity: 0.8;
+    }
+}
+
+.btn-decisionN{
+    background-color: #D60B0C;
 }
 
 .receiver-donations-table{

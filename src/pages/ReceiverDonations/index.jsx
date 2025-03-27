@@ -7,6 +7,7 @@ import { receiveDonation } from "../../helper/receiveDonation";
 import { GoAlertFill } from "react-icons/go";
 import { BiSolidErrorAlt } from "react-icons/bi";
 import { DataSelect } from "../../assets/components/DataTime";
+import { verifyCollector } from "../../helper/verifyCollector";
 
 const ReceiverDonations = () => {
   const [collector, setCollector] = useState("");
@@ -17,9 +18,30 @@ const ReceiverDonations = () => {
   const [collectors, setCollectors] = useState([]);
   const [tableReceipt, setTableReceipt] = useState([]);
   const [typeAlert, setTypeAlert] = useState("");
+  const [isEqual, setIsEqual] = useState(true);
 
-  const handleReceiverDonations = (e) => {
+  const handleReceiverDonations = async (e) => {
     e.preventDefault();
+    const verify = await verifyCollector(collector, search, setMessage, setSearch);
+
+    if (verify) {
+      receiveDonation(
+        modifiedDate,
+        setMessage,
+        collector,
+        setTypeAlert,
+        search,
+        setTableReceipt
+      );
+      setSearch("")
+    }
+    if (verify === false){
+      console.log(verify);
+      setIsEqual(verify);
+    }
+  };
+
+  const btnYes = () => {
     receiveDonation(
       modifiedDate,
       setMessage,
@@ -28,6 +50,12 @@ const ReceiverDonations = () => {
       search,
       setTableReceipt
     );
+    setSearch("")
+    setIsEqual(true);
+  };
+  const btnNo = () => {
+    setIsEqual(true);
+    return null;
   };
   useEffect(() => {
     setTableReceipt([]);
@@ -39,10 +67,11 @@ const ReceiverDonations = () => {
   }, []);
 
   const handleDate = (e) => {
-    const value = e.target.value
-    setDate(value)
-    setModifiedDate(DataSelect(value))
-  }
+    const value = e.target.value;
+    setDate(value);
+    setModifiedDate(DataSelect(value));
+  };
+
   return (
     <main className="receiver-donations-main">
       <div className="receiver-donations-header">
@@ -79,11 +108,7 @@ const ReceiverDonations = () => {
 
         <div className="receiver-donations-form-input">
           <label className="label">Data</label>
-          <input
-            type="date"
-            value={date}
-            onChange={handleDate}
-          />
+          <input type="date" value={date} onChange={handleDate} />
         </div>
 
         <div className="receiver-donations-form-input">
@@ -92,12 +117,34 @@ const ReceiverDonations = () => {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            readOnly={!isEqual}
           />
         </div>
       </form>
 
       {/*MENSAGEM*/}
       <div className="receiver-donations-form-message">
+        {!isEqual && (
+          <div
+            style={{ backgroundColor: "#940000", width: "100%" }}
+            className="receiver-donations-form-message"
+          >
+            <p className="receiver-donations-form-message-text">
+              Coletador é diferente do recibo.
+            </p>
+            <p className="receiver-donations-form-message-text">
+              Deseja dar baixa mesmo assim?
+            </p>
+            <div className="btns">
+              <button onClick={btnYes} className="btn-decisionY">
+                Sim [Y]
+              </button>
+              <button onClick={btnNo} className="btn-decisionN">
+                Não [N]
+              </button>
+            </div>
+          </div>
+        )}
         {message && (
           <div
             style={{ backgroundColor: typeAlert, width: "100%" }}
