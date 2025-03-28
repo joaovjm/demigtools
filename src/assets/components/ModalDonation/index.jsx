@@ -51,9 +51,14 @@ const ModalDonation = ({
   };
 
   const handleDate = (e) => {
-    const value = e.target.value;
+    var value = e.target.value;
+    const now = DataNow("noformated")
+    if (now > value){
+      value = now;
+    }
     setFormatedData(`${(DataSelect(value))}`);
     setData_receber(value);
+    
 
     const monthYear = `${DataSelect(value, "month")}/${DataSelect(
       value,

@@ -11,7 +11,7 @@ const dataTime = (props) => {
 export const DataNow = (x) => {
   const dataNow = dataTime();
   const day = dataNow.getDate();
-  const month = dataNow.getMonth() + 1;
+  const month = dataNow.getUTCMonth() + 1;
   const year = dataNow.getFullYear();
 
   if (x === "day") {
@@ -28,6 +28,9 @@ export const DataNow = (x) => {
   }
   if (x === undefined) {
     return `${day}/${month}/${year}`;
+  }
+  if (x === "noformated"){
+    return `${year}-0${month}-${day}`
   }
 };
 
