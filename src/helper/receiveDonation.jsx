@@ -3,7 +3,7 @@ import supabase from "./superBaseClient";
 
 export const useDonation = () => {
   const [modalOpen, setModalOpen] = useState(false);
-  const [modalConfig, setModalConfirg] = useState({
+  const [modalConfig, setModalConfig] = useState({
     title: "",
     message: "",
     onConfirm: null,
@@ -15,7 +15,7 @@ export const useDonation = () => {
     collector,
     setTypeAlert,
     search,
-    setTableReceipt
+    setTableReceipt, setIsDisable
   ) => {
     if (date !== "" && collector !== "" && search !== "") {
       //Busca do Nome do Doador
@@ -46,12 +46,8 @@ export const useDonation = () => {
 
           if (received === "Não") {
             if (collectorCode !== collector) {
-              //const confirmed = window.confirm("Coletador diferente. Deseja continuar?")
-              //if (!confirmed){
-              //  return null
-              //}
               return new Promise((resolve) => {
-                setModalConfirg({
+                setModalConfig({
                   title: "Confirmação necessária",
                   message: "Ficha de outro coletador. Deseja continuar? ",
                   onConfirm: () => {
@@ -65,9 +61,11 @@ export const useDonation = () => {
                       { search, name, value }
                     ).then(resolve);
                     setModalOpen(false);
+                    
                   },
                 });
                 setModalOpen(true);
+                
               });
             } else {
               return performUpdate(
@@ -130,7 +128,12 @@ export const useDonation = () => {
     } catch (error) {
       console.error("Erro na atualização", error.message);
     }
+    setTimeout(() => {
+      setMessage("");
+    }, 1000);
   };
+
+  
 
   return {receiveDonation, modalOpen, setModalOpen, modalConfig };
 };

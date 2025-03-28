@@ -4,8 +4,11 @@ import "./index.css"
 export const ModalConfirm = ({isOpen, onClose, onConfirm, title, message}) => {
     useEffect(() => {
         const handleKeyDown = (e) => {
-            if (e.key === 'enter'){
-                onclose();
+            if (e.key === "Escape"){
+                onClose();
+            }
+            if (e.keyCode == 89) {
+                onConfirm()
             }
         }
         if (isOpen) {
@@ -20,7 +23,7 @@ export const ModalConfirm = ({isOpen, onClose, onConfirm, title, message}) => {
     return (
         <div className="modal-overlay">
             <div className="modal-content">
-                <h3>{title}</h3>
+                <h4>{title}</h4>
                 <p>{message}</p>
                 <div className="modal-actions">
                     <button onClick={onClose} className="cancel-button">Cancelar</button>

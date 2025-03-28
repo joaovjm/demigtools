@@ -20,13 +20,19 @@ const ReceiverDonations = () => {
   const [collectors, setCollectors] = useState([]);
   const [tableReceipt, setTableReceipt] = useState([]);
   const [typeAlert, setTypeAlert] = useState("");
+  const [isDisable, setIsDisable] = useState(false);
 
-  const { receiveDonation, modalOpen, setModalOpen, modalConfig } = useDonation();
+  const { receiveDonation, modalOpen, setModalOpen, modalConfig } =
+    useDonation();
 
+    useEffect(() => {
+      setIsDisable(modalOpen)
+      
+    }, [modalOpen])
+    
   const handleReceiverDonations = async (e) => {
     e.preventDefault();
-
-    receiveDonation(
+    await receiveDonation(
       modifiedDate,
       setMessage,
       collector,
@@ -34,7 +40,7 @@ const ReceiverDonations = () => {
       search,
       setTableReceipt
     );
-    setSearch("");
+    setSearch("")
   };
 
   useEffect(() => {
@@ -72,7 +78,7 @@ const ReceiverDonations = () => {
             disabled={modalOpen}
             onChange={(e) => setCollector(e.target.value)}
           >
-            <option value="" disabled>
+            <option value="" disabled={isDisable}>
               Selecione o coletador...
             </option>
             {collectors?.map((item) => (
@@ -88,7 +94,12 @@ const ReceiverDonations = () => {
 
         <div className="receiver-donations-form-input">
           <label className="label">Data</label>
-          <input type="date" value={date} onChange={handleDate} readOnly={modalOpen}/>
+          <input
+            type="date"
+            value={date}
+            onChange={handleDate}
+            readOnly={isDisable}
+          />
         </div>
 
         <div className="receiver-donations-form-input">
@@ -97,7 +108,7 @@ const ReceiverDonations = () => {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            readOnly={modalOpen}
+            readOnly={isDisable}
           />
         </div>
       </form>
