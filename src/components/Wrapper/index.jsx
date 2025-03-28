@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import supabase from "../../../helper/superBaseClient";
+import supabase from "../../helper/superBaseClient";
 import { useEffect, useState } from "react";
 
 function Wrapper({ children }) {

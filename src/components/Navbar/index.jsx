@@ -1,4 +1,4 @@
-import React, { createRef, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router";
 import "./navbar.css";
 import Loader from "../Loader";
@@ -6,7 +6,7 @@ import { MdOutlineLogin } from "react-icons/md";
 import { IoPersonCircleOutline } from "react-icons/io5";
 
 import { AdminMenu, Navitens, OperadorMenu, RelatórioMenu } from "../Navitens";
-import supabase from "../../../helper/superBaseClient";
+import supabase from "../../helper/superBaseClient";
 
 const Navbar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

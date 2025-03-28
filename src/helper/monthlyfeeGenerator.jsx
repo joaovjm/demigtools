@@ -1,4 +1,4 @@
-import { DataNow } from "../assets/components/DataTime";
+import { DataNow } from "../components/DataTime";
 import { insertDonation } from "./insertDonation";
 import { insertMonthHistory } from "./insertMonthHistory";
 import supabase from "./superBaseClient";

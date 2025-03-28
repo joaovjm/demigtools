@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./index.css";
-import { getDonation } from "../../../helper/getDonation";
+import { getDonation } from "../../helper/getDonation";
 
 const TableDonor = ({ idDonor , modalShow}) => {
   const [dados, setDados] = useState([]);

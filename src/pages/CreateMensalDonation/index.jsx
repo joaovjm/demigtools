@@ -1,5 +1,5 @@
 import "./index.css";
-import MonthlyfeeGeneratorComponent from "../../assets/components/MonthlyfeeGeneratorComponent";
+import MonthlyfeeGeneratorComponent from "../../components/MonthlyfeeGeneratorComponent";
 
 const CreateMensalDonation = () => {
   return (

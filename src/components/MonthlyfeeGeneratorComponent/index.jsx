@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./index.css";
-import { monthlyfeeGenerator } from "../../../helper/monthlyfeeGenerator";
-import { monthHystoryChecker } from "../../../helper/monthHistoryChecker";
+import { monthlyfeeGenerator } from "../../helper/monthlyfeeGenerator";
+import { monthHystoryChecker } from "../../helper/monthHistoryChecker";
 import { GiConfirmed } from "react-icons/gi";
 import { DataSelect } from "../DataTime";
 

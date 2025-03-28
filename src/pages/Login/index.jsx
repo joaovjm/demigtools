@@ -3,7 +3,7 @@ import './login.css'
 import { FaEye, FaEyeSlash, FaRegUser } from "react-icons/fa";
 import supabase from "../../helper/superBaseClient";
 import { Navigate, useNavigate } from "react-router";
-import Loader from "../../assets/components/Loader";
+import Loader from "../../components/Loader";
 
 const Login = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);

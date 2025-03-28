@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router";
-import Navbar from "./assets/components/Navbar";
+import Navbar from "./components/Navbar";
 import App from "./App";
 import Login from "./pages/Login";
 import Donor from "./pages/Donor";
@@ -18,7 +18,7 @@ import Operators from "./pages/Operators";
 import OperatorWork from "./pages/OperatorWork";
 import WorkHistory from "./pages/WorkHistory";
 import WorkList from "./pages/WorkList";
-import Wrapper from "./assets/components/Wrapper";
+import Wrapper from "./components/Wrapper";
 import UsersManager from "./pages/UsersManager";
 import Dashboard from "./pages/Dashboard";
 import CreateMensalDonation from "./pages/CreateMensalDonation";

@@ -4,12 +4,12 @@ import React, { useState, useEffect } from "react";
 import { FaMoneyCheckDollar } from "react-icons/fa6";
 import { IoMdArrowRoundBack } from "react-icons/io";
 
-import TableDonor from "../../assets/components/TableDonor";
+import TableDonor from "../../components/TableDonor";
 import { useParams } from "react-router";
 import { editDonor } from "../../helper/editDonor";
 import { getInfoDonor } from "../../helper/getDonor";
-import ModalDonation from "../../assets/components/ModalDonation";
-import Loader from "../../assets/components/Loader";
+import ModalDonation from "../../components/ModalDonation";
+import Loader from "../../components/Loader";
 import { BsDatabaseAdd } from "react-icons/bs";
 
 const Donor = () => {

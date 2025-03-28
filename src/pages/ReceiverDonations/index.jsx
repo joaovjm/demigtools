@@ -8,8 +8,8 @@ import { BiSolidErrorAlt } from "react-icons/bi";
 
 import { useDonation } from "../../helper/receiveDonation";
 import { getCollector } from "../../helper/getCollector";
-import { DataSelect } from "../../assets/components/DataTime";
-import { ModalConfirm } from "../../assets/components/ModalConfirm";
+import { DataSelect } from "../../components/DataTime";
+import { ModalConfirm } from "../../components/ModalConfirm";
 
 const ReceiverDonations = () => {
   const [collector, setCollector] = useState("");

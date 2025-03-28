@@ -1,13 +1,18 @@
-import "./index.css";
+// React and Hooks
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 
+//Icons
 import { PiMagnifyingGlassBold } from "react-icons/pi";
 import { FaMoneyCheckDollar } from "react-icons/fa6";
 import { IoMdAddCircleOutline } from "react-icons/io";
-import { searchDonor } from "../../helper/searchDonor";
-import Loader from "../../assets/components/Loader";
 
+//Components and Helpers
+import { searchDonor } from "../../helper/searchDonor";
+import Loader from "../../components/Loader";
+
+//Styles
+import "./index.css";
 
 const SearchDonor = () => {
   const [selectedValue, setSelectValue] = useState("todos");

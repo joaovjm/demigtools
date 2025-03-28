@@ -9,7 +9,7 @@ import { GiConfirmed } from "react-icons/gi";
 import { getCollector } from "../../helper/getCollector";
 import { changeCollector } from "../../helper/changeCollector";
 import { GoAlertFill } from "react-icons/go";
-import { DataSelect } from "../../assets/components/DataTime";
+import { DataSelect } from "../../components/DataTime";
 
 const ChangeCollector = () => {
   const [collector, setCollector] = useState("");

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./index.css";
 
 import { FaDollarSign } from "react-icons/fa";
-import { insertDonation } from "../../../helper/insertDonation";
+import { insertDonation } from "../../helper/insertDonation";
 import { DataNow, DataSelect } from "../DataTime";
 
 const ModalDonation = ({
