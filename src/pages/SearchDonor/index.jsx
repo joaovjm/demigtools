@@ -2,105 +2,60 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 
-//Icons
-import { PiMagnifyingGlassBold } from "react-icons/pi";
-import { FaMoneyCheckDollar } from "react-icons/fa6";
-import { IoMdAddCircleOutline } from "react-icons/io";
-
 //Components and Helpers
-import { searchDonor } from "../../helper/searchDonor";
-import Loader from "../../components/Loader";
+import fetchDonors from "../../services/searchDonorService"
+import { DonorCard } from "../../components/cards/DonorCard";
+import {NewDonorButton} from "../../components/buttons/NewDonorButton"
 
 //Styles
 import "./index.css";
+import { SearchForm } from "../../components/forms/SearchForm";
 
 const SearchDonor = () => {
   const [selectedValue, setSelectValue] = useState("todos");
-  const [buscardoador, setBuscardoador] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [donor, setDonor] = useState([]);
   const [loading, setLoading] = useState(false);
-
   const navigate = useNavigate();
-  let tipo = "";
-  
-  const handleChange = (event) => {
-    setSelectValue(event.target.value);
-  };  
 
-  const onClickSearch = async (event) => {
-    event.preventDefault();
-    try {
-      setLoading(true);
-      selectedValue !== "todos" ? (tipo = selectedValue) : (tipo = "");
-      const data = await searchDonor(buscardoador, tipo);
-      setDonor(data);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-    }
+  const handleSearchDonor = async (e) => {
+    e.preventDefault();
+    await fetchDonors(searchTerm, selectedValue, setLoading, setDonor);
   };
 
-  const onClickDonor = (id) => {
+  const handleDonorClick = (id) => {
     navigate(`/donor/${id}`);
+  };
+
+  const handleAddDonorClick = () => {
+    navigate("/newdonor");
   };
 
   return (
     <main className="containersearch">
-      <form onSubmit={onClickSearch} className="formsearch">
-        <div className="search">
-          <label className="label">Buscar Doador</label>
-          <input
-            type="text"
-            name="buscardoador"
-            value={buscardoador}
-            onChange={(e) => setBuscardoador(e.target.value)}
-          />
-        </div>
-        <div className="type">
-          <label htmlFor="dropdown" className="label">
-            Tipo
-          </label>
-          <select id="dropdown" value={selectedValue} onChange={handleChange}>
-            <option value="todos">Todos</option>
-            <option value="avulso">Avulso</option>
-            <option value="lista">Lista</option>
-            <option value="mensal">Mensal</option>
-          </select>
-        </div>
-
-        <button className="btnsearch" type="submit">
-          {loading ? <Loader className="loadersearch"/> : <PiMagnifyingGlassBold />} Buscar
-        </button>
-      </form>
-
+      <SearchForm
+        searchTerm={searchTerm}
+        selectedValue={selectedValue}
+        loading={loading}
+        onSearchChange={(e) => setSearchTerm(e.target.value)}
+        onValueChange={(e) => setSelectValue(e.targer.value)}
+        onSearchSubmit={handleSearchDonor}
+      />
       <div className="Carddiv">
-        {donor
-          ? donor.map((donors) => (
-            
-              <div
-                key={donors.donor_id}
-                className="Cardform"
-                onClick={() => onClickDonor(donors.donor_id)}
-              >
-                <header>
-                  <h3>
-                    <FaMoneyCheckDollar /> {donors.donor_name}
-                  </h3>
-                </header>
-                <div className="Cardinfo">
-                  <p>End.: {donors.donor_address}</p>
-                  <p>Tel.: {donors.donor_tel_1}</p>
-                  <p>Bairro: {donors.donor_neighborhood}</p>
-                  <p>Tipo: {donors.donor_type}</p>
-                </div>
-              </div>
-            ))
-          : "Nenhum doador encontrado"}
-        
-        <div className="iconadd" onClick={() => navigate("/newdonor")}>
-          <IoMdAddCircleOutline />
-        </div>
-        
+        {donor? (
+          donor.map((donors) => (
+            <DonorCard
+              key={donors.donor_id}
+              donor={donors}
+              onClick={handleDonorClick}
+            />
+          ))
+        ) : (
+          <p>"Nenhum doador encontrado"</p>
+        )}
+
+        <NewDonorButton
+        onClick={handleAddDonorClick}/>
       </div>
     </main>
   );

@@ -1,6 +1,6 @@
 import supabase from "./superBaseClient";
 
-export const searchDonor = async (params, donor_type) => {
+const searchDonor = async (params, donor_type) => {
   try {
     let query;
 
@@ -43,3 +43,4 @@ export const searchDonor = async (params, donor_type) => {
     return null;
   }
 };
+export default searchDonor;
