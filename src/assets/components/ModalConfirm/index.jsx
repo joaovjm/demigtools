@@ -7,7 +7,7 @@ export const ModalConfirm = ({isOpen, onClose, onConfirm, title, message}) => {
             if (e.key === "Escape"){
                 onClose();
             }
-            if (e.keyCode == 89) {
+            if (e.keyCode === 89) {
                 onConfirm()
             }
         }
