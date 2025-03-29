@@ -1,6 +1,7 @@
 import supabase from "./superBaseClient"
 
 export const changeCollector = async (collector_code_id, receipt_donation_id, dateFormat) => {
+ 
     try{
         const { data, error } = await supabase.from("donation").select("donation_received").eq("receipt_donation_id", receipt_donation_id)
 
@@ -14,7 +15,7 @@ export const changeCollector = async (collector_code_id, receipt_donation_id, da
     
             return "Ok"
         } else {
-            return "Sim"
+            return "Yes"
         }
     } catch (error) {
         return 0

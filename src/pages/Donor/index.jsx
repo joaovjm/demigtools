@@ -1,382 +1,305 @@
 import "./index.css";
 import React, { useState, useEffect } from "react";
 
-import { FaMoneyCheckDollar } from "react-icons/fa6";
-import { IoMdArrowRoundBack } from "react-icons/io";
-
 import TableDonor from "../../components/TableDonor";
 import { useParams } from "react-router";
 import { editDonor } from "../../helper/editDonor";
 import { getInfoDonor } from "../../helper/getDonor";
 import ModalDonation from "../../components/ModalDonation";
 import Loader from "../../components/Loader";
-import { BsDatabaseAdd } from "react-icons/bs";
+import { BUTTON_TEXTS, DONOR_TYPES, FORM_LABELS, ICONS } from "../../constants/constants";
+
+import FormTextArea from "../../components/forms/FormTextArea";
+import FormDonorInput from "../../components/forms/FormDonorInput";
+import FormListSelect from "../../components/forms/FormListSelect";
 
 const Donor = () => {
-  const [nome, setNome] = useState(null);
-  const [tipo, setTipo] = useState("");
-  const [cpf, setCpf] = useState(null);
-  const [endereco, setEndereco] = useState(null);
-  const [cidade, setCidade] = useState(null);
-  const [bairro, setBairro] = useState(null);
-  const [telefone1, setTelefone1] = useState(null);
-  const [telefone2, setTelefone2] = useState(null);
-  const [telefone3, setTelefone3] = useState(null);
-  const [dia, setDia] = useState(null);
-  const [mensalidade, setMensalidade] = useState(null);
-  const [media, setMedia] = useState(null);
-  const [observacao, setObservacao] = useState(null);
-  const [idDonor, setIdDonor] = useState(null);
-  const [edit, setEdit] = useState(true);
-  const [btnedit, setBtnedit] = useState("Editar");
-  const [showbtn, setShowbtn] = useState(true);
-  const [modalShow, setModalShow] = useState(false);
-  const [referencia, setReferencia] = useState("")
-
   const { id } = useParams();
+
+  const [donorData, SetDonorData] = useState({
+    nome: "",
+    tipo: "",
+    cpf: "",
+    endereco: "",
+    cidade: "",
+    bairro: "",
+    telefone1: "",
+    telefone2: "",
+    telefone3: "",
+    dia: "",
+    mensalidade: "",
+    media: "",
+    observacao: "",
+    referencia: ""
+  });
+
+  const [uiState, setUiState] = useState({
+    edit: true,
+    btnEdit: BUTTON_TEXTS.EDIT,
+    showBtn:true,
+    modalShow: false,
+    loading: false
+  })
+
+
+  
   const params = {};
   if (id) params.id = id;
   useEffect(() => {
-    getInfoDonor(id).then((data) => {
-      setIdDonor(params.id);
-      setNome(data[0].donor_name);
-      setEndereco(data[0].donor_address);
-      setCidade(data[0].donor_city);
-      setBairro(data[0].donor_neighborhood);
-      setTelefone1(data[0].donor_tel_1);
-
-      
-
+    const loadDonorData = async () => {
       try{
-        setCpf(data[0].donor_cpf.donor_cpf);
-      } catch {
-        setCpf("")
-      }
+        const data = await getInfoDonor(id)
+        const donor = data[0]
 
-      try{
-        setTelefone2(data[0].donor_tel_2.donor_tel_2);
-      } catch {
-        setTelefone2("")
-      }
+        SetDonorData({
+          nome: donor.donor_name,
+          endereco: donor.donor_address,
+          cidade: donor.donor_city,
+          bairro: donor.donor_neighborhood,
+          telefone1: donor.donor_tel_1,
+          cpf: donor.donor_cpf?.donor_cpf || null,
+          telefone2: donor.donor_tel_2?.donor_tel_2 || null,
+          telefone3: donor.donor_tel_2?.donor_tel_3 || null,
+          dia: donor.donor_mensal?.donor_mensal_day || null,
+          mensalidade: donor.donor_mensal?.donor_mensal_monthly_fee || null,
+          observacao: donor.donor_observation?.donor_observation || "",
+          referencia: donor.donor_reference?.donor_reference || "",
+          tipo: donor.donor_type
+        })
 
-      try{
-        setTelefone3(data[0].donor_tel_3.donor_tel_3);
-      } catch {
-        setTelefone3("")
+      } catch (error){
+        console.error("Erro ao carregar os dados do doador: ", error.message)
       }
+    };
 
-      try{
-        setDia(data[0].donor_mensal.donor_mensal_day);
-      } catch {
-        setDia(null)
-      }
+    loadDonorData()
 
-      try{
-        setMensalidade(data[0].donor_mensal.donor_mensal_monthly_fee)
-      } catch {
-        setMensalidade(null)
-      }
+  }, [id]);
 
-      try{
-        setObservacao(data[0].donor_observation.donor_observation);
-      } catch {
-        setObservacao("")
-      }
-
-      try{
-        setReferencia(data[0].donor_reference.donor_reference)
-      }catch {
-        setReferencia("")
-      }
-      
-      
-      
-      
-      //setDia(data[0].dia);
-      //setMensalidade(data[0].valor);
-      //setMedia(data[0].media);
-      
-
-      if (data[0].donor_type === "Avulso") {
-        setTipo("Avulso");
-      } else if (data[0].donor_type === "Mensal") {
-        setTipo("Mensal");
-      } else if (data[0].donor_type === "Lista") {
-        setTipo("Lista");
-      }
-    });
-
+  const handleInputChange = (field, value) => {
+    SetDonorData(prev => ({...prev, [field]: value}))
     
-  }, [tipo !== setTipo]);
+  }
+
 
   // Responsável por editar e salvar as informações do doador
-  const EditDonor = async () => {
-    setBtnedit(<Loader />);
-    if (btnedit === "Salvar") {
-      if (tipo === "Mensal") {
-        if(dia !== null && mensalidade !== null) {
-          const data = await editDonor(
-            id,
-            nome,
-            tipo,
-            cpf,
-            endereco,
-            cidade,
-            bairro,
-            telefone1,
-            telefone2,
-            telefone3,
-            dia,
-            mensalidade,
-            observacao,
-            referencia
-          );
-          if (data) {
-            setEdit(true);
-            setBtnedit("Editar");
-            setShowbtn(true);
-          } else {
-            setBtnedit("Salvar");
-          }
-        } else {
-          window.alert("Os campos DIA e MENSALIDADE precisam ser preenchidos corretamente!")
-          setBtnedit("Salvar")
-        }
-        
-        
-        
-      } else {
-        const data = await editDonor(
-          id,
-          nome,
-          tipo,
-          cpf,
-          endereco,
-          cidade,
-          bairro,
-          telefone1,
-          telefone2,
-          telefone3,
-          observacao,
-          referencia
+  const handleEditDonor = async () => {
+    if (uiState.btnEdit === BUTTON_TEXTS.SAVE){
+      if(donorData.tipo === DONOR_TYPES.MONTHLY && (donorData.dia === null || donorData.mensalidade === null)){
+        window.alert(
+          "Os campos DIA e MENSALIDADE precisam ser preenchidos corretamente!"
         );
-
-        if (data) {
-          setEdit(true);
-          setBtnedit("Editar");
-          setShowbtn(true);
-        } else {
-          setBtnedit("Salvar");
-        }
+        return;
       }
-      
 
-      
+      setUiState(prev => ({...prev, loading: true}));
+
+      try{
+        const success = await editDonor(
+          id, 
+          donorData.nome, 
+          donorData.tipo,
+          donorData.cpf,
+          donorData.endereco,
+          donorData.cidade,
+          donorData.bairro,
+          donorData.telefone1,
+          donorData.telefone2,
+          donorData.telefone3,
+          donorData.dia,
+          donorData.mensalidade,
+          donorData.observacao,
+          donorData.referencia
+        )
+
+        if (success) {
+          setUiState({
+            edit: true,
+            btnEdit: BUTTON_TEXTS.EDIT,
+            showBtn: true,
+            loading: false,
+            modalShow: uiState.modalShow
+          });
+        }
+      } catch (error) {
+        console.error("Erro ao editar o doador: ", error.message)
+        setUiState(prev => ({...prev, loading: false}));
+      }
     } else {
-      setEdit(!edit);
-      setBtnedit("Salvar");
-      setShowbtn(!showbtn);
-      
+      setUiState(prev => ({...prev, edit: false, btnEdit: BUTTON_TEXTS.SAVE, showBtn: false}))
     }
-  };
+  }
+    
 
-  const handleBack = () => {
-    window.history.back();
-  };
-  //console.log(modalShow)
+  const handleBack = () => window.history.back();
+
+
   return (
     <main className="containerDonor">
       {/* Cabeçalho com botões */}
       <header className="header">
         <h2>
-          <FaMoneyCheckDollar /> Doador
+          {ICONS.MONEY} Doador
         </h2>
         <button onClick={handleBack} className="btn-back">
-          <IoMdArrowRoundBack /> Voltar
+          {ICONS.BACK} {BUTTON_TEXTS.BACK}
         </button>
         <div className="btns">
-          <button onClick={EditDonor} className="btn-edit">
-            {btnedit}
+          <button onClick={handleEditDonor} className="btn-edit" disabled={uiState.loading}>
+            {uiState.loading? <Loader/> : uiState.btnEdit}
           </button>
-          {showbtn ? (
+
+
+          {uiState.showBtn && (
             <button
-              onClick={() => setModalShow(true)}
+              onClick={() => setUiState(prev => ({...prev, modalShow: true}))}
               type="submit"
               className="btn-add"
             >
-              Criar Movimento
+              {BUTTON_TEXTS.CREATE_MOVIMENT}
             </button>
-          ) : null}
+          )}
         </div>
       </header>
 
       {/* Formulario com informações do doador */}
       <form className="formDonor">
-        <div className="div-inputs">
-          <label className="label">Nome</label>
-          <input
-            type="text"
-            name="nome"
-            defaultValue={nome}
-            onChange={(e) => setNome(e.target.value)}
-            readOnly={edit}
-          />
-        </div>
+        <FormDonorInput
+          label={FORM_LABELS.NAME}
+          value={donorData.nome}
+          onChange={(e) => handleInputChange("nome", e.target.value)}
+          readOnly={uiState.edit}
+          className={"label"}
+        />
 
-        <div className="div-inputs">
-          <label htmlFor="dropdown" className="label">
-            Tipo
-          </label>
-          <select
-            id="dropdown"
-            onChange={(e) => setTipo(e.target.value)}
-            value={tipo}
-            disabled={edit}
-          >
-            <option value="Avulso">Avulso</option>
-            <option value="Mensal">Mensal</option>
-            <option value="Lista">Lista</option>
-          </select>
-        </div>
+        <FormListSelect
+          label={FORM_LABELS.TYPE}
+          value={donorData.tipo}
+          onChange={(e) => handleInputChange("tipo", e.target.value)}
+          disabled={uiState.edit}
+          options={Object.values(DONOR_TYPES)}
+          className={"label"}
+        />
 
-        <div className="div-inputs">
-          <label className="label">CPF</label>
-          <input
-            type="text"
-            defaultValue={cpf}
-            onChange={(e) => setCpf(e.target.value)}
-            readOnly={edit}
-          />
-        </div>
+        <FormDonorInput
+          label={FORM_LABELS.CPF}
+          value={donorData.cpf}
+          onChange={(e) => handleInputChange("cpf", e.target.value)}
+          readOnly={uiState.edit}
+          className={"label"}
+        />
 
-        <div className="div-inputs">
-          <label className="label">Endereço</label>
-          <input
-            type="text"
-            defaultValue={endereco}
-            onChange={(e) => setEndereco(e.target.value)}
-            readOnly={edit}
-          />
-        </div>
+        <FormDonorInput
+          label={FORM_LABELS.ADDRESS}
+          value={donorData.endereco}
+          onChange={(e) => handleInputChange("endereco", e.target.value)}
+          readOnly={uiState.edit}
+          className={"label"}
+        />
 
-        <div className="div-inputs">
-          <label className="label">Cidade</label>
-          <input
-            type="text"
-            defaultValue={cidade}
-            onChange={(e) => setCidade(e.target.value)}
-            readOnly={edit}
-          />
-        </div>
+        <FormDonorInput
+          label={FORM_LABELS.CITY}
+          value={donorData.cidade}
+          onChange={(e) => handleInputChange("cidade", e.target.value)}
+          readOnly={uiState.edit}
+          className={"label"}
+        />
 
-        <div className="div-inputs">
-          <label className="label">bairro</label>
-          <input
-            type="text"
-            defaultValue={bairro}
-            onChange={(e) => setBairro(e.target.value)}
-            readOnly={edit}
-          />
-        </div>
+        <FormDonorInput
+          label={FORM_LABELS.NEIGHBORHOOD}
+          value={donorData.bairro}
+          onChange={(e) => handleInputChange("bairro", e.target.value)}
+          readOnly={uiState.edit}
+          className={"label"}
+        />
 
-        <div className="div-inputs">
-          <label className="label">Telefone 1</label>
-          <input
-            type="text"
-            defaultValue={telefone1}
-            onChange={(e) => setTelefone1(e.target.value)}
-            readOnly={edit}
-          />
-        </div>
+        <FormDonorInput
+          label={FORM_LABELS.PHONE1}
+          value={donorData.telefone1}
+          onChange={(e) => handleInputChange("telefone1", e.target.value)}
+          readOnly={uiState.edit}
+          className={"label"}
+        />
 
-        <div className="div-inputs">
-          <label className="label">Telefone 2</label>
-          <input
-            type="text"
-            defaultValue={telefone2}
-            readOnly={edit}
-            onChange={(e) => setTelefone2(e.target.value)}
-          />
-        </div>
+        <FormDonorInput
+          label={FORM_LABELS.PHONE2}
+          value={donorData.telefone2}
+          onChange={(e) => handleInputChange("telefone2", e.target.value)}
+          readOnly={uiState.edit}
+          className={"label"}
+        />
 
-        <div className="div-inputs">
-          <label className="label">Telefone 3</label>
-          <input
-            type="text"
-            defaultValue={telefone3}
-            onChange={(e) => setTelefone3(e.target.value)}
-            readOnly={edit}
-          />
-        </div>
+        <FormDonorInput
+          label={FORM_LABELS.PHONE3}
+          value={donorData.telefone3}
+          onChange={(e) => handleInputChange("telefone3", e.target.value)}
+          readOnly={uiState.edit}
+          className={"label"}
+        />
 
-        <div className="div-inputs" style={{ width: 180 }}>
-          <label className="label">dia</label>
-          <input
-            type="text"
-            defaultValue={dia}
-            onChange={(e) => setDia(e.target.value)}
-            disabled={tipo === "Mensal" ? false : true}
-            readOnly={edit}
-          />
-        </div>
+        <FormDonorInput
+          label={FORM_LABELS.DAY}
+          value={donorData.dia}
+          onChange={(e) => handleInputChange("dia", e.target.value)}
+          readOnly={uiState.edit}
+          disabled={donorData.tipo !== DONOR_TYPES.MONTHLY}
+          className={"label"}
+          style={{ width: 100 }}
+          
+          
+        />
 
-        <div className="div-inputs" style={{ width: 180 }}>
-          <label className="label" style={{ width: 100 }}>
-            Mensalidade
-          </label>
-          <input
-            type="text"
-            defaultValue={mensalidade}
-            onChange={(e) => setMensalidade(e.target.value)}
-            readOnly={edit}
-            disabled={tipo === "Mensal" ? false : true}
-          />
-        </div>
+        <FormDonorInput
+          label={FORM_LABELS.FEE}
+          value={donorData.mensalidade}
+          onChange={(e) => handleInputChange("mensalidade", e.target.value)}
+          readOnly={uiState.edit}
+          disabled={donorData.tipo != DONOR_TYPES.MONTHLY}
+          className={"label"}
+          style={{ width: 100 }}
+          
+        />
 
-        <div className="div-inputs" style={{ width: 180 }}>
-          <label className="label">Media</label>
-          <input
-            type="text"
-            defaultValue={media}
-            onChange={(e) => setMedia(e.target.value)}
-            readOnly={edit}
-            disabled={tipo === "Mensal" ? false : true}
-          />
-        </div>
+        <FormDonorInput
+          label={FORM_LABELS.AVERAGE}
+          value={donorData.media}
+          onChange={(e) => handleInputChange("media", e.target.value)}
+          readOnly={uiState.edit}
+          disabled={donorData.tipo !== DONOR_TYPES.MONTHLY}
+          className={"label"}
+          style={{ width: 100 }}
+         
+        />
 
-        <div className="div-inputs" id="observation">
-          <label className="label" style={{ width: "100px" }}>
-            Observação
-          </label>
-          {/* <input className="inputObservation" type="text"/> */}
-          <textarea
-            defaultValue={observacao}
-            onChange={(e) => setObservacao(e.target.value)}
-            readOnly={edit}
-          />
-        </div>
 
-        <div className="div-inputs" id="referencia">
-          <label className="label" style={{ width: "100px" }}>
-            Referência
-          </label>
-          {/* <input className="inputObservation" type="text"/> */}
-          <textarea
-            value={referencia}
-            onChange={(e) => setReferencia(e.target.value)}
-            readOnly={edit}
-          />
-        </div>
+        <FormTextArea
+          label={FORM_LABELS.OBSERVATION}
+          value={donorData.observacao}
+          onChange={(e) => handleInputChange("observacao", e.target.value)}
+          readOnly={uiState.edit}
+          className={"label"}
+         
+        />
+
+        <FormTextArea
+          label={FORM_LABELS.REFERENCE}
+          value={donorData.referencia}
+          onChange={(e) => handleInputChange("referencia", e.target.value)}
+          readOnly={uiState.edit}
+          className={"label"}
+          
+        />
+
       </form>
-      {showbtn ? <TableDonor idDonor={idDonor} modalShow={modalShow}/> : null}
+      {uiState.showBtn && <TableDonor idDonor={id} modalShow={uiState.modalShow}/>}
 
-      {modalShow && (
+      {uiState.modalShow && (
         <ModalDonation
-          modalShow={modalShow}
-          setModalShow={setModalShow}
-          mensalidade={mensalidade}
-          tipo={tipo}
-          donor_id={idDonor}
+          modalShow={uiState.modalShow}
+          setModalShow={(show)=> setUiState(prev => ({...prev, modalShow: show}))}
+          mensalidade={donorData.mensalidade}
+          tipo={donorData.tipo}
+          donor_id={id}
         />
       )}
     </main>

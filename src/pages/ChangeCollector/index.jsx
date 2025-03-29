@@ -1,50 +1,89 @@
 import React, { useEffect, useState } from "react";
 import "./index.css";
 
-import { TbArrowsExchange } from "react-icons/tb";
-import { FaMotorcycle } from "react-icons/fa";
-import { FaCalendarAlt } from "react-icons/fa";
-import { PiMagnifyingGlassBold } from "react-icons/pi";
-import { GiConfirmed } from "react-icons/gi";
 import { getCollector } from "../../helper/getCollector";
 import { changeCollector } from "../../helper/changeCollector";
-import { GoAlertFill } from "react-icons/go";
 import { DataSelect } from "../../components/DataTime";
+import { ALERT_TYPES, ICONS, MESSAGES } from "../../constants/constants";
+import FormSelect from "../../components/forms/FormSelect";
+import FormInput from "../../components/forms/FormInput";
+import MessageStatus from "../../components/MessageStatus";
 
 const ChangeCollector = () => {
-  const [collector, setCollector] = useState("");
+  const [formData, setFormData] = useState({
+    collector: "",
+    date: "",
+    search: "",
+  });
   const [collectors, setCollectors] = useState([]);
-  const [date, setDate] = useState("");
-  const [search, setSearch] = useState("");
-  const [message, setMessage] = useState("");
-  const [typeAlert, setTypeAlert] = useState("")
+  const [alert, setAlert] = useState({ message: "", type: "" });
 
   useEffect(() => {
-    getCollector().then((data) => {
-      setCollectors(data);
-    });
+    const fetchCollectors = async () => {
+      try {
+        const data = await getCollector();
+        setCollectors(data);
+      } catch (error) {
+        console.error("Falha ao buscar colecadores: ", error.message);
+        setAlert({
+          message: "Erro ao carregar coletadores",
+          type: ALERT_TYPES.ERROR,
+        });
+      }
+    };
+    fetchCollectors();
   }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleChangeCollector = async (e) => {
     e.preventDefault();
-    const dateFormat = DataSelect(date)
-    const data = await changeCollector(collector, search, dateFormat);
 
-    if (data === "Ok") {
-      setMessage("Coletador alterado com sucesso!");
-      setTypeAlert("green")
-    } else if (data === "Sim") {
-      setTypeAlert("#940000")
-      setMessage("Doação já recebida")
-    } else if (data === 0) {
-      setTypeAlert("#940000")
-      setMessage("Recibo não localizado")
+    if (!formData.collector || !formData.date || !formData.search) {
+      setAlert({
+        message: "Preencah todos os campos",
+        type: ALERT_TYPES.ERROR,
+      });
+      return;
     }
-    setSearch("")
 
-    setTimeout(() => {
-      setMessage("");
-    }, 500);
+    try {
+      const dateFormat = DataSelect(formData.date);
+      const result = await changeCollector(
+        formData.collector,
+        formData.search,
+        dateFormat
+      );
+
+      let message, type;
+
+      if (result === "Ok") {
+        message = MESSAGES.COLLECTOR_SUCCESS;
+        type = ALERT_TYPES.SUCCESS;
+      } else if (result === "Yes") {
+        (message = MESSAGES.DONATION_RECEIVED), (type = ALERT_TYPES.ERROR);
+
+      } else {
+        (message = MESSAGES.RECEIPT_NOT_FOUND), (type = ALERT_TYPES.ERROR);
+      }
+
+      setAlert({ message, type });
+      setFormData((prev) => ({ ...prev, search: "" }));
+    } catch (error) {
+      setAlert({
+        message: "Erro ao alterar o coletador",
+        type: ALERT_TYPES.ERROR,
+      });
+    }
+
+    {setTimeout(() => {
+      setAlert({message:"", type: ""})
+    }, 1000)}
+
+    setFormData((prev) => ({ ...prev, search: "" }));
   };
 
   return (
@@ -52,70 +91,51 @@ const ChangeCollector = () => {
       <div className="collector-header">
         <div className="collector-title">
           <h2 className="collector-title-text">
-            <TbArrowsExchange /> Mudar Coletador
+            {ICONS.EXCHANGE} Mudar Coletador
           </h2>
         </div>
       </div>
       <form className="collector-form" onSubmit={handleChangeCollector}>
         {/* Coletador */}
-        <div className="collector-form-inputs">
-          <label className="label">
-            <FaMotorcycle />
-            Coletador
-          </label>
-          <select
-            value={collector}
-            onChange={(e) => setCollector(e.target.value)}
-          >
-            <option value="" disabled>
-              Selecione o coletador...
-            </option>
-            {collectors?.map((item) => (
-              <option
-                key={item.collector_code_id}
-                value={item.collector_code_id}
-              >
-                {item.collector_name}
-              </option>
-            ))}
-          </select>
-        </div>
-
+        <FormSelect
+          label="Coletador"
+          icon={ICONS.MOTORCYCLE}
+          name="collector"
+          value={formData.collector}
+          options={collectors}
+          onChange={handleInputChange}
+          disableOption="Selecione o coletador..."
+        />
         {/* Data */}
-        <div className="collector-form-input">
-          <label className="label">
-            <FaCalendarAlt /> Data
-          </label>
-          <input
-            type="date"
-            style={{ width: "180px" }}
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-          />
-        </div>
+        <FormInput
+          label="Data"
+          icon={ICONS.CALENDAR}
+          name="date"
+          type="date"
+          value={formData.date}
+          onChange={handleInputChange}
+          style={{ width: "180px" }}
+        />
 
         {/* Buscar */}
-        <div className="collector-form-input">
-          <label className="label">
-            <PiMagnifyingGlassBold /> Buscar
-          </label>
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
+        <FormInput
+          label="Buscar"
+          icon={ICONS.SEARCH}
+          type="text"
+          name="search"
+          value={formData.search}
+          onChange={handleInputChange}
+        />
       </form>
 
-      {message && (
-        <div style={{backgroundColor: typeAlert}} className="collector-form-message">
-          <p className="collector-form-message-text">
-            {message} 
-            {typeAlert === "green" && <GiConfirmed />}
-            {typeAlert === "#940000" && <GoAlertFill />}
-          </p>
-        </div>
+      {alert && (
+        <MessageStatus
+          message={alert.message}
+          type={alert.type}
+          icon= {alert.type === ALERT_TYPES.SUCCESS ? ICONS.CONFIRMED : alert.type === ALERT_TYPES.ERROR ? ICONS.ALERT : null}
+        />
       )}
+      
     </main>
   );
 };
