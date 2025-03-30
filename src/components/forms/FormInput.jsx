@@ -1,4 +1,4 @@
-const FormInput = ({ label, icon, type, name, value, onChange, style }) => (
+const FormInput = ({ label, icon, type, name, value, onChange, style, readOnly }) => (
   <div className="collector-form-input">
     <label className="label">
       {icon} {label}
@@ -9,6 +9,7 @@ const FormInput = ({ label, icon, type, name, value, onChange, style }) => (
       style={style}
       value={value}
       onChange={onChange}
+      readOnly={readOnly}
     />
   </div>
 );

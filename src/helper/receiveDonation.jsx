@@ -1,6 +1,7 @@
 import { useState } from "react";
 import supabase from "./superBaseClient";
 
+
 export const useDonation = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalConfig, setModalConfig] = useState({
@@ -9,104 +10,73 @@ export const useDonation = () => {
     onConfirm: null,
   });
 
-  const receiveDonation = async (
-    date,
-    setMessage,
-    collector,
-    setTypeAlert,
-    search,
-    setTableReceipt, setIsDisable
-  ) => {
-    if (date !== "" && collector !== "" && search !== "") {
-      //Busca do Nome do Doador
-      try {
-        const { data, error } = await supabase
-          .from("donation")
-          .select(
-            `     donation_value,
+  const receiveDonation = async (date, collector, search, setTableReceipt) => {
+    //Busca do Nome do Doador
+
+    try {
+      const { data, error } = await supabase
+        .from("donation")
+        .select(
+          `     donation_value,
                   donation_received,
                   collector_code_id,
                   donor:donor_id (donor_name)`
-          )
-          .eq("receipt_donation_id", search);
+        )
+        .eq("receipt_donation_id", search);
 
-        if (error) throw error;
+      if (error) throw error;
 
-        if (data.length > 0) {
-          const {
-            donation_value,
-            donor,
-            donation_received,
-            collector_code_id,
-          } = data[0];
-          const name = donor?.donor_name;
-          const value = donation_value;
-          const received = donation_received;
-          const collectorCode = collector_code_id;
+      if (data.length > 0) {
+        const { donation_value, donor, donation_received, collector_code_id } =
+          data[0];
+        const name = donor?.donor_name;
+        const value = donation_value;
+        const received = donation_received;
+        const collectorCode = collector_code_id;
 
-          if (received === "Não") {
-            if (collectorCode !== collector) {
-              return new Promise((resolve) => {
-                setModalConfig({
-                  title: "Confirmação necessária",
-                  message: "Ficha de outro coletador. Deseja continuar? ",
-                  onConfirm: () => {
-                    performUpdate(
-                      date,
-                      collector,
-                      search,
-                      setMessage,
-                      setTypeAlert,
-                      setTableReceipt,
-                      { search, name, value }
-                    ).then(resolve);
-                    setModalOpen(false);
-                    
-                  },
-                });
-                setModalOpen(true);
-                
+        if (received === "Não") {
+          if (collectorCode !== collector) {
+            return new Promise((resolve) => {
+              setModalConfig({
+                title: "Confirmação necessária",
+                message: "Ficha de outro coletador. Deseja continuar? ",
+                onConfirm: () => {
+                  performUpdate(date, collector, search, setTableReceipt, {
+                    search,
+                    name,
+                    value,
+                  }).then(resolve);
+                  setModalOpen(false);
+                },
               });
-            } else {
-              return performUpdate(
-                date,
-                collector,
-                search,
-                setMessage,
-                setTypeAlert,
-                setTableReceipt,
-                { search, name, value }
-              );
-            }
+              setModalOpen(true);
+            });
           } else {
-            setMessage("Doação já recebida");
-            setTypeAlert("#940000");
+            return performUpdate(date, collector, search, setTableReceipt, {
+              search,
+              name,
+              value,
+            });
           }
         } else {
-          setMessage("Recibo não localizado");
-          setTypeAlert("#940000");
+          return "received";
         }
-      } catch (error) {
-        setMessage("Error: ", error.message);
+      } else {
+        return "not located";
       }
-    } else {
-      setMessage(
-        "Os campos coletador, data e recibo, precisam ser preenchidos corretamente."
-      );
-      setTypeAlert("#F25205");
+    } catch (error) {
+      console.error("Error: ", error.message);
     }
 
-    setTimeout(() => {
-      setMessage("");
-    }, 1000);
+    //setTimeout(() => {
+    //  setMessage("");
+    //}, 1000);
   };
 
   const performUpdate = async (
     date,
     collector,
     search,
-    setMessage,
-    setTypeAlert,
     setTableReceipt,
     newItem
   ) => {
@@ -123,17 +93,12 @@ export const useDonation = () => {
       if (updateError) throw updateError;
 
       setTableReceipt((prev) => [...prev, newItem]);
-      setMessage("Doações recebidas com sucesso!");
-      setTypeAlert("green");
+      return "success"
     } catch (error) {
       console.error("Erro na atualização", error.message);
     }
-    setTimeout(() => {
-      setMessage("");
-    }, 1000);
+
   };
 
-  
-
-  return {receiveDonation, modalOpen, setModalOpen, modalConfig };
+  return { receiveDonation, modalOpen, setModalOpen, modalConfig };
 };

@@ -25,7 +25,8 @@ export const MESSAGES = {
 
 export const ALERT_TYPES = {
     SUCCESS: "green",
-    ERROR: "#940000"
+    ERROR: "#940000",
+    ATTENTION: "#F25205"
 }
 
 export const DONOR_TYPES = {

@@ -1,133 +1,171 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./index.css";
 
-import { FaMoneyCheckDollar } from "react-icons/fa6";
-import { GiConfirmed } from "react-icons/gi";
-import { GoAlertFill } from "react-icons/go";
-import { BiSolidErrorAlt } from "react-icons/bi";
+import { ALERT_TYPES, ICONS } from "../../constants/constants";
+import FormInput from "../../components/forms/FormInput";
 
+import MessageStatus from "../../components/MessageStatus";
 import { useDonation } from "../../helper/receiveDonation";
 import { getCollector } from "../../helper/getCollector";
 import { DataSelect } from "../../components/DataTime";
 import { ModalConfirm } from "../../components/ModalConfirm";
+import FormSelect from "../../components/forms/FormSelect";
 
 const ReceiverDonations = () => {
-  const [collector, setCollector] = useState("");
-  const [date, setDate] = useState("");
-  const [modifiedDate, setModifiedDate] = useState("");
-  const [search, setSearch] = useState("");
-  const [message, setMessage] = useState("");
+  const [formData, setFormData] = useState({
+    collector: "",
+    date: "",
+    search: ""
+  });
+
   const [collectors, setCollectors] = useState([]);
   const [tableReceipt, setTableReceipt] = useState([]);
-  const [typeAlert, setTypeAlert] = useState("");
-  const [isDisable, setIsDisable] = useState(false);
-
+  const [alert, setAlert] = useState({message: "", type: null, icon: null});
+  
   const { receiveDonation, modalOpen, setModalOpen, modalConfig } =
     useDonation();
 
     useEffect(() => {
-      setIsDisable(modalOpen)
-      
+      console.log(modalOpen)
     }, [modalOpen])
-    
-  const handleReceiverDonations = async (e) => {
-    e.preventDefault();
-    await receiveDonation(
-      modifiedDate,
-      setMessage,
-      collector,
-      setTypeAlert,
-      search,
-      setTableReceipt
-    );
-    setSearch("")
-  };
+  useEffect(() => {
+    const fetchCollectors = async () => {
+      try {
+        const data = await getCollector();
+        setCollectors(data);
+      } catch (error) {
+        console.error("Erro ao carregar os coletadores: ", error.message),
+          setAlert({
+            message: "Ero ao carregar os coletadores",
+            type: ALERT_TYPES.ERROR,
+            icon: ICONS.ALERT
+          });
+      }
+    };
+    fetchCollectors();
+  }, []);
 
   useEffect(() => {
     setTableReceipt([]);
-  }, [collector]);
-  useEffect(() => {
-    getCollector().then((data) => {
-      setCollectors(data);
-    });
-  }, []);
+  }, [formData.collector]);
 
-  const handleDate = (e) => {
-    const value = e.target.value;
-    setDate(value);
-    setModifiedDate(DataSelect(value));
+  const handleInputChange = (name, value) => {
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
+
+  const handleDataChange = (e) => {
+    const value = e.target.value;
+    const modifiedDate = DataSelect(value);
+    setFormData((prev) => ({ ...prev, date: value, modifiedDate }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!formData.collector || !formData.date || !formData.search) {
+      console.log("ATTENTION icon:", ICONS.ATTENTION);
+      
+      setAlert({
+        message: "Preencha todos os campos",
+        type: ALERT_TYPES.ATTENTION,
+        icon: ICONS.ALERT
+      });
+   
+      setTimeout(() => {
+        setAlert({message: "", type: null, icon: null})
+      }, 1000);
+
+      return;
+    }
+    const status = await receiveDonation(
+      formData.modifiedDate,
+      formData.collector,
+      formData.search,
+      setTableReceipt,
+    );
+
+    setFormData((prev) => ({ ...prev, search: "" }));
+    
+    if (status === "received"){
+      setAlert({
+        message: "Doação já recebida",
+        type: ALERT_TYPES.ERROR,
+        icon: ICONS.ALERT
+      })
+  
+    } else if (status === "not located"){
+      setAlert({
+        message: "Recibo não localizado",
+        type: ALERT_TYPES.ERROR,
+        icon: ICONS.ALERT
+      })
+
+    } else if (status === "success"){
+      setAlert({
+        message: "Doação recebida com sucesso",
+        type: ALERT_TYPES.SUCCESS,
+        icon: ICONS.CONFIRMED
+      })
+    }
+
+    setTimeout(() => {
+      setAlert({message: "", type: null, icon: null})
+    }, 1000);
+
+  };
+
+  
 
   return (
     <main className="receiver-donations-main">
       <div className="receiver-donations-header">
-        <div>
-          <h2 className="receiver-donations-header-title-text">
-            <FaMoneyCheckDollar /> Receber Doações
-          </h2>
-        </div>
+        <h2 className="receiver-donations-header-title-text">
+          {ICONS.MONEY} Receber Doações
+        </h2>
       </div>
-      <form
-        onSubmit={handleReceiverDonations}
-        className="receiver-donations-form"
-      >
-        <div className="receiver-donations-form-input">
-          <label className="label">Coletador</label>
-          <select
-            value={collector}
-            disabled={modalOpen}
-            onChange={(e) => setCollector(e.target.value)}
-          >
-            <option value="" disabled={isDisable}>
-              Selecione o coletador...
-            </option>
-            {collectors?.map((item) => (
-              <option
-                key={item.collector_code_id}
-                value={item.collector_code_id}
-              >
-                {item.collector_name}
-              </option>
-            ))}
-          </select>
-        </div>
 
-        <div className="receiver-donations-form-input">
-          <label className="label">Data</label>
-          <input
-            type="date"
-            value={date}
-            onChange={handleDate}
-            readOnly={isDisable}
-          />
-        </div>
+      <form onSubmit={handleSubmit} className="receiver-donations-form">
+        <FormSelect
+          label="Coletador"
+          value={formData.collector}
+          onChange={(e) => handleInputChange("collector", e.target.value)}
+          disable={modalOpen}
+          options={collectors}
+          disableOption="Selecione o coletador..."
+          icon={ICONS.MOTORCYCLE}
+        />
+        
+        <FormInput
+          label="Data"
+          className="label"
+          type="date"
+          value={formData.date}
+          onChange={handleDataChange}
+          readOnly={modalOpen}
+          icon={ICONS.CALENDAR}
+        />
 
-        <div className="receiver-donations-form-input">
-          <label className="label">Buscar</label>
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            readOnly={isDisable}
-          />
-        </div>
+        <FormInput
+          label="Busca"
+          className="label"
+          type="text"
+          value={formData.search}
+          onChange={(e) => handleInputChange("search", e.target.value)}
+          readOnly={modalOpen}
+          icon={ICONS.SEARCH}
+        />
       </form>
       {/*MENSAGEM*/}
-      <div className="receiver-donations-form-message">
-        {message && (
-          <div
-            style={{ backgroundColor: typeAlert, width: "100%" }}
-            className="receiver-donations-form-message"
-          >
-            <p className="receiver-donations-form-message-text">
-              {message}
-              {typeAlert === "green" && <GiConfirmed />}
-              {typeAlert === "#940000" && <GoAlertFill />}
-              {typeAlert === "#F25205" && <BiSolidErrorAlt />}
-            </p>
-          </div>
-        )}
-      </div>
+
+      {alert.message && (
+        <MessageStatus
+          type={alert.type}
+          message={alert.message}
+          icon={alert.icon}
+        />
+        
+      )}
+
       {/*MODAL CONFIRM*/}
       <ModalConfirm
         isOpen={modalOpen}
