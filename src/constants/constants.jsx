@@ -5,6 +5,9 @@ import { GoAlertFill } from "react-icons/go";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { PiMagnifyingGlassBold } from "react-icons/pi";
 import { TbArrowsExchange } from "react-icons/tb";
+import { MdEdit } from "react-icons/md";
+import { FaTrashAlt } from "react-icons/fa";
+import { IoMdAddCircleOutline } from "react-icons/io";
 
 export const ICONS = {
   EXCHANGE: <TbArrowsExchange />,
@@ -14,7 +17,10 @@ export const ICONS = {
   CONFIRMED: <GiConfirmed />,
   ALERT: <GoAlertFill />,
   MONEY: <FaMoneyCheckDollar />,
-  BACK: <IoMdArrowRoundBack />
+  BACK: <IoMdArrowRoundBack />,
+  EDIT: <MdEdit />,
+  TRASH: <FaTrashAlt />,
+  CIRCLEOUTLINE: <IoMdAddCircleOutline />
 };
 
 export const MESSAGES = {

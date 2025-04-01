@@ -25,9 +25,6 @@ const ReceiverDonations = () => {
   const { receiveDonation, modalOpen, setModalOpen, modalConfig } =
     useDonation();
 
-    useEffect(() => {
-      console.log(modalOpen)
-    }, [modalOpen])
   useEffect(() => {
     const fetchCollectors = async () => {
       try {
