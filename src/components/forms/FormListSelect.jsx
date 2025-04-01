@@ -1,6 +1,8 @@
 const FormListSelect = ({ 
     label,
     value,
+    name,
+    id,
     onChange,
     disabled,
     options,
@@ -9,22 +11,22 @@ const FormListSelect = ({
 }) => (
 
   <div className="div-inputs">
-    <label htmlFor="dropdown" className={className}>
+    <label htmlFor={id} className={className}>
       {label}
     </label>
     <select
       onChange={onChange}
       value={value}
+      name={name}
       disabled={disabled}
       style={style}
-      id="dropdown"
+      id={id}
     >
     {options.map((item) => (
         <option key={item} value={item}>
             {item}
         </option>
     ))}
-    {console.log(options)}
     </select>
   </div>
 )   
