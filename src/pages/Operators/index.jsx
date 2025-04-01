@@ -1,9 +1,214 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
+import "./index.css";
+import FormInput from "../../components/forms/FormInput";
+import FormListSelect from "../../components/forms/FormListSelect";
+import { ICONS } from "../../constants/constants";
+import {
+  BtnDelete,
+  BtnEdit,
+  BtnNewOperator,
+} from "../../components/buttons/ActionButtons";
+import { getOperators } from "../../helper/getOperators";
+import editOperator from "../../helper/editOperator";
+import Loader from "../../components/Loader";
 
 const Operators = () => {
-  return (
-    <div>Pege in Development</div>
-  )
-}
+  const [formTerm, setFormTerm] = useState({
+    cod: "",
+    operator: "",
+    password: "",
+    type: "",
+    active: false,
+  });
 
-export default Operators
+  const [tableOperators, setTableOperators] = useState([]);
+
+  useEffect(() => {
+    const operators = async () => {
+      try {
+        const data = await getOperators();
+        const operatorsWithDisableState = data.map(op => ({
+          ...op,
+          isDisable: true
+        }));
+        setTableOperators(operatorsWithDisableState);
+
+        if (data.length > 0) {
+          const operator = data[0];
+          setFormTerm({
+            cod: operator.operator_code_id,
+            operator: operator.operator_name,
+            password: "",
+            type: operator.operator_type,
+            active: operator.operator_active,
+          });
+        }
+      } catch (error) {
+        console.error("Erro: ", error.message);
+      }
+    };
+    operators();
+  }, []);
+
+  const handleInputChange = (e, operator) => {
+    const { name, value, type, checked } = e.target;
+
+    const inputValue = type === "checkbox" ? checked : value;
+
+    const updatedOperators = tableOperators.map((op) => {
+      if (op.operator_code_id === operator.operator_code_id) {
+        if (name === "operator") {
+          return { ...op, operator_name: inputValue };
+        } else if (name === "cod") {
+          return { ...op, operator_code_id: inputValue };
+        } else if (name === "type") {
+          return { ...op, operator_type: inputValue };
+        } else if (name === "active") {
+          return { ...op, operator_active: inputValue };
+        } else if (name === "password") {
+          return { ...op, operator_password: inputValue };
+        }
+        return { ...op, [`operator_${name}`]: inputValue };
+      }
+      return op;
+    });
+
+    setTableOperators(updatedOperators);
+  };
+
+  useEffect(() => {
+    console.log(tableOperators)
+  }, [setTableOperators])
+
+  const handleSubmit = async (e, action, operatorId) => {
+    e.preventDefault();
+    if (action === "edit") {
+      setTableOperators(prevOperators => 
+        prevOperators.map(op => 
+          op.operator_code_id === operatorId 
+            ? { ...op, isDisable: !op.isDisable } 
+            : op
+        )
+      );
+    } else if(action === "save"){
+      const operatorToUpdate = tableOperators.find(op => op.operator_code_id === operatorId);
+      
+      if (operatorToUpdate) {
+        const operatorData = {
+          id: operatorToUpdate.operator_code_id,
+          name: operatorToUpdate.operator_name,
+          type: operatorToUpdate.operator_type,
+          active: operatorToUpdate.operator_active
+        };
+        
+        const data = await editOperator(operatorData);
+        if (data === "success"){
+          window.alert("Dados atualizados com sucesso!")
+        }
+
+        setTableOperators(prevOperators => 
+          prevOperators.map(op => 
+            op.operator_code_id === operatorId 
+              ? { ...op, isDisable: true } 
+              : op
+          )
+        );
+      }
+    } else if (action === "delete") {
+      console.log("Botão delete pressionado para operador:", operatorId);
+    } else if (action === "newoperator") {
+      console.log("Adicionar novo Operador");
+    }
+  };
+
+  const typeOperator = ["Admin", "Operator", "Mensal"];
+  return (
+    <div className="operators">
+      <div className="header-btn">
+        <BtnNewOperator
+          className="btn-new-operator"
+          onClick={(e) => handleSubmit(e, "newoperator")}
+          icon={ICONS.CIRCLEOUTLINE}
+        />
+      </div>
+
+      {tableOperators  ? tableOperators.map((operator, index) => (
+        <form
+          key={operator.operator_code_id || index}
+          onSubmit={(e) => e.preventDefault()}
+          className="form-operators"
+        >
+          <div className="gerent-operators">
+            <FormInput
+              label="Codigo"
+              type="text"
+              name="cod"
+              value={operator.operator_code_id}
+              style={{ width: 70 }}
+              onChange={(e) => handleInputChange(e, operator)}
+              readOnly={operator.isDisable}
+            />
+
+            <FormInput
+              label="Operador"
+              type="text"
+              name="operator"
+              value={operator.operator_name}
+              style={{ width: 120 }}
+              onChange={(e) => handleInputChange(e, operator)}
+              readOnly={operator.isDisable}
+            />
+
+            <FormInput
+              label="Password"
+              type="current-password"
+              name="password"
+              value=""
+              style={{ width: 100 }}
+              onChange={(e) => handleInputChange(e, operator)}
+              readOnly={operator.isDisable}
+            />
+
+            <FormListSelect
+              label="Tipo"
+              value={operator.operator_type}
+              name="type"
+              id={operator.operator_code_id}
+              onChange={(e) => handleInputChange(e, operator)}
+              options={typeOperator}
+              className="label"
+              disabled={operator.isDisable}
+            />
+
+            <div className="checkbox-active">
+              <label>Ativo ?</label>
+              <input
+                type="checkbox"
+                value="active"
+                name="active"
+                checked={operator.operator_active}
+                onChange={(e) => handleInputChange(e, operator)}
+                style={{ width: 20 }}
+                disabled={operator.isDisable}
+              />
+            </div>
+
+            <BtnEdit
+              label={operator.isDisable ? "Editar" : "Salvar"}
+              onClick={(e) =>
+                handleSubmit(e, operator.isDisable ? "edit" : "save", operator.operator_code_id)
+              }
+            />
+            <BtnDelete
+              onClick={(e) =>
+                handleSubmit(e, "delete", operator.operator_code_id)
+              }
+            />
+          </div>
+        </form>
+      )) : <Loader/>}
+    </div>
+  );
+};
+
+export default Operators;
