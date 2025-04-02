@@ -6,6 +6,7 @@ const FormListSelect = ({
     onChange,
     disabled,
     options,
+    defaultValue,
     className,
     style, 
 }) => (
@@ -21,7 +22,9 @@ const FormListSelect = ({
       disabled={disabled}
       style={style}
       id={id}
+      defaultValue={defaultValue}
     >
+      <option value="" disabled>selecione...</option>
     {options && options.map((item) => (
         <option key={item} value={item}>
             {item}

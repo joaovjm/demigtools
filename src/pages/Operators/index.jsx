@@ -12,6 +12,8 @@ import { getOperators } from "../../helper/getOperators";
 import editOperator from "../../helper/editOperator";
 import Loader from "../../components/Loader";
 import ModalNewOperator from "../../components/ModalNewOperator";
+import deleteOperator from "../../helper/deleteOperator";
+import { ModalConfirm } from "../../components/ModalConfirm";
 
 const Operators = () => {
   const [formTerm, setFormTerm] = useState({
@@ -24,6 +26,12 @@ const Operators = () => {
 
   const [tableOperators, setTableOperators] = useState([]);
   const [modalShow, setModalShow] = useState(false);
+  const [modalConfig, setModalConfig] = useState({
+    title: "",
+    message: "",
+    onConfirm: null,
+  })
+  const [modalConfirmOpen, setModalConfirmOpen] = useState(false)
 
   useEffect(() => {
     const operators = async () => {
@@ -50,7 +58,7 @@ const Operators = () => {
       }
     };
     operators();
-  }, [modalShow === false]);
+  }, [modalShow === false, modalConfirmOpen === false]);
 
   const handleInputChange = (e, operator) => {
     const { name, value, type, checked } = e.target;
@@ -113,7 +121,20 @@ const Operators = () => {
         );
       }
     } else if (action === "delete") {
-      console.log("Botão delete pressionado para operador:", operatorId);
+
+      return new Promise((resolve) => {
+        setModalConfig({
+          title: "Deletar Usuario",
+          message: "Tem certeza que desejas deletar este usuário?",
+          onConfirm: async () => {
+            await deleteOperator(operatorId).then(resolve);
+            setModalConfirmOpen(false)
+            window.alert("Usuário deletado com sucesso!")
+          }
+        })
+        setModalConfirmOpen(true)
+      })
+
     } else if (action === "newoperator") {
       setModalShow(true);
     }
@@ -129,6 +150,14 @@ const Operators = () => {
           icon={ICONS.CIRCLEOUTLINE}
         />
       </div>
+
+      <ModalConfirm
+        isOpen={modalConfirmOpen}
+        onClose={() => setModalConfirmOpen(false)}
+        onConfirm={modalConfig.onConfirm}
+        title={modalConfig.title}
+        message={modalConfig.message}
+      />
 
       {tableOperators ? (
         tableOperators.map((operator, index) => (
@@ -153,16 +182,17 @@ const Operators = () => {
                 type="text"
                 name="operator"
                 value={operator.operator_name}
+                autoComplete="username"
                 style={{ width: 120 }}
                 onChange={(e) => handleInputChange(e, operator)}
                 readOnly={operator.isDisable}
               />
 
               <FormInput
-                label="Password"
+                label="Senha"
                 type="password"
                 name="password"
-                value={operator ? operator.operator_password : ""}
+                value={operator.operator_password || ""}
                 autoComplete="current-password"
                 style={{ width: 100 }}
                 onChange={(e) => handleInputChange(e, operator)}

@@ -86,6 +86,7 @@ const ModalNewOperator = ({setModalShow}) => {
               value={newOperator.type}
               options={typeOperator}
               ///disableOption={}
+              defaultValue="Admin"
               onChange={handleOperatorChange}
               style={{ width: 198 }}
             />
