@@ -22,7 +22,7 @@ const FormListSelect = ({
       style={style}
       id={id}
     >
-    {options.map((item) => (
+    {options && options.map((item) => (
         <option key={item} value={item}>
             {item}
         </option>
