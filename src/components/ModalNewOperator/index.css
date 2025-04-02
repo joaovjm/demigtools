@@ -1,0 +1,24 @@
+.modal-form{
+    width: 100%;
+
+    
+}
+
+.inputs{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+
+}
+
+.btns{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-title{
+    display: flex;
+    justify-content: space-between;
+}
