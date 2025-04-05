@@ -7,7 +7,12 @@ import { editDonor } from "../../helper/editDonor";
 import { getInfoDonor } from "../../helper/getDonor";
 import ModalDonation from "../../components/ModalDonation";
 import Loader from "../../components/Loader";
-import { BUTTON_TEXTS, DONOR_TYPES, FORM_LABELS, ICONS } from "../../constants/constants";
+import {
+  BUTTON_TEXTS,
+  DONOR_TYPES,
+  FORM_LABELS,
+  ICONS,
+} from "../../constants/constants";
 
 import FormTextArea from "../../components/forms/FormTextArea";
 import FormDonorInput from "../../components/forms/FormDonorInput";
@@ -30,26 +35,24 @@ const Donor = () => {
     mensalidade: "",
     media: "",
     observacao: "",
-    referencia: ""
+    referencia: "",
   });
 
   const [uiState, setUiState] = useState({
     edit: true,
     btnEdit: BUTTON_TEXTS.EDIT,
-    showBtn:true,
+    showBtn: true,
     modalShow: false,
-    loading: false
-  })
+    loading: false,
+  });
 
-
-  
   const params = {};
   if (id) params.id = id;
   useEffect(() => {
     const loadDonorData = async () => {
-      try{
-        const data = await getInfoDonor(id)
-        const donor = data[0]
+      try {
+        const data = await getInfoDonor(id);
+        const donor = data[0];
 
         SetDonorData({
           nome: donor.donor_name,
@@ -64,40 +67,39 @@ const Donor = () => {
           mensalidade: donor.donor_mensal?.donor_mensal_monthly_fee || null,
           observacao: donor.donor_observation?.donor_observation || "",
           referencia: donor.donor_reference?.donor_reference || "",
-          tipo: donor.donor_type
-        })
-
-      } catch (error){
-        console.error("Erro ao carregar os dados do doador: ", error.message)
+          tipo: donor.donor_type,
+        });
+      } catch (error) {
+        console.error("Erro ao carregar os dados do doador: ", error.message);
       }
     };
 
-    loadDonorData()
-
+    loadDonorData();
   }, [id]);
 
   const handleInputChange = (field, value) => {
-    SetDonorData(prev => ({...prev, [field]: value}))
-    
-  }
-
+    SetDonorData((prev) => ({ ...prev, [field]: value }));
+  };
 
   // Responsável por editar e salvar as informações do doador
   const handleEditDonor = async () => {
-    if (uiState.btnEdit === BUTTON_TEXTS.SAVE){
-      if(donorData.tipo === DONOR_TYPES.MONTHLY && (donorData.dia === null || donorData.mensalidade === null)){
+    if (uiState.btnEdit === BUTTON_TEXTS.SAVE) {
+      if (
+        donorData.tipo === DONOR_TYPES.MONTHLY &&
+        (donorData.dia === null || donorData.mensalidade === null)
+      ) {
         window.alert(
           "Os campos DIA e MENSALIDADE precisam ser preenchidos corretamente!"
         );
         return;
       }
 
-      setUiState(prev => ({...prev, loading: true}));
+      setUiState((prev) => ({ ...prev, loading: true }));
 
-      try{
+      try {
         const success = await editDonor(
-          id, 
-          donorData.nome, 
+          id,
+          donorData.nome,
           donorData.tipo,
           donorData.cpf,
           donorData.endereco,
@@ -110,7 +112,7 @@ const Donor = () => {
           donorData.mensalidade,
           donorData.observacao,
           donorData.referencia
-        )
+        );
 
         if (success) {
           setUiState({
@@ -118,41 +120,47 @@ const Donor = () => {
             btnEdit: BUTTON_TEXTS.EDIT,
             showBtn: true,
             loading: false,
-            modalShow: uiState.modalShow
+            modalShow: uiState.modalShow,
           });
         }
       } catch (error) {
-        console.error("Erro ao editar o doador: ", error.message)
-        setUiState(prev => ({...prev, loading: false}));
+        console.error("Erro ao editar o doador: ", error.message);
+        setUiState((prev) => ({ ...prev, loading: false }));
       }
     } else {
-      setUiState(prev => ({...prev, edit: false, btnEdit: BUTTON_TEXTS.SAVE, showBtn: false}))
+      setUiState((prev) => ({
+        ...prev,
+        edit: false,
+        btnEdit: BUTTON_TEXTS.SAVE,
+        showBtn: false,
+      }));
     }
-  }
-    
+  };
 
   const handleBack = () => window.history.back();
-
 
   return (
     <main className="containerDonor">
       {/* Cabeçalho com botões */}
-      <header className="header">
-        <h2>
-          {ICONS.MONEY} Doador
-        </h2>
+      <header className="header-btns">
+        <h2>{ICONS.MONEY} Doador</h2>
         <button onClick={handleBack} className="btn-back">
           {ICONS.BACK} {BUTTON_TEXTS.BACK}
         </button>
         <div className="btns">
-          <button onClick={handleEditDonor} className="btn-edit" disabled={uiState.loading}>
-            {uiState.loading? <Loader/> : uiState.btnEdit}
+          <button
+            onClick={handleEditDonor}
+            className="btn-edit"
+            disabled={uiState.loading}
+          >
+            {uiState.loading ? <Loader /> : uiState.btnEdit}
           </button>
-
 
           {uiState.showBtn && (
             <button
-              onClick={() => setUiState(prev => ({...prev, modalShow: true}))}
+              onClick={() =>
+                setUiState((prev) => ({ ...prev, modalShow: true }))
+              }
               type="submit"
               className="btn-add"
             >
@@ -245,8 +253,6 @@ const Donor = () => {
           disabled={donorData.tipo !== DONOR_TYPES.MONTHLY}
           className={"label"}
           style={{ width: 100 }}
-          
-          
         />
 
         <FormDonorInput
@@ -257,7 +263,6 @@ const Donor = () => {
           disabled={donorData.tipo != DONOR_TYPES.MONTHLY}
           className={"label"}
           style={{ width: 100 }}
-          
         />
 
         <FormDonorInput
@@ -268,9 +273,7 @@ const Donor = () => {
           disabled={donorData.tipo !== DONOR_TYPES.MONTHLY}
           className={"label"}
           style={{ width: 100 }}
-         
         />
-
 
         <FormTextArea
           label={FORM_LABELS.OBSERVATION}
@@ -278,7 +281,6 @@ const Donor = () => {
           onChange={(e) => handleInputChange("observacao", e.target.value)}
           readOnly={uiState.edit}
           className={"label"}
-         
         />
 
         <FormTextArea
@@ -287,16 +289,18 @@ const Donor = () => {
           onChange={(e) => handleInputChange("referencia", e.target.value)}
           readOnly={uiState.edit}
           className={"label"}
-          
         />
-
       </form>
-      {uiState.showBtn && <TableDonor idDonor={id} modalShow={uiState.modalShow}/>}
+      {uiState.showBtn && (
+        <TableDonor idDonor={id} modalShow={uiState.modalShow} />
+      )}
 
       {uiState.modalShow && (
         <ModalDonation
           modalShow={uiState.modalShow}
-          setModalShow={(show)=> setUiState(prev => ({...prev, modalShow: show}))}
+          setModalShow={(show) =>
+            setUiState((prev) => ({ ...prev, modalShow: show }))
+          }
           mensalidade={donorData.mensalidade}
           tipo={donorData.tipo}
           donor_id={id}

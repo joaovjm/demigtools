@@ -9,8 +9,8 @@
     gap: 18px;
 }
 
-.header{
-    width: 360px;
+.header-btns{
+    width: 1120px;
     margin-top: 10px;
     display: flex;
     align-items: center;
