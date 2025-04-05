@@ -22,6 +22,7 @@ import Wrapper from "./components/Wrapper";
 import UsersManager from "./pages/UsersManager";
 import Dashboard from "./pages/Dashboard";
 import CreateMensalDonation from "./pages/CreateMensalDonation";
+import LoadLeads from "./pages/LoadLeads";
 
 const Approuter = () => {
   return (
@@ -167,6 +168,14 @@ const Approuter = () => {
             element={
               <Wrapper>
                 <CreateMensalDonation />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="/loadleads"
+            element={
+              <Wrapper>
+                <LoadLeads />
               </Wrapper>
             }
           />
