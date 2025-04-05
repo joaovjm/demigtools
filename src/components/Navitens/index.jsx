@@ -53,6 +53,12 @@ export const AdminMenu = [
         path: "./operators",
         cName: "submenu-itens",
     },
+    {
+        id: 7,
+        title: "Leads",
+        path: "./loadleads",
+        cName: "submenu-itens",
+    },
 ];
 
 export const RelatórioMenu = [
