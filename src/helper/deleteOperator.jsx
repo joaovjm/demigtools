@@ -1,4 +1,3 @@
-import supabaseAdmin from "./supabaseAdmin";
 import supabase from "./superBaseClient";
 
 const deleteOperator = async (operator_code_id) => {
