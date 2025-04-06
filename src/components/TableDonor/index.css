@@ -1,68 +1,207 @@
-.table-container{
-    display: flex;
-    justify-content: center;
+.table-wrapper {
     width: 100%;
-    overflow-x: auto;
+    position: relative;
+    margin-bottom: 30px; /* Aumentado para dar espaço à dica de rolagem */
 }
 
-.tabledonor{
+.table-container {
+    display: flex;
+    width: 90%;
+    overflow-x: auto;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 5px;
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    position: relative;
+}
+
+/* Efeito de sombra nas bordas para indicar rolagem */
+.table-container.has-scroll {
+    background: 
+        linear-gradient(to right, #383838 0%, rgba(56, 56, 56, 0) 5%),
+        linear-gradient(to left, #383838 0%, rgba(56, 56, 56, 0) 5%);
+    background-position: left center, right center;
+    background-repeat: no-repeat;
+    background-size: 20px 100%, 20px 100%;
+    background-attachment: local, local;
+}
+
+/* Estilizando a barra de rolagem */
+.table-container::-webkit-scrollbar {
+    height: 10px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: #1f1d1d;
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: #585858;
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: #727272;
+}
+
+/* Dica de rolagem */
+.scroll-hint {
+    position: absolute;
+    bottom: -25px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: #FAF5E9;
+    font-size: 12px;
+    padding: 5px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    margin: 0 10px;
+    animation: pulse 2s infinite;
+    pointer-events: none;
+    z-index: 2;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.7; }
+    50% { opacity: 1; }
+    100% { opacity: 0.7; }
+}
+
+.tabledonor {
     background-color: #000000;
     border: none;
     border-radius: 6px;
-    padding: 4px 4px;
-    min-width: 1134px;
+    padding: 4px;
+    width: max-content;
+    min-width: 100%;
     font-size: 13px;
-    .trHead, .trBody{
-        text-align: center;
+    border-collapse: separate; /* Alterado para garantir limites de colunas */
+    border-spacing: 0;
+    table-layout: fixed; /* Alterado para permitir expansão natural */
+}
 
-        
-        .tableHead, .tableBody{
-            height: 40px;
-            border: none;
-            
-        }
-
-        .tableBody{
-            background-color: #1F1D1D;
-            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-            
-            
-        }
-
-        .tableHead{
-            background-color: #000000;
-        }
+/* Esta regra garante que em telas pequenas, a tabela seja maior que o container */
+@media (max-width: 1200px) {
+    .table-container{
+        min-width: 100%;
     }
-    .trBody{
-        cursor: pointer;
-        &:hover{
-            opacity: 0.5;
-        }
+    .tabledonor {
+        min-width: 100%;
     }
 }
 
-.obs{
-    font-size: 6px;
+.tabledonor .trHead, 
+.tabledonor .trBody {
+    text-align: center;
+}
+
+.tabledonor .tableHead, 
+.tabledonor .tableBody {
+    height: 40px;
+    border: none;
+    padding: 8px 12px;
+    white-space: nowrap;
+    min-width: 110px; /* Aumentado para garantir visibilidade do conteúdo */
+    max-width: 250px; /* Limita a largura máxima */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tabledonor .tableBody {
+    background-color: #1F1D1D;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.tabledonor .tableHead {
+    background-color: #000000;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.tabledonor .trBody {
+    cursor: pointer;
+}
+
+.tabledonor .trBody:hover {
+    opacity: 0.5;
+}
+
+.tabledonor .no-data {
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+}
+
+.obs {
+    font-size: 9px;
     font-weight: 600;
     background-color: #000000;
     border: none;
     padding-left: 10px;
+    text-align: left;
+    white-space: normal; /* Permite quebra de linha no texto de observação */
 }
 
-@media (min-width:700px){
-    .obs{
-        font-size: 6px;
+/* Mobile - ajustes específicos */
+@media (max-width: 699px) {
+    .tabledonor .tableHead,
+    .tabledonor .tableBody {
+        font-size: 12px;
+        padding: 6px 8px;
+        min-width: 90px; /* Ligeiramente aumentado para melhor visualização */
     }
-    .tabledonor{
-        width: 824px;
+    
+    .obs {
+        font-size: 8px;
+    }
+    
+    .scroll-hint {
+        font-size: 10px;
     }
 }
 
-@media (min-width:1200px){
-    .obs{
+/* Tablets */
+@media (min-width: 700px) {
+    .obs {
         font-size: 9px;
     }
-    .tabledonor{
-        width: 1134px;
+    
+    .tabledonor .tableHead,
+    .tabledonor .tableBody {
+        min-width: 120px;
+    }
+}
+
+/* Desktop */
+@media (min-width: 1200px) {
+    .obs {
+        font-size: 10px;
+    }
+    
+    .tabledonor .tableHead,
+    .tabledonor .tableBody {
+        min-width: 100px;
+    }
+}
+
+/* Impressão */
+@media print {
+    .table-container {
+        overflow-x: visible;
+        background: none;
+    }
+    
+    .tabledonor {
+        width: 100%;
+    }
+    
+    .scroll-hint {
+        display: none;
     }
 }

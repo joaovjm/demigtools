@@ -144,29 +144,31 @@ const Donor = () => {
       {/* Cabeçalho com botões */}
       <header className="header-btns">
         <h2>{ICONS.MONEY} Doador</h2>
-        <button onClick={handleBack} className="btn-back">
-          {ICONS.BACK} {BUTTON_TEXTS.BACK}
-        </button>
-        <div className="btns">
-          <button
-            onClick={handleEditDonor}
-            className="btn-edit"
-            disabled={uiState.loading}
-          >
-            {uiState.loading ? <Loader /> : uiState.btnEdit}
+        <div className="header-actions">
+          <button onClick={handleBack} className="btn-back">
+            {ICONS.BACK} {BUTTON_TEXTS.BACK}
           </button>
-
-          {uiState.showBtn && (
+          <div className="btns">
             <button
-              onClick={() =>
-                setUiState((prev) => ({ ...prev, modalShow: true }))
-              }
-              type="submit"
-              className="btn-add"
+              onClick={handleEditDonor}
+              className="btn-edit"
+              disabled={uiState.loading}
             >
-              {BUTTON_TEXTS.CREATE_MOVIMENT}
+              {uiState.loading ? <Loader /> : uiState.btnEdit}
             </button>
-          )}
+
+            {uiState.showBtn && (
+              <button
+                onClick={() =>
+                  setUiState((prev) => ({ ...prev, modalShow: true }))
+                }
+                type="submit"
+                className="btn-add"
+              >
+                {BUTTON_TEXTS.CREATE_MOVIMENT}
+              </button>
+            )}
+          </div>
         </div>
       </header>
 
@@ -252,7 +254,7 @@ const Donor = () => {
           readOnly={uiState.edit}
           disabled={donorData.tipo !== DONOR_TYPES.MONTHLY}
           className={"label"}
-          style={{ width: 100 }}
+          style={{ width: '100%', maxWidth: 100 }}
         />
 
         <FormDonorInput
@@ -262,7 +264,7 @@ const Donor = () => {
           readOnly={uiState.edit}
           disabled={donorData.tipo != DONOR_TYPES.MONTHLY}
           className={"label"}
-          style={{ width: 100 }}
+          style={{ width: '100%', maxWidth: 100 }}
         />
 
         <FormDonorInput
@@ -272,7 +274,7 @@ const Donor = () => {
           readOnly={uiState.edit}
           disabled={donorData.tipo !== DONOR_TYPES.MONTHLY}
           className={"label"}
-          style={{ width: 100 }}
+          style={{ width: '100%', maxWidth: 100 }}
         />
 
         <FormTextArea
@@ -281,6 +283,7 @@ const Donor = () => {
           onChange={(e) => handleInputChange("observacao", e.target.value)}
           readOnly={uiState.edit}
           className={"label"}
+          name="observacao"
         />
 
         <FormTextArea
@@ -289,6 +292,7 @@ const Donor = () => {
           onChange={(e) => handleInputChange("referencia", e.target.value)}
           readOnly={uiState.edit}
           className={"label"}
+          name="referencia"
         />
       </form>
       {uiState.showBtn && (

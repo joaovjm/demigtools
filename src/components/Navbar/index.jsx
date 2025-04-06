@@ -97,7 +97,7 @@ const Navbar = () => {
           <div className="nav-logo">
             {isAuthenticated ? (
               <Link to="/dashboard" className="logo">
-                <span>DEMI</span>Tools
+                <span>DEMIG</span>Tools
               </Link>
             ) : (
               <Link to="/" className="logo">
