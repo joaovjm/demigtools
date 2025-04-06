@@ -92,7 +92,7 @@ const Navbar = () => {
 
   return (
     <>
-      <header className="header">
+      <header className="header-nav">
         <nav className="nav">
           <div className="nav-logo">
             {isAuthenticated ? (

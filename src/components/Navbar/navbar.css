@@ -10,25 +10,28 @@
   --border-radius: 6px;
 }
 
-.header {
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.header-nav {
   position: relative;
   width: 100%;
-  margin-left: 114px;
-  background-color: var(--dark-color);
 }
 
 .nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background-color: var(--dark-color);
   width: 100%;
-  max-width: 1200px;
   height: 70px;
   padding: 0 2rem;
   box-shadow: var(--box-shadow);
   z-index: 1000;
   position: relative;
-  margin: 0 auto;
 }
 
 .nav-logo {
@@ -269,10 +272,6 @@
   
   .mobile-menu-toggle {
     display: block;
-  }
-  
-  .nav {
-    width: 100%;
   }
 }
 
