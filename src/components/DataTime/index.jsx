@@ -10,8 +10,8 @@ const dataTime = (props) => {
 
 export const DataNow = (x) => {
   const dataNow = dataTime();
-  const day = dataNow.getDate();
-  const month = dataNow.getUTCMonth() + 1;
+  const day = String(dataNow.getUTCDate()).padStart(2, "0");
+  const month = String(dataNow.getUTCMonth() + 1).padStart(2, "0");
   const year = dataNow.getFullYear();
 
   if (x === "day") {
@@ -30,7 +30,7 @@ export const DataNow = (x) => {
     return `${day}/${month}/${year}`;
   }
   if (x === "noformated"){
-    return `${year}-0${month}-${day}`
+    return `${year}-${month}-${day}`
   }
 };
 
