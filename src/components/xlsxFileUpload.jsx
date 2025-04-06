@@ -15,39 +15,43 @@ const xlsxFileUpload = (file, setExcelData, setHeaders) => {
 
       const reader = new FileReader();
 
-      reader.onload = (event) => {
-        try {
-          const data = new Uint8Array(event.target.result);
-          const workbook = XLSX.read(data, { type: "array" });
+      return new Promise((resolve, reject) => {
+        reader.onload = (event) => {
+          try {
+            const data = new Uint8Array(event.target.result);
+            const workbook = XLSX.read(data, { type: "array" });
 
-          // Pegar a primeira planilha
-          const firstSheetName = workbook.SheetNames[0];
-          const worksheet = workbook.Sheets[firstSheetName];
+            // Pegar a primeira planilha
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
 
-          // Converter para JSON com cabeçalhos (retorna array de objetos)
-          const jsonData = XLSX.utils.sheet_to_json(worksheet);
+            // Converter para JSON com cabeçalhos (retorna array de objetos)
+            const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-          if (jsonData.length === 0) {
-            return "O arquivo Excel está vazio";
+            if (jsonData.length === 0) {
+              reject("O arquivo Excel está vazio");
+              return;
+            }
+
+            // Extrair os cabeçalhos do primeiro objeto
+            const headerRow = Object.keys(jsonData[0]);
+            setHeaders(headerRow);
+
+            // Dados já estão no formato de array de objetos
+            setExcelData(jsonData);
+            resolve();
+          } catch (error) {
+            console.error("Erro ao processar o arquivo:", error);
+            reject(new Error("Erro ao processar o arquivo Excel"));
           }
-
-          // Extrair os cabeçalhos do primeiro objeto
-          const headerRow = Object.keys(jsonData[0]);
-          setHeaders(headerRow);
-
-          // Dados já estão no formato de array de objetos
-          setExcelData(jsonData);
-        } catch (error) {
-          console.error("Erro ao processar o arquivo:", error);
-          throw new Error("Erro ao processar o arquivo Excel");
-        }
+        };
 
         reader.onerror = () => {
-          toast.error("Erro ao ler o arquivo");
+          reject(new Error("Erro ao ler o arquivo"));
         };
 
         reader.readAsArrayBuffer(file);
-      };
+      });
     })(),
 
     {
