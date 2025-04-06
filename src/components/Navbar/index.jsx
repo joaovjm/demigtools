@@ -19,20 +19,36 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeMobileDropdown, setActiveMobileDropdown] = useState(null);
-  
+  const [userUuid, setUserUuid] = useState(null)
+
   const navigate = useNavigate();
 
   useEffect(() => {
+    
+    // Check initial session
     const getSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-
-      setIsAuthenticated(!!session);
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        console.log("Initial session check:", !!session ? "Authenticated" : "Not authenticated");
+        setIsAuthenticated(!!session);
+        if (error) console.error("Session error:", error);
+      } catch (err) {
+        console.error("Error checking session:", err);
+      }
     };
-
     getSession();
-  }, [<Outlet />]);
+    
+    // Set up auth listener
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Auth state changed:", event, "Session:", !!session);
+      setIsAuthenticated(!!session);
+    });
+    
+    // Cleanup on unmount
+    return () => {
+      data?.subscription?.unsubscribe();
+    };
+  }, []);
 
   const onClickUserIcon = () => {
     setIsOpen(!isOpen);
@@ -53,7 +69,10 @@ const Navbar = () => {
   };
 
   const onClickOutsideMobileMenu = (event) => {
-    if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
+    if (
+      mobileMenuRef.current &&
+      !mobileMenuRef.current.contains(event.target)
+    ) {
       setMobileMenuOpen(false);
     }
   };
@@ -64,13 +83,13 @@ const Navbar = () => {
     } else {
       document.removeEventListener("mousedown", onClickOutside);
     }
-    
+
     if (mobileMenuOpen) {
       document.addEventListener("mousedown", onClickOutsideMobileMenu);
     } else {
       document.removeEventListener("mousedown", onClickOutsideMobileMenu);
     }
-    
+
     return () => {
       document.removeEventListener("mousedown", onClickOutside);
       document.removeEventListener("mousedown", onClickOutsideMobileMenu);
@@ -106,41 +125,43 @@ const Navbar = () => {
             )}
           </div>
 
-          {!isAuthenticated ? (
-            <Link to="/login" className="link_login">
-              <MdOutlineLogin />
-              Login
-            </Link>
-          ) : (
+          {isAuthenticated ? (
             <>
-              {/* Desktop menu */}
-              <ul className="nav-items">
-                {Navitens.map((item) => (
-                  <li
-                    key={item.id}
-                    className={item.cName}
-                    onMouseEnter={() => setShowDropdown(item.title)}
-                    onMouseLeave={() => setShowDropdown(null)}
-                  >
-                    <div className="nav-item-content">
-                      <p>{item.title}</p>
-                      <FaAngleDown className="dropdown-icon" />
-                    </div>
+            {/* Desktop menu */}
+            <ul className="nav-items">
+              {Navitens.map((item) => (
+                <li
+                  key={item.id}
+                  className={item.cName}
+                  onMouseEnter={() => setShowDropdown(item.title)}
+                  onMouseLeave={() => setShowDropdown(null)}
+                >
+                  <div className="nav-item-content">
+                    <p>{item.title}</p>
+                    <FaAngleDown className="dropdown-icon" />
+                  </div>
 
-                    {/* Dropdown Sob-menu AdminMenu */}
-                    {item.title === "Admin" && showDropdown === "Admin" && (
-                      <ul className="dropdown-admin" onClick={() => setShowDropdown(null)}>
-                        {AdminMenu.map((admin) => (
-                          <li key={admin.id} className={admin.cName}>
-                            <Link to={admin.path}>{admin.title}</Link>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
+                  {/* Dropdown Sob-menu AdminMenu */}
+                  {item.title === "Admin" && showDropdown === "Admin" && (
+                    <ul
+                      className="dropdown-admin"
+                      onClick={() => setShowDropdown(null)}
+                    >
+                      {AdminMenu.map((admin) => (
+                        <li key={admin.id} className={admin.cName}>
+                          <Link to={admin.path}>{admin.title}</Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
 
-                    {/* Dropdown Sob-menu RelatórioMenu */}
-                    {item.title === "Relatório" && showDropdown === "Relatório" && (
-                      <ul className="dropdown-admin" onClick={() => setShowDropdown(null)}>
+                  {/* Dropdown Sob-menu RelatórioMenu */}
+                  {item.title === "Relatório" &&
+                    showDropdown === "Relatório" && (
+                      <ul
+                        className="dropdown-admin"
+                        onClick={() => setShowDropdown(null)}
+                      >
                         {RelatórioMenu.map((admin) => (
                           <li key={admin.id} className={admin.cName}>
                             <Link to={admin.path}>{admin.title}</Link>
@@ -149,9 +170,13 @@ const Navbar = () => {
                       </ul>
                     )}
 
-                    {/* Dropdown Sob-menu OperadorMenu */}
-                    {item.title === "Operador" && showDropdown === "Operador" && (
-                      <ul className="dropdown-admin" onClick={() => setShowDropdown(null)}>
+                  {/* Dropdown Sob-menu OperadorMenu */}
+                  {item.title === "Operador" &&
+                    showDropdown === "Operador" && (
+                      <ul
+                        className="dropdown-admin"
+                        onClick={() => setShowDropdown(null)}
+                      >
                         {OperadorMenu.map((admin) => (
                           <li key={admin.id} className={admin.cName}>
                             <Link to={admin.path}>{admin.title}</Link>
@@ -159,105 +184,119 @@ const Navbar = () => {
                         ))}
                       </ul>
                     )}
-                  </li>
-                ))}
-                <div 
-                  ref={dropdownRef} 
-                  className="user-profile"
-                  onMouseEnter={() => setShowDropdown("userIcon")}
-                  onMouseLeave={() => setShowDropdown(null)}
-                >
-                  <IoPersonCircleOutline
-                    onClick={onClickUserIcon}
-                    className="icon-user"
-                  />
+                </li>
+              ))}
+              <div
+                ref={dropdownRef}
+                className="user-profile"
+                onMouseEnter={() => setShowDropdown("userIcon")}
+                onMouseLeave={() => setShowDropdown(null)}
+              >
+                <IoPersonCircleOutline
+                  onClick={onClickUserIcon}
+                  className="icon-user"
+                />
 
-                  {isOpen && showDropdown === "userIcon" && (
-                    <ul className="dropdown-admin user-dropdown">
-                      <li className="nav-item" onClick={signOut}>
-                        {loading ? <Loader/> : "Sair"}
-                      </li>
-                    </ul>
-                  )}
-                </div>
-              </ul>
-
-              {/* Mobile menu button */}
-              <div className="mobile-menu-toggle">
-                <button onClick={handleMobileMenuClick}>
-                  {mobileMenuOpen ? <HiX /> : <HiMenu />}
-                </button>
+                {isOpen && showDropdown === "userIcon" && (
+                  <ul className="dropdown-admin user-dropdown">
+                    <li className="nav-item" onClick={signOut}>
+                      {loading ? <Loader /> : "Sair"}
+                    </li>
+                  </ul>
+                )}
               </div>
-            </>
+            </ul>
+
+            {/* Mobile menu button */}
+            <div className="mobile-menu-toggle">
+              <button onClick={handleMobileMenuClick}>
+                {mobileMenuOpen ? <HiX /> : <HiMenu />}
+              </button>
+            </div>
+          </>
+          ) : (
+            <Link to="/login" className="link_login">
+              <MdOutlineLogin />
+              Login
+            </Link>
+          
+            
           )}
         </nav>
 
         {/* Mobile menu */}
         {isAuthenticated && (
-          <div 
+          <div
             ref={mobileMenuRef}
-            className={`mobile-menu ${mobileMenuOpen ? 'active' : ''}`}
+            className={`mobile-menu ${mobileMenuOpen ? "active" : ""}`}
           >
             <ul className="mobile-nav-items">
               {Navitens.map((item) => (
                 <li key={item.id} className="mobile-nav-item">
-                  <div 
+                  <div
                     className="mobile-nav-header"
                     onClick={() => handleMobileDropdownClick(item.title)}
                   >
                     <p>{item.title}</p>
-                    <FaAngleDown className={`dropdown-icon ${activeMobileDropdown === item.title ? 'rotated' : ''}`} />
+                    <FaAngleDown
+                      className={`dropdown-icon ${
+                        activeMobileDropdown === item.title ? "rotated" : ""
+                      }`}
+                    />
                   </div>
 
                   {/* Mobile Dropdown menus */}
-                  {item.title === "Admin" && activeMobileDropdown === "Admin" && (
-                    <ul className="mobile-dropdown">
-                      {AdminMenu.map((admin) => (
-                        <li key={admin.id} className="mobile-dropdown-item">
-                          <Link 
-                            to={admin.path}
-                            onClick={() => setMobileMenuOpen(false)}
-                          >
-                            {admin.title}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+                  {item.title === "Admin" &&
+                    activeMobileDropdown === "Admin" && (
+                      <ul className="mobile-dropdown">
+                        {AdminMenu.map((admin) => (
+                          <li key={admin.id} className="mobile-dropdown-item">
+                            <Link
+                              to={admin.path}
+                              onClick={() => setMobileMenuOpen(false)}
+                            >
+                              {admin.title}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
 
-                  {item.title === "Relatório" && activeMobileDropdown === "Relatório" && (
-                    <ul className="mobile-dropdown">
-                      {RelatórioMenu.map((admin) => (
-                        <li key={admin.id} className="mobile-dropdown-item">
-                          <Link 
-                            to={admin.path}
-                            onClick={() => setMobileMenuOpen(false)}
-                          >
-                            {admin.title}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+                  {item.title === "Relatório" &&
+                    activeMobileDropdown === "Relatório" && (
+                      <ul className="mobile-dropdown">
+                        {RelatórioMenu.map((admin) => (
+                          <li key={admin.id} className="mobile-dropdown-item">
+                            <Link
+                              to={admin.path}
+                              onClick={() => setMobileMenuOpen(false)}
+                            >
+                              {admin.title}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
 
-                  {item.title === "Operador" && activeMobileDropdown === "Operador" && (
-                    <ul className="mobile-dropdown">
-                      {OperadorMenu.map((admin) => (
-                        <li key={admin.id} className="mobile-dropdown-item">
-                          <Link 
-                            to={admin.path}
-                            onClick={() => setMobileMenuOpen(false)}
-                          >
-                            {admin.title}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+                  {item.title === "Operador" &&
+                    activeMobileDropdown === "Operador" && (
+                      <ul className="mobile-dropdown">
+                        {OperadorMenu.map((admin) => (
+                          <li key={admin.id} className="mobile-dropdown-item">
+                            <Link
+                              to={admin.path}
+                              onClick={() => setMobileMenuOpen(false)}
+                            >
+                              {admin.title}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                 </li>
               ))}
               <li className="mobile-nav-item sign-out" onClick={signOut}>
-                {loading ? <Loader/> : "Sair"}
+                {loading ? <Loader /> : "Sair"}
               </li>
             </ul>
           </div>

@@ -7,18 +7,37 @@ function Wrapper({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log("Wrapper component mounting");
+    
     const getSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      setIsAuthenticated(!!session);
-      setLoading(false);
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        console.log("Wrapper - session check:", !!session);
+        setIsAuthenticated(!!session);
+        setLoading(false);
+        
+        if (error) {
+          console.error("Wrapper - error checking session:", error);
+        }
+      } catch (err) {
+        console.error("Wrapper - exception checking session:", err);
+        setLoading(false);
+      }
     };
 
     getSession();
+    
+    // Subscribe to auth changes
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Wrapper - auth event:", event, "Session exists:", !!session);
+      setIsAuthenticated(!!session);
+      setLoading(false);
+    });
+    
+    return () => {
+      data?.subscription?.unsubscribe();
+    };
   }, []);
-
-  
 
   if (loading) {
     return <p>Loading...</p>;
@@ -28,7 +47,5 @@ function Wrapper({ children }) {
 
   return <Navigate to="/login" />;
 }
-
-
 
 export default Wrapper;

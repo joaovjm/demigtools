@@ -14,15 +14,30 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [isSession, setIsSession] = useState(null);
   const [loading, setLoading] = useState(false);
+  
   useEffect(() => {
+    console.log("Login component mounting");
     const getSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      setIsSession(session);
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        console.log("Login page - session check:", !!session);
+        setIsSession(session);
+      } catch (err) {
+        console.error("Login page - error checking session:", err);
+      }
     };
 
     getSession();
+    
+    // Listen for auth changes
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Login page - auth state changed:", event, !!session);
+      setIsSession(session);
+    });
+    
+    return () => {
+      data?.subscription?.unsubscribe();
+    };
   }, []);
 
   const navigate = useNavigate();
@@ -34,15 +49,25 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    console.log("Login form submitted", { username });
 
-    const response = await OperatorSessionLogin(
-      username,
-      password
-    );
+    try {
+      const response = await OperatorSessionLogin(
+        username,
+        password
+      );
+      
+      console.log("Login response:", response ? "Success" : "Failed");
 
-    if (response) {
-      navigate("/dashboard");
-      return null;
+      if (response) {
+        console.log("Login successful, navigating to dashboard");
+        // Ensure state is updated before navigation
+        setIsSession(response.session);
+        navigate("/dashboard");
+        return null;
+      }
+    } catch (err) {
+      console.error("Error during login:", err);
     }
 
     setUsername("");

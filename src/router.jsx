@@ -23,10 +23,12 @@ import UsersManager from "./pages/UsersManager";
 import Dashboard from "./pages/Dashboard";
 import CreateMensalDonation from "./pages/CreateMensalDonation";
 import LoadLeads from "./pages/LoadLeads";
+import AuthMonitor from "./components/AuthMonitor";
 
 const Approuter = () => {
   return (
     <BrowserRouter>
+      <AuthMonitor />
       <Routes>
         <Route element={<Navbar />}>
           <Route path="/" element={<App />} />
