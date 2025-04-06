@@ -4,9 +4,10 @@ import FormListSelect from "../forms/FormListSelect";
 import "./index.css";
 import { BtnNewOperator } from "../buttons/ActionButtons";
 import UsersToOperators from "../../auth/UsersToOperators";
+import { toast, ToastContainer } from "react-toastify";
 
 
-const ModalNewOperator = ({setModalShow}) => {
+const ModalNewOperator = ({setModalShow, setStatus}) => {
     const typeOperator = ["Admin", "Operador", "Mensal"]
     const [newOperator, setNewOperator] = useState({
         cod: "",
@@ -23,14 +24,17 @@ const ModalNewOperator = ({setModalShow}) => {
     const handleClick = async (e) => {
         e.preventDefault();
         if (!newOperator.cod || !newOperator.operator || !newOperator.password || !newOperator.type){
-          window.alert("Todos os campos devem ser preenchidos!")
-          return;
+          toast.warning("Preencha todos os campos!")
         }
         try{
             const status = await UsersToOperators(newOperator)
             if(status === "OK"){
-              window.alert("Usuário criado com sucesso!")
-              setModalShow(false)
+              toast.success("Operador criado com sucesso!")
+              setTimeout(()=> {
+                setModalShow(false)
+              }, 2000)
+              
+              
             }
             
         } catch (error) {
@@ -101,6 +105,7 @@ const ModalNewOperator = ({setModalShow}) => {
           </div>
         </form>
       </div>
+      <ToastContainer autoClose={2000} closeOnClick="true" pauseOnFocusLoss="false" position="top-left"/>
     </div>
   );
 };

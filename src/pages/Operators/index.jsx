@@ -14,6 +14,7 @@ import Loader from "../../components/Loader";
 import ModalNewOperator from "../../components/ModalNewOperator";
 import deleteOperator from "../../helper/deleteOperator";
 import { ModalConfirm } from "../../components/ModalConfirm";
+import { toast, ToastContainer } from "react-toastify";
 
 const Operators = () => {
   const [formTerm, setFormTerm] = useState({
@@ -32,6 +33,7 @@ const Operators = () => {
     onConfirm: null,
   })
   const [modalConfirmOpen, setModalConfirmOpen] = useState(false)
+  const [status, setStatus] = useState("")
 
   useEffect(() => {
     const operators = async () => {
@@ -107,11 +109,12 @@ const Operators = () => {
           name: operatorToUpdate.operator_name,
           type: operatorToUpdate.operator_type,
           active: operatorToUpdate.operator_active,
+          password: operatorToUpdate.operator_password
         };
 
         const data = await editOperator(operatorData);
         if (data === "success") {
-          window.alert("Dados atualizados com sucesso!");
+          toast.success("Dados atualizados com sucesso!");
         }
 
         setTableOperators((prevOperators) =>
@@ -129,7 +132,7 @@ const Operators = () => {
           onConfirm: async () => {
             await deleteOperator(operatorId).then(resolve);
             setModalConfirmOpen(false)
-            window.alert("Usuário deletado com sucesso!")
+            toast.success("Usuário deletado com sucesso!")
           }
         })
         setModalConfirmOpen(true)
@@ -137,10 +140,12 @@ const Operators = () => {
 
     } else if (action === "newoperator") {
       setModalShow(true);
+      
     }
+    
   };
 
-  const typeOperator = ["Admin", "Operator", "Mensal"];
+  const typeOperator = ["Admin", "Operator", "Mensal", "Confirmação"];
   return (
     <div className="operators">
       <div className="header-btn">
@@ -243,6 +248,7 @@ const Operators = () => {
             {modalShow && (
               <ModalNewOperator
                 setModalShow={setModalShow}
+                setStatus={setStatus}
               />
             )}
           </form>
@@ -250,6 +256,8 @@ const Operators = () => {
       ) : (
         <Loader />
       )}
+
+      <ToastContainer closeOnClick="true" pauseOnFocusLoss="false" position="top-left"/>
     </div>
   );
 };

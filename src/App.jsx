@@ -4,7 +4,9 @@ function App() {
 
   return (
     <>
-      <h1>João Oliveira</h1>
+      <div className='logo-home'>
+        <img src="/public/banner1-Photoroom.png" alt="Demig" style={{width: 200, heigth: 200}}/>
+      </div>
     </>
   )
 }

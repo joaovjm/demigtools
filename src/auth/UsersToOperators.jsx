@@ -2,7 +2,8 @@ import insertOperators from "../helper/insertOperators"
 import SignUp from "./SignUp"
 
 const UsersToOperators = async ({cod, operator, password, type}) => {
-    const email = `${operator}@therocha.com`
+    const login = operator.normalize("NFD").replace(/[\u0300-\u036f\s]/g, "").toLocaleLowerCase();
+    const email = `${login}@therocha.com`
     const signUp = await SignUp({email, password})
 
     if (signUp.user){

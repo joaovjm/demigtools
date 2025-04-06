@@ -3,7 +3,7 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-    min-height: calc(100vh - 7.8vh);
+    min-height: calc(100vh - 10.8vh);
     background-color: #383838;
     color: #FAF5E9;
 }
