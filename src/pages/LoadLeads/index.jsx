@@ -23,10 +23,10 @@ const LoadLeads = () => {
     e.preventDefault();
     const response = await insertNewLeads(excelData)
     console.log(response)
-    /*if (response){
+    if (response){
       setFileName("Nenum arquivo selecionado")
       setExcelData([])
-    }*/
+    }
     
 
   }
