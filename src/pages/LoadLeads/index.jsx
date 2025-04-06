@@ -2,21 +2,34 @@ import React, { useState } from "react";
 import "./index.css";
 import xlsxFileUpload from "../../components/xlsxFileUpload";
 import { ToastContainer } from "react-toastify";
+import insertNewLeads from "../../components/insertNewLeads";
 
 const LoadLeads = () => {
   const [fileName, setFileName] = useState("Nenhum arquivo selecionado");
   const [excelData, setExcelData] = useState([]);
   const [headers, setHeaders] = useState(null);
 
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     const file = event.target.files[0];
-    xlsxFileUpload(file, setExcelData, setHeaders);
+    await xlsxFileUpload(file, setExcelData, setHeaders);
     if (file) {
       setFileName(file.name);
     } else {
       setFileName("Nenhum arquivo selecionado");
     }
   };
+
+  const handleInsertNewLead = async (e) => {
+    e.preventDefault();
+    const response = await insertNewLeads(excelData)
+    console.log(response)
+    /*if (response){
+      setFileName("Nenum arquivo selecionado")
+      setExcelData([])
+    }*/
+    
+
+  }
 
   return (
     <main className="main-leads">
@@ -38,8 +51,17 @@ const LoadLeads = () => {
                 className="input-file"
                 onChange={handleFileChange}
               />
+              
             </div>
-            <div className="file-name">{fileName}</div>
+            <div className="lead-info-btn">
+              <div className="file-name">{fileName}</div>
+              {excelData.length > 0 && (
+                <button onClick={handleInsertNewLead} className="save-lead-btn">Salvar novo lead</button>
+              )}
+              
+            </div>
+            
+            
           </div>
         </div>
         <ToastContainer
