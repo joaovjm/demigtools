@@ -187,6 +187,10 @@
     .tabledonor .tableHead,
     .tabledonor .tableBody {
         min-width: 100px;
+        
+    }
+    .table-container{
+        max-width: 1200px;
     }
 }
 

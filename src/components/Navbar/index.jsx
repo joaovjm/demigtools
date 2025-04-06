@@ -101,7 +101,7 @@ const Navbar = () => {
               </Link>
             ) : (
               <Link to="/" className="logo">
-                <span>DEMI</span>Tools
+                <span>DEMIG</span>Tools
               </Link>
             )}
           </div>

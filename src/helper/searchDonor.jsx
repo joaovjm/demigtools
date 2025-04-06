@@ -34,7 +34,7 @@ const searchDonor = async (params, donor_type) => {
     }
 
     const { data, error } = await query;
-   
+
     if (error) throw error;
 
     return data;
