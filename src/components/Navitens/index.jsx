@@ -106,5 +106,11 @@ export const OperadorMenu = [
         title: "Lista de Trabalho",
         path: "./worklist",
         cName: "submenu-itens",
+    },
+    {
+        id: 3,
+        title: "Leads",
+        path: "./leads",
+        cName: "submenu-itens",
     }
 ];

@@ -24,6 +24,7 @@ import Dashboard from "./pages/Dashboard";
 import CreateMensalDonation from "./pages/CreateMensalDonation";
 import LoadLeads from "./pages/LoadLeads";
 import AuthMonitor from "./components/AuthMonitor";
+import Leads from "./pages/Leads";
 
 const Approuter = () => {
   return (
@@ -178,6 +179,14 @@ const Approuter = () => {
             element={
               <Wrapper>
                 <LoadLeads />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="/leads"
+            element={
+              <Wrapper>
+                <Leads />
               </Wrapper>
             }
           />

@@ -47,8 +47,6 @@ const OperatorSessionLogin = async (login, password) => {
   const nameOrCode = NameOrCode(login);
   const data = await GetOperator(nameOrCode, login);
 
-  console.log("Operator data found:", data ? "Yes" : "No");
-
   if (data && data.length > 0) {
     const username = data[0].operator_name;
     const login = username.normalize("NFD").replace(/[\u0300-\u036f\s]/g, "").toLocaleLowerCase();
@@ -56,7 +54,6 @@ const OperatorSessionLogin = async (login, password) => {
 
     if (data[0].operator_active) {
       try {
-        console.log("Attempting signInWithPassword");
         const { data: responseLogin, error } =
           await supabase.auth.signInWithPassword({
             email: `${login}@therocha.com`,
@@ -68,18 +65,18 @@ const OperatorSessionLogin = async (login, password) => {
           throw error;
         }
 
-        console.log("Login successful:", !!responseLogin.session);
+        // Store operator data in localStorage
+        localStorage.setItem('operatorData', JSON.stringify(data[0]));
+        
         return responseLogin;
       } catch (error) {
         console.error("Login exception:", error.message);
         toast.error(error.message);
       }
     } else {
-      console.log("Usuario desativado");
       toast.error("Usuario desativado. Contacte o administrador");
     }
   } else {
-    console.log("Usuario não localizado");
     toast.error("Usuário não localizado");
   }
 };

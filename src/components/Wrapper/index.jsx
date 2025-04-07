@@ -7,12 +7,11 @@ function Wrapper({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log("Wrapper component mounting");
     
     const getSession = async () => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
-        console.log("Wrapper - session check:", !!session);
+
         setIsAuthenticated(!!session);
         setLoading(false);
         
@@ -29,7 +28,6 @@ function Wrapper({ children }) {
     
     // Subscribe to auth changes
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log("Wrapper - auth event:", event, "Session exists:", !!session);
       setIsAuthenticated(!!session);
       setLoading(false);
     });

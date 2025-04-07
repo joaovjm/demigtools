@@ -6,7 +6,6 @@ const AuthMonitor = () => {
   const [authEvents, setAuthEvents] = useState([]);
 
   useEffect(() => {
-    console.log('AuthMonitor mounted');
     
     // Check initial session
     const checkSession = async () => {
@@ -19,10 +18,8 @@ const AuthMonitor = () => {
         }
         
         const hasSession = !!data.session;
-        console.log('AuthMonitor - Initial session:', hasSession);
         setAuthState(hasSession ? 'Authenticated' : 'Not authenticated');
       } catch (err) {
-        console.error('AuthMonitor - Exception:', err);
         setAuthState('Exception checking session');
       }
     };
@@ -38,7 +35,6 @@ const AuthMonitor = () => {
         hasSession: !!session
       };
       
-      console.log('AuthMonitor - Auth event:', newEvent);
       setAuthEvents(prev => [newEvent, ...prev].slice(0, 5));
       setAuthState(!!session ? 'Authenticated' : 'Not authenticated');
     });

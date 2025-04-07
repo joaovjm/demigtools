@@ -4,7 +4,6 @@ import { FaEye, FaEyeSlash, FaRegUser } from "react-icons/fa";
 import supabase from "../../helper/superBaseClient";
 import { Navigate, useNavigate } from "react-router";
 import Loader from "../../components/Loader";
-import NameOrCode from "../../auth/OperatorSessionLogin";
 import OperatorSessionLogin from "../../auth/OperatorSessionLogin";
 import { ToastContainer } from "react-toastify";
 
@@ -16,11 +15,10 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   
   useEffect(() => {
-    console.log("Login component mounting");
+  
     const getSession = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
-        console.log("Login page - session check:", !!session);
         setIsSession(session);
       } catch (err) {
         console.error("Login page - error checking session:", err);
@@ -29,9 +27,8 @@ const Login = () => {
 
     getSession();
     
-    // Listen for auth changes
+
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log("Login page - auth state changed:", event, !!session);
       setIsSession(session);
     });
     
@@ -49,19 +46,14 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log("Login form submitted", { username });
 
     try {
       const response = await OperatorSessionLogin(
         username,
         password
       );
-      
-      console.log("Login response:", response ? "Success" : "Failed");
 
       if (response) {
-        console.log("Login successful, navigating to dashboard");
-        // Ensure state is updated before navigation
         setIsSession(response.session);
         navigate("/dashboard");
         return null;
