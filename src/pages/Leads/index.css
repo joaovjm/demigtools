@@ -185,10 +185,6 @@
     gap: 18px;
 }
 
-.date-value{
-
-}
-
 .address-area, .tel-area, .obs-area, .date-value{
     display: flex;
     align-items: center;
@@ -227,8 +223,4 @@
     display: flex;
     width: 100%;
     justify-content: flex-end;
-}
-
-@media (min-width: 800px) and (max-width: 1199px){
-    
 }
