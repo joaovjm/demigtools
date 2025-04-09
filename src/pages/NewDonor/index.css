@@ -1,0 +1,5 @@
+.header-new-donor{
+    width: 1120px;
+    display: flex;
+    justify-content: space-between;
+}

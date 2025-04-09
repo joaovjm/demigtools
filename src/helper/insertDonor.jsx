@@ -18,10 +18,8 @@ export const insertDonor = async (
         donor_tel_1: telefone1,
       },
     ]).select(); 
-  
-    if (!error) {
-      window.alert("Doador criado com sucesso!");
-    } else {
+
+    if(error){
       window.alert("Erro ao criar doador: ", error);
     }
   
@@ -29,53 +27,74 @@ export const insertDonor = async (
   };
 
 export const insertDonor_cpf = async (donor_id, cpf) => {
-    const {error} = await supabase.from("donor_cpf").insert([{
+    const {data, error} = await supabase.from("donor_cpf").insert([{
         donor_id: donor_id,
         donor_cpf: cpf
-    }])
+    }]).select()
 
     if (error) {
       window.alert ("Não foi possível salvar o CPF")
     }
+    if (!error){
+      return data;
+    }
 };
 
 export const insertDonor_tel_2 = async (donor_id, telefone2) => {
-  const {error} = await supabase.from ("donor_tel_2").insert([{
+  const {data, error} = await supabase.from ("donor_tel_2").insert([{
     donor_id: donor_id,
     donor_tel_2: telefone2
-  }])
+  }]).select()
 
   if (error) {
     window.alert ("Não foi possível salvar o Telefone 2")
   }
+  if (!error){
+    return data;
+  }
 }
 
 export const insertDonor_observation = async (donor_id, observacao) => {
-  const {error} = await supabase.from("donor_observation").insert([{
+  const {data, error} = await supabase.from("donor_observation").insert([{
     donor_id: donor_id,
     donor_observation: observacao
-  }])
+  }]).select()
+
+  if (!error){
+    return data;
+  }
 }
 
 export const insertDonor_tel_3 = async (donor_id, telefone3) => {
-  const {error} = await supabase.from("donor_tel_3").insert([{
+  const {data, error} = await supabase.from("donor_tel_3").insert([{
     donor_id: donor_id,
     donor_tel_3: telefone3
-  }])
+  }]).select()
+
+  if (!error){
+    return data;
+  }
 }
 
 export const insertDonor_reference = async (donor_id, referencia) => {
-  const {error} = await supabase.from("donor_reference").insert([{
+  const {data, error} = await supabase.from("donor_reference").insert([{
     donor_id: donor_id,
     donor_reference: referencia
-  }])
+  }]).select()
+
+  if (!error){
+    return data;
+  }
 }
 
 export const insertDonor_mensal = async (donor_id, dia, mensalidade) => {
-  console.log(dia, mensalidade)
-  await supabase.from("donor_mensal").insert ([{
+  const{data, error} = await supabase.from("donor_mensal").insert ([{
     donor_id: donor_id,
     donor_mensal_day: dia,
     donor_mensal_monthly_fee: mensalidade
-  }])
+  }]).select()
+
+  if (!error){
+    return data;
+  }
 }

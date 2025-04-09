@@ -36,8 +36,8 @@ export const DataNow = (x) => {
 
 export const DataSelect = (e, props) => {
   const dataSelect = dataTime(e);
-  const day = dataSelect.getUTCDate();
-  const month = dataSelect.getUTCMonth() + 1;
+  const day = String(dataSelect.getUTCDate()).padStart(2, "0");
+  const month = String(dataSelect.getUTCMonth() + 1).padStart(2, "0");
   const year = dataSelect.getFullYear();
 
   if (props === "day") {

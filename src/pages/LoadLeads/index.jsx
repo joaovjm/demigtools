@@ -32,7 +32,7 @@ const LoadLeads = () => {
   }
 
   return (
-    <main className="main-leads">
+    <main className="main-load-leads">
       <div className="lead-panel">
         <div className="lead-header">
           <h2>Inserir Leads</h2>

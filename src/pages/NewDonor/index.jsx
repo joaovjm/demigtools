@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "./index.css"
 import { FaMoneyCheckDollar } from "react-icons/fa6";
 import { useNavigate } from "react-router";
 import { insertDonor, insertDonor_cpf, insertDonor_mensal, insertDonor_observation, insertDonor_reference, insertDonor_tel_2, insertDonor_tel_3 } from "../../helper/insertDonor";
@@ -79,7 +80,7 @@ const index = () => {
   return (
     <main className="containerDonor">
       {/* Cabeçalho com botões */}
-      <header className="header">
+      <header className="header-new-donor">
         <h2>
           <FaMoneyCheckDollar /> Novo Doador
         </h2>

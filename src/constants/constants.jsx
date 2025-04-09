@@ -8,6 +8,7 @@ import { TbArrowsExchange } from "react-icons/tb";
 import { MdEdit } from "react-icons/md";
 import { FaTrashAlt } from "react-icons/fa";
 import { IoMdAddCircleOutline } from "react-icons/io";
+import { FaPhoneAlt } from "react-icons/fa";
 
 export const ICONS = {
   EXCHANGE: <TbArrowsExchange />,
@@ -20,7 +21,8 @@ export const ICONS = {
   BACK: <IoMdArrowRoundBack />,
   EDIT: <MdEdit />,
   TRASH: <FaTrashAlt />,
-  CIRCLEOUTLINE: <IoMdAddCircleOutline />
+  CIRCLEOUTLINE: <IoMdAddCircleOutline />,
+  PHONE: <FaPhoneAlt />
 };
 
 export const MESSAGES = {

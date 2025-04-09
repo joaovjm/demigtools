@@ -42,7 +42,6 @@ const Navbar = () => {
         if (session && !storedOperatorData) {
           try {
             const email = session.user.email;
-            console.log("Tentando buscar operador com email:", email);
 
             let username = email.split("@")[0];
 

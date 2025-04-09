@@ -52,9 +52,7 @@ const ModalDonation = ({
 
   const handleDate = (e) => {
     var value = e.target.value;
-    console.log(value)
     const now = DataNow("noformated")
-    console.log(now)
     if (now > value){
       value = now;
     }

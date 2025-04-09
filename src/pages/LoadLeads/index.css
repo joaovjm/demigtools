@@ -1,4 +1,4 @@
-.main-leads{
+.main-load-leads{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -6,9 +6,6 @@
     height: calc(100vh - 10.8vh);
 }
 
-.lead-header{
-
-}
 
 .lead-panel{
     display: flex;
