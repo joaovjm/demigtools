@@ -1,11 +1,12 @@
 import './App.css'
+import demig from "./assets/demig.png"
 
 function App() {
 
   return (
     <>
       <div className='logo-home'>
-        <img src="/public/banner1-Photoroom.png" alt="Demig" style={{width: 200, heigth: 200}}/>
+        <img src={demig} alt="Demig" style={{width: 200, heigth: 200}}/>
       </div>
     </>
   )
