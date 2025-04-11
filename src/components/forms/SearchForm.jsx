@@ -10,13 +10,14 @@ export const SearchForm = ({searchTerm, selectedValue, loading, onSearchChange, 
         name="buscardoador"
         value={searchTerm}
         onChange={onSearchChange}
+        className="search-input"
       />
     </div>
     <div className="type">
       <label htmlFor="dropdown" className="label">
         Tipo
       </label>
-      <select id="dropdown" value={selectedValue} onChange={onValueChange}>
+      <select className="select-type" id="dropdown" value={selectedValue} onChange={onValueChange}>
         <option value="todos">Todos</option>
         <option value="avulso">Avulso</option>
         <option value="lista">Lista</option>

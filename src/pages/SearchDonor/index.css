@@ -115,43 +115,35 @@ input, select{
 .btnsearch{
     width: 100px;
 }
-/* @media (min-width: 768px){
-    .formsearch{
-       display: grid;
-       grid-template-columns: auto auto;
-       gap: 8px;
-    }
 
-    input{
-        width: 90px;
-    }
-    
-    .btnsearch{
-        width: 100px;
-    }
-} */
-
-@media (min-width:460px){
+@media (max-width: 479px){
     .Carddiv{
-        display: grid;
-        grid-template-columns: auto auto;
+        display: flex;
+        flex-direction: column;
         
     }
 
     .formsearch{
-        display: grid;
-        grid-template-columns: auto auto;
-        gap: 8px;
+        display: flex;
+        flex-direction: column;
+        width: 96%;
+        gap: 16px;
     }
 
+    .select-type{
+        width: 86%;
+    }
+
+    .search-input{
+        width: 64%;
+    }
+
+    .btnsearch{
+        width: 99%;
+    }
 }
 
-@media (min-width:768px){
-    .Carddiv{
-        display: grid;
-        grid-template-columns: auto auto;
-        
-    }
+@media (min-width: 480px) and (max-width: 1109px){
 
     .formsearch{
         display: flex;
@@ -183,9 +175,20 @@ input, select{
 
     .formsearch{
         display: flex;
+        justify-content: center;
         align-items: center;
+        width: 1100px;
         gap: 64px;
     }
+
+    input{
+        width: 300px;
+    }
+
+    select{
+        width: 120px;
+    }
+    
 }
 
         
