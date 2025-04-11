@@ -15,13 +15,13 @@ const ReceiverDonations = () => {
   const [formData, setFormData] = useState({
     collector: "",
     date: "",
-    search: ""
+    search: "",
   });
 
   const [collectors, setCollectors] = useState([]);
   const [tableReceipt, setTableReceipt] = useState([]);
-  const [alert, setAlert] = useState({message: "", type: null, icon: null});
-  
+  const [alert, setAlert] = useState({ message: "", type: null, icon: null });
+
   const { receiveDonation, modalOpen, setModalOpen, modalConfig } =
     useDonation();
 
@@ -35,7 +35,7 @@ const ReceiverDonations = () => {
           setAlert({
             message: "Ero ao carregar os coletadores",
             type: ALERT_TYPES.ERROR,
-            icon: ICONS.ALERT
+            icon: ICONS.ALERT,
           });
       }
     };
@@ -61,15 +61,15 @@ const ReceiverDonations = () => {
 
     if (!formData.collector || !formData.date || !formData.search) {
       console.log("ATTENTION icon:", ICONS.ATTENTION);
-      
+
       setAlert({
         message: "Preencha todos os campos",
         type: ALERT_TYPES.ATTENTION,
-        icon: ICONS.ALERT
+        icon: ICONS.ALERT,
       });
-   
+
       setTimeout(() => {
-        setAlert({message: "", type: null, icon: null})
+        setAlert({ message: "", type: null, icon: null });
       }, 1000);
 
       return;
@@ -78,40 +78,35 @@ const ReceiverDonations = () => {
       formData.modifiedDate,
       formData.collector,
       formData.search,
-      setTableReceipt,
+      setTableReceipt
     );
 
     setFormData((prev) => ({ ...prev, search: "" }));
-    
-    if (status === "received"){
+
+    if (status === "received") {
       setAlert({
         message: "Doação já recebida",
         type: ALERT_TYPES.ERROR,
-        icon: ICONS.ALERT
-      })
-  
-    } else if (status === "not located"){
+        icon: ICONS.ALERT,
+      });
+    } else if (status === "not located") {
       setAlert({
         message: "Recibo não localizado",
         type: ALERT_TYPES.ERROR,
-        icon: ICONS.ALERT
-      })
-
-    } else if (status === "success"){
+        icon: ICONS.ALERT,
+      });
+    } else if (status === "success") {
       setAlert({
         message: "Doação recebida com sucesso",
         type: ALERT_TYPES.SUCCESS,
-        icon: ICONS.CONFIRMED
-      })
+        icon: ICONS.CONFIRMED,
+      });
     }
 
     setTimeout(() => {
-      setAlert({message: "", type: null, icon: null})
+      setAlert({ message: "", type: null, icon: null });
     }, 1000);
-
   };
-
-  
 
   return (
     <main className="receiver-donations-main">
@@ -130,8 +125,9 @@ const ReceiverDonations = () => {
           options={collectors}
           disableOption="Selecione o coletador..."
           icon={ICONS.MOTORCYCLE}
+          selectInput="select-input"
         />
-        
+
         <FormInput
           label="Data"
           className="label"
@@ -140,6 +136,7 @@ const ReceiverDonations = () => {
           onChange={handleDataChange}
           readOnly={modalOpen}
           icon={ICONS.CALENDAR}
+          classinput="form-input"
         />
 
         <FormInput
@@ -150,6 +147,7 @@ const ReceiverDonations = () => {
           onChange={(e) => handleInputChange("search", e.target.value)}
           readOnly={modalOpen}
           icon={ICONS.SEARCH}
+          classinput="form-input"
         />
       </form>
       {/*MENSAGEM*/}
@@ -160,7 +158,6 @@ const ReceiverDonations = () => {
           message={alert.message}
           icon={alert.icon}
         />
-        
       )}
 
       {/*MODAL CONFIRM*/}

@@ -6,13 +6,14 @@ const FormSelect = ({
   onChange,
   disable,
   disableOption,
+  selectInput
 }) => (
   
   <div className="collector-form-inputs">
     <label className="label">
       {icon} {label}
     </label>
-    <select value={value} name="collector" onChange={onChange} disabled={disable}>
+    <select className={selectInput} value={value} name="collector" onChange={onChange} disabled={disable}>
       <option value="" disabled>
         {disableOption}
       </option>

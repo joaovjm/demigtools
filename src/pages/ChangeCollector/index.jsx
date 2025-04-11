@@ -105,6 +105,7 @@ const ChangeCollector = () => {
           options={collectors}
           onChange={handleInputChange}
           disableOption="Selecione o coletador..."
+          selectInput="select-input"
         />
         {/* Data */}
         <FormInput
@@ -114,7 +115,7 @@ const ChangeCollector = () => {
           type="date"
           value={formData.date}
           onChange={handleInputChange}
-          style={{ width: "180px" }}
+          classinput="form-input"
         />
 
         {/* Buscar */}
@@ -125,6 +126,7 @@ const ChangeCollector = () => {
           name="search"
           value={formData.search}
           onChange={handleInputChange}
+          classinput="form-input"
         />
       </form>
 

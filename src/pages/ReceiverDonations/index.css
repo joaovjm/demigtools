@@ -60,31 +60,6 @@
     }
 }
 
-.btns{
-    min-width: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.btn-decisionY,  .btn-decisionN{
-    width: 80px;
-    height: 28px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    background-color: #385BAD;
-    color: #FAF5E9;
-
-    &:hover{
-        opacity: 0.8;
-    }
-}
-
-.btn-decisionN{
-    background-color: #D60B0C;
-}
-
 .receiver-donations-table{
     width: 1134px;
     border-radius: 10px;
@@ -105,5 +80,60 @@
         border-radius: 6px;
         text-align: start;
         padding: 0 10px;
+    }
+}
+
+@media (max-width: 479px) {
+    .receiver-donations-form{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 320px;
+        gap: 32px;
+    }
+
+    .form-input{
+        width: 220px;
+    }
+
+    .select-input{
+        max-width: 176px;
+    }
+
+    .receiver-donations-table{
+        width: 100%;
+    }
+
+    .receiver-donations-header{
+        width: 100%;
+    }
+}
+
+@media (min-width: 480px) and (max-width: 1199px){
+    .receiver-donations-header{
+        width: 100%;
+    }
+    .receiver-donations-form{
+        display: flex;
+        width: 100%;
+        gap: 18px;
+    }
+
+    .form-input{
+        width: 130px;
+    }
+
+    .select-input{
+        max-width: 160px;
+    }
+}
+
+@media (min-width: 1200px){
+    .receiver-donations-header{
+        width: 1134px;
+    }
+    .receiver-donations-form{
+        width: 1134px;
+
     }
 }
