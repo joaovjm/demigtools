@@ -127,7 +127,7 @@ input, select{
         display: flex;
         flex-direction: column;
         width: 96%;
-        gap: 16px;
+        gap: 32px;
     }
 
     .select-type{
