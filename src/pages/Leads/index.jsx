@@ -197,8 +197,8 @@ const Leads = () => {
                     donation_value: valueDonation,
                     donation_day_contact: DataNow(),
                     donation_day_to_receive: DataSelect(dateDonation),
-                    donation_print: "false",
-                    donation_received: "false",
+                    donation_print: "Não",
+                    donation_received: "Não",
                     donation_description: observation,
                   },
                 ])
@@ -349,6 +349,7 @@ const Leads = () => {
                 type="text"
                 name="address"
                 onChange={(e) => setAddress(e.target.value)}
+                classinput="address-area-input"
               />
               <FormInput
                 label="Cidade"
@@ -356,6 +357,7 @@ const Leads = () => {
                 type="text"
                 name="city"
                 onChange={(e) => setCity(e.target.value)}
+                classinput="address-area-input"
               />
               <FormInput
                 label="Bairro"
@@ -363,6 +365,7 @@ const Leads = () => {
                 type="text"
                 name="neighborhood"
                 onChange={(e) => setNeighborhood(e.target.value)}
+                classinput="address-area-input"
               />
             </div>
             <div className="tel-area">

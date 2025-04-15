@@ -33,7 +33,7 @@ const ReceiverDonations = () => {
       } catch (error) {
         console.error("Erro ao carregar os coletadores: ", error.message),
           setAlert({
-            message: "Ero ao carregar os coletadores",
+            message: "Erro ao carregar os coletadores",
             type: ALERT_TYPES.ERROR,
             icon: ICONS.ALERT,
           });
@@ -76,7 +76,7 @@ const ReceiverDonations = () => {
     }
     const status = await receiveDonation(
       formData.modifiedDate,
-      formData.collector,
+      Number(formData.collector),
       formData.search,
       setTableReceipt
     );
