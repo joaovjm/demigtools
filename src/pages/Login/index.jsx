@@ -89,6 +89,7 @@ const Login = () => {
                     className="input_design"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
+                    autoComplete="username"
                   />
                   <FaRegUser color="#FAF5E9" />
                 </div>
@@ -104,6 +105,7 @@ const Login = () => {
                     className="input_design"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    autoComplete="current-password"
                   />
                   <button
                     onClick={togglePasswordVisibility}

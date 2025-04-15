@@ -25,6 +25,7 @@ const Navbar = () => {
 
   useEffect(() => {
     const storedOperatorData = localStorage.getItem("operatorData");
+    console.log(storedOperatorData)
     if (storedOperatorData) {
       setOperatorData(JSON.parse(storedOperatorData));
     }
@@ -40,6 +41,7 @@ const Navbar = () => {
         if (error) console.error("Session error:", error);
 
         if (session && !storedOperatorData) {
+          console.log("Buscando os dados do operador...")
           try {
             const email = session.user.email;
 
@@ -51,7 +53,7 @@ const Navbar = () => {
                 operator_active,
                 operator_name,
                 operator_type,
-                operator_uuid
+                operator_uuid,
               `);
 
             if (opError) {
@@ -61,7 +63,7 @@ const Navbar = () => {
 
             console.log("Operadores encontrados:", allOperators);
 
-            // Tentar encontrar o operador que corresponde ao email formatado
+            // Tentar encontrar o operador que corresponde ao email informatado
             let userData = null;
             if (allOperators && allOperators.length > 0) {
               for (const op of allOperators) {
@@ -118,7 +120,8 @@ const Navbar = () => {
                   operator_active,
                   operator_name,
                   operator_type,
-                  operator_uuid
+                  operator_uuid,
+                  operator_code_id
                 `);
 
               if (opError) {
@@ -302,11 +305,11 @@ const Navbar = () => {
           <div className="nav-logo">
             {isAuthenticated ? (
               <Link to="/dashboard" className="logo">
-                <span>DEMIG</span>Tools
+                <span className="span-logo-1">DEMI</span><span className="span-logo-2">GT</span><span className="span-logo-3">ools</span>
               </Link>
             ) : (
               <Link to="/" className="logo">
-                <span>DEMIG</span>Tools
+                <span className="span-logo-1">DEMI</span><span className="span-logo-2">GT</span><span className="span-logo-3">ools</span>
               </Link>
             )}
           </div>

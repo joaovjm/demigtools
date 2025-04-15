@@ -53,8 +53,16 @@
   letter-spacing: 0.5px;
 }
 
-.logo span {
-  color: var(--primary-color);
+.span-logo-1 {
+  color: #FAA01C;
+}
+
+.span-logo-2 {
+  color: #636271;
+}
+
+.span-logo-3 {
+  color: #7C7C8C;
 }
 
 .link_login {

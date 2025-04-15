@@ -25,7 +25,8 @@ const GetOperator = async (nameOrCode, login) => {
               operator_active,
               operator_name,
               operator_type,
-              operator_uuid`
+              operator_uuid,
+              operator_code_id`
       )
       .eq(column, login);
 
