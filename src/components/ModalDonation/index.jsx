@@ -25,6 +25,11 @@ const ModalDonation = ({
   const data_contato = DataNow();
 
   useEffect(() => {
+    const operatorData = JSON.parse(localStorage.getItem("operatorData"))
+    setOperator(operatorData.operator_code_id)
+  }, [])
+
+  useEffect(() => {
     if (mensalidade && comissao == "") {
       setValor(mensalidade);
     } else if (mensalidade && comissao != "") {

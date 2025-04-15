@@ -111,7 +111,7 @@ const Navbar = () => {
           const fetchOperatorData = async () => {
             try {
               const email = session.user.email;
-              console.log("Tentando buscar operador com email:", email);
+
 
               let username = email.split("@")[0];
 
@@ -137,7 +137,6 @@ const Navbar = () => {
                     .replace(/[\u0300-\u036f\s]/g, "")
                     .toLowerCase();
 
-                  console.log("Comparando:", formattedName, "com", username);
                   if (formattedName === username) {
                     userData = op;
                     break;
