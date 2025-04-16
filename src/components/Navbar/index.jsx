@@ -25,7 +25,6 @@ const Navbar = () => {
 
   useEffect(() => {
     const storedOperatorData = localStorage.getItem("operatorData");
-    console.log(storedOperatorData)
     if (storedOperatorData) {
       setOperatorData(JSON.parse(storedOperatorData));
     }

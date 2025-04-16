@@ -70,9 +70,7 @@ const ModalDonation = ({
       "year"
     )}`;
 
-    if (tipo === "Mensal") {
-      setMesref(monthYear);
-    }
+    setMesref(monthYear)
   };
 
   return (
