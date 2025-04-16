@@ -9,20 +9,35 @@ const Dashboard = () => {
   const caracterOperator = JSON.parse(localStorage.getItem("operatorData"));
   //const [qReceived, setQReceived] = useState(null); //Quantidade de fichas recebidas
   //const [valueReceived, setValueReceived] = useState(null); //Total de valor recebido
-  const [confirmations, setConfirmations] = useState(null) //Quantidade de fichas na confirmação
-  const [valueConfirmations, setValueConfirmations] = useState(null) //Total valor na confirmação
-  const [openDonations, setOpenDonations] = useState(null) //Quantidades de fichas em aberto
-  const [valueOpenDonations, setValueOpenDonations] = useState(null) //Total valor de fichas em aberto
-  const [monthReceived, setMonthReceived] = useState(null) //Total de fichas recebidas em determinado mês
-  const [valueMonthReceived, setValueMonthReceived] = useState(null) //Total valor dos recebidos do atual Mês
-  const [receivedPercent, setReceivedPercent] = useState(null)
+  const [confirmations, setConfirmations] = useState(null); //Quantidade de fichas na confirmação
+  const [valueConfirmations, setValueConfirmations] = useState(null); //Total valor na confirmação
+  const [openDonations, setOpenDonations] = useState(null); //Quantidades de fichas em aberto
+  const [valueOpenDonations, setValueOpenDonations] = useState(null); //Total valor de fichas em aberto
+  const [monthReceived, setMonthReceived] = useState(null); //Total de fichas recebidas em determinado mês
+  const [valueMonthReceived, setValueMonthReceived] = useState(null); //Total valor dos recebidos do atual Mês
+  const [receivedPercent, setReceivedPercent] = useState(null);
+  const [active, setActive] = useState(false);
 
-  const monthref = DataNow("mesref")
+  const monthref = DataNow("mesref");
 
   useEffect(() => {
-    getDonationNotReceived(setConfirmations, setValueConfirmations, setOpenDonations, setValueOpenDonations)
-    getDonationPerMonthReceived(monthref, setMonthReceived, setValueMonthReceived, setReceivedPercent)
-  },[])
+    getDonationNotReceived(
+      setConfirmations,
+      setValueConfirmations,
+      setOpenDonations,
+      setValueOpenDonations
+    );
+    getDonationPerMonthReceived(
+      monthref,
+      setMonthReceived,
+      setValueMonthReceived,
+      setReceivedPercent
+    );
+  }, []);
+
+  const handleClickCard = (e) => {
+    setActive(e.currentTarget.id)
+  }
 
   return (
     <main className="mainDashboard">
@@ -30,7 +45,11 @@ const Dashboard = () => {
         <>
           <section className="sectionHeader">
             {/* Card 1 */}
-            <div className="divCard">
+            <div
+              id="inConfirmation"
+              className={`divCard ${active === "inConfirmation" ? "active" : ""}`}
+              onClick={handleClickCard}
+            >
               <div className="divHeader">
                 <h3 className="h3Header">Em Confirmação</h3>
               </div>
@@ -52,7 +71,7 @@ const Dashboard = () => {
             </div>*/}
 
             {/* Card 3 */}
-            <div className="divCard">
+            <div id="inOpen" className={`divCard ${active === "inOpen" ? "active" : ""}`} onClick={handleClickCard}>
               <div className="divHeader">
                 <h3 className="h3Header">Em Aberto</h3>
               </div>
@@ -75,7 +94,7 @@ const Dashboard = () => {
           </section>
 
           <section className="sectionGrafico">
-            {/* ChartCard 1 */}
+            {/*
             <div className="cardGrafico">
               <div className="divHeaderGrafico">
                 <h3 className="h3HeaderGrafico">Resultados da Equipe (DIA)</h3>
@@ -85,7 +104,7 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {/* ChartCard 2 */}
+          
             <div className="cardGrafico">
               <div className="divHeaderGrafico">
                 <h3 className="h3HeaderGrafico">Histórico Mensal</h3>
@@ -94,6 +113,7 @@ const Dashboard = () => {
                 <p>Grafico</p>
               </div>
             </div>
+            */}
           </section>
         </>
       )}

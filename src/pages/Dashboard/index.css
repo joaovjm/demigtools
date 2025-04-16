@@ -21,15 +21,24 @@
     width: 220px;
     background-color: #1F1D1D;
     border-radius: 6px;
-    border: none;
+    border: 3px double transparent;
     padding: 20px;
     cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: border-color 0.3s, box-shadow 0.3s;
 
     &:hover{
         background-color: #2F2D2D;
         transition: 0.3s;
     }
     
+}
+
+.divCard.active{
+    border: 3px double #FAA01C;
+    box-shadow: 0 4px 12px rgba(250, 160, 28, 0.4);
+    transform: scale(0.98);
+    transition: transform 0.1s
 }
 
 .divHeader{
@@ -59,31 +68,7 @@ p{
     background-color: #1F1D1D;
     padding: 10px;
     border-radius: 6px;
-    min-width: 720px;
+    width: 1120px;
     height: 50vh;
     gap: 20px;
-}
-.cardGrafico{
-    display: flex;
-    flex-direction: column;
-    min-width: 500px;
-    margin: 4px;
-    padding: 4px;
-    gap: 10px;
-    
-    & .divHeaderGrafico{
-        display: flex;
-    }
-
-    & .h3HeaderGrafico{
-        font-size: 14px;
-        font-weight: 800;
-        color: #FAF5E9;
-    }
-}
-
-.divGrafico{
-    background-color: #2F2D2D;
-    border-radius: 6px;
-    border: none;
 }
