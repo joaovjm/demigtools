@@ -63,12 +63,11 @@ p{
     color: #FAF5E9;
 }
 
-.sectionGrafico{
+.section-grafico{
     display: flex;
-    background-color: #1F1D1D;
-    padding: 10px;
-    border-radius: 6px;
-    width: 1120px;
-    height: 50vh;
-    gap: 20px;
+    width: 1100px;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    
 }

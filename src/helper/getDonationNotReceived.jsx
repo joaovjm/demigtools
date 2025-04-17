@@ -1,31 +1,67 @@
 import supabase from "./superBaseClient";
 
-const getDonationNotReceived = (setConfirmations, setValueConfirmations, setOpenDonations, setValueOpenDonations) => {
-    let confirmations = 0;
-    let valueConfirmations = 0;
-    let valueOpenDonations = 0;
-    const getValueDonation = async () => {
-        const { data: operatorValue } = await supabase
-          .from("donation")
-          .select("donation_value, collector_code_id")
-          .eq("donation_received", "Não");
+const getDonationNotReceived = (
+  setConfirmations,
+  setValueConfirmations,
+  setOpenDonations,
+  setValueOpenDonations,
+  setDonationConfirmation,
+  setFullNotReceivedDonations
+) => {
+  let confirmations = 0;
+  let valueConfirmations = 0;
+  let valueOpenDonations = 0;
+  let tempFullNotReceivedDonations = [];
+  let tempDonationConfirmations = [];
+  const getValueDonation = async () => {
+    const { data: operatorValue } = await supabase
+      .from("donation")
+      .select(
+        `receipt_donation_id, 
+        donor(donor_name), 
+        donation_value, 
+        collector_code_id, 
+        donor_confirmation_reason(donor_confirmation_reason),
+        collector: collector_code_id (collector_name)`
+      )
+      .eq("donation_received", "Não");
     
-        for (let i = 0; i < operatorValue.length; i++) {
-            if( operatorValue[i].collector_code_id === 10 ){
-                confirmations += 1
-                let value = operatorValue[i].donation_value;
-                valueConfirmations += value
-            }
-            let value = operatorValue[i].donation_value
-            valueOpenDonations += value
+    console.log(operatorValue)
+    for (let i = 0; i < operatorValue.length; i++) {
+      if (operatorValue[i].collector_code_id === 10) {
+        confirmations += 1;
+        let value = operatorValue[i].donation_value;
+        valueConfirmations += value;
+        tempDonationConfirmations.push({
+          receipt_donation_id: operatorValue[i].receipt_donation_id,
+          donor_name: operatorValue[i].donor.donor_name,
+          donation_value: operatorValue[i].donation_value,
+          collector_code_id: operatorValue[i].collector_code_id,
+          donor_confirmation_reason:
+            operatorValue[i].donor_confirmation_reason[0]
+              ?.donor_confirmation_reason,
+        });
+      }
+      tempFullNotReceivedDonations.push({
+        receipt_donation_id: operatorValue[i].receipt_donation_id,
+        donor_name: operatorValue[i].donor.donor_name,
+        donation_value: operatorValue[i].donation_value,
+        collector_code_id: operatorValue[i].collector_code_id,
+        donor_confirmation_reason: operatorValue[i].donor_confirmation_reason[0]?.donor_confirmation_reason,
+        collector_name: operatorValue[i].collector?.collector_name,
+      });
 
-        }
-        setOpenDonations(operatorValue.length)
-        setConfirmations(confirmations)
-        setValueConfirmations(valueConfirmations)
-        setValueOpenDonations(valueOpenDonations)
-      };
-      getValueDonation();
-}
+      let value = operatorValue[i].donation_value;
+      valueOpenDonations += value;
+    }
+    setDonationConfirmation(tempDonationConfirmations);
+    setFullNotReceivedDonations(tempFullNotReceivedDonations);
+    setOpenDonations(operatorValue.length);
+    setConfirmations(confirmations);
+    setValueConfirmations(valueConfirmations);
+    setValueOpenDonations(valueOpenDonations);
+  };
+  getValueDonation();
+};
 
 export default getDonationNotReceived;

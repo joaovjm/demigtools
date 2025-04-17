@@ -1,0 +1,29 @@
+.table-confirmation{
+    max-width: 1120px;
+}
+
+.table-head-confirmation{
+    background-color: black;
+}
+
+.table-head-confirmation-text{
+    border-radius: 6px;
+    padding: 6px 12px;
+}
+
+.table-body-confirmation-tr{
+    cursor: pointer;
+    background-color: #1F1D1D;
+    transition: 0.3s;
+
+    &:hover{
+        background-color: #FAA01C;
+    }
+    
+}
+.table-body-confirmation-text{
+    text-align: center;
+    border-radius: 6px;
+    padding: 6px 24px;
+    
+}

@@ -4,6 +4,8 @@ import "./index.css";
 import getDonationNotReceived from "../../helper/getDonationNotReceived";
 import getDonationPerMonthReceived from "../../helper/getDonationPerMonthReceived";
 import { DataNow } from "../../components/DataTime";
+import TableConfirmation from "../../components/TableConfirmation";
+import TableInOpen from "../../components/TableInOpen";
 
 const Dashboard = () => {
   const caracterOperator = JSON.parse(localStorage.getItem("operatorData"));
@@ -18,6 +20,9 @@ const Dashboard = () => {
   const [receivedPercent, setReceivedPercent] = useState(null);
   const [active, setActive] = useState(false);
 
+  const [donationConfirmation, setDonationConfirmation] = useState([]);
+  const [fullNotReceivedDonations, setFullNotReceivedDonations] = useState([]);
+
   const monthref = DataNow("mesref");
 
   useEffect(() => {
@@ -25,7 +30,9 @@ const Dashboard = () => {
       setConfirmations,
       setValueConfirmations,
       setOpenDonations,
-      setValueOpenDonations
+      setValueOpenDonations,
+      setDonationConfirmation,
+      setFullNotReceivedDonations
     );
     getDonationPerMonthReceived(
       monthref,
@@ -36,8 +43,8 @@ const Dashboard = () => {
   }, []);
 
   const handleClickCard = (e) => {
-    setActive(e.currentTarget.id)
-  }
+    setActive(e.currentTarget.id);
+  };
 
   return (
     <main className="mainDashboard">
@@ -47,7 +54,9 @@ const Dashboard = () => {
             {/* Card 1 */}
             <div
               id="inConfirmation"
-              className={`divCard ${active === "inConfirmation" ? "active" : ""}`}
+              className={`divCard ${
+                active === "inConfirmation" ? "active" : ""
+              }`}
               onClick={handleClickCard}
             >
               <div className="divHeader">
@@ -71,7 +80,11 @@ const Dashboard = () => {
             </div>*/}
 
             {/* Card 3 */}
-            <div id="inOpen" className={`divCard ${active === "inOpen" ? "active" : ""}`} onClick={handleClickCard}>
+            <div
+              id="inOpen"
+              className={`divCard ${active === "inOpen" ? "active" : ""}`}
+              onClick={handleClickCard}
+            >
               <div className="divHeader">
                 <h3 className="h3Header">Em Aberto</h3>
               </div>
@@ -94,6 +107,16 @@ const Dashboard = () => {
           </section>
 
           <section className="sectionGrafico">
+            {active === "inConfirmation" ? (
+              <>
+                <TableConfirmation donationConfirmation={donationConfirmation}/>
+              </>
+              
+            ) : active === "inOpen" ? (
+              <TableInOpen fullNotReceivedDonations={fullNotReceivedDonations}/>
+              
+            ) : null}
+
             {/*
             <div className="cardGrafico">
               <div className="divHeaderGrafico">
