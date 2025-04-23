@@ -137,7 +137,6 @@ const ChangeCollector = () => {
           icon= {alert.type === ALERT_TYPES.SUCCESS ? ICONS.CONFIRMED : alert.type === ALERT_TYPES.ERROR ? ICONS.ALERT : null}
         />
       )}
-      
     </main>
   );
 };

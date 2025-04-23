@@ -18,7 +18,7 @@ const getDonationNotReceived = (
       .from("donation")
       .select(
         `receipt_donation_id, 
-        donor(donor_name), 
+        donor(donor_name, donor_address, donor_tel_1, donor_tel_2(donor_tel_2), donor_tel_3(donor_tel_3)),
         donation_value, 
         collector_code_id, 
         donor_confirmation_reason(donor_confirmation_reason),
@@ -36,6 +36,10 @@ const getDonationNotReceived = (
         tempDonationConfirmations.push({
           receipt_donation_id: operatorValue[i].receipt_donation_id,
           donor_name: operatorValue[i].donor.donor_name,
+          donor_address: operatorValue[i].donor.donor_address,
+          donor_tel_1: operatorValue[i].donor.donor_tel_1,
+          donor_tel_2: operatorValue[i].donor.donor_tel_2.donor_tel_2,
+          donor_tel_3: operatorValue[i].donor.donor_tel_3.donor_tel_3,
           donation_value: operatorValue[i].donation_value,
           collector_code_id: operatorValue[i].collector_code_id,
           donor_confirmation_reason: operatorValue[i].donor_confirmation_reason[0]?.donor_confirmation_reason,
@@ -55,6 +59,7 @@ const getDonationNotReceived = (
       let value = operatorValue[i].donation_value;
       valueOpenDonations += value;
     }
+    
 
     setDonationConfirmation(tempDonationConfirmations);
     setFullNotReceivedDonations(tempFullNotReceivedDonations);

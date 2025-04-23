@@ -24,6 +24,8 @@ const Dashboard = () => {
   const [donationConfirmation, setDonationConfirmation] = useState([]);
   const [fullNotReceivedDonations, setFullNotReceivedDonations] = useState([]);
 
+  const [donationOpen, setDonationOpen] = useState([]);
+
   const [modalOpen, setModalOpen] = useState(false);
 
   const monthref = DataNow("mesref");
@@ -112,7 +114,7 @@ const Dashboard = () => {
           <section className="sectionGrafico">
             {active === "inConfirmation" ? (
               <>
-                <TableConfirmation donationConfirmation={donationConfirmation} setModalOpen={setModalOpen}/>
+                <TableConfirmation donationConfirmation={donationConfirmation} setModalOpen={setModalOpen} setDonationOpen={setDonationOpen}/>
               </>
               
             ) : active === "inOpen" ? (
@@ -141,8 +143,7 @@ const Dashboard = () => {
             </div>
             */}
           </section>
-          {modalOpen && <ModalConfirmations/>}
-          {console.log(modalOpen)}
+          {modalOpen && <ModalConfirmations donationOpen={donationOpen} setModalOpen={setModalOpen}/>}
         </>
       )}
     </main>

@@ -1,11 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import "./index.css";
-import ModalConfirmations from "../ModalConfirmations";
 
-const TableConfirmation = ({ donationConfirmation, setModalOpen}) => {
+const TableConfirmation = ({ donationConfirmation, setModalOpen, setDonationOpen}) => {
   
-  const handleClick = (e) => {
-    console.log(e.target.parentElement.children[0].textContent);
+  const handleClick = (donation) => {
+    
+    setDonationOpen({
+      id: donation.receipt_donation_id, 
+      name: donation.donor_name, 
+      value: donation.donation_value, 
+      reason: donation.donor_confirmation_reason, 
+      address: donation.donor_address, 
+      phone: donation.donor_tel_1,
+      phone2: donation.donor_tel_2,
+      phone3: donation.donor_tel_3,
+    })
     setModalOpen(true);
   };
   return (
@@ -24,7 +33,7 @@ const TableConfirmation = ({ donationConfirmation, setModalOpen}) => {
             <tr
               className="table-body-confirmation-tr"
               key={donation.receipt_donation_id}
-              onClick={handleClick}
+              onClick={() => handleClick(donation)}
             >
               <td className="table-body-confirmation-text">
                 {donation.receipt_donation_id}
