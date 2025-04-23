@@ -6,6 +6,7 @@ import getDonationPerMonthReceived from "../../helper/getDonationPerMonthReceive
 import { DataNow } from "../../components/DataTime";
 import TableConfirmation from "../../components/TableConfirmation";
 import TableInOpen from "../../components/TableInOpen";
+import ModalConfirmations from "../../components/ModalConfirmations";
 
 const Dashboard = () => {
   const caracterOperator = JSON.parse(localStorage.getItem("operatorData"));
@@ -22,6 +23,8 @@ const Dashboard = () => {
 
   const [donationConfirmation, setDonationConfirmation] = useState([]);
   const [fullNotReceivedDonations, setFullNotReceivedDonations] = useState([]);
+
+  const [modalOpen, setModalOpen] = useState(false);
 
   const monthref = DataNow("mesref");
 
@@ -40,7 +43,7 @@ const Dashboard = () => {
       setValueMonthReceived,
       setReceivedPercent
     );
-  }, []);
+  }, [active]);
 
   const handleClickCard = (e) => {
     setActive(e.currentTarget.id);
@@ -109,7 +112,7 @@ const Dashboard = () => {
           <section className="sectionGrafico">
             {active === "inConfirmation" ? (
               <>
-                <TableConfirmation donationConfirmation={donationConfirmation}/>
+                <TableConfirmation donationConfirmation={donationConfirmation} setModalOpen={setModalOpen}/>
               </>
               
             ) : active === "inOpen" ? (
@@ -138,6 +141,8 @@ const Dashboard = () => {
             </div>
             */}
           </section>
+          {modalOpen && <ModalConfirmations/>}
+          {console.log(modalOpen)}
         </>
       )}
     </main>

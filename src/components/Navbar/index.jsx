@@ -40,7 +40,7 @@ const Navbar = () => {
         if (error) console.error("Session error:", error);
 
         if (session && !storedOperatorData) {
-          console.log("Buscando os dados do operador...")
+          console.log("Buscando os dados do operador...");
           try {
             const email = session.user.email;
 
@@ -110,7 +110,6 @@ const Navbar = () => {
           const fetchOperatorData = async () => {
             try {
               const email = session.user.email;
-
 
               let username = email.split("@")[0];
 
@@ -303,11 +302,15 @@ const Navbar = () => {
           <div className="nav-logo">
             {isAuthenticated ? (
               <Link to="/dashboard" className="logo">
-                <span className="span-logo-1">DEMI</span><span className="span-logo-2">GT</span><span className="span-logo-3">ools</span>
+                <span className="span-logo-1">DEMI</span>
+                <span className="span-logo-2">GT</span>
+                <span className="span-logo-3">ools</span>
               </Link>
             ) : (
               <Link to="/" className="logo">
-                <span className="span-logo-1">DEMI</span><span className="span-logo-2">GT</span><span className="span-logo-3">ools</span>
+                <span className="span-logo-1">DEMI</span>
+                <span className="span-logo-2">GT</span>
+                <span className="span-logo-3">ools</span>
               </Link>
             )}
           </div>
@@ -335,8 +338,12 @@ const Navbar = () => {
                         onClick={() => setShowDropdown(null)}
                       >
                         {AdminMenu.map((admin) => (
-                          <li key={admin.id} className={admin.cName}>
-                            <Link to={admin.path}>{admin.title}</Link>
+                          <li
+                            key={admin.id}
+                            className={admin.cName}
+                            onClick={() => navigate(admin.path)}
+                          >
+                            {admin.title}
                           </li>
                         ))}
                       </ul>
@@ -350,8 +357,12 @@ const Navbar = () => {
                           onClick={() => setShowDropdown(null)}
                         >
                           {RelatórioMenu.map((admin) => (
-                            <li key={admin.id} className={admin.cName}>
-                              <Link to={admin.path}>{admin.title}</Link>
+                            <li
+                              key={admin.id}
+                              className={admin.cName}
+                              onClick={() => navigate(admin.path)}
+                            >
+                              {admin.title}
                             </li>
                           ))}
                         </ul>
@@ -365,8 +376,12 @@ const Navbar = () => {
                           onClick={() => setShowDropdown(null)}
                         >
                           {OperadorMenu.map((admin) => (
-                            <li key={admin.id} className={admin.cName}>
-                              <Link to={admin.path}>{admin.title}</Link>
+                            <li
+                              key={admin.id}
+                              className={admin.cName}
+                              onClick={() => navigate(admin.path)}
+                            >
+                              {admin.title}
                             </li>
                           ))}
                         </ul>
@@ -615,7 +630,9 @@ const Navbar = () => {
                     <p>{Navitens[2].title}</p>
                     <FaAngleDown
                       className={`dropdown-icon ${
-                        activeMobileDropdown === Navitens[2].title ? "rotated" : ""
+                        activeMobileDropdown === Navitens[2].title
+                          ? "rotated"
+                          : ""
                       }`}
                     />
                   </div>

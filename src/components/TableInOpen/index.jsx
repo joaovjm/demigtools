@@ -1,6 +1,11 @@
 import React from "react";
 
 const TableInOpen = ({ fullNotReceivedDonations }) => {
+
+  const handleClick = (e) => {
+    console.log(e.target.parentElement.children[0].textContent);
+  };
+
   return (
     <table className="table-confirmation">
       <thead className="table-head-confirmation">
@@ -16,6 +21,7 @@ const TableInOpen = ({ fullNotReceivedDonations }) => {
           <tr
             className="table-body-confirmation-tr"
             key={donation.receipt_donation_id}
+            onClick={handleClick}
           >
             <td className="table-body-confirmation-text">
               {donation.receipt_donation_id}

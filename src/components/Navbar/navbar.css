@@ -121,6 +121,10 @@
   background-color: var(--primary-color);
 }
 
+.submenu-itens{
+  cursor: pointer;
+}
+
 .dropdown-icon {
   font-size: 0.8rem;
   transition: var(--transition);
@@ -134,10 +138,9 @@
 .dropdown-admin {
   width: 200px;
   position: absolute;
-  top: 100%;
+  top: 100%;  
   left: 0;
   list-style: none;
-  border: none;
   border-radius: var(--border-radius);
   background-color: var(--dark-color);
   box-shadow: var(--box-shadow);
