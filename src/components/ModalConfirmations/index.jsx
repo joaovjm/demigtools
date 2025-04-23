@@ -21,8 +21,8 @@ const ModalConfirmations = ({donationOpen, setModalOpen}) => {
             <label>Name: {donationOpen.name}</label>
             <label>Endereço: {donationOpen.address}</label>
             <label>Tel 1: {donationOpen.phone}</label>
-            <label>Tel 2: {donationOpen.phone2}</label>
-            <label>Tel 3: {donationOpen.phone3}</label>
+            <label>Tel 2: {donationOpen.phone2 ? donationOpen.phone2 : "*****-****"}</label>
+            <label>Tel 3: {donationOpen.phone3 ? donationOpen.phone3 : "*****-****"}</label>
             <label>Valor: R$ {donationOpen.value},00</label>
             <h4>
               Motivo: {donationOpen.reason}
