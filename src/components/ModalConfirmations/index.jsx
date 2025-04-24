@@ -1,10 +1,42 @@
 import React, { useState } from "react";
 import "./index.css";
 import { ICONS } from "../../constants/constants";
+import cancelDonation from "../../helper/cancelDonation";
+import { toast } from "react-toastify";
 
-const ModalConfirmations = ({donationOpen, setModalOpen}) => {
+const ModalConfirmations = ({
+  donationOpen,
+  onClose,
+  setStatus
+}) => {
   const [isConfirmation, setIsConfirmation] = useState(false);
-  console.log(donationOpen);
+
+  const handleCancel = async () => {
+    window.confirm("Você tem certeza que deseja cancelar a ficha?");
+    if (window.confirm) {
+      const status = await cancelDonation({
+        donation: {
+          receipt_donation_id: donationOpen.id,
+          donor_id: donationOpen.donor_id,
+          donation_value: donationOpen.value,
+          donation_extra: donationOpen.extra,
+          donation_day_contact: donationOpen.day_contact,
+          donation_day_to_receive: donationOpen.day_to_receive,
+          donation_print: donationOpen.print,
+          donation_monthref: donationOpen.monthref,
+          donation_description: donationOpen.description,
+          donation_received: "Não",
+          operator_code_id: donationOpen.operator_code_id,
+          collector_code_id: donationOpen.collector_code_id,
+        },
+      });
+      
+      setStatus(status)
+      onClose();
+      
+
+    }
+  };
 
   return (
     <div className="modal-confirmations">
@@ -21,12 +53,14 @@ const ModalConfirmations = ({donationOpen, setModalOpen}) => {
             <label>Name: {donationOpen.name}</label>
             <label>Endereço: {donationOpen.address}</label>
             <label>Tel 1: {donationOpen.phone}</label>
-            <label>Tel 2: {donationOpen.phone2 ? donationOpen.phone2 : "*****-****"}</label>
-            <label>Tel 3: {donationOpen.phone3 ? donationOpen.phone3 : "*****-****"}</label>
+            <label>
+              Tel 2: {donationOpen.phone2 ? donationOpen.phone2 : "*****-****"}
+            </label>
+            <label>
+              Tel 3: {donationOpen.phone3 ? donationOpen.phone3 : "*****-****"}
+            </label>
             <label>Valor: R$ {donationOpen.value},00</label>
-            <h4>
-              Motivo: {donationOpen.reason}
-            </h4>
+            <h4>Motivo: {donationOpen.reason}</h4>
           </div>
           {!isConfirmation && (
             <div className="modal-confirmations-footer">
@@ -36,7 +70,9 @@ const ModalConfirmations = ({donationOpen, setModalOpen}) => {
               >
                 Reagendar Ficha
               </button>
-              <button className="btn-delete">Cancelar Ficha</button>
+              <button onClick={handleCancel} className="btn-delete">
+                Cancelar Ficha
+              </button>
             </div>
           )}
 

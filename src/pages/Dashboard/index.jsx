@@ -7,6 +7,7 @@ import { DataNow } from "../../components/DataTime";
 import TableConfirmation from "../../components/TableConfirmation";
 import TableInOpen from "../../components/TableInOpen";
 import ModalConfirmations from "../../components/ModalConfirmations";
+import { toast, ToastContainer } from "react-toastify";
 
 const Dashboard = () => {
   const caracterOperator = JSON.parse(localStorage.getItem("operatorData"));
@@ -30,22 +31,44 @@ const Dashboard = () => {
 
   const monthref = DataNow("mesref");
 
+  const [status, setStatus] = useState();
+
+  const donations = async () => {
+    try{
+      await getDonationNotReceived(
+        setConfirmations,
+        setValueConfirmations,
+        setOpenDonations,
+        setValueOpenDonations,
+        setDonationConfirmation,
+        setFullNotReceivedDonations
+      );
+      await getDonationPerMonthReceived(
+        monthref,
+        setMonthReceived,
+        setValueMonthReceived,
+        setReceivedPercent
+      );
+
+
+    } catch (error){
+      console.error("Error fetching donations:", error);
+    }
+    if (status === "OK"){
+      toast.success("Ficha cancelada com sucesso!", {
+        position: "top-right",
+        autoClose: 1000,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      setStatus(null);
+    }
+  };
+
   useEffect(() => {
-    getDonationNotReceived(
-      setConfirmations,
-      setValueConfirmations,
-      setOpenDonations,
-      setValueOpenDonations,
-      setDonationConfirmation,
-      setFullNotReceivedDonations
-    );
-    getDonationPerMonthReceived(
-      monthref,
-      setMonthReceived,
-      setValueMonthReceived,
-      setReceivedPercent
-    );
-  }, [active]);
+    donations();
+  }, [active, modalOpen]);
 
   const handleClickCard = (e) => {
     setActive(e.currentTarget.id);
@@ -73,18 +96,6 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {/* Card 2 */}
-            {/*<div className="divCard">
-              <div className="divHeader">
-                <h3 className="h3Header">Recebidas</h3>
-              </div>
-              <div className="divBody">
-                <p>{qReceived}</p>
-                <p>R$ {valueReceived}</p>
-              </div>
-            </div>*/}
-
-            {/* Card 3 */}
             <div
               id="inOpen"
               className={`divCard ${active === "inOpen" ? "active" : ""}`}
@@ -114,36 +125,26 @@ const Dashboard = () => {
           <section className="sectionGrafico">
             {active === "inConfirmation" ? (
               <>
-                <TableConfirmation donationConfirmation={donationConfirmation} setModalOpen={setModalOpen} setDonationOpen={setDonationOpen}/>
+                <TableConfirmation
+                  donationConfirmation={donationConfirmation}
+                  setModalOpen={setModalOpen}
+                  setDonationOpen={setDonationOpen}
+                />
               </>
-              
             ) : active === "inOpen" ? (
-              <TableInOpen fullNotReceivedDonations={fullNotReceivedDonations}/>
-              
+              <TableInOpen
+                fullNotReceivedDonations={fullNotReceivedDonations}
+              />
             ) : null}
-
-            {/*
-            <div className="cardGrafico">
-              <div className="divHeaderGrafico">
-                <h3 className="h3HeaderGrafico">Resultados da Equipe (DIA)</h3>
-              </div>
-              <div className="divGrafico">
-                <p>Grafico</p>
-              </div>
-            </div>
-
-          
-            <div className="cardGrafico">
-              <div className="divHeaderGrafico">
-                <h3 className="h3HeaderGrafico">Histórico Mensal</h3>
-              </div>
-              <div className="divGrafico">
-                <p>Grafico</p>
-              </div>
-            </div>
-            */}
           </section>
-          {modalOpen && <ModalConfirmations donationOpen={donationOpen} setModalOpen={setModalOpen}/>}
+          {modalOpen && (
+            <ModalConfirmations
+              donationOpen={donationOpen}
+              onClose={() => setModalOpen(false)}
+              setStatus={setStatus}
+            />
+          )}
+          <ToastContainer/>
         </>
       )}
     </main>

@@ -18,8 +18,17 @@ const getDonationNotReceived = (
       .from("donation")
       .select(
         `receipt_donation_id, 
+        donor_id,
+        donation_description,
         donor(donor_name, donor_address, donor_tel_1, donor_tel_2(donor_tel_2), donor_tel_3(donor_tel_3)),
         donation_value, 
+        donation_extra,
+        donation_day_contact,
+        donation_day_to_receive,
+        donation_print,
+        donation_received,
+        donation_monthref,
+        operator_code_id,
         collector_code_id, 
         donor_confirmation_reason(donor_confirmation_reason),
         collector: collector_code_id (collector_name)`
@@ -35,11 +44,20 @@ const getDonationNotReceived = (
         //Preenche o array com os doadores na confirmação
         tempDonationConfirmations.push({
           receipt_donation_id: operatorValue[i].receipt_donation_id,
+          donor_id: operatorValue[i].donor_id,
           donor_name: operatorValue[i].donor.donor_name,
           donor_address: operatorValue[i].donor.donor_address,
           donor_tel_1: operatorValue[i].donor.donor_tel_1,
           donor_tel_2: operatorValue[i].donor.donor_tel_2?.donor_tel_2,
           donor_tel_3: operatorValue[i].donor.donor_tel_3?.donor_tel_3,
+          donation_extra: operatorValue[i].donation_extra,
+          donation_day_contact: operatorValue[i].donation_day_contact,
+          donation_day_to_receive: operatorValue[i].donation_day_to_receive,
+          donation_print: operatorValue[i].donation_print,
+          donation_monthref: operatorValue[i].donation_monthref,
+          donation_description: operatorValue[i].donation_description,
+          operator_code_id: operatorValue[i].operator_code_id,
+          donation_received: operatorValue[i].donation_received,
           donation_value: operatorValue[i].donation_value,
           collector_code_id: operatorValue[i].collector_code_id,
           donor_confirmation_reason: operatorValue[i].donor_confirmation_reason[0]?.donor_confirmation_reason,
