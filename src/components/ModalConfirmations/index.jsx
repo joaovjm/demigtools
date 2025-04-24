@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./index.css";
 import { ICONS } from "../../constants/constants";
 import cancelDonation from "../../helper/cancelDonation";
+import supabase from "../../helper/superBaseClient";
 import { toast } from "react-toastify";
+import { DataNow, DataSelect } from "../DataTime";
 
-const ModalConfirmations = ({
-  donationOpen,
-  onClose,
-  setStatus
-}) => {
+const ModalConfirmations = ({ donationOpen, onClose, setStatus }) => {
   const [isConfirmation, setIsConfirmation] = useState(false);
+  const [dateConfirm, setDateConfirm] = useState("");
+  const [observation, setObservation] = useState("");
 
   const handleCancel = async () => {
     window.confirm("Você tem certeza que deseja cancelar a ficha?");
@@ -30,21 +30,44 @@ const ModalConfirmations = ({
           collector_code_id: donationOpen.collector_code_id,
         },
       });
-      
-      setStatus(status)
-      onClose();
-      
 
+      setStatus(status);
+      onClose();
     }
   };
 
+  const handleConfirm = async () => {
+    window.confirm("Você deseja reagendar a ficha?");
+    if (window.confirm) {
+      try {
+        const { data: updateConfirm, error: errorConfirm } = await supabase
+          .from("donation")
+          .update({
+            donation_day_contact: DataNow(),
+            donation_day_to_receive: DataSelect(dateConfirm),
+            donation_description: observation,
+            donation_received: "Não",
+            collector_code_id: null,
+          })
+          .eq("receipt_donation_id", donationOpen.id);
+
+        if (errorConfirm) throw errorConfirm;
+        
+          setStatus("Update OK")
+          onClose();
+        
+      } catch (errorConfirm) {
+        console.error("Error updating donation:", errorConfirm);
+      }
+    }
+  };
   return (
     <div className="modal-confirmations">
       <div className="modal-confirmations-content">
         <div className="modal-confirmations-div">
           <div className="modal-confirmations-title">
             <h2>Recibo: {donationOpen.id}</h2>
-            <button onClick={() => setModalOpen(false)} className="btn-close">
+            <button onClick={() => onClose()} className="btn-close">
               Fechar
             </button>
           </div>
@@ -81,11 +104,20 @@ const ModalConfirmations = ({
               <div className="modal-confirmations-confirm-1">
                 <div>
                   <label className="label">Data</label>
-                  <input style={{ width: "180px" }} type="date" />
+                  <input
+                    value={dateConfirm}
+                    style={{ width: "180px" }}
+                    type="date"
+                    onChange={(e) => setDateConfirm(e.target.value)}
+                  />
                 </div>
                 <div>
                   <label className="label">Observação</label>
-                  <input style={{ width: "370px" }} />
+                  <input
+                    value={observation}
+                    style={{ width: "370px" }}
+                    onChange={(e) => setObservation(e.target.value)}
+                  />
                 </div>
               </div>
               <div className="modal-confirmations-confirm-2">
@@ -95,7 +127,9 @@ const ModalConfirmations = ({
                 >
                   {ICONS.BACK} Voltar
                 </button>
-                <button className="btn-confirm">Confirmar</button>
+                <button onClick={handleConfirm} className="btn-confirm">
+                  Confirmar
+                </button>
               </div>
             </div>
           )}

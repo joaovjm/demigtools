@@ -62,8 +62,18 @@ const Dashboard = () => {
         pauseOnHover: true,
         draggable: true,
       });
-      setStatus(null);
+      
+    } else if (status === "Update OK"){
+      toast.success("Ficha reagendada com sucesso!", {
+        position: "top-right",
+        autoClose: 1000,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      
     }
+    setStatus(null);
   };
 
   useEffect(() => {
