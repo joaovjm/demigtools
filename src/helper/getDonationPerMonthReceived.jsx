@@ -17,7 +17,7 @@ const getDonationPerMonthReceived = (
     setMonthReceived(operatorValue.length);
 
     for (let i = 0; i < operatorValue.length; i++) {
-      if (operatorValue[i].donation_received === "Sim" && operatorValue[0].donation_monthref === monthref) {
+      if (operatorValue[i].donation_received === "Sim" && operatorValue[i].donation_monthref === monthref) {
         cont = i;
         let value = operatorValue[i].donation_value;
         totalValue = totalValue + value;
