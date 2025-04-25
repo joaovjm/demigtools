@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./index.css";
 
 import { getCollector } from "../../helper/getCollector";
-import { changeCollector } from "../../helper/changeCollector";
+import { changeCollector, handleReasonButtonPressed } from "../../helper/changeCollector";
 import { DataSelect } from "../../components/DataTime";
 import { ALERT_TYPES, ICONS, MESSAGES } from "../../constants/constants";
 import FormSelect from "../../components/forms/FormSelect";
@@ -17,6 +17,8 @@ const ChangeCollector = () => {
   });
   const [collectors, setCollectors] = useState([]);
   const [alert, setAlert] = useState({ message: "", type: "" });
+  const [openReason, setOpenReason] = useState(false);
+  const [reason, setReason] = useState("");
 
   useEffect(() => {
     const fetchCollectors = async () => {
@@ -53,9 +55,10 @@ const ChangeCollector = () => {
     try {
       const dateFormat = DataSelect(formData.date);
       const result = await changeCollector(
-        formData.collector,
+        Number(formData.collector),
         formData.search,
-        dateFormat
+        dateFormat,
+        setOpenReason,
       );
 
       let message, type;
@@ -65,7 +68,6 @@ const ChangeCollector = () => {
         type = ALERT_TYPES.SUCCESS;
       } else if (result === "Yes") {
         (message = MESSAGES.DONATION_RECEIVED), (type = ALERT_TYPES.ERROR);
-
       } else {
         (message = MESSAGES.RECEIPT_NOT_FOUND), (type = ALERT_TYPES.ERROR);
       }
@@ -79,9 +81,11 @@ const ChangeCollector = () => {
       });
     }
 
-    {setTimeout(() => {
-      setAlert({message:"", type: ""})
-    }, 1000)}
+    {
+      setTimeout(() => {
+        setAlert({ message: "", type: "" });
+      }, 1000);
+    }
 
     setFormData((prev) => ({ ...prev, search: "" }));
   };
@@ -134,8 +138,26 @@ const ChangeCollector = () => {
         <MessageStatus
           message={alert.message}
           type={alert.type}
-          icon= {alert.type === ALERT_TYPES.SUCCESS ? ICONS.CONFIRMED : alert.type === ALERT_TYPES.ERROR ? ICONS.ALERT : null}
+          icon={
+            alert.type === ALERT_TYPES.SUCCESS
+              ? ICONS.CONFIRMED
+              : alert.type === ALERT_TYPES.ERROR
+              ? ICONS.ALERT
+              : null
+          }
         />
+      )}
+
+      {openReason && (
+        <div className="collector-reason">
+          <div>
+            <label className="label">Motivo</label>
+            <input value={reason} autoFocus="true" type="text" onChange={(e) => setReason(e.target.value)}/>
+          </div>
+          <div>
+            <button onClick={() => handleReasonButtonPressed(reason)} className="btn-OK">OK</button>
+          </div>
+        </div>
       )}
     </main>
   );
