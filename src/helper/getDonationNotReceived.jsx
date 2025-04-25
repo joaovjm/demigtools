@@ -35,6 +35,7 @@ const getDonationNotReceived = (
       )
       .eq("donation_received", "Não");
     
+      console.log(operatorValue)
     for (let i = 0; i < operatorValue.length; i++) {
       if (operatorValue[i].collector_code_id === 10) {
         confirmations += 1;
@@ -60,7 +61,7 @@ const getDonationNotReceived = (
           donation_received: operatorValue[i].donation_received,
           donation_value: operatorValue[i].donation_value,
           collector_code_id: operatorValue[i].collector_code_id,
-          donor_confirmation_reason: operatorValue[i].donor_confirmation_reason[0]?.donor_confirmation_reason,
+          donor_confirmation_reason: operatorValue[i].donor_confirmation_reason?.donor_confirmation_reason,
         });
       }
 
@@ -70,7 +71,7 @@ const getDonationNotReceived = (
         donor_name: operatorValue[i].donor.donor_name,
         donation_value: operatorValue[i].donation_value,
         collector_code_id: operatorValue[i].collector_code_id,
-        donor_confirmation_reason: operatorValue[i].donor_confirmation_reason[0]?.donor_confirmation_reason,
+        donor_confirmation_reason: operatorValue[i].donor_confirmation_reason?.donor_confirmation_reason,
         collector_name: operatorValue[i].collector?.collector_name,
       });
 
