@@ -1,8 +1,10 @@
 import React from 'react'
+import './index.css'
 
 const AreasToPrint = () => {
   return (
-    <div>Page in Development</div>
+    <>
+    </>
   )
 }
 

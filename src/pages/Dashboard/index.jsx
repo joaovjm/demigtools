@@ -86,7 +86,7 @@ const Dashboard = () => {
 
   return (
     <main className="mainDashboard">
-      {caracterOperator.operator_type === "Admin" && (
+      
         <>
           <section className="sectionHeader">
             {/* Card 1 */}
@@ -156,7 +156,6 @@ const Dashboard = () => {
           )}
           <ToastContainer/>
         </>
-      )}
     </main>
   );
 };
