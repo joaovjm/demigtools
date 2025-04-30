@@ -5,35 +5,35 @@ import cancelDonation from "../../helper/cancelDonation";
 import supabase from "../../helper/superBaseClient";
 import { DataNow, DataSelect } from "../DataTime";
 
-const ModalConfirmations = ({ donationOpen, onClose, setStatus }) => {
+const ModalScheduled = ({ scheduledOpen, onClose, setStatus }) => {
   const [isConfirmation, setIsConfirmation] = useState(false);
   const [dateConfirm, setDateConfirm] = useState("");
   const [observation, setObservation] = useState("");
 
-  const handleCancel = async () => {
-    window.confirm("Você tem certeza que deseja cancelar a ficha?");
-    if (window.confirm) {
-      const status = await cancelDonation({
-        donation: {
-          receipt_donation_id: donationOpen.id,
-          donor_id: donationOpen.donor_id,
-          donation_value: donationOpen.value,
-          donation_extra: donationOpen.extra,
-          donation_day_contact: donationOpen.day_contact,
-          donation_day_to_receive: donationOpen.day_to_receive,
-          donation_print: donationOpen.print,
-          donation_monthref: donationOpen.monthref,
-          donation_description: donationOpen.description,
-          donation_received: "Não",
-          operator_code_id: donationOpen.operator_code_id,
-          collector_code_id: donationOpen.collector_code_id,
-        },
-      });
+  // const handleCancel = async () => {
+  //   window.confirm("Você tem certeza que deseja cancelar a ficha?");
+  //   if (window.confirm) {
+  //     const status = await cancelDonation({
+  //       donation: {
+  //         receipt_donation_id: donationOpen.id,
+  //         donor_id: donationOpen.donor_id,
+  //         donation_value: donationOpen.value,
+  //         donation_extra: donationOpen.extra,
+  //         donation_day_contact: donationOpen.day_contact,
+  //         donation_day_to_receive: donationOpen.day_to_receive,
+  //         donation_print: donationOpen.print,
+  //         donation_monthref: donationOpen.monthref,
+  //         donation_description: donationOpen.description,
+  //         donation_received: "Não",
+  //         operator_code_id: donationOpen.operator_code_id,
+  //         collector_code_id: donationOpen.collector_code_id,
+  //       },
+  //     });
 
-      setStatus(status);
-      onClose();
-    }
-  };
+  //     setStatus(status);
+  //     onClose();
+  //   }
+  // };
 
   const handleConfirm = async () => {
     window.confirm("Você deseja reagendar a ficha?");
@@ -65,7 +65,7 @@ const ModalConfirmations = ({ donationOpen, onClose, setStatus }) => {
       <div className="modal-confirmations-content">
         <div className="modal-confirmations-div">
           <div className="modal-confirmations-title">
-            <h2>Recibo: {donationOpen.id}</h2>
+            <h2>Recibo: {scheduledOpen.leads_id}</h2>
             <button onClick={() => onClose()} className="btn-close">
               Fechar
             </button>
@@ -138,4 +138,4 @@ const ModalConfirmations = ({ donationOpen, onClose, setStatus }) => {
   );
 };
 
-export default ModalConfirmations;
+export default ModalScheduled;

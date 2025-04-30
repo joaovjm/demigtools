@@ -1,9 +1,8 @@
 import React from "react";
 
 const TableScheduled = ({ scheduled }) => {
-  console.log(scheduled);
   const handleClick = (e) => {
-    console.log(e.target.parentElement.children[0].textContent);
+    
   };
 
   return (
@@ -18,9 +17,9 @@ const TableScheduled = ({ scheduled }) => {
       <tbody className="table-body-confirmation">
         {scheduled?.map((item) => (
           <tr
-            key={item.id}
+            key={item.leads_id}
             className="table-body-confirmation-tr"
-            onClick={handleClick}
+            onClick={() => handleClick(item.leads_id)}
           >
             <td className="table-body-confirmation-text">{item.leads_name}</td>
             <td className="table-body-confirmation-text">{item.leads_observation}</td>

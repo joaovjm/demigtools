@@ -10,6 +10,7 @@ import ModalConfirmations from "../../components/ModalConfirmations";
 import { toast, ToastContainer } from "react-toastify";
 import TableScheduled from "../../components/TableScheduled";
 import getScheduledLeads from "../../helper/getScheduledLeads";
+import ModalScheduled from "../../components/ModalScheduled";
 
 const Dashboard = () => {
   const caracterOperator = JSON.parse(localStorage.getItem("operatorData"));
@@ -22,6 +23,7 @@ const Dashboard = () => {
   const [monthReceived, setMonthReceived] = useState(null); //Total de fichas recebidas em determinado mês
   const [valueMonthReceived, setValueMonthReceived] = useState(null); //Total valor dos recebidos do atual Mês
   const [receivedPercent, setReceivedPercent] = useState(null);
+  const [scheduling, setScheduling] = useState(null); //Total de leads agendadas
   const [active, setActive] = useState(false);
 
   const [donationConfirmation, setDonationConfirmation] = useState([]);
@@ -29,6 +31,7 @@ const Dashboard = () => {
   const [scheduled, setScheduled] = useState([]);
 
   const [donationOpen, setDonationOpen] = useState([]);
+  const [scheduledOpen, setScheduledOpen] = useState([]);
 
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -52,7 +55,7 @@ const Dashboard = () => {
         setValueMonthReceived,
         setReceivedPercent
       );
-      await getScheduledLeads(caracterOperator.operator_code_id, setScheduled);
+      await getScheduledLeads(caracterOperator.operator_code_id, setScheduled, setScheduling);
     } catch (error) {
       console.error("Error fetching donations:", error);
     }
@@ -97,7 +100,7 @@ const Dashboard = () => {
               <h3 className="h3Header">Agendados</h3>
             </div>
             <div className="divBody">
-              <p>{openDonations}</p>
+              <p>{scheduling}</p>
               
             </div>
           </div>
@@ -154,12 +157,23 @@ const Dashboard = () => {
           ) : active === "inOpen" ? (
             <TableInOpen fullNotReceivedDonations={fullNotReceivedDonations} />
           ) : active === "inScheduled" ? (
-            <TableScheduled scheduled={scheduled}/>
+            <TableScheduled 
+              scheduled={scheduled}
+              // setModalOpen={setModalOpen}
+              // setScheduledOpen={setScheduledOpen}
+            />
           ) : null}
         </section>
-        {modalOpen && (
+        {modalOpen && active === "inConfirmation" && (
           <ModalConfirmations
             donationOpen={donationOpen}
+            onClose={() => setModalOpen(false)}
+            setStatus={setStatus}
+          />
+        )}
+        {modalOpen && active === "inScheduled" && (
+          <ModalScheduled
+            scheduledOpen={scheduled}
             onClose={() => setModalOpen(false)}
             setStatus={setStatus}
           />
