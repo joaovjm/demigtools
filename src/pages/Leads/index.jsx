@@ -14,6 +14,7 @@ import {
   insertDonor_tel_2,
 } from "../../helper/insertDonor";
 import getSession from "../../auth/getSession";
+import updateLeads from "../../helper/updateLeads";
 
 const Leads = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -59,7 +60,7 @@ const Leads = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    GetLeads(itemsPerPage, currentPage, setItems, setTotalItems);
+    GetLeads(itemsPerPage, currentPage, setItems, setTotalItems, idSession);
     setIsLoading(false);
   }, [currentPage, isSchedulingOpen === false, isOpen === false]);
 
@@ -70,17 +71,21 @@ const Leads = () => {
     }
   };
 
-  const handleOpenDetails = (e) => {
-    setIsLead(e);
-    setIsOpen(false);
-    setActive(e.leads_id);
-    setName(e.leads_name);
-    setTel1(e.leads_tel_1);
-    setTel2(e.leads_tel_2);
-    setTel3(e.leads_tel_3);
-    setTel4(e.leads_tel_4);
-    setTel5(e.leads_tel_5);
-    setTel6(e.leads_tel_6);
+  const handleOpenDetails = async (e) => {
+    const UpdateLeads = await updateLeads("Aberto", e.leads_id);
+    console.log(UpdateLeads);
+    if (UpdateLeads.length > 0) {
+      setIsLead(e);
+      setIsOpen(false);
+      setActive(e.leads_id);
+      setName(e.leads_name);
+      setTel1(e.leads_tel_1);
+      setTel2(e.leads_tel_2);
+      setTel3(e.leads_tel_3);
+      setTel4(e.leads_tel_4);
+      setTel5(e.leads_tel_5);
+      setTel6(e.leads_tel_6);
+    }
   };
 
   const handleAccident = () => {
@@ -213,9 +218,12 @@ const Leads = () => {
               .from("leads_excludes")
               .insert(isLead)
               .select();
-            
+
             if (ErroChange) {
-              console.error("Erro ao inserir em leads_excludes:", ErroChange.message);
+              console.error(
+                "Erro ao inserir em leads_excludes:",
+                ErroChange.message
+              );
               throw ErroChange;
             }
 
@@ -224,7 +232,7 @@ const Leads = () => {
               .delete()
               .eq("leads_id", isLead.leads_id)
               .select();
-            
+
             if (ErroDelete) {
               console.error("Erro ao deletar de leads:", ErroDelete.message);
               throw ErroDelete;
@@ -243,7 +251,7 @@ const Leads = () => {
         {
           pending: "Processando doação...",
           success: (message) => message,
-          error: "Erro ao processar a operação"
+          error: "Erro ao processar a operação",
         }
       );
     }

@@ -5,6 +5,7 @@ const GetLeads = async (
   currentPage,
   setItems,
   setTotalItems,
+  idSession
 ) => {
 
 
@@ -15,7 +16,8 @@ const GetLeads = async (
     const { data, error, count } = await supabase
       .from("leads")
       .select("*", { count: "exact" })
-      .range(from, to);
+      .range(from, to)
+      .or(`leads_status.eq, leads_status.eq.${idSession}`)
 
     if (error) throw error;
 
