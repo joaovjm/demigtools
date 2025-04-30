@@ -19,9 +19,9 @@ import updateLeads from "../../helper/updateLeads";
 const Leads = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [items, setItems] = useState([]);
-  const [totalItems, setTotalItems] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [indiceAtual, setIndiceAtual] = useState(0);
+  //const [currentPage, setCurrentPage] = useState(1);
+  //const [itemsPerPage, setItemsPerPage] = useState(5);
   const [active, setActive] = useState(null);
   const [isOpen, setIsOpen] = useState(null);
   const [isSchedulingOpen, setIsSchedulingOpen] = useState(false);
@@ -47,7 +47,8 @@ const Leads = () => {
   const [dateScheduling, setDateScheduling] = useState("");
   const [observationScheduling, setObservationScheduling] = useState("");
   const [valueDonation, setValueDonation] = useState("");
-  const [operatorData, setOperatorData] = useState([]);
+  //const [operatorData, setOperatorData] = useState([]);
+  //const [statusLeads, setStatusLeads] = useState([]);
 
   useEffect(() => {
     const GetSession = async () => {
@@ -59,34 +60,57 @@ const Leads = () => {
   }, []);
 
   useEffect(() => {
-    setIsLoading(true);
-    GetLeads(itemsPerPage, currentPage, setItems, setTotalItems, idSession);
-    setIsLoading(false);
-  }, [currentPage, isSchedulingOpen === false, isOpen === false]);
+    const fetchLeads = async () => {
+      setIsLoading(true);
+      const data = await GetLeads()
+      setIsLoading(false);
 
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+      if (data.length > 0) {
+        setItems(data);
+        setIndiceAtual(0);
+        // setIsLead(data[0]);
+        // setName(data[0].leads_name);
+        // setTel1(data[0].leads_tel_1);
+        // setTel2(data[0].leads_tel_2);
+        // setTel3(data[0].leads_tel_3);
+        // setTel4(data[0].leads_tel_4);
+        // setTel5(data[0].leads_tel_5);
+        // setTel6(data[0].leads_tel_6);
+      }
+    }
+    fetchLeads();
+  }, []);
+
+
+  //Paginação
+  /*const totalPages = Math.ceil(totalItems / itemsPerPage);
   const goToPages = (page) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
-  };
+  };*/
 
   const handleOpenDetails = async (e) => {
-    const UpdateLeads = await updateLeads("Aberto", e.leads_id);
-    console.log(UpdateLeads);
-    if (UpdateLeads.length > 0) {
-      setIsLead(e);
-      setIsOpen(false);
-      setActive(e.leads_id);
-      setName(e.leads_name);
-      setTel1(e.leads_tel_1);
-      setTel2(e.leads_tel_2);
-      setTel3(e.leads_tel_3);
-      setTel4(e.leads_tel_4);
-      setTel5(e.leads_tel_5);
-      setTel6(e.leads_tel_6);
-    }
+    setIndiceAtual((prev) => (prev + 1 < items.length ? prev + 1 : 0));
+
+
+    //const lead = await supabase.from("leads").select("leads_id, leads_status").eq("leads_id", e.leads_id);
+    // console.log(await GetLeads())
+    // setActive(true)
+    // setIsLead(e);
+    // setIsOpen(false);
+    // setActive(e.leads_id);
+    // setName(e.leads_name);
+    // setTel1(e.leads_tel_1);
+    // setTel2(e.leads_tel_2);
+    // setTel3(e.leads_tel_3);
+    // setTel4(e.leads_tel_4);
+    // setTel5(e.leads_tel_5);
+    // setTel6(e.leads_tel_6);
+    //setStatusLeads(updateLeads("Aberto", e.leads_id));
   };
+
+  const produto = items[indiceAtual];
 
   const handleAccident = () => {
     setActive(false);
@@ -258,7 +282,7 @@ const Leads = () => {
   };
   return (
     <main className="main-leads">
-      <div className="section-leads">
+      {/*<div className="section-leads">
         <h3 className="header-leads">Leads</h3>
         <div className="container-leads">
           {isLoading ? (
@@ -272,9 +296,8 @@ const Leads = () => {
                   <div
                     onClick={(e) => handleOpenDetails(item)}
                     key={item.leads_id}
-                    className={`names-leads ${
-                      active === item.leads_id ? "active" : ""
-                    }`}
+                    className={`names-leads ${active === item.leads_id ? "active" : ""
+                      }`}
                   >
                     {item.leads_name}
                     <div className="status-lead">
@@ -316,19 +339,20 @@ const Leads = () => {
             </div>
           )}
         </div>
-      </div>
+      </div>*/}
       <div className="section-info-leads">
-        {active && (
+        <button onClick={handleOpenDetails}>Proximo</button>
+        {produto ? (
           <div className="info-possible-donor">
             <h3>{name}</h3>
             <div className="info-lead">
               <div className="tel-lead">
-                <p className="paragraph">Telefone 1: {tel1}</p>
-                <p className="paragraph">Telefone 2: {tel2}</p>
-                <p className="paragraph">Telefone 3: {tel3}</p>
-                <p className="paragraph">Telefone 4: {tel4}</p>
-                <p className="paragraph">Telefone 5: {tel5}</p>
-                <p className="paragraph">Telefone 6: {tel6}</p>
+                <p className="paragraph">Telefone 1: {produto.leads_tel_1}</p>
+                <p className="paragraph">Telefone 2: {produto.leads_tel_2}</p>
+                <p className="paragraph">Telefone 3: {produto.leads_tel_3}</p>
+                <p className="paragraph">Telefone 4: {produto.leads_tel_4}</p>
+                <p className="paragraph">Telefone 5: {produto.leads_tel_5}</p>
+                <p className="paragraph">Telefone 6: {produto.leads_tel_6}</p>
               </div>
               <div className="btn-lead">
                 <button onClick={handleAccident} className="info-lead-button-a">
@@ -346,7 +370,9 @@ const Leads = () => {
               </div>
             </div>
           </div>
-        )}
+        ) : null}
+
+
 
         {isOpen && (
           <form className="menu-action-lead">

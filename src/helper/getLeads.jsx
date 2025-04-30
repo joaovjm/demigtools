@@ -1,28 +1,20 @@
 import supabase from "./superBaseClient";
 
 const GetLeads = async (
-  itemsPerPage,
-  currentPage,
-  setItems,
-  setTotalItems,
-  idSession
 ) => {
-
-
   try {
-    const from = (currentPage - 1) * itemsPerPage;
-    const to = from + itemsPerPage - 1;
-
-    const { data, error, count } = await supabase
+    //const from = (currentPage - 1) * itemsPerPage;
+    //const to = from + itemsPerPage - 1;
+    const { data, error } = await supabase
       .from("leads")
-      .select("*", { count: "exact" })
-      .range(from, to)
-      .or(`leads_status.eq, leads_status.eq.${idSession}`)
+      .select("*")
+      .eq("leads_status", "Nunca Ligado")
+      .order("leads_id", { ascending: true })
 
     if (error) throw error;
 
-    setItems(data);
-    setTotalItems(count);
+    return data
+  
   } catch (error) {
     console.error("Erro ao buscar os dados", error.message);
   }

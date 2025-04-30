@@ -1,6 +1,7 @@
 import supabase from "./superBaseClient";
 
 const updateLeads = async (status_leads, leads_id) => {
+  console.log(status_leads)
   const {data} = await supabase
     .from("leads")
     .update([
