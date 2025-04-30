@@ -8,6 +8,8 @@ import TableConfirmation from "../../components/TableConfirmation";
 import TableInOpen from "../../components/TableInOpen";
 import ModalConfirmations from "../../components/ModalConfirmations";
 import { toast, ToastContainer } from "react-toastify";
+import TableScheduled from "../../components/TableScheduled";
+import getScheduledLeads from "../../helper/getScheduledLeads";
 
 const Dashboard = () => {
   const caracterOperator = JSON.parse(localStorage.getItem("operatorData"));
@@ -24,6 +26,7 @@ const Dashboard = () => {
 
   const [donationConfirmation, setDonationConfirmation] = useState([]);
   const [fullNotReceivedDonations, setFullNotReceivedDonations] = useState([]);
+  const [scheduled, setScheduled] = useState([]);
 
   const [donationOpen, setDonationOpen] = useState([]);
 
@@ -34,7 +37,7 @@ const Dashboard = () => {
   const [status, setStatus] = useState();
 
   const donations = async () => {
-    try{
+    try {
       await getDonationNotReceived(
         setConfirmations,
         setValueConfirmations,
@@ -49,12 +52,11 @@ const Dashboard = () => {
         setValueMonthReceived,
         setReceivedPercent
       );
-
-
-    } catch (error){
+      await getScheduledLeads(caracterOperator.operator_code_id, setScheduled);
+    } catch (error) {
       console.error("Error fetching donations:", error);
     }
-    if (status === "OK"){
+    if (status === "OK") {
       toast.success("Ficha cancelada com sucesso!", {
         position: "top-right",
         autoClose: 1000,
@@ -62,8 +64,7 @@ const Dashboard = () => {
         pauseOnHover: true,
         draggable: true,
       });
-      
-    } else if (status === "Update OK"){
+    } else if (status === "Update OK") {
       toast.success("Ficha reagendada com sucesso!", {
         position: "top-right",
         autoClose: 1000,
@@ -71,7 +72,6 @@ const Dashboard = () => {
         pauseOnHover: true,
         draggable: true,
       });
-      
     }
     setStatus(null);
   };
@@ -86,76 +86,86 @@ const Dashboard = () => {
 
   return (
     <main className="mainDashboard">
-      
-        <>
-          <section className="sectionHeader">
-            {/* Card 1 */}
-            <div
-              id="inConfirmation"
-              className={`divCard ${
-                active === "inConfirmation" ? "active" : ""
-              }`}
-              onClick={handleClickCard}
-            >
-              <div className="divHeader">
-                <h3 className="h3Header">Em Confirmação</h3>
-              </div>
-              <div className="divBody">
-                <p>{confirmations}</p>
-                <p>R$ {valueConfirmations}</p>
-              </div>
+      <>
+        <section className="sectionHeader">
+          <div
+            id="inScheduled"
+            className={`divCard ${active === "inScheduled" ? "active" : ""}`}
+            onClick={handleClickCard}
+          >
+            <div className="divHeader">
+              <h3 className="h3Header">Agendados</h3>
             </div>
-
-            <div
-              id="inOpen"
-              className={`divCard ${active === "inOpen" ? "active" : ""}`}
-              onClick={handleClickCard}
-            >
-              <div className="divHeader">
-                <h3 className="h3Header">Em Aberto</h3>
-              </div>
-              <div className="divBody">
-                <p>{openDonations}</p>
-                <p>R$ {valueOpenDonations}</p>
-              </div>
+            <div className="divBody">
+              <p>{openDonations}</p>
+              
             </div>
-
-            {/* Card 4 */}
-            <div className="divCard">
-              <div className="divHeader">
-                <h3 className="h3Header">Recebida Mês Atual</h3>
-              </div>
-              <div className="divBody">
-                <p>{receivedPercent}%</p>
-                <p>R$ {valueMonthReceived}</p>
-              </div>
+          </div>
+          {/* Card 1 */}
+          <div
+            id="inConfirmation"
+            className={`divCard ${active === "inConfirmation" ? "active" : ""}`}
+            onClick={handleClickCard}
+          >
+            <div className="divHeader">
+              <h3 className="h3Header">Em Confirmação</h3>
             </div>
-          </section>
+            <div className="divBody">
+              <p>{confirmations}</p>
+              <p>R$ {valueConfirmations}</p>
+            </div>
+          </div>
 
-          <section className="sectionGrafico">
-            {active === "inConfirmation" ? (
-              <>
-                <TableConfirmation
-                  donationConfirmation={donationConfirmation}
-                  setModalOpen={setModalOpen}
-                  setDonationOpen={setDonationOpen}
-                />
-              </>
-            ) : active === "inOpen" ? (
-              <TableInOpen
-                fullNotReceivedDonations={fullNotReceivedDonations}
+          <div
+            id="inOpen"
+            className={`divCard ${active === "inOpen" ? "active" : ""}`}
+            onClick={handleClickCard}
+          >
+            <div className="divHeader">
+              <h3 className="h3Header">Em Aberto</h3>
+            </div>
+            <div className="divBody">
+              <p>{openDonations}</p>
+              <p>R$ {valueOpenDonations}</p>
+            </div>
+          </div>
+
+          {/* Card 4 */}
+          <div className="divCard">
+            <div className="divHeader">
+              <h3 className="h3Header">Recebida Mês Atual</h3>
+            </div>
+            <div className="divBody">
+              <p>{receivedPercent}%</p>
+              <p>R$ {valueMonthReceived}</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="sectionGrafico">
+          {active === "inConfirmation" ? (
+            <>
+              <TableConfirmation
+                donationConfirmation={donationConfirmation}
+                setModalOpen={setModalOpen}
+                setDonationOpen={setDonationOpen}
               />
-            ) : null}
-          </section>
-          {modalOpen && (
-            <ModalConfirmations
-              donationOpen={donationOpen}
-              onClose={() => setModalOpen(false)}
-              setStatus={setStatus}
-            />
-          )}
-          <ToastContainer/>
-        </>
+            </>
+          ) : active === "inOpen" ? (
+            <TableInOpen fullNotReceivedDonations={fullNotReceivedDonations} />
+          ) : active === "inScheduled" ? (
+            <TableScheduled scheduled={scheduled}/>
+          ) : null}
+        </section>
+        {modalOpen && (
+          <ModalConfirmations
+            donationOpen={donationOpen}
+            onClose={() => setModalOpen(false)}
+            setStatus={setStatus}
+          />
+        )}
+        <ToastContainer />
+      </>
     </main>
   );
 };
