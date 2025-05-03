@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./index.css";
-import GetLeads from "../../helper/getLeads";
-import Loader from "../../components/Loader";
+import GetLeadsWithPagination from "../../helper/getLeadsWithPagination";
+
 import { ICONS } from "../../constants/constants";
 import { toast, ToastContainer } from "react-toastify";
 import FormInput from "../../components/forms/FormInput";
@@ -14,16 +14,16 @@ import {
   insertDonor_tel_2,
 } from "../../helper/insertDonor";
 import getSession from "../../auth/getSession";
+import Loader from "../../components/Loader";
 import updateLeads from "../../helper/updateLeads";
 
 const Leads = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [items, setItems] = useState([]);
-  const [indiceAtual, setIndiceAtual] = useState(0);
-  //const [currentPage, setCurrentPage] = useState(1);
-  //const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [items, setItems] = useState(0);
+  const [currentItem, setCurrentItem] = useState(1);
+  const [currentLead, setCurrentLead] = useState([]);
   const [active, setActive] = useState(null);
-  const [isOpen, setIsOpen] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
   const [isSchedulingOpen, setIsSchedulingOpen] = useState(false);
   const [idSession, setIdSession] = useState("");
   const [isLead, setIsLead] = useState([]);
@@ -47,8 +47,13 @@ const Leads = () => {
   const [dateScheduling, setDateScheduling] = useState("");
   const [observationScheduling, setObservationScheduling] = useState("");
   const [valueDonation, setValueDonation] = useState("");
-  //const [operatorData, setOperatorData] = useState([]);
+  const [operatorID, setOperatorID] = useState(null);
   //const [statusLeads, setStatusLeads] = useState([]);
+
+  useEffect(() => {
+    const operatorData = JSON.parse(localStorage.getItem("operatorData"));
+    setOperatorID(operatorData?.operator_code_id);
+  }, [])
 
   useEffect(() => {
     const GetSession = async () => {
@@ -59,58 +64,46 @@ const Leads = () => {
     GetSession();
   }, []);
 
-  useEffect(() => {
-    const fetchLeads = async () => {
-      setIsLoading(true);
-      const data = await GetLeads()
-      setIsLoading(false);
+  const fetchLeads = async () => {
+    const operatorData = JSON.parse(localStorage.getItem("operatorData"));
+    const currentOperatorID = operatorData?.operator_code_id;
 
-      if (data.length > 0) {
-        setItems(data);
-        setIndiceAtual(0);
-        // setIsLead(data[0]);
-        // setName(data[0].leads_name);
-        // setTel1(data[0].leads_tel_1);
-        // setTel2(data[0].leads_tel_2);
-        // setTel3(data[0].leads_tel_3);
-        // setTel4(data[0].leads_tel_4);
-        // setTel5(data[0].leads_tel_5);
-        // setTel6(data[0].leads_tel_6);
-      }
-    }
-    fetchLeads();
-  }, []);
+    setIsLoading(true);
+    const start = currentItem - 1;
+    const end = currentItem - 1;
 
+    const lead = await GetLeadsWithPagination(start, end, setItems, setCurrentLead, currentOperatorID);
+    
+    console.log(lead)
+    if(lead[0].leads_id){
+      await updateLeads(
+        "Aberto",
+        Number(currentOperatorID),
+        lead[0].leads_id
+      );
+    }      
 
-  //Paginação
-  /*const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const goToPages = (page) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
-  };*/
-
-  const handleOpenDetails = async (e) => {
-    setIndiceAtual((prev) => (prev + 1 < items.length ? prev + 1 : 0));
-
-
-    //const lead = await supabase.from("leads").select("leads_id, leads_status").eq("leads_id", e.leads_id);
-    // console.log(await GetLeads())
-    // setActive(true)
-    // setIsLead(e);
-    // setIsOpen(false);
-    // setActive(e.leads_id);
-    // setName(e.leads_name);
-    // setTel1(e.leads_tel_1);
-    // setTel2(e.leads_tel_2);
-    // setTel3(e.leads_tel_3);
-    // setTel4(e.leads_tel_4);
-    // setTel5(e.leads_tel_5);
-    // setTel6(e.leads_tel_6);
-    //setStatusLeads(updateLeads("Aberto", e.leads_id));
+    setIsLoading(false);
   };
 
-  const produto = items[indiceAtual];
+  useEffect(() => {
+    fetchLeads();
+  }, [currentItem]);
+
+  const handleNext = async () => {
+    if (currentItem < items && currentLead?.leads_id) {
+      const data = await updateLeads(
+        "Nunca Ligado",
+        null,
+        currentLead.leads_id
+      );
+      if(data.length > 0){
+        const next = currentItem + 1
+        setCurrentItem(next);
+      }
+      
+    }
+  };
 
   const handleAccident = () => {
     setActive(false);
@@ -282,97 +275,80 @@ const Leads = () => {
   };
   return (
     <main className="main-leads">
-      {/*<div className="section-leads">
-        <h3 className="header-leads">Leads</h3>
-        <div className="container-leads">
-          {isLoading ? (
-            <p>
-              <Loader />
-            </p>
-          ) : (
-            <div className="container-pagination">
-              <div className="card-lead">
-                {items.map((item) => (
-                  <div
-                    onClick={(e) => handleOpenDetails(item)}
-                    key={item.leads_id}
-                    className={`names-leads ${active === item.leads_id ? "active" : ""
-                      }`}
-                  >
-                    {item.leads_name}
-                    <div className="status-lead">
-                      <p style={{ fontSize: 12 }}>
-                        contato:{" "}
-                        {item.leads_date_accessed
-                          ? item.leads_date_accessed
-                          : "--/--/----"}
-                      </p>
-                      <p style={{ fontSize: 12 }}>
-                        status:{" "}
-                        {item.leads_status ? item.leads_status : "Nunca Ligado"}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="pagination">
-                <button
-                  className="pagination-button"
-                  onClick={() => goToPages(currentPage - 1)}
-                  disabled={currentPage === 1}
-                >
-                  Anterior
-                </button>
-
-                <span>
-                  Página {currentPage} de {totalPages}
-                </span>
-                <button
-                  className="pagination-button"
-                  onClick={() => goToPages(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                >
-                  Próxima
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>*/}
       <div className="section-info-leads">
-        <button onClick={handleOpenDetails}>Proximo</button>
-        {produto ? (
+        {isLoading ? (
+          <div className="info-possible-donor-loading">
+            <Loader />
+          </div>
+        ) : (
           <div className="info-possible-donor">
-            <h3>{name}</h3>
+            <h3>{currentLead.leads_name}</h3>
             <div className="info-lead">
               <div className="tel-lead">
-                <p className="paragraph">Telefone 1: {produto.leads_tel_1}</p>
-                <p className="paragraph">Telefone 2: {produto.leads_tel_2}</p>
-                <p className="paragraph">Telefone 3: {produto.leads_tel_3}</p>
-                <p className="paragraph">Telefone 4: {produto.leads_tel_4}</p>
-                <p className="paragraph">Telefone 5: {produto.leads_tel_5}</p>
-                <p className="paragraph">Telefone 6: {produto.leads_tel_6}</p>
+                <p className="paragraph">
+                  Telefone 1: {currentLead.leads_tel_1}
+                </p>
+                <p className="paragraph">
+                  Telefone 2: {currentLead.leads_tel_2}
+                </p>
+                <p className="paragraph">
+                  Telefone 3: {currentLead.leads_tel_3}
+                </p>
+                <p className="paragraph">
+                  Telefone 4: {currentLead.leads_tel_4}
+                </p>
+                <p className="paragraph">
+                  Telefone 5: {currentLead.leads_tel_5}
+                </p>
+                <p className="paragraph">
+                  Telefone 6: {currentLead.leads_tel_6}
+                </p>
               </div>
-              <div className="btn-lead">
-                <button onClick={handleAccident} className="info-lead-button-a">
-                  Abrir por acidente
-                </button>
-                <button
-                  onClick={handleScheduling}
-                  className="info-lead-button-b"
-                >
-                  Agendar
-                </button>
-                <button onClick={handleAction} className="info-lead-button-c">
-                  {ICONS.CIRCLEOUTLINE} Nova doação
-                </button>
+              <div className="neighborhood">
+                <p className="paragraph">
+                  Bairro: {currentLead.leads_neighborhood}{" "}
+                </p>
               </div>
+              {!isOpen && !isSchedulingOpen && (
+                <div className="btn-lead">
+                  <button
+                    onClick={handleAccident}
+                    className="info-lead-button-a"
+                  >
+                    Abrir por acidente
+                  </button>
+                  <button
+                    onClick={handleScheduling}
+                    className="info-lead-button-b"
+                  >
+                    Agendar
+                  </button>
+                  <button onClick={handleAction} className="info-lead-button-c">
+                    {ICONS.CIRCLEOUTLINE} Nova doação
+                  </button>
+                </div>
+              )}
             </div>
+            {!isOpen && !isSchedulingOpen && (
+              <>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginTop: "50px",
+                  }}
+                >
+                  <button className="btn-next" onClick={handleNext}>
+                    Proximo
+                  </button>
+                </div>
+                <div>
+                  <p>Lead / {items}</p>
+                </div>
+              </>
+            )}
           </div>
-        ) : null}
-
-
+        )}
 
         {isOpen && (
           <form className="menu-action-lead">
@@ -484,6 +460,12 @@ const Leads = () => {
             </div>
 
             <div className="menu-action-button">
+              <button
+                onClick={() => setIsOpen(false)}
+                className="info-lead-button-a"
+              >
+                {ICONS.BACK}Voltar
+              </button>
               <button
                 type="button"
                 onClick={handleNewDonorAndDonation}
