@@ -20,7 +20,7 @@ export const insertDonor = async (
     ]).select(); 
 
     if(error){
-      window.alert("Erro ao criar doador: ", error);
+      console.log("Erro ao criar doador: ", error);
     }
   
     return data;

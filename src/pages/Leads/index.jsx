@@ -41,6 +41,7 @@ const Leads = () => {
   const [newTel2, setNewTel2] = useState("");
   const [newTel3, setNewTel3] = useState("");
   const [telSuccess, setTelSuccess] = useState("");
+  const [campain, setCampain] = useState("")
   const [observation, setObservation] = useState("");
   const [reference, setReference] = useState("");
   const [dateDonation, setDateDonation] = useState("");
@@ -48,7 +49,6 @@ const Leads = () => {
   const [observationScheduling, setObservationScheduling] = useState("");
   const [valueDonation, setValueDonation] = useState("");
   const [operatorID, setOperatorID] = useState(null);
-  //const [statusLeads, setStatusLeads] = useState([]);
 
   useEffect(() => {
     const operatorData = JSON.parse(localStorage.getItem("operatorData"));
@@ -130,9 +130,9 @@ const Leads = () => {
   const handleAction = (e) => {
     setIsSchedulingOpen(false);
     setIsOpen(true);
-    setAddress(isLead.leads_address);
-    setCity(isLead.leads_city);
-    setNeighborhood(isLead.leads_neighborhood);
+    setAddress(currentLead.leads_address);
+    setCity(currentLead.leads_city);
+    setNeighborhood(currentLead.leads_neighborhood);
   };
 
   const handleSchedulingClick = async () => {
@@ -147,7 +147,7 @@ const Leads = () => {
             leads_observation: observationScheduling,
           },
         ])
-        .eq("leads_id", isLead.leads_id)
+        .eq("leads_id", currentLead.leads_id)
         .select();
 
       if (error) throw error;
@@ -167,7 +167,10 @@ const Leads = () => {
       address === "" ||
       city === "" ||
       neighborhood === "" ||
-      telSuccess === ""
+      telSuccess === "" ||
+      valueDonation === "" ||
+      dateDonation === "" ||
+      campain === ""
     ) {
       toast.warning("Preencha todos os campos obrigatórios!");
     } else {
@@ -205,23 +208,20 @@ const Leads = () => {
             let successMessage = "Operação concluída com sucesso!";
 
             if (valueDonation !== "" && dateDonation !== "") {
-              const { data: operator } = await supabase
-                .from("operator")
-                .select("operator_code_id")
-                .eq("operator_uuid", idSession);
 
               const { data: donation, error: donationError } = await supabase
                 .from("donation")
                 .insert([
                   {
                     donor_id: data[0].donor_id,
-                    operator_code_id: operator[0].operator_code_id,
+                    operator_code_id: operatorID,
                     donation_value: valueDonation,
                     donation_day_contact: DataNow(),
                     donation_day_to_receive: DataSelect(dateDonation),
                     donation_print: "Não",
                     donation_received: "Não",
                     donation_description: observation,
+                    donation_campain: campain,
                   },
                 ])
                 .select();
@@ -233,7 +233,7 @@ const Leads = () => {
             // Independente da doação, mover o lead para leads_excludes e deletar
             const { data: ChangeLead, error: ErroChange } = await supabase
               .from("leads_excludes")
-              .insert(isLead)
+              .insert(currentLead)
               .select();
 
             if (ErroChange) {
@@ -247,7 +247,7 @@ const Leads = () => {
             const { data: DeleteLead, error: ErroDelete } = await supabase
               .from("leads")
               .delete()
-              .eq("leads_id", isLead.leads_id)
+              .eq("leads_id", currentLead.leads_id)
               .select();
 
             if (ErroDelete) {
@@ -393,12 +393,12 @@ const Leads = () => {
                   <option value={telSuccess} disabled>
                     Selecione...
                   </option>
-                  {tel1 && <option value={tel1}>{tel1}</option>}
-                  {tel2 && <option value={tel2}>{tel2}</option>}
-                  {tel3 && <option value={tel3}>{tel3}</option>}
-                  {tel4 && <option value={tel4}>{tel4}</option>}
-                  {tel5 && <option value={tel5}>{tel5}</option>}
-                  {tel6 && <option value={tel6}>{tel6}</option>}
+                  {currentLead.leads_tel_1 && <option value={currentLead.leads_tel_1}>{currentLead.leads_tel_1}</option>}
+                  {currentLead.leads_tel_2 && <option value={currentLead.leads_tel_2}>{currentLead.leads_tel_2}</option>}
+                  {currentLead.leads_tel_3 && <option value={currentLead.leads_tel_3}>{currentLead.leads_tel_3}</option>}
+                  {currentLead.leads_tel_4 && <option value={currentLead.leads_tel_4}>{currentLead.leads_tel_4}</option>}
+                  {currentLead.leads_tel_5 && <option value={currentLead.leads_tel_5}>{currentLead.leads_tel_5}</option>}
+                  {currentLead.leads_tel_6 && <option value={currentLead.leads_tel_6}>{currentLead.leads_tel_6}</option>}
                 </select>
               </div>
 
@@ -414,7 +414,7 @@ const Leads = () => {
                 label="Telefone 3"
                 value={newTel3}
                 type="text"
-                name="mewtel3"
+                name="newtel3"
                 onChange={(e) => setNewTel3(e.target.value)}
                 style={{ width: 120 }}
               />
@@ -425,12 +425,21 @@ const Leads = () => {
                 label="Valor"
                 value={valueDonation}
                 onChange={(e) => setValueDonation(e.target.value)}
+                style={{width: 120}}
               />
               <FormInput
                 label="Data"
                 value={dateDonation}
                 type="date"
                 onChange={(e) => setDateDonation(e.target.value)}
+                style={{width: 180}}
+              />
+              <FormInput
+                label="Campanha"
+                value={campain}
+                type="text"
+                onChange={(e) => setCampain(e.target.value)}
+                style={{width: 220}}
               />
             </div>
 

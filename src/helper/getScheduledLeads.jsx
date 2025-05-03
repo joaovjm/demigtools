@@ -6,6 +6,7 @@ const getScheduledLeads = async (operator_code_id, setScheduled, setScheduling) 
     const { data, error} = await supabase.from("leads")
         .select("*")
         .eq("operator_code_id", operator_code_id)
+        .eq("leads_status", "agendado")
         .order("leads_scheduling_date", { ascending: false })
         .limit(10);
 
