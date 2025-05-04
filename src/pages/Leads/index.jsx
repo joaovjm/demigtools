@@ -178,11 +178,11 @@ const Leads = () => {
         (async () => {
           try {
             const data = await insertDonor(
-              isLead.leads_name,
+              currentLead.leads_name,
               "Lista",
-              isLead.leads_address,
-              isLead.leads_city,
-              isLead.leads_neighborhood,
+              address,
+              city,
+              neighborhood,
               telSuccess
             );
 
@@ -192,7 +192,7 @@ const Leads = () => {
 
             const cpf = await insertDonor_cpf(
               data[0].donor_id,
-              isLead.leads_icpf
+              currentLead.leads_icpf
             );
 
             if (newTel2 !== "") {
@@ -230,7 +230,7 @@ const Leads = () => {
               successMessage = "Doação criada com sucesso!";
             }
 
-            // Independente da doação, mover o lead para leads_excludes e deletar
+
             const { data: ChangeLead, error: ErroChange } = await supabase
               .from("leads_excludes")
               .insert(currentLead)
