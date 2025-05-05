@@ -11,11 +11,10 @@ import { toast, ToastContainer } from "react-toastify";
 import TableScheduled from "../../components/TableScheduled";
 import getScheduledLeads from "../../helper/getScheduledLeads";
 import ModalScheduled from "../../components/ModalScheduled";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
 
 const Dashboard = () => {
   const caracterOperator = JSON.parse(localStorage.getItem("operatorData"));
-  //const [qReceived, setQReceived] = useState(null); //Quantidade de fichas recebidas
-  //const [valueReceived, setValueReceived] = useState(null); //Total de valor recebido
   const [confirmations, setConfirmations] = useState(null); //Quantidade de fichas na confirmação
   const [valueConfirmations, setValueConfirmations] = useState(null); //Total valor na confirmação
   const [openDonations, setOpenDonations] = useState(null); //Quantidades de fichas em aberto
@@ -25,19 +24,28 @@ const Dashboard = () => {
   const [receivedPercent, setReceivedPercent] = useState(null);
   const [scheduling, setScheduling] = useState(null); //Total de leads agendadas
   const [active, setActive] = useState(false);
+  const [storage, setStorage] = useLocalStorage()
 
   const [donationConfirmation, setDonationConfirmation] = useState([]);
   const [fullNotReceivedDonations, setFullNotReceivedDonations] = useState([]);
   const [scheduled, setScheduled] = useState([]);
 
   const [donationOpen, setDonationOpen] = useState([]);
-  const [scheduledOpen, setScheduledOpen] = useState([]);
 
   const [modalOpen, setModalOpen] = useState(false);
 
   const monthref = DataNow("mesref");
 
   const [status, setStatus] = useState();
+
+  const [operatorID, setOperatorID] = useState("")
+  const [operatorType, setOperatorType] = useState("")
+
+    useEffect(() => {
+      const operatorData = JSON.parse(localStorage.getItem("operatorData"));
+      setOperatorID(operatorData?.operator_code_id);
+      setOperatorType(operatorData?.operator_type);
+    }, [])
 
   const donations = async () => {
     try {
@@ -47,7 +55,10 @@ const Dashboard = () => {
         setOpenDonations,
         setValueOpenDonations,
         setDonationConfirmation,
-        setFullNotReceivedDonations
+        setFullNotReceivedDonations,
+        operatorID,
+        operatorType
+
       );
       await getDonationPerMonthReceived(
         monthref,
@@ -100,7 +111,7 @@ const Dashboard = () => {
               <h3 className="h3Header">Agendados</h3>
             </div>
             <div className="divBody">
-              <p>{scheduling}</p>
+              <p>{scheduling ? scheduling : 0}</p>
               
             </div>
           </div>
