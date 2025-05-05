@@ -119,7 +119,6 @@ const Leads = () => {
     const now = DataNow("noformated");
     if (value < now) {
       value = now;
-      console.log(value);
     }
     setFormatedDate(`${DataSelect(value)}`);
     setDateScheduling(value);
@@ -152,6 +151,8 @@ const Leads = () => {
 
       if (!error) {
         toast.success("Agendado com sucesso!");
+        setDateScheduling("");
+        setObservationScheduling("")
         setIsSchedulingOpen(false);
       }
     } catch (error) {
