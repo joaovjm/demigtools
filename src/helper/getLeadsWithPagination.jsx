@@ -5,7 +5,8 @@ const GetLeadsWithPagination = async (
   end,
   setItems,
   setCurrentLead,
-  operatorID
+  operatorID,
+  
 ) => {
 
   try {
@@ -15,6 +16,7 @@ const GetLeadsWithPagination = async (
       .or(`leads_status.eq.Nunca Ligado,and(leads_status.eq.Aberto,operator_code_id.eq.${operatorID})`)
       .range(start, end)
       .order("leads_id", { ascending: true })
+      .limit(1)
 
     setCurrentLead(data?.[0] || null)
     setItems(count || 0)

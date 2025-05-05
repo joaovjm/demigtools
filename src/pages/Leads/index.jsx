@@ -22,19 +22,10 @@ const Leads = () => {
   const [items, setItems] = useState(0);
   const [currentItem, setCurrentItem] = useState(1);
   const [currentLead, setCurrentLead] = useState([]);
-  const [active, setActive] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isSchedulingOpen, setIsSchedulingOpen] = useState(false);
   const [idSession, setIdSession] = useState("");
-  const [isLead, setIsLead] = useState([]);
   const [formatedDate, setFormatedDate] = useState("");
-  const [name, setName] = useState("");
-  const [tel1, setTel1] = useState("");
-  const [tel2, setTel2] = useState("");
-  const [tel3, setTel3] = useState("");
-  const [tel4, setTel4] = useState("");
-  const [tel5, setTel5] = useState("");
-  const [tel6, setTel6] = useState("");
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [neighborhood, setNeighborhood] = useState("");
@@ -48,6 +39,7 @@ const Leads = () => {
   const [dateScheduling, setDateScheduling] = useState("");
   const [observationScheduling, setObservationScheduling] = useState("");
   const [valueDonation, setValueDonation] = useState("");
+  const [nowLead, setNowLead] = useState("")
   const [operatorID, setOperatorID] = useState(null);
 
   useEffect(() => {
@@ -72,9 +64,9 @@ const Leads = () => {
     const start = currentItem - 1;
     const end = currentItem - 1;
 
-    const lead = await GetLeadsWithPagination(start, end, setItems, setCurrentLead, currentOperatorID);
+    const lead = await GetLeadsWithPagination(start, end, setItems, setCurrentLead, currentOperatorID, nowLead);
     
-    console.log(lead)
+    setNowLead(lead.leads_id)
     if(lead[0].leads_id){
       await updateLeads(
         "Aberto",
@@ -105,10 +97,16 @@ const Leads = () => {
     }
   };
 
-  const handleAccident = () => {
-    setActive(false);
-    setIsSchedulingOpen(false);
-    setIsOpen(false);
+  const handleNoDonation = async () => {
+    const response = await updateLeads(
+      "Não pode ajudar",
+      Number(operatorID),
+      currentLead.leads_id
+    );
+    if (response.length > 0){
+      const next = currentItem + 1
+      setCurrentItem(next)
+    }
   };
 
   const handleScheduling = (e) => {
@@ -155,7 +153,6 @@ const Leads = () => {
       if (!error) {
         toast.success("Agendado com sucesso!");
         setIsSchedulingOpen(false);
-        setActive(false);
       }
     } catch (error) {
       console.error("Erro: ", error.message);
@@ -257,7 +254,6 @@ const Leads = () => {
 
             // Reset form after successful operation
             setIsOpen(false);
-            setActive(false);
 
             return successMessage;
           } catch (error) {
@@ -312,10 +308,10 @@ const Leads = () => {
               {!isOpen && !isSchedulingOpen && (
                 <div className="btn-lead">
                   <button
-                    onClick={handleAccident}
+                    onClick={handleNoDonation}
                     className="info-lead-button-a"
                   >
-                    Abrir por acidente
+                    Não pode ajudar
                   </button>
                   <button
                     onClick={handleScheduling}
@@ -343,7 +339,7 @@ const Leads = () => {
                   </button>
                 </div>
                 <div>
-                  <p>Lead / {items}</p>
+                  <p>{currentItem} / {items}</p>
                 </div>
               </>
             )}
