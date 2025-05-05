@@ -414,6 +414,7 @@ const Leads = () => {
                 name="newtel3"
                 onChange={(e) => setNewTel3(e.target.value)}
                 style={{ width: 120 }}
+                classinput="tel"
               />
             </div>
 
@@ -423,6 +424,7 @@ const Leads = () => {
                 value={valueDonation}
                 onChange={(e) => setValueDonation(e.target.value)}
                 style={{width: 120}}
+                classinput="value-campain"
               />
               <FormInput
                 label="Data"
@@ -430,6 +432,7 @@ const Leads = () => {
                 type="date"
                 onChange={(e) => setDateDonation(e.target.value)}
                 style={{width: 180}}
+                classinput="value-campain"
               />
               <FormInput
                 label="Campanha"
@@ -437,6 +440,7 @@ const Leads = () => {
                 type="text"
                 onChange={(e) => setCampain(e.target.value)}
                 style={{width: 220}}
+                classinput="value-campain"
               />
             </div>
 
@@ -446,6 +450,7 @@ const Leads = () => {
                   Observação da Ficha
                 </label>
                 <textarea
+                  className="text-area"
                   value={observation}
                   onChange={(e) => {
                     setObservation(e.target.value);
@@ -457,6 +462,7 @@ const Leads = () => {
                   Referência do Doador
                 </label>
                 <textarea
+                  className="text-area"
                   value={reference}
                   onChange={(e) => {
                     setReference(e.target.value);

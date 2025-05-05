@@ -262,3 +262,71 @@
     justify-content: flex-end;
     gap: 64px;
 }
+
+@media (min-width: 400px) and (max-width: 699px){
+    .section-info-leads{
+        width: 90%;
+        height: 620px;
+    }
+    .address-area-input{
+        font-size: 10px;
+        width: 120px;
+    }
+    .label{
+        max-width: 60px;
+        font-size: 10px;
+    }
+    .tel{
+        max-width: 106px;
+    }
+    .value-campain{
+        max-width: 120px;
+    }
+    .text-area{
+        width: 100px;
+    }
+    .menu-action-lead{
+        height: 400px;
+    }
+    .info-lead-button-c{
+        height: 40px;
+    }
+}
+
+@media (min-width: 700px) and (max-width: 800px){
+    .section-info-leads{
+        width: 90%;
+        height: 560px;
+    }
+    .address-area-input{
+        font-size: 10px;
+        width: 120px;
+    }
+    .label{
+        font-size: 10px;
+    }
+    .text-area{
+        width: 180px;
+    }
+    .menu-action-lead{
+        min-height: 100px;
+    }
+}
+
+@media (min-width: 801px) and (max-width: 1000px){
+    .section-info-leads{
+        width: 90%;
+        height: 560px;
+    }
+    .address-area-input{
+ 
+        width: 120px;
+    }
+
+    .text-area{
+        width: 180px;
+    }
+    .menu-action-lead{
+        min-height: 100px;
+    }
+}
