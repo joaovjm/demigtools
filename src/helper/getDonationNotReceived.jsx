@@ -116,25 +116,24 @@ const getDonationNotReceived = (
         openCount += 1
         console.log("Caiu aqui")
         console.log(operatorValue)
-      } 
-      // else {
-      //   tempFullNotReceivedDonations.push({
-      //     receipt_donation_id: operatorValue[i].receipt_donation_id,
-      //     donor_name: operatorValue[i].donor.donor_name,
-      //     donation_value: operatorValue[i].donation_value,
-      //     collector_code_id: operatorValue[i].collector_code_id,
-      //     donor_confirmation_reason:
-      //       operatorValue[i].donor_confirmation_reason?.donor_confirmation_reason,
-      //     collector_name: operatorValue[i].collector?.collector_name,
-      //   });
+      } else if (operatorType === "Admin" && operatorID === operatorValue[i].operator_code_id){
+         tempFullNotReceivedDonations.push({
+           receipt_donation_id: operatorValue[i].receipt_donation_id,
+           donor_name: operatorValue[i].donor.donor_name,
+           donation_value: operatorValue[i].donation_value,
+           collector_code_id: operatorValue[i].collector_code_id,
+           donor_confirmation_reason:
+             operatorValue[i].donor_confirmation_reason?.donor_confirmation_reason,
+           collector_name: operatorValue[i].collector?.collector_name,
+         });
   
-      //   let value = operatorValue[i].donation_value;
-      //   valueOpenDonations += value;
-      //   openCount += 1
-      //   console.log("Caiu no segundo ")
-      //   console.log(operatorValue)
-      //   console.log(operatorID)
-      // }
+         let value = operatorValue[i].donation_value;
+         valueOpenDonations += value;
+         openCount += 1
+         console.log("Caiu no segundo ")
+         console.log(operatorValue)
+         console.log(operatorID)
+      }
       
     }
 

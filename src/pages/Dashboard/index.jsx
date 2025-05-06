@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./index.css";
 //import getDonationReceived from "../../helper/getDonationReceived";
 import getDonationNotReceived from "../../helper/getDonationNotReceived";
@@ -12,6 +12,7 @@ import TableScheduled from "../../components/TableScheduled";
 import getScheduledLeads from "../../helper/getScheduledLeads";
 import ModalScheduled from "../../components/ModalScheduled";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
+import { UserContext } from "../../context/UserContext";
 
 const Dashboard = () => {
   const caracterOperator = JSON.parse(localStorage.getItem("operatorData"));
@@ -24,12 +25,12 @@ const Dashboard = () => {
   const [receivedPercent, setReceivedPercent] = useState(null);
   const [scheduling, setScheduling] = useState(null); //Total de leads agendadas
   const [active, setActive] = useState(false);
-  const [storage, setStorage] = useLocalStorage()
+  //const [storage, setStorage] = useLocalStorage()
 
   const [donationConfirmation, setDonationConfirmation] = useState([]);
   const [fullNotReceivedDonations, setFullNotReceivedDonations] = useState([]);
   const [scheduled, setScheduled] = useState([]);
-
+  const {operatorData, setOperatorData} = useContext(UserContext)
   const [donationOpen, setDonationOpen] = useState([]);
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -37,15 +38,16 @@ const Dashboard = () => {
   const monthref = DataNow("mesref");
 
   const [status, setStatus] = useState();
+  //const [operatorTeste, setOperatorTeste] = useLocalStorage("operatorData", [])
 
-  const [operatorID, setOperatorID] = useState("")
-  const [operatorType, setOperatorType] = useState("")
+  // const [operatorID, setOperatorID] = useState("")
+  // const [operatorType, setOperatorType] = useState("")
 
-    useEffect(() => {
-      const operatorData = JSON.parse(localStorage.getItem("operatorData"));
-      setOperatorID(operatorData?.operator_code_id);
-      setOperatorType(operatorData?.operator_type);
-    }, [])
+    // useEffect(() => {
+    //   const operatorData = JSON.parse(localStorage.getItem("operatorData"));
+    //   // setOperatorID(operatorData?.operator_code_id);
+    //   // setOperatorType(operatorData?.operator_type);
+    // }, []);
 
   const donations = async () => {
     try {
@@ -56,8 +58,8 @@ const Dashboard = () => {
         setValueOpenDonations,
         setDonationConfirmation,
         setFullNotReceivedDonations,
-        operatorID,
-        operatorType
+        operatorData.operator_code_id,
+        operatorData.operator_type
 
       );
       await getDonationPerMonthReceived(
