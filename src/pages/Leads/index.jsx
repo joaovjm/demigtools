@@ -32,20 +32,20 @@ const Leads = () => {
   const [newTel2, setNewTel2] = useState("");
   const [newTel3, setNewTel3] = useState("");
   const [telSuccess, setTelSuccess] = useState("");
-  const [campain, setCampain] = useState("")
+  const [campain, setCampain] = useState("");
   const [observation, setObservation] = useState("");
   const [reference, setReference] = useState("");
   const [dateDonation, setDateDonation] = useState("");
   const [dateScheduling, setDateScheduling] = useState("");
   const [observationScheduling, setObservationScheduling] = useState("");
   const [valueDonation, setValueDonation] = useState("");
-  const [nowLead, setNowLead] = useState("")
+  const [nowLead, setNowLead] = useState("");
   const [operatorID, setOperatorID] = useState(null);
 
   useEffect(() => {
     const operatorData = JSON.parse(localStorage.getItem("operatorData"));
     setOperatorID(operatorData?.operator_code_id);
-  }, [])
+  }, []);
 
   useEffect(() => {
     const GetSession = async () => {
@@ -64,16 +64,19 @@ const Leads = () => {
     const start = currentItem - 1;
     const end = currentItem - 1;
 
-    const lead = await GetLeadsWithPagination(start, end, setItems, setCurrentLead, currentOperatorID, nowLead);
-    
-    setNowLead(lead.leads_id)
-    if(lead[0].leads_id){
-      await updateLeads(
-        "Aberto",
-        Number(currentOperatorID),
-        lead[0].leads_id
-      );
-    }      
+    const lead = await GetLeadsWithPagination(
+      start,
+      end,
+      setItems,
+      setCurrentLead,
+      currentOperatorID,
+      nowLead
+    );
+
+    setNowLead(lead.leads_id);
+    if (lead[0].leads_id) {
+      await updateLeads("Aberto", Number(currentOperatorID), lead[0].leads_id);
+    }
 
     setIsLoading(false);
   };
@@ -82,20 +85,15 @@ const Leads = () => {
     fetchLeads();
   }, [currentItem]);
 
-  // const handleNext = async () => {
-  //   if (currentItem < items && currentLead?.leads_id) {
-  //     const data = await updateLeads(
-  //       "Nunca Ligado",
-  //       null,
-  //       currentLead.leads_id
-  //     );
-  //     if(data.length > 0){
-  //       const next = currentItem + 1
-  //       setCurrentItem(next);
-  //     }
-      
-  //   }
-  // };
+  const handleNext = async () => {
+    if (currentItem < items && currentLead?.leads_id) {
+      const data = await updateLeads("Não Atendeu", operatorID, currentLead.leads_id);
+      if (data.length > 0) {
+        const next = currentItem + 1;
+        setCurrentItem(next);
+      }
+    }
+  };
 
   const handleNoDonation = async () => {
     const response = await updateLeads(
@@ -103,9 +101,9 @@ const Leads = () => {
       Number(operatorID),
       currentLead.leads_id
     );
-    if (response.length > 0){
-      const next = currentItem + 1
-      setCurrentItem(next)
+    if (response.length > 0) {
+      const next = currentItem + 1;
+      setCurrentItem(next);
     }
   };
 
@@ -152,10 +150,10 @@ const Leads = () => {
       if (!error) {
         toast.success("Agendado com sucesso!");
         setDateScheduling("");
-        setObservationScheduling("")
+        setObservationScheduling("");
         setIsSchedulingOpen(false);
-        const next = currentItem + 1
-        setCurrentItem(next)
+        const next = currentItem + 1;
+        setCurrentItem(next);
       }
     } catch (error) {
       console.error("Erro: ", error.message);
@@ -208,7 +206,6 @@ const Leads = () => {
             let successMessage = "Operação concluída com sucesso!";
 
             if (valueDonation !== "" && dateDonation !== "") {
-
               const { data: donation, error: donationError } = await supabase
                 .from("donation")
                 .insert([
@@ -229,7 +226,6 @@ const Leads = () => {
               if (donationError) throw donationError;
               successMessage = "Doação criada com sucesso!";
             }
-
 
             const { data: ChangeLead, error: ErroChange } = await supabase
               .from("leads_excludes")
@@ -256,8 +252,8 @@ const Leads = () => {
             }
 
             // Reset form after successful operation
-            const next = currentItem + 1
-            setCurrentItem(next)
+            const next = currentItem + 1;
+            setCurrentItem(next);
             setIsOpen(false);
 
             return successMessage;
@@ -332,7 +328,7 @@ const Leads = () => {
             </div>
             {!isOpen && !isSchedulingOpen && (
               <>
-                {/* <div
+                <div
                   style={{
                     display: "flex",
                     justifyContent: "center",
@@ -342,9 +338,11 @@ const Leads = () => {
                   <button className="btn-next" onClick={handleNext}>
                     Proximo
                   </button>
-                </div> */}
+                </div>
                 <div>
-                  <p>{currentItem} / {items}</p>
+                  <p>
+                    {currentItem} / {items}
+                  </p>
                 </div>
               </>
             )}
@@ -394,12 +392,36 @@ const Leads = () => {
                   <option value={telSuccess} disabled>
                     Selecione...
                   </option>
-                  {currentLead.leads_tel_1 && <option value={currentLead.leads_tel_1}>{currentLead.leads_tel_1}</option>}
-                  {currentLead.leads_tel_2 && <option value={currentLead.leads_tel_2}>{currentLead.leads_tel_2}</option>}
-                  {currentLead.leads_tel_3 && <option value={currentLead.leads_tel_3}>{currentLead.leads_tel_3}</option>}
-                  {currentLead.leads_tel_4 && <option value={currentLead.leads_tel_4}>{currentLead.leads_tel_4}</option>}
-                  {currentLead.leads_tel_5 && <option value={currentLead.leads_tel_5}>{currentLead.leads_tel_5}</option>}
-                  {currentLead.leads_tel_6 && <option value={currentLead.leads_tel_6}>{currentLead.leads_tel_6}</option>}
+                  {currentLead.leads_tel_1 && (
+                    <option value={currentLead.leads_tel_1}>
+                      {currentLead.leads_tel_1}
+                    </option>
+                  )}
+                  {currentLead.leads_tel_2 && (
+                    <option value={currentLead.leads_tel_2}>
+                      {currentLead.leads_tel_2}
+                    </option>
+                  )}
+                  {currentLead.leads_tel_3 && (
+                    <option value={currentLead.leads_tel_3}>
+                      {currentLead.leads_tel_3}
+                    </option>
+                  )}
+                  {currentLead.leads_tel_4 && (
+                    <option value={currentLead.leads_tel_4}>
+                      {currentLead.leads_tel_4}
+                    </option>
+                  )}
+                  {currentLead.leads_tel_5 && (
+                    <option value={currentLead.leads_tel_5}>
+                      {currentLead.leads_tel_5}
+                    </option>
+                  )}
+                  {currentLead.leads_tel_6 && (
+                    <option value={currentLead.leads_tel_6}>
+                      {currentLead.leads_tel_6}
+                    </option>
+                  )}
                 </select>
               </div>
 
@@ -427,7 +449,7 @@ const Leads = () => {
                 label="Valor"
                 value={valueDonation}
                 onChange={(e) => setValueDonation(e.target.value)}
-                style={{width: 120}}
+                style={{ width: 120 }}
                 classinput="value-campain"
               />
               <FormInput
@@ -435,7 +457,7 @@ const Leads = () => {
                 value={dateDonation}
                 type="date"
                 onChange={(e) => setDateDonation(e.target.value)}
-                style={{width: 180}}
+                style={{ width: 180 }}
                 classinput="value-campain"
               />
               <FormInput
@@ -443,7 +465,7 @@ const Leads = () => {
                 value={campain}
                 type="text"
                 onChange={(e) => setCampain(e.target.value)}
-                style={{width: 220}}
+                style={{ width: 220 }}
                 classinput="value-campain"
               />
             </div>

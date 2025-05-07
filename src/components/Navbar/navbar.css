@@ -310,6 +310,9 @@
 
 /* Media Queries */
 @media screen and (max-width: 968px) {
+  .header-nav{
+    position: relative;
+  }
   .nav-items {
     display: none;
   }

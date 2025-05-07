@@ -11,3 +11,8 @@ body{
     justify-content: center;
 }
 
+.main-app-container{
+    width: 100%;
+    height: calc(100vh - 10.8vh);
+}
+
