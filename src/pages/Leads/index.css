@@ -134,11 +134,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.loader{
-    width: 100px;
-    height: 100px;
+    
+    & .loader{
+        width: 100px;
+        height: 100px;
+    }
 }
 
 .paragraph{
