@@ -147,7 +147,7 @@ const Dashboard = () => {
           </div>
 
           {/* Card 4 */}
-          <div className="divCard">
+          {/* <div className="divCard">
             <div className="divHeader">
               <h3 className="h3Header">Recebida Mês Atual</h3>
             </div>
@@ -155,7 +155,7 @@ const Dashboard = () => {
               <p>{receivedPercent}%</p>
               <p>R$ {valueMonthReceived}</p>
             </div>
-          </div>
+          </div> */}
         </section>
 
         <section className="sectionGrafico">

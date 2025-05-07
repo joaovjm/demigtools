@@ -40,7 +40,7 @@ const getDonationNotReceived = (
 
     for (let i = 0; i < operatorValue.length; i++) {
       if (operatorValue[i].collector_code_id === 10) {
-        if (operatorType === "Admin" && operatorID === operatorValue.operator_code_id) {
+        if (operatorType === "Admin") {
           confirmations += 1;
           let value = operatorValue[i].donation_value;
           valueConfirmations += value;
@@ -114,9 +114,9 @@ const getDonationNotReceived = (
         let value = operatorValue[i].donation_value;
         valueOpenDonations += value;
         openCount += 1
-        console.log("Caiu aqui")
-        console.log(operatorValue)
-      } else if (operatorType === "Admin" && operatorID === operatorValue[i].operator_code_id){
+
+
+      } else if (operatorType === "Admin"){
          tempFullNotReceivedDonations.push({
            receipt_donation_id: operatorValue[i].receipt_donation_id,
            donor_name: operatorValue[i].donor.donor_name,
@@ -130,9 +130,9 @@ const getDonationNotReceived = (
          let value = operatorValue[i].donation_value;
          valueOpenDonations += value;
          openCount += 1
-         console.log("Caiu no segundo ")
-         console.log(operatorValue)
-         console.log(operatorID)
+
+
+         
       }
       
     }
