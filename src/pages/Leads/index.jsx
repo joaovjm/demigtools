@@ -82,20 +82,20 @@ const Leads = () => {
     fetchLeads();
   }, [currentItem]);
 
-  const handleNext = async () => {
-    if (currentItem < items && currentLead?.leads_id) {
-      const data = await updateLeads(
-        "Nunca Ligado",
-        null,
-        currentLead.leads_id
-      );
-      if(data.length > 0){
-        const next = currentItem + 1
-        setCurrentItem(next);
-      }
+  // const handleNext = async () => {
+  //   if (currentItem < items && currentLead?.leads_id) {
+  //     const data = await updateLeads(
+  //       "Nunca Ligado",
+  //       null,
+  //       currentLead.leads_id
+  //     );
+  //     if(data.length > 0){
+  //       const next = currentItem + 1
+  //       setCurrentItem(next);
+  //     }
       
-    }
-  };
+  //   }
+  // };
 
   const handleNoDonation = async () => {
     const response = await updateLeads(
@@ -254,6 +254,8 @@ const Leads = () => {
             }
 
             // Reset form after successful operation
+            const next = currentItem + 1
+            setCurrentItem(next)
             setIsOpen(false);
 
             return successMessage;
@@ -328,7 +330,7 @@ const Leads = () => {
             </div>
             {!isOpen && !isSchedulingOpen && (
               <>
-                <div
+                {/* <div
                   style={{
                     display: "flex",
                     justifyContent: "center",
@@ -338,7 +340,7 @@ const Leads = () => {
                   <button className="btn-next" onClick={handleNext}>
                     Proximo
                   </button>
-                </div>
+                </div> */}
                 <div>
                   <p>{currentItem} / {items}</p>
                 </div>
