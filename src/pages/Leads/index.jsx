@@ -154,6 +154,8 @@ const Leads = () => {
         setDateScheduling("");
         setObservationScheduling("")
         setIsSchedulingOpen(false);
+        const next = currentItem + 1
+        setCurrentItem(next)
       }
     } catch (error) {
       console.error("Erro: ", error.message);
