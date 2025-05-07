@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./navbar.css";
 import Loader from "../Loader";
 import { MdOutlineLogin } from "react-icons/md";
@@ -672,7 +672,7 @@ const Navbar = () => {
           )
         )}
       </header>
-      <Outlet />
+      {/* <Outlet /> */}
     </>
   );
 };

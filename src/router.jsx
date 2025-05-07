@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router";
-import Navbar from "./components/Navbar";
+//import Navbar from "./components/Navbar";
 import App from "./App";
 import Login from "./pages/Login";
 import Donor from "./pages/Donor";
@@ -25,14 +25,15 @@ import CreateMensalDonation from "./pages/CreateMensalDonation";
 import LoadLeads from "./pages/LoadLeads";
 import AuthMonitor from "./components/AuthMonitor";
 import Leads from "./pages/Leads";
+import Home from "./pages/Home";
 
 const Approuter = () => {
   return (
     <BrowserRouter>
       <AuthMonitor />
       <Routes>
-        <Route element={<Navbar />}>
-          <Route path="/" element={<App />} />
+        <Route element={<App />}>
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route
             path="/dashboard"
