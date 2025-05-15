@@ -78,6 +78,7 @@ const Leads = () => {
       await updateLeads("Aberto", Number(currentOperatorID), lead[0].leads_id);
     }
 
+
     setIsLoading(false);
   };
 
@@ -91,6 +92,7 @@ const Leads = () => {
       if (data.length > 0) {
         const next = currentItem + 1;
         setCurrentItem(next);
+        
       }
     }
   };
@@ -341,7 +343,7 @@ const Leads = () => {
                 </div>
                 <div>
                   <p>
-                    {currentItem} / {items}
+                    {items}
                   </p>
                 </div>
               </>
