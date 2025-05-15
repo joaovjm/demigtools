@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./index.css";
 import GetLeadsWithPagination from "../../helper/getLeadsWithPagination";
 
@@ -89,7 +89,7 @@ const Leads = () => {
   const handleNext = async () => {
     if (currentItem < items && currentLead?.leads_id) {
       const data = await updateLeads("Não Atendeu", operatorID, currentLead.leads_id);
-      if (data.length > 0) {
+      if (data[0].leads_status === "Não Atendeu") {
         const next = currentItem + 1;
         setCurrentItem(next);
         
