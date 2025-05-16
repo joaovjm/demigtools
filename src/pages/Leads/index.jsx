@@ -78,7 +78,6 @@ const Leads = () => {
       await updateLeads("Aberto", Number(currentOperatorID), lead[0].leads_id);
     }
 
-
     setIsLoading(false);
   };
 
@@ -88,11 +87,14 @@ const Leads = () => {
 
   const handleNext = async () => {
     if (currentItem < items && currentLead?.leads_id) {
-      const data = await updateLeads("Não Atendeu", operatorID, currentLead.leads_id);
+      const data = await updateLeads(
+        "Não Atendeu",
+        operatorID,
+        currentLead.leads_id
+      );
       if (data[0].leads_status === "Não Atendeu") {
         const next = currentItem + 1;
         setCurrentItem(next);
-        
       }
     }
   };
@@ -128,7 +130,7 @@ const Leads = () => {
     setIsSchedulingOpen(false);
     setIsOpen(true);
     setAddress(currentLead.leads_address);
-    setCity(currentLead.leads_city);
+    setCity(currentLead.leads_city ? currentLead.leads_city : "RIO DE JANEIRO");
     setNeighborhood(currentLead.leads_neighborhood);
   };
 
@@ -354,9 +356,7 @@ const Leads = () => {
                   </button>
                 </div>
                 <div>
-                  <p>
-                    {items}
-                  </p>
+                  <p>{items}</p>
                 </div>
               </>
             )}
@@ -474,14 +474,15 @@ const Leads = () => {
                 style={{ width: 180 }}
                 classinput="value-campain"
               />
-              <FormInput
-                label="Campanha"
-                value={campain}
-                type="text"
-                onChange={(e) => setCampain(e.target.value)}
-                style={{ width: 220 }}
-                classinput="value-campain"
-              />
+              <div>
+                <label className="label">Campanha</label>
+                <select value={campain} onChange={(e) => setCampain(e.target.value)}>
+                  <option value="" disabled>Selecione...</option>
+                  <option value="fralda">Fralda</option>
+                  <option value="manutenção">Manutenção</option>
+                </select>
+              </div>
+
             </div>
 
             <div className="obs-area">

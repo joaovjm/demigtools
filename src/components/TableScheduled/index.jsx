@@ -9,7 +9,7 @@ const TableScheduled = ({ scheduled, setModalOpen, setScheduledOpen }) => {
       name: e.leads_name,
       address: e.leads_address,
       city: e.leads_city,
-      neighbothood: e.leads_neighborhood,
+      neighborhood: e.leads_neighborhood,
       phone: e.leads_tel_1,
       phone2: e.leads_tel_2,
       phone3: e.leads_tel_3,
