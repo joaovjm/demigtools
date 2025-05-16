@@ -338,7 +338,7 @@ const Leads = () => {
                   }}
                 >
                   <button className="btn-next" onClick={handleNext}>
-                    Proximo
+                    Não Atendeu
                   </button>
                 </div>
                 <div>
