@@ -258,6 +258,18 @@ const Leads = () => {
             setCurrentItem(next);
             setIsOpen(false);
 
+            setAddress("");
+            setCity("");
+            setNeighborhood("");
+            setNewTel2("");
+            setNewTel3("");
+            setTelSuccess("");
+            setCampain("");
+            setObservation("");
+            setReference("");
+            setDateDonation("");
+            setValueDonation("");
+
             return successMessage;
           } catch (error) {
             console.error("Erro na operação:", error.message);
