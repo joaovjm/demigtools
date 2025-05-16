@@ -7,7 +7,7 @@ const getScheduledLeads = async (operator_code_id, setScheduled, setScheduling) 
         .select("*")
         .eq("operator_code_id", operator_code_id)
         .eq("leads_status", "agendado")
-        .order("leads_scheduling_date", { ascending: false })
+        .order("leads_scheduling_date", { ascending: true })
         .limit(10);
 
     if(error) {

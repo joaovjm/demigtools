@@ -12,7 +12,7 @@ const TableScheduled = ({ scheduled }) => {
               <th className="table-head-confirmation-text">Nome</th>
               <th className="table-head-confirmation-text">Observação</th>
               <th className="table-head-confirmation-text">
-                Data do Agendamento
+                Agendado para
               </th>
             </tr>
           </thead>
