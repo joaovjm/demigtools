@@ -6,8 +6,11 @@ const TableConfirmation = ({
   setModalOpen,
   setDonationOpen,
 }) => {
+  
 
   const handleClick = (donation) => {
+
+    
     setDonationOpen({
       id: donation.receipt_donation_id,
       donor_id: donation.donor_id,

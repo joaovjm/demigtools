@@ -32,6 +32,7 @@ const Dashboard = () => {
   const [scheduled, setScheduled] = useState([]);
   const {operatorData, setOperatorData} = useContext(UserContext)
   const [donationOpen, setDonationOpen] = useState([]);
+  const [scheduledOpen, setScheduledOpen] = useState([]);
 
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -172,8 +173,8 @@ const Dashboard = () => {
           ) : active === "inScheduled" ? (
             <TableScheduled 
               scheduled={scheduled}
-              // setModalOpen={setModalOpen}
-              // setScheduledOpen={setScheduledOpen}
+              setModalOpen={setModalOpen}
+              setScheduledOpen={setScheduledOpen}
             />
           ) : null}
         </section>
@@ -186,7 +187,7 @@ const Dashboard = () => {
         )}
         {modalOpen && active === "inScheduled" && (
           <ModalScheduled
-            scheduledOpen={scheduled}
+            scheduledOpen={scheduledOpen}
             onClose={() => setModalOpen(false)}
             setStatus={setStatus}
           />

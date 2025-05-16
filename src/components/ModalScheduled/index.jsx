@@ -1,40 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./index.css";
 import { ICONS } from "../../constants/constants";
-import cancelDonation from "../../helper/cancelDonation";
 import supabase from "../../helper/superBaseClient";
 import { DataNow, DataSelect } from "../DataTime";
+import updateLeads from "../../helper/updateLeads";
 
 const ModalScheduled = ({ scheduledOpen, onClose, setStatus }) => {
   const [isConfirmation, setIsConfirmation] = useState(false);
   const [dateConfirm, setDateConfirm] = useState("");
   const [observation, setObservation] = useState("");
 
-  // const handleCancel = async () => {
-  //   window.confirm("Você tem certeza que deseja cancelar a ficha?");
-  //   if (window.confirm) {
-  //     const status = await cancelDonation({
-  //       donation: {
-  //         receipt_donation_id: donationOpen.id,
-  //         donor_id: donationOpen.donor_id,
-  //         donation_value: donationOpen.value,
-  //         donation_extra: donationOpen.extra,
-  //         donation_day_contact: donationOpen.day_contact,
-  //         donation_day_to_receive: donationOpen.day_to_receive,
-  //         donation_print: donationOpen.print,
-  //         donation_monthref: donationOpen.monthref,
-  //         donation_description: donationOpen.description,
-  //         donation_received: "Não",
-  //         operator_code_id: donationOpen.operator_code_id,
-  //         collector_code_id: donationOpen.collector_code_id,
-  //       },
-  //     });
+  const handleCancel = async () => {
+    window.confirm("Você tem certeza que deseja cancelar a ficha?");
+    if (window.confirm) {
+      await updateLeads();
+      setStatus(status);
+      onClose();
+    }
+  };
 
-  //     setStatus(status);
-  //     onClose();
-  //   }
-  // };
-
+  console.log(scheduledOpen);
   const handleConfirm = async () => {
     window.confirm("Você deseja reagendar a ficha?");
     if (window.confirm) {
@@ -51,10 +36,9 @@ const ModalScheduled = ({ scheduledOpen, onClose, setStatus }) => {
           .eq("receipt_donation_id", donationOpen.id);
 
         if (errorConfirm) throw errorConfirm;
-        
-          setStatus("Update OK")
-          onClose();
-        
+
+        setStatus("Update OK");
+        onClose();
       } catch (errorConfirm) {
         console.error("Error updating donation:", errorConfirm);
       }
@@ -65,24 +49,36 @@ const ModalScheduled = ({ scheduledOpen, onClose, setStatus }) => {
       <div className="modal-confirmations-content">
         <div className="modal-confirmations-div">
           <div className="modal-confirmations-title">
-            <h2>Recibo: {scheduledOpen.leads_id}</h2>
+            <h2>Nome: {scheduledOpen.name}</h2>
             <button onClick={() => onClose()} className="btn-close">
               Fechar
             </button>
           </div>
 
           <div className="modal-confirmations-body">
-            <label>Name: {donationOpen.name}</label>
-            <label>Endereço: {donationOpen.address}</label>
-            <label>Tel 1: {donationOpen.phone}</label>
+            <label>Endereço: {scheduledOpen.address}</label>
+            <label>Tel 1: {scheduledOpen.phone}</label>
             <label>
-              Tel 2: {donationOpen.phone2 ? donationOpen.phone2 : "*****-****"}
+              Tel 2:{" "}
+              {scheduledOpen.phone2 ? scheduledOpen.phone2 : "*****-****"}
             </label>
             <label>
-              Tel 3: {donationOpen.phone3 ? donationOpen.phone3 : "*****-****"}
+              Tel 3:{" "}
+              {scheduledOpen.phone3 ? scheduledOpen.phone3 : "*****-****"}
             </label>
-            <label>Valor: R$ {donationOpen.value},00</label>
-            <h4>Motivo: {donationOpen.reason}</h4>
+            <label>
+              Tel 4:{" "}
+              {scheduledOpen.phone4 ? scheduledOpen.phone4 : "*****-****"}
+            </label>
+            <label>
+              Tel 5:{" "}
+              {scheduledOpen.phone5 ? scheduledOpen.phone5 : "*****-****"}
+            </label>
+            <label>
+              Tel 6:{" "}
+              {scheduledOpen.phone6 ? scheduledOpen.phone6 : "*****-****"}
+            </label>
+            <h4>Observação: {scheduledOpen.observation}</h4>
           </div>
           {!isConfirmation && (
             <div className="modal-confirmations-footer">
@@ -90,7 +86,7 @@ const ModalScheduled = ({ scheduledOpen, onClose, setStatus }) => {
                 onClick={() => setIsConfirmation(true)}
                 className="btn-confirm"
               >
-                Reagendar Ficha
+                Criar Doação
               </button>
               <button onClick={handleCancel} className="btn-delete">
                 Cancelar Ficha

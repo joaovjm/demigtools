@@ -10,6 +10,8 @@ const ModalConfirmations = ({ donationOpen, onClose, setStatus }) => {
   const [dateConfirm, setDateConfirm] = useState("");
   const [observation, setObservation] = useState("");
 
+  console.log(donationOpen)
+
   const handleCancel = async () => {
     window.confirm("Você tem certeza que deseja cancelar a ficha?");
     if (window.confirm) {
