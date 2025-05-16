@@ -1,7 +1,7 @@
 import supabase from "../helper/superBaseClient";
 import { toast } from "react-toastify";
 
-const insertNewLeads = async (excelData) => {
+const insertNewLeads = async (excelData, setInsertedCount, setTotalCount) => {
   return toast.promise(
     (async () => {
       try {
@@ -12,7 +12,6 @@ const insertNewLeads = async (excelData) => {
 
         for (let i = 0; i < excelData.length; i += 1) {
           const insertBatch = excelData.slice(i, i + 1);
-          console.log("insertBatch", insertBatch[i]);
 
           const { error, count } = await supabase
             .from("leads")
@@ -32,14 +31,21 @@ const insertNewLeads = async (excelData) => {
           throw new Error("Nenhum lead novo para ser armazenado.");
         }
 
-        return `${insertedCount} leads inseridos com sucesso. E ${totalCount - insertedCount} leads já existem na base`;
+        setInsertedCount(insertedCount);
+        setTotalCount(totalCount);
+
+        return "Leads Carregados com Sucesso!";
       } catch (error) {
         throw new Error(error.message || "Erro ao inserir novos leads.");
       }
     })(),
     {
       pending: "Processando novos leads...",
-      success: (message) => message,
+      success: {
+        render ({ data }) {
+          return data;
+        }
+      },
       error: {
         render({ data }) {
           return data.message || "Erro inesperado ao armazenar os leads.";

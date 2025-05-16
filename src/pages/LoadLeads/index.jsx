@@ -8,6 +8,9 @@ const LoadLeads = () => {
   const [fileName, setFileName] = useState("Nenhum arquivo selecionado");
   const [excelData, setExcelData] = useState([]);
   const [headers, setHeaders] = useState(null);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [insertedCount, setInsertedCount] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
@@ -21,11 +24,11 @@ const LoadLeads = () => {
 
   const handleInsertNewLead = async (e) => {
     e.preventDefault();
-    const response = await insertNewLeads(excelData)
-    console.log(response)
+    const response = await insertNewLeads(excelData, setInsertedCount, setTotalCount);
     if (response){
-      setFileName("Nenum arquivo selecionado")
+      setFileName("Nenhum arquivo selecionado")
       setExcelData([])
+      setSuccessMessage(response);
     }
     
 
@@ -62,6 +65,14 @@ const LoadLeads = () => {
             </div>
             
             
+          </div>
+          <div className="lead-message">
+            {successMessage && (
+              <div className="lead-success-message">
+                <p>[ {insertedCount} ] lead(s) inseridos</p>
+                <p>[ {totalCount-insertedCount} ] leads já existem e não foram inseridos</p>
+              </div>
+            )}
           </div>
         </div>
         <ToastContainer
