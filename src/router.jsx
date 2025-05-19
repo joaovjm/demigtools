@@ -26,6 +26,7 @@ import LoadLeads from "./pages/LoadLeads";
 import AuthMonitor from "./components/AuthMonitor";
 import Leads from "./pages/Leads";
 import Home from "./pages/Home";
+import Request from "./pages/Request";
 
 const Approuter = () => {
   return (
@@ -188,6 +189,14 @@ const Approuter = () => {
             element={
               <Wrapper>
                 <Leads />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="/request"
+            element={
+              <Wrapper>
+                <Request />
               </Wrapper>
             }
           />

@@ -62,7 +62,7 @@ export const AdminMenu = [
     {
         id: 8,
         title: "Requisição",
-        path: "./requisition",
+        path: "./request",
         cName: "submenu-itens",
     },
 ];
