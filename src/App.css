@@ -14,6 +14,38 @@ body{
 .main-app-container{
     width: 100%;
 
+}
 
+.input-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.input-field {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 200px;
+  max-width: 100%;
+}
+
+.input-field label {
+  margin-bottom: 4px;
+  font-size: 14px;
+  color: #FAF5E9;
+}
+
+.input-field input,
+.input-field select,
+.input-field textarea {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #888;
+  background-color: #2b2b2b;
+  color: #FAF5E9;
+  width: 100%;
+  box-sizing: border-box;
 }
 
