@@ -9,10 +9,14 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    overflow-y: auto;
+    padding: 1rem;
 }
 
 .modal-confirmations-div{
     width: 768px;
+    max-height: 80vh;
+    overflow-y: auto;
     border-radius: 6px;
     background-color: #1F1D1D;
 }
@@ -33,9 +37,9 @@
     background-color: #385BAD;
     color: #FAF5E9;
     cursor: pointer;
-    &:hover{
-        background-color: #284487;
-    }
+}
+.btn-close:hover{
+    background-color: #284487;
 }
 
 .modal-confirmations-body{
@@ -46,15 +50,13 @@
     border-radius: 6px;
     padding: 12px;
     gap: 4px;
-
-    & Label{
-        font-size: 16px;
-    }
-
-    & h4{
-        grid-column: span 2;
-        margin-top: 12px;
-    }
+}
+.modal-confirmations-body label{
+    font-size: 16px;
+}
+.modal-confirmations-body h4{
+    grid-column: span 2;
+    margin-top: 12px;
 }
 
 .modal-confirmations-footer{
@@ -64,94 +66,80 @@
     padding: 12px;
 }
 
-.btn-confirm{
+.btn-confirm,
+.btn-delete{
     width: 180px;
     height: 30px;
     border-radius: 6px;
     border: none;
-    background-color: #385BAD;
-    color: #FAF5E9;
     cursor: pointer;
-    &:hover{
-        background-color: #284487;
-    }
+    color: #FAF5E9;
+}
+
+.btn-confirm{
+    background-color: #385BAD;
+}
+.btn-confirm:hover{
+    background-color: #284487;
 }
 
 .btn-delete{
-    width: 180px;
-    border-radius: 6px;
-    border: none;
     background-color: #C70000;
-    color: #FAF5E9;
-    cursor: pointer;
-    &:hover{
-        background-color: #A60000;
-    }
+}
+.btn-delete:hover{
+    background-color: #A60000;
 }
 
 .modal-confirmations-confirm{
     display: flex;
     flex-direction: column;
-    align-items: center;
     margin: 12px;
     padding: 12px;
     border: 3px double #383838;
     border-radius: 6px;
-    gap: 32px;
-}
-
-.modal-confirmations-confirm-address{
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-}
-.modal-confirmations-confirm-tel{
-    display: flex;
-    justify-content: space-between;
-}
-
-.modal-confirmations-confirm-1{
-    display: flex;
-    align-items: center;
     gap: 12px;
 }
 
-.modal-confirmations-confirm-2{
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    width: 100%;
-    & .btn-confirm{
-        height: 36px;
-    }
-
-    & .btn-back{
-
-    }
+/* Novo layout de inputs responsivo */
+.input-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 16px;
+  width: 100%;
 }
 
-/* Modal wrapper: permite rolagem no fundo se necessário */
-.modal-confirmations {
-  overflow-y: auto;
-  padding: 1rem;
+.input-field {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 200px;
+  max-width: 100%;
 }
 
-/* Modal principal: limita altura e ativa rolagem interna */
-.modal-confirmations-div {
-  max-height: 80vh; /* impede que ultrapasse a tela */
-  overflow-y: auto; /* rola internamente se necessário */
+.input-field label {
+  margin-bottom: 4px;
+  font-size: 14px;
+  color: #FAF5E9;
 }
 
-/* Responsividade para telas menores (ex: tablets e celulares) */
+.input-field input,
+.input-field select {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #888;
+  background-color: #2b2b2b;
+  color: #FAF5E9;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 @media (max-width: 768px) {
-  .modal-confirmations-div {
-    width: 100%;
-    border-radius: 0;
-  }
-
-  .modal-confirmations-body,
-  .modal-confirmations-confirm {
-    flex-direction: column;
-  }
+    .modal-confirmations-div {
+        width: 100%;
+        border-radius: 0;
+    }
+    .modal-confirmations-body,
+    .modal-confirmations-confirm {
+        flex-direction: column;
+    }
 }
-
