@@ -1,5 +1,5 @@
 import "./index.css";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import TableDonor from "../../components/TableDonor";
 import { useParams } from "react-router";
@@ -17,10 +17,12 @@ import {
 import FormTextArea from "../../components/forms/FormTextArea";
 import FormDonorInput from "../../components/forms/FormDonorInput";
 import FormListSelect from "../../components/forms/FormListSelect";
+import { UserContext } from "../../context/UserContext";
 
 const Donor = () => {
-  const { id } = useParams();
 
+  const { id } = useParams();
+  const { operatorData, setOperatorData } = useContext(UserContext);
   const [donorData, SetDonorData] = useState({
     nome: "",
     tipo: "",
@@ -48,6 +50,8 @@ const Donor = () => {
 
   const params = {};
   if (id) params.id = id;
+
+
   useEffect(() => {
     const loadDonorData = async () => {
       try {
@@ -138,7 +142,6 @@ const Donor = () => {
   };
 
   const handleBack = () => window.history.back();
-
   return (
     <main className="containerDonor">
       {/* Cabeçalho com botões */}
@@ -191,13 +194,15 @@ const Donor = () => {
           className={"label"}
         />
 
-        <FormDonorInput
-          label={FORM_LABELS.CPF}
-          value={donorData.cpf}
-          onChange={(e) => handleInputChange("cpf", e.target.value)}
-          readOnly={uiState.edit}
-          className={"label"}
-        />
+        {operatorData?.operator_type === "Admin" && (
+          <FormDonorInput
+            label={FORM_LABELS.CPF}
+            value={donorData.cpf}
+            onChange={(e) => handleInputChange("cpf", e.target.value)}
+            readOnly={uiState.edit}
+            className={"label"}
+          />
+        )}
 
         <FormDonorInput
           label={FORM_LABELS.ADDRESS}
@@ -254,7 +259,7 @@ const Donor = () => {
           readOnly={uiState.edit}
           disabled={donorData.tipo !== DONOR_TYPES.MONTHLY}
           className={"label"}
-          style={{ width: '100%', maxWidth: 100 }}
+          style={{ width: "100%", maxWidth: 100 }}
         />
 
         <FormDonorInput
@@ -264,7 +269,7 @@ const Donor = () => {
           readOnly={uiState.edit}
           disabled={donorData.tipo != DONOR_TYPES.MONTHLY}
           className={"label"}
-          style={{ width: '100%', maxWidth: 100 }}
+          style={{ width: "100%", maxWidth: 100 }}
         />
 
         <FormDonorInput
@@ -274,7 +279,7 @@ const Donor = () => {
           readOnly={uiState.edit}
           disabled={donorData.tipo !== DONOR_TYPES.MONTHLY}
           className={"label"}
-          style={{ width: '100%', maxWidth: 100 }}
+          style={{ width: "100%", maxWidth: 100 }}
         />
 
         <FormTextArea

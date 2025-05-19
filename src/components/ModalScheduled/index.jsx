@@ -118,8 +118,7 @@ const ModalScheduled = ({ scheduledOpen, onClose, setStatus, nowScheduled }) => 
       nowScheduled
       
     );
-
-    if(response) {
+    if(response) { 
       onClose();
     }
   };

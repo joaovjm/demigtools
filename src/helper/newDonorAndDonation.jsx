@@ -25,7 +25,7 @@ const newDonorAndDonation = async (
   operatorID,
   nowScheduled
 ) => {
-  await toast.promise(
+  const result = await toast.promise(
     new Promise(async (resolve, reject) => {
       const response = await insertDonor(
         name,
@@ -128,6 +128,8 @@ const newDonorAndDonation = async (
       },
     }
   );
+
+  return result;
 };
 
 export default newDonorAndDonation;

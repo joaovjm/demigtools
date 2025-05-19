@@ -23,10 +23,8 @@ const Dashboard = () => {
   const [monthReceived, setMonthReceived] = useState(null); //Total de fichas recebidas em determinado mês
   const [valueMonthReceived, setValueMonthReceived] = useState(null); //Total valor dos recebidos do atual Mês
   const [receivedPercent, setReceivedPercent] = useState(null);
-  const [scheduling, setScheduling] = useState(null); //Total de leads agendadas
+  const [scheduling, setScheduling] = useState(0); //Total de leads agendadas
   const [active, setActive] = useState(false);
-  //const [storage, setStorage] = useLocalStorage()
-
   const [donationConfirmation, setDonationConfirmation] = useState([]);
   const [fullNotReceivedDonations, setFullNotReceivedDonations] = useState([]);
   const [scheduled, setScheduled] = useState([]);
@@ -40,16 +38,6 @@ const Dashboard = () => {
   const monthref = DataNow("mesref");
 
   const [status, setStatus] = useState();
-  //const [operatorTeste, setOperatorTeste] = useLocalStorage("operatorData", [])
-
-  // const [operatorID, setOperatorID] = useState("")
-  // const [operatorType, setOperatorType] = useState("")
-
-    // useEffect(() => {
-    //   const operatorData = JSON.parse(localStorage.getItem("operatorData"));
-    //   // setOperatorID(operatorData?.operator_code_id);
-    //   // setOperatorType(operatorData?.operator_type);
-    // }, []);
 
   const donations = async () => {
     try {
@@ -71,6 +59,7 @@ const Dashboard = () => {
         setReceivedPercent
       );
       await getScheduledLeads(caracterOperator.operator_code_id, setScheduled, setScheduling);
+      
     } catch (error) {
       console.error("Error fetching donations:", error);
     }
@@ -96,7 +85,8 @@ const Dashboard = () => {
 
   useEffect(() => {
     donations();
-  }, [active, modalOpen]);
+    console.log("entrou no useEffect");
+  }, [active, modalOpen, status]);
 
   const handleClickCard = (e) => {
     setActive(e.currentTarget.id);
@@ -115,7 +105,7 @@ const Dashboard = () => {
               <h3 className="h3Header">Agendados</h3>
             </div>
             <div className="divBody">
-              <p>{scheduling ? scheduling : 0}</p>
+              <p>{scheduling}</p>
               
             </div>
           </div>
