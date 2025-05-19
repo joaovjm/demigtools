@@ -1,6 +1,6 @@
 import React from "react";
 
-const TableScheduled = ({ scheduled, setModalOpen, setScheduledOpen }) => {
+const TableScheduled = ({ scheduled, setModalOpen, setScheduledOpen, setNowScheduled }) => {
 
   const handleClick = (e) => {
 
@@ -23,6 +23,7 @@ const TableScheduled = ({ scheduled, setModalOpen, setScheduledOpen }) => {
       scheduling_date: e.leads_scheduling_date,
       operator_code_id: e.operator_code_id,
     })
+    setNowScheduled(e)
     setModalOpen(true);
   };
 

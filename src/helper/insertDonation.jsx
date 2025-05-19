@@ -11,7 +11,7 @@ export const insertDonation = async (
   recebido,
   descricao,
   mesref,
-  setModalShow
+  campain,
 ) => {
   let print = "";
   let received = "";
@@ -40,14 +40,14 @@ export const insertDonation = async (
         donation_day_to_receive: data_receber ? data_receber : null,
         donation_print: print,
         donation_received: received,
-        donation_monthref: mesref ? mesref : null
+        donation_monthref: mesref ? mesref : null,
+        donation_campain: campain ? campain : null,
       },
     ]).select();
     
     if(error) throw error
 
     if(!error){
-      setModalShow(false)
       return data
     }
 

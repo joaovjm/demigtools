@@ -33,6 +33,7 @@ const Dashboard = () => {
   const {operatorData, setOperatorData} = useContext(UserContext)
   const [donationOpen, setDonationOpen] = useState([]);
   const [scheduledOpen, setScheduledOpen] = useState([]);
+  const [nowScheduled, setNowScheduled] = useState(null);
 
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -175,6 +176,7 @@ const Dashboard = () => {
               scheduled={scheduled}
               setModalOpen={setModalOpen}
               setScheduledOpen={setScheduledOpen}
+              setNowScheduled={setNowScheduled}
             />
           ) : null}
         </section>
@@ -190,6 +192,7 @@ const Dashboard = () => {
             scheduledOpen={scheduledOpen}
             onClose={() => setModalOpen(false)}
             setStatus={setStatus}
+            nowScheduled={nowScheduled}
           />
         )}
         <ToastContainer />

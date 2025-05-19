@@ -5,20 +5,23 @@ import supabase from "../../helper/superBaseClient";
 import { DataNow, DataSelect } from "../DataTime";
 import updateLeads from "../../helper/updateLeads";
 import { toast } from "react-toastify";
+import newDonorAndDonation from "../../helper/newDonorAndDonation";
 
-const ModalScheduled = ({ scheduledOpen, onClose, setStatus }) => {
+const ModalScheduled = ({ scheduledOpen, onClose, setStatus, nowScheduled }) => {
   const [isScheduling, setIsScheduling] = useState(false);
   const [dateScheduling, setDateScheduling] = useState("");
   const [observation, setObservation] = useState("");
   const [address, setAddress] = useState("");
   const [neighborhood, setNeighborhood] = useState("");
   const [city, setCity] = useState("");
+  const [telSuccess, setTelSuccess] = useState("");
   const [tel1, setTel1] = useState("");
   const [tel2, setTel2] = useState("");
   const [tel3, setTel3] = useState("");
   const [tel4, setTel4] = useState("");
   const [tel5, setTel5] = useState("");
   const [tel6, setTel6] = useState("");
+  const [campain, setCampain] = useState("");
   const [valueDonation, setValueDonation] = useState("");
 
   const handleNewDonation = () => {
@@ -32,20 +35,17 @@ const ModalScheduled = ({ scheduledOpen, onClose, setStatus }) => {
     setTel5(scheduledOpen.phone5);
     setTel6(scheduledOpen.phone6);
     setIsScheduling(true);
-  }
+  };
 
   const handleCancel = async () => {
     window.confirm("Você tem certeza que deseja cancelar a ficha?");
     if (window.confirm) {
-      const response = await updateLeads(
-        "Não pode Ajudar"
-      );
+      const response = await updateLeads("Não pode Ajudar");
       // setStatus(status);
       if (response) {
         //setStatus(response.leads_status)
         onClose();
       }
-      
     }
   };
 
@@ -80,20 +80,49 @@ const ModalScheduled = ({ scheduledOpen, onClose, setStatus }) => {
     const selectedDateFormatted = DataSelect(selectedDate);
 
     if (selectedDateFormatted < currentDate) {
-      setDateScheduling(DataNow("noformated"))
+      setDateScheduling(DataNow("noformated"));
     } else {
       setDateScheduling(selectedDate);
     }
-  }
+  };
 
   const handleNewDonorAndDonation = async () => {
-    if (address === "" || neighborhood === "" || city === "" || tel1 === "" || tel2 === "" || tel3 === "" || valueDonation === "" || dateScheduling === "" ) {
-      toast.warning("Preencha todos os campos obrigatórios")
+    if (
+      address === "" ||
+      neighborhood === "" ||
+      city === "" ||
+      tel1 === "" ||
+      tel2 === "" ||
+      tel3 === "" ||
+      valueDonation === "" ||
+      dateScheduling === ""
+    ) {
+      toast.warning("Preencha todos os campos obrigatórios");
       return;
     }
 
-  }
-  
+    const response = await newDonorAndDonation(
+      scheduledOpen.name,
+      address,
+      neighborhood,
+      city,
+      telSuccess,
+      tel2,
+      tel3,
+      scheduledOpen.cpf,
+      valueDonation,
+      DataSelect(dateScheduling),
+      campain,
+      observation,
+      scheduledOpen.operator_code_id,
+      nowScheduled
+      
+    );
+
+    if(response) {
+      onClose();
+    }
+  };
 
   return (
     <div className="modal-confirmations">
@@ -133,10 +162,7 @@ const ModalScheduled = ({ scheduledOpen, onClose, setStatus }) => {
           </div>
           {!isScheduling && (
             <div className="modal-confirmations-footer">
-              <button
-                onClick={handleNewDonation}
-                className="btn-confirm"
-              >
+              <button onClick={handleNewDonation} className="btn-confirm">
                 Criar Doação
               </button>
               <button onClick={handleCancel} className="btn-delete">
@@ -150,45 +176,110 @@ const ModalScheduled = ({ scheduledOpen, onClose, setStatus }) => {
               <div className="modal-confirmations-confirm-address">
                 <div>
                   <label className="label">Endereço</label>
-                  <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} style={{ width: "60%" }}/>
+                  <input
+                    type="text"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    style={{ width: "60%" }}
+                  />
                 </div>
                 <div>
                   <label className="label">Bairro</label>
-                  <input type="text" value={neighborhood} onChange={(e) => setNeighborhood(e.target.value)} style={{ width: "70%" }}/>
+                  <input
+                    type="text"
+                    value={neighborhood}
+                    onChange={(e) => setNeighborhood(e.target.value)}
+                    style={{ width: "70%" }}
+                  />
                 </div>
                 <div>
                   <label className="label">Cidade</label>
-                  <input type="text" value={city} onChange={(e) => setCity(e.target.value)} style={{ width: "50%" }}/>
+                  <input
+                    type="text"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    style={{ width: "50%" }}
+                  />
                 </div>
-                
               </div>
 
               <div className="modal-confirmations-confirm-tel">
                 <div style={{ display: "flex", width: "100%" }}>
-                  <label style={{ width: "50%"}} className="label">Qual contactado?</label>
-                  <select type="text"  style={{ width: "40%" }}>
-                    {scheduledOpen.phone && <option value={scheduledOpen.phone}>{scheduledOpen.phone}</option>}
-                    {scheduledOpen.phone2 && <option value={scheduledOpen.phone2}>{scheduledOpen.phone2}</option>}
-                    {scheduledOpen.phone3 && <option value={scheduledOpen.phone3}>{scheduledOpen.phone3}</option>}
-                    {scheduledOpen.phone4 && <option value={scheduledOpen.phone4}>{scheduledOpen.phone4}</option>}
-                    {scheduledOpen.phone5 && <option value={scheduledOpen.phone5}>{scheduledOpen.phone5}</option>}
-                    {scheduledOpen.phone6 && <option value={scheduledOpen.phone6}>{scheduledOpen.phone6}</option>}
+                  <label style={{ width: "50%" }} className="label">
+                    Qual contactado?
+                  </label>
+                  <select
+                    type="text"
+                    value={telSuccess}
+                    onChange={(e) => setTelSuccess(e.target.value)}
+                    style={{ width: "40%" }}
+                  >
+                    {scheduledOpen.phone && (
+                      <option value={scheduledOpen.phone}>
+                        {scheduledOpen.phone}
+                      </option>
+                    )}
+                    {scheduledOpen.phone2 && (
+                      <option value={scheduledOpen.phone2}>
+                        {scheduledOpen.phone2}
+                      </option>
+                    )}
+                    {scheduledOpen.phone3 && (
+                      <option value={scheduledOpen.phone3}>
+                        {scheduledOpen.phone3}
+                      </option>
+                    )}
+                    {scheduledOpen.phone4 && (
+                      <option value={scheduledOpen.phone4}>
+                        {scheduledOpen.phone4}
+                      </option>
+                    )}
+                    {scheduledOpen.phone5 && (
+                      <option value={scheduledOpen.phone5}>
+                        {scheduledOpen.phone5}
+                      </option>
+                    )}
+                    {scheduledOpen.phone6 && (
+                      <option value={scheduledOpen.phone6}>
+                        {scheduledOpen.phone6}
+                      </option>
+                    )}
                   </select>
                 </div>
                 <div>
                   <label className="label">Tel.: 2</label>
-                  <input type="text" value={tel2} onChange={(e) => setTel2(e.target.value)}  style={{ width: "50%" }}/>
+                  <input
+                    type="text"
+                    value={tel2}
+                    onChange={(e) => setTel2(e.target.value)}
+                    style={{ width: "50%" }}
+                  />
                 </div>
                 <div>
                   <label className="label">tel.: 3</label>
-                  <input type="text" value={tel3} onChange={(e) => setTel3(e.target.value)} style={{ width: "50%" }}/>
+                  <input
+                    type="text"
+                    value={tel3}
+                    onChange={(e) => setTel3(e.target.value)}
+                    style={{ width: "50%" }}
+                  />
                 </div>
-                
               </div>
-              <div style={{ display: "flex", width: "100%" , justifyContent: "space-around" }}>
+              <div
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  justifyContent: "space-around",
+                }}
+              >
                 <div>
                   <label className="label">Valor</label>
-                  <input type="text" value={valueDonation} onChange={(e) => setValueDonation(e.target.value)} style={{ width: 90}} />
+                  <input
+                    type="text"
+                    value={valueDonation}
+                    onChange={(e) => setValueDonation(e.target.value)}
+                    style={{ width: 90 }}
+                  />
                 </div>
                 <div>
                   <label className="label">Data</label>
@@ -199,10 +290,16 @@ const ModalScheduled = ({ scheduledOpen, onClose, setStatus }) => {
                     onChange={handleDateChange}
                   />
                 </div>
-                <div>  
+                <div>
                   <label className="label">Campanha</label>
-                  <select style={{ width: 140 }}>
-                    <option value="" disabled>Selecione...</option>
+                  <select
+                    value={campain}
+                    onChange={(e) => setCampain(e.target.value)}
+                    style={{ width: 140 }}
+                  >
+                    <option value="" disabled>
+                      Selecione...
+                    </option>
                     <option value="fralda">Fralda</option>
                     <option value="leite">Leite</option>
                     <option value="manutenção">Manutenção</option>
@@ -210,7 +307,6 @@ const ModalScheduled = ({ scheduledOpen, onClose, setStatus }) => {
                 </div>
               </div>
               <div className="modal-confirmations-confirm-1">
-                
                 <div>
                   <label className="label">Observação</label>
                   <input
@@ -227,7 +323,10 @@ const ModalScheduled = ({ scheduledOpen, onClose, setStatus }) => {
                 >
                   {ICONS.BACK} Voltar
                 </button>
-                <button onClick={handleNewDonorAndDonation} className="btn-confirm">
+                <button
+                  onClick={handleNewDonorAndDonation}
+                  className="btn-confirm"
+                >
                   Concludir
                 </button>
               </div>
