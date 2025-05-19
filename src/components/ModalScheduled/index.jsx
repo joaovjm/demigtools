@@ -27,7 +27,7 @@ const ModalScheduled = ({ scheduledOpen, onClose, setStatus, nowScheduled }) => 
   const handleNewDonation = () => {
     setAddress(scheduledOpen.address);
     setNeighborhood(scheduledOpen.neighborhood);
-    setCity(scheduledOpen.city ? scheduledOpen.city : "RIO DE JANEIRO");
+    setCity(scheduledOpen.city || "RIO DE JANEIRO");
     setTel1(scheduledOpen.phone);
     setTel2(scheduledOpen.phone2);
     setTel3(scheduledOpen.phone3);
@@ -38,22 +38,19 @@ const ModalScheduled = ({ scheduledOpen, onClose, setStatus, nowScheduled }) => 
   };
 
   const handleCancel = async () => {
-    window.confirm("Você tem certeza que deseja cancelar a ficha?");
-    if (window.confirm) {
-      const response = await updateLeads("Não pode Ajudar");
-      // setStatus(status);
+    if (window.confirm("Você tem certeza que deseja cancelar a ficha?")) {
+      const response = await updateLeads("Não pode Ajudar", scheduledOpen.operator_code_id, scheduledOpen.id);
       if (response) {
-        //setStatus(response.leads_status)
+        toast.success("Processo concluído com sucesso");
         onClose();
       }
     }
   };
 
   const handleConfirm = async () => {
-    window.confirm("Você deseja reagendar a ficha?");
-    if (window.confirm) {
+    if (window.confirm("Você deseja reagendar a ficha?")) {
       try {
-        const { data: updateConfirm, error: errorConfirm } = await supabase
+        const { error: errorConfirm } = await supabase
           .from("donation")
           .update({
             donation_day_contact: DataNow(),
@@ -63,9 +60,7 @@ const ModalScheduled = ({ scheduledOpen, onClose, setStatus, nowScheduled }) => 
             collector_code_id: null,
           })
           .eq("receipt_donation_id", donationOpen.id);
-
         if (errorConfirm) throw errorConfirm;
-
         setStatus("Update OK");
         onClose();
       } catch (errorConfirm) {
@@ -78,29 +73,14 @@ const ModalScheduled = ({ scheduledOpen, onClose, setStatus, nowScheduled }) => 
     const selectedDate = e.target.value;
     const currentDate = DataNow("noformated");
     const selectedDateFormatted = DataSelect(selectedDate);
-
-    if (selectedDateFormatted < currentDate) {
-      setDateScheduling(DataNow("noformated"));
-    } else {
-      setDateScheduling(selectedDate);
-    }
+    setDateScheduling(selectedDateFormatted < currentDate ? DataNow("noformated") : selectedDate);
   };
 
   const handleNewDonorAndDonation = async () => {
-    if (
-      address === "" ||
-      neighborhood === "" ||
-      city === "" ||
-      tel1 === "" ||
-      tel2 === "" ||
-      tel3 === "" ||
-      valueDonation === "" ||
-      dateScheduling === ""
-    ) {
+    if ([address, neighborhood, city, tel1, tel2, tel3, valueDonation, dateScheduling].some(v => v === "")) {
       toast.warning("Preencha todos os campos obrigatórios");
       return;
     }
-
     const response = await newDonorAndDonation(
       scheduledOpen.name,
       address,
@@ -116,11 +96,8 @@ const ModalScheduled = ({ scheduledOpen, onClose, setStatus, nowScheduled }) => 
       observation,
       scheduledOpen.operator_code_id,
       nowScheduled
-      
     );
-    if(response) { 
-      onClose();
-    }
+    if (response) onClose();
   };
 
   return (
