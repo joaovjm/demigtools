@@ -91,8 +91,8 @@ const ModalDonation = ({
           </div>
 
           {/* Valor */}
-          <div className="modal-form-imputs">
-            <label className="label">Valor</label>
+          <div className="input-field">
+            <label>Valor</label>
             <input
               type="text"
               value={valor}
@@ -103,8 +103,8 @@ const ModalDonation = ({
 
           {/* Comissão */}
           {tipo === "Mensal" && (
-            <div className="modal-form-imputs">
-              <label className="label">Extra</label>
+            <div className="input-field">
+              <label >Extra</label>
               <input
                 type="text"
                 placeholder="R$ 0,00"
@@ -115,8 +115,8 @@ const ModalDonation = ({
           )}
 
           {/* Data */}
-          <div className="modal-form-imputs">
-            <label className="label">Data</label>
+          <div className="input-field">
+            <label>Data</label>
             <input
               type="date"
               placeholder="dd/mm/yyyy"
@@ -126,8 +126,8 @@ const ModalDonation = ({
           </div>
 
           {/* Mês Referente */}
-          <div className="modal-form-imputs">
-            <label className="label">Mês Referente</label>
+          <div className="input-field">
+            <label>Mês Referente</label>
             <input
               type="text"
               placeholder="Mês"
@@ -137,11 +137,8 @@ const ModalDonation = ({
           </div>
 
           {/* Descrição */}
-          <div className="modal-form-imputs">
-            <label
-              style={{ borderRadius: "6px 0px 0px 6px" }}
-              className="label"
-            >
+          <div className="input-field">
+            <label>
               Descrição
             </label>
             <textarea
@@ -149,6 +146,7 @@ const ModalDonation = ({
               placeholder="Observação"
               value={descricao}
               onChange={(e) => setDescricao(e.target.value)}
+              style={{ height: "40px" }}
             />
           </div>
 

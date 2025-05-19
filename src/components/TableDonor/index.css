@@ -1,24 +1,20 @@
 .table-wrapper {
     width: 100%;
-    position: relative;
     margin-bottom: 30px; /* Aumentado para dar espaço à dica de rolagem */
 }
 
 .table-container {
     display: flex;
-    width: 90%;
-    overflow-x: auto;
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 0 5px;
     box-sizing: border-box;
-    -webkit-overflow-scrolling: touch;
+    /* -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
-    scrollbar-width: thin;
+    scrollbar-width: thin; */
     position: relative;
 }
 
-/* Efeito de sombra nas bordas para indicar rolagem */
+
+
+/* Efeito de sombra nas bordas para indicar rolagem
 .table-container.has-scroll {
     background: 
         linear-gradient(to right, #383838 0%, rgba(56, 56, 56, 0) 5%),
@@ -27,9 +23,9 @@
     background-repeat: no-repeat;
     background-size: 20px 100%, 20px 100%;
     background-attachment: local, local;
-}
+} */
 
-/* Estilizando a barra de rolagem */
+/* Estilizando a barra de rolagem
 .table-container::-webkit-scrollbar {
     height: 10px;
 }
@@ -46,9 +42,9 @@
 
 .table-container::-webkit-scrollbar-thumb:hover {
     background: #727272;
-}
+} */
 
-/* Dica de rolagem */
+/* Dica de rolagem
 .scroll-hint {
     position: absolute;
     bottom: -25px;
@@ -64,25 +60,29 @@
     animation: pulse 2s infinite;
     pointer-events: none;
     z-index: 2;
-}
+} */
 
-@keyframes pulse {
+/* @keyframes pulse {
     0% { opacity: 0.7; }
     50% { opacity: 1; }
     100% { opacity: 0.7; }
-}
+} */
 
 .tabledonor {
     background-color: #000000;
     border: none;
     border-radius: 6px;
     padding: 4px;
-    width: max-content;
-    min-width: 100%;
     font-size: 13px;
-    border-collapse: separate; /* Alterado para garantir limites de colunas */
-    border-spacing: 0;
-    table-layout: fixed; /* Alterado para permitir expansão natural */
+}
+
+.tableHead{
+    font-size: 11px;
+}
+
+.tableBody{
+    font-size: 11px;
+    font-weight: bold;
 }
 
 /* Esta regra garante que em telas pequenas, a tabela seja maior que o container */
@@ -161,8 +161,8 @@
         font-size: 8px;
     }
     
-    .scroll-hint {
-        font-size: 10px;
+    .table-container{
+        overflow-x: auto;
     }
 }
 
@@ -189,8 +189,16 @@
         min-width: 100px;
         
     }
+
+    .tabledonor{
+        display: flex;
+        flex-direction: column;
+    }
     .table-container{
-        width: 1200px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
     }
 }
 

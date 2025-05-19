@@ -14,8 +14,6 @@ const TableDonor = ({ idDonor, modalShow }) => {
       getDonation(idDonor)
         .then((data) => {
           setDados(data);
-          // Verifica após renderização se a tabela precisa de rolagem
-          setTimeout(checkScrollNeeded, 100);
         })
         .catch((error) => {
           console.log(error.message);
@@ -23,43 +21,43 @@ const TableDonor = ({ idDonor, modalShow }) => {
     }
   }, [idDonor, modalShow]);
 
-  // Verifica se a tabela precisa de rolagem horizontal
-  const checkScrollNeeded = () => {
-    const containerEl = tableContainerRef.current;
-    if (containerEl) {
-      // Se a largura do conteúdo for maior que a largura visível
-      const hasScroll = containerEl.scrollWidth > containerEl.clientWidth;
-      setCanScroll(hasScroll);
-      if (!hasScroll) {
-        setShowScrollHint(false);
-      }
-    }
-  };
+  // // Verifica se a tabela precisa de rolagem horizontal
+  // const checkScrollNeeded = () => {
+  //   const containerEl = tableContainerRef.current;
+  //   if (containerEl) {
+  //     // Se a largura do conteúdo for maior que a largura visível
+  //     const hasScroll = containerEl.scrollWidth > containerEl.clientWidth;
+  //     setCanScroll(hasScroll);
+  //     if (!hasScroll) {
+  //       setShowScrollHint(false);
+  //     }
+  //   }
+  // };
 
-  // Monitora o scroll para esconder a dica após rolar
-  useEffect(() => {
-    const handleScroll = () => {
-      if (tableContainerRef.current && showScrollHint) {
-        setShowScrollHint(false);
-      }
-    };
+  // // Monitora o scroll para esconder a dica após rolar
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     if (tableContainerRef.current && showScrollHint) {
+  //       setShowScrollHint(false);
+  //     }
+  //   };
 
-    const containerEl = tableContainerRef.current;
-    if (containerEl) {
-      containerEl.addEventListener("scroll", handleScroll);
-      window.addEventListener("resize", checkScrollNeeded);
+  //   const containerEl = tableContainerRef.current;
+  //   if (containerEl) {
+  //     containerEl.addEventListener("scroll", handleScroll);
+  //     window.addEventListener("resize", checkScrollNeeded);
       
-      // Verifica inicialmente se há necessidade de rolagem
-      checkScrollNeeded();
-    }
+  //     // Verifica inicialmente se há necessidade de rolagem
+  //     checkScrollNeeded();
+  //   }
 
-    return () => {
-      if (containerEl) {
-        containerEl.removeEventListener("scroll", handleScroll);
-      }
-      window.removeEventListener("resize", checkScrollNeeded);
-    };
-  }, [showScrollHint]);
+  //   return () => {
+  //     if (containerEl) {
+  //       containerEl.removeEventListener("scroll", handleScroll);
+  //     }
+  //     window.removeEventListener("resize", checkScrollNeeded);
+  //   };
+  // }, [showScrollHint]);
   
   // Força a rolagem para o início quando os dados mudam
   useEffect(() => {
@@ -71,8 +69,8 @@ const TableDonor = ({ idDonor, modalShow }) => {
   return (
     <div className="table-wrapper">
       <div 
-        className={`table-container ${canScroll ? 'has-scroll' : ''}`} 
-        ref={tableContainerRef}
+        className= "table-container"
+        // ref={tableContainerRef}
       >
         <table className="tabledonor">
           <thead>
