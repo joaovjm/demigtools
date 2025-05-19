@@ -365,14 +365,13 @@ const Leads = () => {
 
         {isOpen && (
           <form className="menu-action-lead">
-            <div className="address-area">
+            <div className="input-group">
               <FormInput
                 label="Endereço"
                 value={address}
                 type="text"
                 name="address"
                 onChange={(e) => setAddress(e.target.value)}
-                classinput="address-area-input"
               />
               <FormInput
                 label="Cidade"
@@ -380,7 +379,6 @@ const Leads = () => {
                 type="text"
                 name="city"
                 onChange={(e) => setCity(e.target.value)}
-                classinput="address-area-input"
               />
               <FormInput
                 label="Bairro"
@@ -388,16 +386,14 @@ const Leads = () => {
                 type="text"
                 name="neighborhood"
                 onChange={(e) => setNeighborhood(e.target.value)}
-                classinput="address-area-input"
               />
             </div>
-            <div className="tel-area">
-              <div className="div-inputs">
-                <label htmlFor="telSuccess" className="label">
+            <div className="input-group">
+              <div className="input-field">
+                <label htmlFor="telSuccess">
                   Qual telefone conseguiu contato?{" "}
                 </label>
                 <select
-                  style={{ width: 135 }}
                   name=""
                   id="telSuccess"
                   defaultValue=""
@@ -437,57 +433,57 @@ const Leads = () => {
                     </option>
                   )}
                 </select>
+                
               </div>
-
               <FormInput
-                label="Telefone 2"
-                value={newTel2}
-                type="text"
-                name="newtel2"
-                onChange={(e) => setNewTel2(e.target.value)}
-                style={{ width: 120 }}
-              />
-              <FormInput
-                label="Telefone 3"
-                value={newTel3}
-                type="text"
-                name="newtel3"
-                onChange={(e) => setNewTel3(e.target.value)}
-                style={{ width: 120 }}
-                classinput="tel"
-              />
+                  label="Tel. 2"
+                  value={newTel2}
+                  type="text"
+                  name="newtel2"
+                  onChange={(e) => setNewTel2(e.target.value)}
+                  
+                />
+                <FormInput
+                  label="Tel. 3"
+                  value={newTel3}
+                  type="text"
+                  name="newtel3"
+                  onChange={(e) => setNewTel3(e.target.value)}
+                />
             </div>
 
-            <div className="date-value">
+            <div className="input-group">
               <FormInput
                 label="Valor"
                 value={valueDonation}
                 onChange={(e) => setValueDonation(e.target.value)}
-                style={{ width: 120 }}
-                classinput="value-campain"
+          
+                
               />
               <FormInput
                 label="Data"
                 value={dateDonation}
                 type="date"
                 onChange={(e) => setDateDonation(e.target.value)}
-                style={{ width: 180 }}
-                classinput="value-campain"
               />
-              <div>
-                <label className="label">Campanha</label>
-                <select value={campain} onChange={(e) => setCampain(e.target.value)}>
-                  <option value="" disabled>Selecione...</option>
+              <div className="input-field">
+                <label>Campanha</label>
+                <select
+                  value={campain}
+                  onChange={(e) => setCampain(e.target.value)}
+                >
+                  <option value="" disabled>
+                    Selecione...
+                  </option>
                   <option value="fralda">Fralda</option>
                   <option value="manutenção">Manutenção</option>
                 </select>
               </div>
-
             </div>
 
-            <div className="obs-area">
-              <div className="obs-input">
-                <label className="label" style={{ width: 100 }}>
+            <div className="input-group">
+              <div className="input-field">
+                <label>
                   Observação da Ficha
                 </label>
                 <textarea
@@ -498,8 +494,8 @@ const Leads = () => {
                   }}
                 />
               </div>
-              <div className="obs-input">
-                <label className="label" style={{ width: 100 }}>
+              <div className="input-field">
+                <label>
                   Referência do Doador
                 </label>
                 <textarea
