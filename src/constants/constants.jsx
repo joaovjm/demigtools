@@ -54,7 +54,7 @@ export const FORM_LABELS = {
   PHONE2: "Telefone 2",
   PHONE3: "Telefone 3",
   DAY: "Dia",
-  FEE: "MENSAL",
+  FEE: "Mensalidade",
   AVERAGE: "Média",
   OBSERVATION: "Observação",
   REFERENCE: "Referência"

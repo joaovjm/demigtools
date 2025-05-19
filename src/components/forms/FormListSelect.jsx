@@ -7,12 +7,10 @@ const FormListSelect = ({
     disabled,
     options,
     defaultValue,
-    className,
-    style, 
 }) => (
 
-  <div className="div-inputs">
-    <label htmlFor={id} className={className}>
+  <div className="input-field">
+    <label htmlFor={id}>
       {label}
     </label>
     <select
@@ -20,7 +18,6 @@ const FormListSelect = ({
       value={value}
       name={name}
       disabled={disabled}
-      style={style}
       id={id}
       defaultValue={defaultValue}
     >

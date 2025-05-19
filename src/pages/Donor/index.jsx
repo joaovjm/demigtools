@@ -151,7 +151,7 @@ const Donor = () => {
           <button onClick={handleBack} className="btn-back">
             {ICONS.BACK} {BUTTON_TEXTS.BACK}
           </button>
-          <div className="btns">
+          <div className="btns-donor">
             <button
               onClick={handleEditDonor}
               className="btn-edit"
@@ -182,7 +182,6 @@ const Donor = () => {
           value={donorData.nome}
           onChange={(e) => handleInputChange("nome", e.target.value)}
           readOnly={uiState.edit}
-          className={"label"}
         />
 
         <FormListSelect
@@ -191,7 +190,6 @@ const Donor = () => {
           onChange={(e) => handleInputChange("tipo", e.target.value)}
           disabled={uiState.edit}
           options={Object.values(DONOR_TYPES)}
-          className={"label"}
         />
 
         {operatorData?.operator_type === "Admin" && (
@@ -200,7 +198,7 @@ const Donor = () => {
             value={donorData.cpf}
             onChange={(e) => handleInputChange("cpf", e.target.value)}
             readOnly={uiState.edit}
-            className={"label"}
+
           />
         )}
 
@@ -209,7 +207,6 @@ const Donor = () => {
           value={donorData.endereco}
           onChange={(e) => handleInputChange("endereco", e.target.value)}
           readOnly={uiState.edit}
-          className={"label"}
         />
 
         <FormDonorInput
@@ -217,7 +214,6 @@ const Donor = () => {
           value={donorData.cidade}
           onChange={(e) => handleInputChange("cidade", e.target.value)}
           readOnly={uiState.edit}
-          className={"label"}
         />
 
         <FormDonorInput
@@ -225,7 +221,6 @@ const Donor = () => {
           value={donorData.bairro}
           onChange={(e) => handleInputChange("bairro", e.target.value)}
           readOnly={uiState.edit}
-          className={"label"}
         />
 
         <FormDonorInput
@@ -233,7 +228,6 @@ const Donor = () => {
           value={donorData.telefone1}
           onChange={(e) => handleInputChange("telefone1", e.target.value)}
           readOnly={uiState.edit}
-          className={"label"}
         />
 
         <FormDonorInput
@@ -241,7 +235,6 @@ const Donor = () => {
           value={donorData.telefone2}
           onChange={(e) => handleInputChange("telefone2", e.target.value)}
           readOnly={uiState.edit}
-          className={"label"}
         />
 
         <FormDonorInput
@@ -249,7 +242,6 @@ const Donor = () => {
           value={donorData.telefone3}
           onChange={(e) => handleInputChange("telefone3", e.target.value)}
           readOnly={uiState.edit}
-          className={"label"}
         />
 
         <FormDonorInput
@@ -258,7 +250,6 @@ const Donor = () => {
           onChange={(e) => handleInputChange("dia", e.target.value)}
           readOnly={uiState.edit}
           disabled={donorData.tipo !== DONOR_TYPES.MONTHLY}
-          className={"label"}
           style={{ width: "100%", maxWidth: 100 }}
         />
 
@@ -268,7 +259,6 @@ const Donor = () => {
           onChange={(e) => handleInputChange("mensalidade", e.target.value)}
           readOnly={uiState.edit}
           disabled={donorData.tipo != DONOR_TYPES.MONTHLY}
-          className={"label"}
           style={{ width: "100%", maxWidth: 100 }}
         />
 
@@ -278,7 +268,6 @@ const Donor = () => {
           onChange={(e) => handleInputChange("media", e.target.value)}
           readOnly={uiState.edit}
           disabled={donorData.tipo !== DONOR_TYPES.MONTHLY}
-          className={"label"}
           style={{ width: "100%", maxWidth: 100 }}
         />
 
@@ -287,7 +276,6 @@ const Donor = () => {
           value={donorData.observacao}
           onChange={(e) => handleInputChange("observacao", e.target.value)}
           readOnly={uiState.edit}
-          className={"label"}
           name="observacao"
         />
 
@@ -296,7 +284,6 @@ const Donor = () => {
           value={donorData.referencia}
           onChange={(e) => handleInputChange("referencia", e.target.value)}
           readOnly={uiState.edit}
-          className={"label"}
           name="referencia"
         />
       </form>

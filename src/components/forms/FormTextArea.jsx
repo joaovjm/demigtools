@@ -3,18 +3,16 @@ const FormTextArea = ({
   value,
   onChange,
   readOnly,
-  className,
-  style
 }) => (
-  <div className="div-inputs" >
-    <label className={className}>
+  <div className="input-field" >
+    <label>
       {label}
     </label>
     <textarea
       value={value}
       onChange={onChange}
       readOnly={readOnly}
-      style={style}
+    
     />
   </div>
 );
