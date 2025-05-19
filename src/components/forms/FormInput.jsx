@@ -1,6 +1,6 @@
-const FormInput = ({ classinput, label, icon, type, name, value, autoComplete, onChange, style, readOnly }) => (
-  <div className="collector-form-input">
-    <label className="label">
+const FormInput = ({ label, icon, type, name, value, autoComplete, onChange, style, readOnly }) => (
+  <div className="input-field">
+    <label>
       {icon} {label}
     </label>
     <input
@@ -11,7 +11,6 @@ const FormInput = ({ classinput, label, icon, type, name, value, autoComplete, o
       autoComplete={autoComplete}
       onChange={onChange}
       readOnly={readOnly}
-      className={classinput}
     />
   </div>
 );
