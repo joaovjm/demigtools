@@ -16,127 +16,71 @@ const getDonationNotReceived = (
   let openCount = 0;
   let tempFullNotReceivedDonations = [];
   let tempDonationConfirmations = [];
+
+  const fillDonationConfirmation = (item) => {
+    tempDonationConfirmations.push({
+      receipt_donation_id: item.receipt_donation_id,
+      donor_id: item.donor_id,
+      donor_name: item.donor.donor_name,
+      donor_address: item.donor.donor_address,
+      donor_tel_1: item.donor.donor_tel_1,
+      donor_tel_2: item.donor.donor_tel_2?.donor_tel_2,
+      donor_tel_3: item.donor.donor_tel_3?.donor_tel_3,
+      donation_extra: item.donation_extra,
+      donation_day_contact: item.donation_day_contact,
+      donation_day_to_receive: item.donation_day_to_receive,
+      donation_print: item.donation_print,
+      donation_monthref: item.donation_monthref,
+      donation_description: item.donation_description,
+      operator_code_id: item.operator_code_id,
+      donation_received: item.donation_received,
+      donation_value: item.donation_value,
+      collector_code_id: item.collector_code_id,
+      donor_confirmation_reason: item.donor_confirmation_reason?.donor_confirmation_reason,
+    });
+  };
+
+  const fillFullNotReceivedDonations = (item) => {
+    tempFullNotReceivedDonations.push({
+      receipt_donation_id: item.receipt_donation_id,
+      donor_name: item.donor.donor_name,
+      donation_value: item.donation_value,
+      collector_code_id: item.collector_code_id,
+      donor_confirmation_reason: item.donor_confirmation_reason?.donor_confirmation_reason,
+      collector_name: item.collector?.collector_name,
+    });
+  };
+
   const getValueDonation = async () => {
     const { data: operatorValue } = await supabase
       .from("donation")
-      .select(
-        `receipt_donation_id, 
-        donor_id,
-        donation_description,
-        donor(donor_name, donor_address, donor_tel_1, donor_tel_2(donor_tel_2), donor_tel_3(donor_tel_3)),
-        donation_value, 
-        donation_extra,
-        donation_day_contact,
-        donation_day_to_receive,
-        donation_print,
-        donation_received,
-        donation_monthref,
-        operator_code_id,
-        collector_code_id, 
-        donor_confirmation_reason(donor_confirmation_reason),
-        collector: collector_code_id (collector_name)`
-      )
+      .select(`receipt_donation_id, donor_id, donation_description, donor(donor_name, donor_address, donor_tel_1, donor_tel_2(donor_tel_2), donor_tel_3(donor_tel_3)), donation_value, donation_extra, donation_day_contact, donation_day_to_receive, donation_print, donation_received, donation_monthref, operator_code_id, collector_code_id, donor_confirmation_reason(donor_confirmation_reason), collector: collector_code_id (collector_name)`)
       .eq("donation_received", "Não");
 
     for (let i = 0; i < operatorValue.length; i++) {
-      if (operatorValue[i].collector_code_id === 10) {
+      const item = operatorValue[i];
+      // Confirmações
+      if (item.collector_code_id === 10) {
         if (operatorType === "Admin") {
           confirmations += 1;
-          let value = operatorValue[i].donation_value;
-          valueConfirmations += value;
-
-          //Preenche o array com os doadores na confirmação
-          tempDonationConfirmations.push({
-            receipt_donation_id: operatorValue[i].receipt_donation_id,
-            donor_id: operatorValue[i].donor_id,
-            donor_name: operatorValue[i].donor.donor_name,
-            donor_address: operatorValue[i].donor.donor_address,
-            donor_tel_1: operatorValue[i].donor.donor_tel_1,
-            donor_tel_2: operatorValue[i].donor.donor_tel_2?.donor_tel_2,
-            donor_tel_3: operatorValue[i].donor.donor_tel_3?.donor_tel_3,
-            donation_extra: operatorValue[i].donation_extra,
-            donation_day_contact: operatorValue[i].donation_day_contact,
-            donation_day_to_receive: operatorValue[i].donation_day_to_receive,
-            donation_print: operatorValue[i].donation_print,
-            donation_monthref: operatorValue[i].donation_monthref,
-            donation_description: operatorValue[i].donation_description,
-            operator_code_id: operatorValue[i].operator_code_id,
-            donation_received: operatorValue[i].donation_received,
-            donation_value: operatorValue[i].donation_value,
-            collector_code_id: operatorValue[i].collector_code_id,
-            donor_confirmation_reason:
-              operatorValue[i].donor_confirmation_reason
-                ?.donor_confirmation_reason,
-          });
-        } else if (operatorType === "Operador" && operatorValue.operator_code_id){
+          valueConfirmations += item.donation_value;
+          fillDonationConfirmation(item);
+        } else if (operatorType === "Operador" && item.operator_code_id) {
           confirmations += 1;
-          let value = operatorValue[i].donation_value;
-          valueConfirmations += value;
-
-          //Preenche o array com os doadores na confirmação
-          tempDonationConfirmations.push({
-            receipt_donation_id: operatorValue[i].receipt_donation_id,
-            donor_id: operatorValue[i].donor_id,
-            donor_name: operatorValue[i].donor.donor_name,
-            donor_address: operatorValue[i].donor.donor_address,
-            donor_tel_1: operatorValue[i].donor.donor_tel_1,
-            donor_tel_2: operatorValue[i].donor.donor_tel_2?.donor_tel_2,
-            donor_tel_3: operatorValue[i].donor.donor_tel_3?.donor_tel_3,
-            donation_extra: operatorValue[i].donation_extra,
-            donation_day_contact: operatorValue[i].donation_day_contact,
-            donation_day_to_receive: operatorValue[i].donation_day_to_receive,
-            donation_print: operatorValue[i].donation_print,
-            donation_monthref: operatorValue[i].donation_monthref,
-            donation_description: operatorValue[i].donation_description,
-            operator_code_id: operatorValue[i].operator_code_id,
-            donation_received: operatorValue[i].donation_received,
-            donation_value: operatorValue[i].donation_value,
-            collector_code_id: operatorValue[i].collector_code_id,
-            donor_confirmation_reason:
-              operatorValue[i].donor_confirmation_reason
-                ?.donor_confirmation_reason,
-          });
+          valueConfirmations += item.donation_value;
+          fillDonationConfirmation(item);
         }
       }
-
-      //Preenche o array com todos os doadores
-      if (operatorType === "Operador" && operatorID === operatorValue[i].operator_code_id) {
-        tempFullNotReceivedDonations.push({
-          receipt_donation_id: operatorValue[i].receipt_donation_id,
-          donor_name: operatorValue[i].donor.donor_name,
-          donation_value: operatorValue[i].donation_value,
-          collector_code_id: operatorValue[i].collector_code_id,
-          donor_confirmation_reason:
-            operatorValue[i].donor_confirmation_reason?.donor_confirmation_reason,
-          collector_name: operatorValue[i].collector?.collector_name,
-        });
-  
-        let value = operatorValue[i].donation_value;
-        valueOpenDonations += value;
-        openCount += 1
-
-
-      } else if (operatorType === "Admin"){
-         tempFullNotReceivedDonations.push({
-           receipt_donation_id: operatorValue[i].receipt_donation_id,
-           donor_name: operatorValue[i].donor.donor_name,
-           donation_value: operatorValue[i].donation_value,
-           collector_code_id: operatorValue[i].collector_code_id,
-           donor_confirmation_reason:
-             operatorValue[i].donor_confirmation_reason?.donor_confirmation_reason,
-           collector_name: operatorValue[i].collector?.collector_name,
-         });
-  
-         let value = operatorValue[i].donation_value;
-         valueOpenDonations += value;
-         openCount += 1
-
-
-         
+      // Em aberto
+      if (
+        (operatorType === "Operador" && operatorID === item.operator_code_id) ||
+        operatorType === "Admin"
+      ) {
+        fillFullNotReceivedDonations(item);
+        valueOpenDonations += item.donation_value;
+        openCount += 1;
       }
-      
     }
-
     setDonationConfirmation(tempDonationConfirmations);
     setFullNotReceivedDonations(tempFullNotReceivedDonations);
     setOpenDonations(openCount);
