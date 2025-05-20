@@ -1,8 +1,9 @@
 import React from "react";
 
-const TableInOpen = ({ fullNotReceivedDonations }) => {
-  const handleClick = (e) => {
-    console.log(e.target.parentElement.children[0].textContent);
+const TableInOpen = ({ fullNotReceivedDonations, setDonationOpen, setModalOpen }) => {
+  const handleClick = (donation) => {
+    setDonationOpen(donation)
+    setModalOpen(true)
   };
 
   return (
@@ -22,7 +23,7 @@ const TableInOpen = ({ fullNotReceivedDonations }) => {
               <tr
                 className="table-body-confirmation-tr"
                 key={donation.receipt_donation_id}
-                onClick={handleClick}
+                onClick={() => handleClick(donation)}
               >
                 <td className="table-body-confirmation-text">
                   {donation.donation_day_to_receive}

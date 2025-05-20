@@ -4,14 +4,13 @@ import "./index.css";
 const TableConfirmation = ({
   donationConfirmation,
   setModalOpen,
-  setDonationOpen,
+  setDonationConfirmationOpen,
 }) => {
   
 
   const handleClick = (donation) => {
 
-    
-    setDonationOpen({
+    setDonationConfirmationOpen({
       id: donation.receipt_donation_id,
       donor_id: donation.donor_id,
       name: donation.donor_name,

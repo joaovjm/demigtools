@@ -53,6 +53,7 @@ export const insertDonation = async (
 
   } catch (error){
     console.log("Erro ao criar doação", error.message)
+    throw error;
   }
   
 };
