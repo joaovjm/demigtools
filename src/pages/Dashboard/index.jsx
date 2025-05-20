@@ -89,7 +89,6 @@ const Dashboard = () => {
 
   useEffect(() => {
     donations();
-    console.log("entrou no useEffect");
   }, [active, modalOpen, status]);
 
   const handleClickCard = (e) => {
