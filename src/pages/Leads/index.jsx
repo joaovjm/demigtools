@@ -348,7 +348,7 @@ const Leads = () => {
                   style={{
                     display: "flex",
                     justifyContent: "center",
-                    marginTop: "50px",
+                    marginTop: "10px",
                   }}
                 >
                   <button className="btn-next" onClick={handleNext}>
@@ -536,10 +536,9 @@ const Leads = () => {
               value={dateScheduling}
               onChange={handleSchedulingDateChange}
               type="date"
-              style={{ width: 160 }}
             />
-            <div className="obs-input">
-              <label className="label" style={{ width: 100 }}>
+            <div className="input-field">
+              <label>
                 Observação
               </label>
               <textarea
@@ -547,7 +546,6 @@ const Leads = () => {
                 onChange={(e) => {
                   setObservationScheduling(e.target.value);
                 }}
-                style={{ width: 200 }}
               />
             </div>
             <button

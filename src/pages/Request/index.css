@@ -1,0 +1,58 @@
+.form-request{
+
+}
+
+.form-request-list1{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 180px;
+    height: 220px;
+    border: 1px solid #000;
+    border-radius: 6px;
+    padding: 6px 0px 6px 0px;
+
+    & h5{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    & .btn-add-item{
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        background-color: green;
+        border: none;
+        margin-top: 6px;
+        color: #f0f0f0f0;
+    }
+}
+
+.form-request-list1-items{
+    display: flex;
+    flex-direction: column;
+    width: 99%;
+    height: 99%;
+    border: 1px solid yellow;
+    border-radius: 6px;
+    padding: 6px;
+    overflow-y: auto;
+}
+
+.form-request-list1-items-item{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 30px;
+    border-radius: 6px;
+    font-size: 12px;
+    padding: 6px 0;
+
+    &:hover{
+        border: 1px solid #f0f0f0f0;
+        cursor: pointer;
+    }
+}

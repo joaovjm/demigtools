@@ -125,7 +125,7 @@ const ReceiverDonations = () => {
           options={collectors}
           disableOption="Selecione o coletador..."
           icon={ICONS.MOTORCYCLE}
-          selectInput="select-input"
+          
         />
 
         <FormInput

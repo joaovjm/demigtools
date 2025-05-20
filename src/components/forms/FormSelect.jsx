@@ -9,8 +9,8 @@ const FormSelect = ({
   selectInput
 }) => (
   
-  <div className="collector-form-inputs">
-    <label className="label">
+  <div className="input-field">
+    <label>
       {icon} {label}
     </label>
     <select className={selectInput} value={value} name="collector" onChange={onChange} disabled={disable}>

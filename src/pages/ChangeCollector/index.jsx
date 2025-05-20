@@ -109,7 +109,6 @@ const ChangeCollector = () => {
           options={collectors}
           onChange={handleInputChange}
           disableOption="Selecione o coletador..."
-          selectInput="select-input"
         />
         {/* Data */}
         <FormInput

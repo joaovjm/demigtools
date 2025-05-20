@@ -1,39 +1,78 @@
-.mainAdmin_manager{
+.CreateMensalDonation {
     display: flex;
-    width: 100%;
-    height: calc(100vh - 10.8vh);
     align-items: center;
     justify-content: center;
+    width: 100%;
 }
 
-.adminManager_menu{
+.MonthlyfeeGeneratorComponent_div {
+  display: flex;
+  flex-direction: column;
+  width: 600px;
+  height: 400px;
+  margin-top: 40px;
+  gap: 18px;
+  border-radius: 6px;
+  padding: 32px;
+  background-color: #1F1D1D;
+}
+
+.form_inputs {
+  display: flex;
+  gap: 16px;
+  align-items: end;
+}
+
+.btn_gerar {
+  border: none;
+  border-radius: 6px;
+  width: 150px;
+  height: 40px;
+  background-color: #385bad;
+  color: #faf5e9;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.status_mensal {
+    display: flex;
+    justify-content: center;
+    width: 300px;
+    border-radius: 6px;
+    background-color: green;
+}
+
+.label_status_mensal {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    font-size: 48px;
+    gap: 10px;
+}
+
+@media (max-width: 479px){
+  .MonthlyfeeGeneratorComponent_div{
+    width: 98%;
+    height: 500px;
+  }
+  .form_inputs{
     display: flex;
     flex-direction: column;
-    width: 220px;
-    border-radius: 6px 0px 0px 6px;
-    background-color: black;
+    width: 100%;
+  }
 }
 
-.label_menu{
+@media (min-width: 480px) and (max-width: 799px){
+  .MonthlyfeeGeneratorComponent_div{
+    width: 90%;
+    height: 500px;
+  }
+  .form_inputs{
     display: flex;
-    align-items: center;
-    padding: 32px;
-    width: 220px;
-    height: 50px;
-    cursor: pointer;
-
-    &:hover{
-        border-radius: 6px 0px 0px 6px;
-        background-color: #1F1D1D;
-    }
-}
-
-.form_adminManager{
-    display: flex;
-    align-items: baseline;
-    justify-content: center;
-    width: 800px;
-    height: 540px;
-    border-radius: 6px;
-    background-color: #1F1D1D;
+    flex-direction: column;
+    width: 100%;
+  }
 }

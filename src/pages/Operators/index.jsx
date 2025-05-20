@@ -31,9 +31,9 @@ const Operators = () => {
     title: "",
     message: "",
     onConfirm: null,
-  })
-  const [modalConfirmOpen, setModalConfirmOpen] = useState(false)
-  const [status, setStatus] = useState("")
+  });
+  const [modalConfirmOpen, setModalConfirmOpen] = useState(false);
+  const [status, setStatus] = useState("");
 
   useEffect(() => {
     const operators = async () => {
@@ -109,7 +109,7 @@ const Operators = () => {
           name: operatorToUpdate.operator_name,
           type: operatorToUpdate.operator_type,
           active: operatorToUpdate.operator_active,
-          password: operatorToUpdate.operator_password
+          password: operatorToUpdate.operator_password,
         };
 
         const data = await editOperator(operatorData);
@@ -124,25 +124,21 @@ const Operators = () => {
         );
       }
     } else if (action === "delete") {
-
       return new Promise((resolve) => {
         setModalConfig({
           title: "Deletar Usuario",
           message: "Tem certeza que desejas deletar este usuário?",
           onConfirm: async () => {
             await deleteOperator(operatorId).then(resolve);
-            setModalConfirmOpen(false)
-            toast.success("Usuário deletado com sucesso!")
-          }
-        })
-        setModalConfirmOpen(true)
-      })
-
+            setModalConfirmOpen(false);
+            toast.success("Usuário deletado com sucesso!");
+          },
+        });
+        setModalConfirmOpen(true);
+      });
     } else if (action === "newoperator") {
       setModalShow(true);
-      
     }
-    
   };
 
   const typeOperator = ["Admin", "Operator", "Mensal", "Confirmação"];
@@ -164,100 +160,103 @@ const Operators = () => {
         message={modalConfig.message}
       />
 
-      {tableOperators ? (
-        tableOperators.map((operator, index) => (
-          <form
-            key={operator.operator_code_id || index}
-            onSubmit={(e) => e.preventDefault()}
-            className="form-operators"
-          >
-            <div className="gerent-operators">
-              <FormInput
-                label="Codigo"
-                type="text"
-                name="cod"
-                value={operator.operator_code_id}
-                style={{ width: 70 }}
-                onChange={(e) => handleInputChange(e, operator)}
-                readOnly={operator.isDisable}
-              />
+      <div className="operators-table">
+        <div className="operators-table-inner">
+          {tableOperators ? (
+            tableOperators.map((operator, index) => (
+              <form
+                key={operator.operator_code_id || index}
+                onSubmit={(e) => e.preventDefault()}
+                className="form-operators"
+              >
+                <div className="gerent-operators">
+                  <FormInput
+                    label="Codigo"
+                    type="text"
+                    name="cod"
+                    value={operator.operator_code_id}
+                    onChange={(e) => handleInputChange(e, operator)}
+                    readOnly={operator.isDisable}
+                  />
+                  <FormInput
+                    label="Operador"
+                    type="text"
+                    name="operator"
+                    value={operator.operator_name}
+                    autoComplete="username"
+                    onChange={(e) => handleInputChange(e, operator)}
+                    readOnly={operator.isDisable}
+                  />
+                  <FormInput
+                    label="Senha"
+                    type="password"
+                    name="password"
+                    value={operator.operator_password || ""}
+                    autoComplete="current-password"
+                    onChange={(e) => handleInputChange(e, operator)}
+                    readOnly={operator.isDisable}
+                  />
+                  <FormListSelect
+                    label="Tipo"
+                    value={operator.operator_type}
+                    name="type"
+                    id={operator.operator_code_id}
+                    onChange={(e) => handleInputChange(e, operator)}
+                    options={typeOperator}
+                    disabled={operator.isDisable}
+                  />
+                  <div className="input-field">
+                    <label>Ativo?</label>
+                    <input
+                      type="checkbox"
+                      value="active"
+                      name="active"
+                      checked={operator.operator_active}
+                      onChange={(e) => handleInputChange(e, operator)}
+                      style={{ width: 20 }}
+                      disabled={operator.isDisable}
+                    />
+                  </div>
 
-              <FormInput
-                label="Operador"
-                type="text"
-                name="operator"
-                value={operator.operator_name}
-                autoComplete="username"
-                style={{ width: 120 }}
-                onChange={(e) => handleInputChange(e, operator)}
-                readOnly={operator.isDisable}
-              />
+                  <BtnEdit
+                    label={operator.isDisable ? "Editar" : "Salvar"}
+                    onClick={(e) =>
+                      handleSubmit(
+                        e,
+                        operator.isDisable ? "edit" : "save",
+                        operator.operator_code_id
+                      )
+                    }
+                  />
+                  <button
+                    className="btn-delete-operator"
+                    onClick={(e) =>
+                      handleSubmit(e, "delete", operator.operator_code_id)
+                    }
+                  >
+                    {ICONS.TRASH} Delete
+                  </button>
+                </div>
 
-              <FormInput
-                label="Senha"
-                type="password"
-                name="password"
-                value={operator.operator_password || ""}
-                autoComplete="current-password"
-                style={{ width: 100 }}
-                onChange={(e) => handleInputChange(e, operator)}
-                readOnly={operator.isDisable}
-              />
+                {modalShow && (
+                  <ModalNewOperator
+                    setModalShow={setModalShow}
+                    setStatus={setStatus}
+                  />
+                )}
+              </form>
+            ))
+          ) : (
+            <Loader />
+          )}
+        </div>
+      </div>
 
-              <FormListSelect
-                label="Tipo"
-                value={operator.operator_type}
-                name="type"
-                id={operator.operator_code_id}
-                onChange={(e) => handleInputChange(e, operator)}
-                options={typeOperator}
-                className="label"
-                disabled={operator.isDisable}
-              />
-
-              <div className="checkbox-active">
-                <label>Ativo ?</label>
-                <input
-                  type="checkbox"
-                  value="active"
-                  name="active"
-                  checked={operator.operator_active}
-                  onChange={(e) => handleInputChange(e, operator)}
-                  style={{ width: 20 }}
-                  disabled={operator.isDisable}
-                />
-              </div>
-
-              <BtnEdit
-                label={operator.isDisable ? "Editar" : "Salvar"}
-                onClick={(e) =>
-                  handleSubmit(
-                    e,
-                    operator.isDisable ? "edit" : "save",
-                    operator.operator_code_id
-                  )
-                }
-              />
-              <BtnDelete
-                onClick={(e) =>
-                  handleSubmit(e, "delete", operator.operator_code_id)
-                }
-              />
-            </div>
-
-            {modalShow && (
-              <ModalNewOperator
-                setModalShow={setModalShow}
-                setStatus={setStatus}
-              />
-            )}
-          </form>
-        ))
-      ) : (
-        <Loader />
-      )}
-
-      <ToastContainer closeOnClick="true" pauseOnFocusLoss="false" position="top-left"/>
+      <ToastContainer
+        closeOnClick="true"
+        pauseOnFocusLoss="false"
+        position="top-left"
+      />
     </div>
   );
 };
