@@ -14,7 +14,6 @@
   box-sizing: border-box;
   justify-content: space-between;
   width: 64%;
-  min-height: 80vh;
   border-radius: 6px;
   background-color: #1f1d1d;
   gap: 12px;
@@ -168,7 +167,8 @@
 @media (min-width: 300px) and (max-width: 699px) {
   .section-info-leads {
     width: 98%;
-    height: 620px;
+    min-height: 620px;
+    margin-top: 20px;
   }
 
   .value-campain {
@@ -176,7 +176,7 @@
   }
 
   .menu-action-lead {
-    height: 400px;
+    min-height: 400px;
   }
   .info-lead-button-c {
     height: 40px;
