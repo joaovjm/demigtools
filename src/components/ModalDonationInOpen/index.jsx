@@ -1,5 +1,4 @@
 const ModalDonationInOpen = ({ donationOpen, onClose }) => {
-    console.log(donationOpen)
   return (
     <div className="modal-confirmations">
       <div className="modal-confirmations-content">
