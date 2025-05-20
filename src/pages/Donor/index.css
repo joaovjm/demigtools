@@ -167,6 +167,12 @@
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         gap: 15px;
     }
+
+    .formDonor{
+        input{
+            font-size: 14px;
+        }
+    }
     
     .formDonor textarea {
         grid-column: span 2;

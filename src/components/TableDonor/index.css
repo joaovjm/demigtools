@@ -176,6 +176,10 @@
     .tabledonor .tableBody {
         min-width: 120px;
     }
+    
+    .table-container{
+        overflow-x: auto;
+    }
 }
 
 /* Desktop */
