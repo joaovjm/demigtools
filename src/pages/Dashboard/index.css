@@ -1,73 +1,113 @@
-.mainDashboard{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 48px;
-    padding: 4px;
+.mainDashboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48px;
+  padding: 4px;
 }
 
-.sectionHeader{
+.sectionHeader {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  gap: 20px;
+}
+
+.divCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100px;
+  width: 220px;
+  background-color: #1f1d1d;
+  border-radius: 6px;
+  border: 3px double transparent;
+  padding: 20px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s, box-shadow 0.3s;
+
+  &:hover {
+    background-color: #2f2d2d;
+    transition: 0.3s;
+  }
+}
+
+.divCard.active {
+  border: 3px double #faa01c;
+  box-shadow: 0 4px 12px rgba(250, 160, 28, 0.4);
+  transform: scale(0.98);
+  transition: transform 0.1s;
+}
+
+.divHeader {
+  display: flex;
+}
+
+.h3Header {
+  font-size: 14px;
+  font-weight: 800;
+  color: #faf5e9;
+}
+
+.divBody {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+p {
+  font-size: 14px;
+  font-weight: 600;
+  color: #faf5e9;
+}
+
+.section-grafico {
+  display: flex;
+  width: 1100px;
+  align-items: center;
+  justify-content: center;
+  border: none;
+}
+
+@media (min-width: 379px) and (max-width: 599px) {
+  .sectionHeader {
     display: flex;
     justify-content: center;
-    padding: 20px;
-    gap: 20px;
-}
+    padding: 10px;
+    gap: 6px;
+  }
 
-.divCard{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100px;
-    width: 220px;
-    background-color: #1F1D1D;
-    border-radius: 6px;
-    border: 3px double transparent;
-    padding: 20px;
-    cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    transition: border-color 0.3s, box-shadow 0.3s;
+  .divCard{
+    width: 120px;
+    height: 70px;
+    padding: 10px;
 
-    &:hover{
-        background-color: #2F2D2D;
-        transition: 0.3s;
+    .h3Header{
+        font-size: 9px;
     }
-    
+
+    p{
+        font-size: 12px;
+    }
+  }
+
+  .table-head-confirmation-text, .table-body-confirmation-tr{
+    font-size: 12px;
+  }
 }
 
-.divCard.active{
-    border: 3px double #FAA01C;
-    box-shadow: 0 4px 12px rgba(250, 160, 28, 0.4);
-    transform: scale(0.98);
-    transition: transform 0.1s
-}
-
-.divHeader{
+@media (min-width: 600px) {
+  .sectionHeader {
     display: flex;
-}
-
-.h3Header{
-    font-size: 14px;
-    font-weight: 800;
-    color: #FAF5E9;
-}
-
-.divBody{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;    
-}
-
-p{
-    font-size: 14px;
-    font-weight: 600;
-    color: #FAF5E9;
-}
-
-.section-grafico{
-    display: flex;
-    width: 1100px;
-    align-items: center;
     justify-content: center;
-    border: none;
-    
+    padding: 10px;
+    gap: 6px;
+  }
+
+  .divCard{
+    width: 180px;
+    height: 80px;
+    padding: 10px;
+  }
 }

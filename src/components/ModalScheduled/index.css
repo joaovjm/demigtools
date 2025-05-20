@@ -142,4 +142,17 @@
     .modal-confirmations-confirm {
         flex-direction: column;
     }
+
+    .modal-confirmations-title{
+        h2{
+            font-size: 14px;
+        }
+    }
+
+    .modal-confirmations-footer{
+        button{
+            width: 120px;
+            height: 50px;
+        }
+    }
 }
