@@ -5,30 +5,28 @@ import cancelDonation from "../../helper/cancelDonation";
 import supabase from "../../helper/superBaseClient";
 import { DataNow, DataSelect } from "../DataTime";
 
-const ModalConfirmations = ({ donationOpen, onClose, setStatus }) => {
+const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) => {
   const [isConfirmation, setIsConfirmation] = useState(false);
   const [dateConfirm, setDateConfirm] = useState("");
   const [observation, setObservation] = useState("");
-
-  console.log(donationOpen)
 
   const handleCancel = async () => {
     window.confirm("Você tem certeza que deseja cancelar a ficha?");
     if (window.confirm) {
       const status = await cancelDonation({
         donation: {
-          receipt_donation_id: donationOpen.id,
-          donor_id: donationOpen.donor_id,
-          donation_value: donationOpen.value,
-          donation_extra: donationOpen.extra,
-          donation_day_contact: donationOpen.day_contact,
-          donation_day_to_receive: donationOpen.day_to_receive,
-          donation_print: donationOpen.print,
-          donation_monthref: donationOpen.monthref,
-          donation_description: donationOpen.description,
+          receipt_donation_id: donationConfirmationOpen.id,
+          donor_id: donationConfirmationOpen.donor_id,
+          donation_value: donationConfirmationOpen.value,
+          donation_extra: donationConfirmationOpen.extra,
+          donation_day_contact: donationConfirmationOpen.day_contact,
+          donation_day_to_receive: donationConfirmationOpen.day_to_receive,
+          donation_print: donationConfirmationOpen.print,
+          donation_monthref: donationConfirmationOpen.monthref,
+          donation_description: donationConfirmationOpen.description,
           donation_received: "Não",
-          operator_code_id: donationOpen.operator_code_id,
-          collector_code_id: donationOpen.collector_code_id,
+          operator_code_id: donationConfirmationOpen.operator_code_id,
+          collector_code_id: donationConfirmationOpen.collector_code_id,
         },
       });
 
@@ -50,7 +48,7 @@ const ModalConfirmations = ({ donationOpen, onClose, setStatus }) => {
             donation_received: "Não",
             collector_code_id: null,
           })
-          .eq("receipt_donation_id", donationOpen.id);
+          .eq("receipt_donation_id", donationConfirmationOpen.id);
 
         if (errorConfirm) throw errorConfirm;
         
@@ -67,24 +65,24 @@ const ModalConfirmations = ({ donationOpen, onClose, setStatus }) => {
       <div className="modal-confirmations-content">
         <div className="modal-confirmations-div">
           <div className="modal-confirmations-title">
-            <h2>Recibo: {donationOpen.id}</h2>
+            <h2>Recibo: {donationConfirmationOpen.id}</h2>
             <button onClick={() => onClose()} className="btn-close">
               Fechar
             </button>
           </div>
 
           <div className="modal-confirmations-body">
-            <label>Name: {donationOpen.name}</label>
-            <label>Endereço: {donationOpen.address}</label>
-            <label>Tel 1: {donationOpen.phone}</label>
+            <label>Name: {donationConfirmationOpen.name}</label>
+            <label>Endereço: {donationConfirmationOpen.address}</label>
+            <label>Tel 1: {donationConfirmationOpen.phone}</label>
             <label>
-              Tel 2: {donationOpen.phone2 ? donationOpen.phone2 : "*****-****"}
+              Tel 2: {donationConfirmationOpen.phone2 ? donationConfirmationOpen.phone2 : "*****-****"}
             </label>
             <label>
-              Tel 3: {donationOpen.phone3 ? donationOpen.phone3 : "*****-****"}
+              Tel 3: {donationConfirmationOpen.phone3 ? donationConfirmationOpen.phone3 : "*****-****"}
             </label>
-            <label>Valor: R$ {donationOpen.value},00</label>
-            <h4>Motivo: {donationOpen.reason}</h4>
+            <label>Valor: R$ {donationConfirmationOpen.value},00</label>
+            <h4>Motivo: {donationConfirmationOpen.reason}</h4>
           </div>
           {!isConfirmation && (
             <div className="modal-confirmations-footer">
@@ -103,16 +101,15 @@ const ModalConfirmations = ({ donationOpen, onClose, setStatus }) => {
           {isConfirmation && (
             <div className="modal-confirmations-confirm">
               <div className="modal-confirmations-confirm-1">
-                <div>
+                <div className="input-field">
                   <label className="label">Data</label>
                   <input
                     value={dateConfirm}
-                    style={{ width: "180px" }}
                     type="date"
                     onChange={(e) => setDateConfirm(e.target.value)}
                   />
                 </div>
-                <div>
+                <div className="input-field">
                   <label className="label">Observação</label>
                   <input
                     value={observation}

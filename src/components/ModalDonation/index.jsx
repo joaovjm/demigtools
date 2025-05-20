@@ -4,6 +4,7 @@ import "./index.css";
 import { FaDollarSign } from "react-icons/fa";
 import { insertDonation } from "../../helper/insertDonation";
 import { DataNow, DataSelect } from "../DataTime";
+import { toast, ToastContainer } from "react-toastify";
 
 const ModalDonation = ({
   modalShow,
@@ -15,19 +16,20 @@ const ModalDonation = ({
   const [comissao, setComissao] = useState("");
   const [valor, setValor] = useState("");
   const [data_receber, setData_receber] = useState("");
-  const [formatedData, setFormatedData] = useState("")
+  const [formatedData, setFormatedData] = useState("");
   const [descricao, setDescricao] = useState("");
   const [impresso, setImpresso] = useState("");
   const [recebido, setRecebido] = useState("");
   const [mesref, setMesref] = useState("");
-  const [operator, setOperator] = useState(null)
+  const [operator, setOperator] = useState(null);
+  const [campain, setCampain] = useState("");
 
   const data_contato = DataNow();
 
   useEffect(() => {
-    const operatorData = JSON.parse(localStorage.getItem("operatorData"))
-    setOperator(operatorData.operator_code_id)
-  }, [])
+    const operatorData = JSON.parse(localStorage.getItem("operatorData"));
+    setOperator(operatorData.operator_code_id);
+  }, []);
 
   useEffect(() => {
     if (mensalidade && comissao == "") {
@@ -40,7 +42,7 @@ const ModalDonation = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const error = insertDonation(
+    const promise = insertDonation(
       donor_id,
       operator,
       valor,
@@ -51,26 +53,44 @@ const ModalDonation = ({
       recebido,
       descricao,
       mesref,
-      setModalShow
+      campain
     );
+
+    toast.promise(promise, {
+      pending: "Criando doação...",
+      success: "Doação criada com sucesso!",
+      error: "Erro ao criar doação!",
+    });
+
+    try {
+      await promise;
+
+      setModalShow(false);
+      setValor("");
+      setComissao("");
+      setData_receber("");
+      setDescricao("");
+      setImpresso("");
+      setRecebido("");
+      setMesref("");
+    } catch (_) {}
   };
 
   const handleDate = (e) => {
     var value = e.target.value;
-    const now = DataNow("noformated")
-    if (now > value){
+    const now = DataNow("noformated");
+    if (now > value) {
       value = now;
     }
-    setFormatedData(`${(DataSelect(value))}`);
+    setFormatedData(`${DataSelect(value)}`);
     setData_receber(value);
-    
 
     const monthYear = `${DataSelect(value, "month")}/${DataSelect(
       value,
       "year"
     )}`;
 
-    setMesref(monthYear)
+    setMesref(monthYear);
   };
 
   return (
@@ -104,7 +124,7 @@ const ModalDonation = ({
           {/* Comissão */}
           {tipo === "Mensal" && (
             <div className="input-field">
-              <label >Extra</label>
+              <label>Extra</label>
               <input
                 type="text"
                 placeholder="R$ 0,00"
@@ -138,9 +158,7 @@ const ModalDonation = ({
 
           {/* Descrição */}
           <div className="input-field">
-            <label>
-              Descrição
-            </label>
+            <label>Descrição</label>
             <textarea
               type="text"
               placeholder="Observação"
