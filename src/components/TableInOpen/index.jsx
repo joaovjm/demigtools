@@ -11,7 +11,7 @@ const TableInOpen = ({ fullNotReceivedDonations }) => {
         <table className="table-confirmation">
           <thead className="table-head-confirmation">
             <tr>
-              <th className="table-head-confirmation-text">Recibo</th>
+              <th className="table-head-confirmation-text">A receber</th>
               <th className="table-head-confirmation-text">Nome</th>
               <th className="table-head-confirmation-text">Valor</th>
               <th className="table-head-confirmation-text">Coletador</th>
@@ -25,7 +25,7 @@ const TableInOpen = ({ fullNotReceivedDonations }) => {
                 onClick={handleClick}
               >
                 <td className="table-body-confirmation-text">
-                  {donation.receipt_donation_id}
+                  {donation.donation_day_to_receive}
                 </td>
                 <td className="table-body-confirmation-text">
                   {donation.donor_name}

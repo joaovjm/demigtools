@@ -48,6 +48,7 @@ const getDonationNotReceived = (
       collector_code_id: item.collector_code_id,
       donor_confirmation_reason: item.donor_confirmation_reason?.donor_confirmation_reason,
       collector_name: item.collector?.collector_name,
+      donation_day_to_receive: item.donation_day_to_receive,
     });
   };
 
