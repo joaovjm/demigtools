@@ -11,8 +11,8 @@ import { toast, ToastContainer } from "react-toastify";
 import TableScheduled from "../../components/TableScheduled";
 import getScheduledLeads from "../../helper/getScheduledLeads";
 import ModalScheduled from "../../components/ModalScheduled";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { UserContext } from "../../context/UserContext";
+import ModalDonationInOpen from "../../components/ModalDonationInOpen";
 
 const Dashboard = () => {
   const caracterOperator = JSON.parse(localStorage.getItem("operatorData"));
@@ -25,13 +25,15 @@ const Dashboard = () => {
   const [receivedPercent, setReceivedPercent] = useState(null);
   const [scheduling, setScheduling] = useState(0); //Total de leads agendadas
   const [active, setActive] = useState(false);
+  const [nowScheduled, setNowScheduled] = useState(null);
+  const { operatorData, setOperatorData } = useContext(UserContext);
+
+  const [donationConfirmationOpen, setDonationConfirmationOpen] = useState([]);
+  const [donationOpen, setDonationOpen] = useState([]);
+  const [scheduledOpen, setScheduledOpen] = useState([]);
   const [donationConfirmation, setDonationConfirmation] = useState([]);
   const [fullNotReceivedDonations, setFullNotReceivedDonations] = useState([]);
   const [scheduled, setScheduled] = useState([]);
-  const {operatorData, setOperatorData} = useContext(UserContext)
-  const [donationOpen, setDonationOpen] = useState([]);
-  const [scheduledOpen, setScheduledOpen] = useState([]);
-  const [nowScheduled, setNowScheduled] = useState(null);
 
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -50,7 +52,6 @@ const Dashboard = () => {
         setFullNotReceivedDonations,
         operatorData.operator_code_id,
         operatorData.operator_type
-
       );
       await getDonationPerMonthReceived(
         monthref,
@@ -58,8 +59,11 @@ const Dashboard = () => {
         setValueMonthReceived,
         setReceivedPercent
       );
-      await getScheduledLeads(caracterOperator.operator_code_id, setScheduled, setScheduling);
-      
+      await getScheduledLeads(
+        caracterOperator.operator_code_id,
+        setScheduled,
+        setScheduling
+      );
     } catch (error) {
       console.error("Error fetching donations:", error);
     }
@@ -106,7 +110,6 @@ const Dashboard = () => {
             </div>
             <div className="divBody">
               <p>{scheduling}</p>
-              
             </div>
           </div>
           {/* Card 1 */}
@@ -156,13 +159,17 @@ const Dashboard = () => {
               <TableConfirmation
                 donationConfirmation={donationConfirmation}
                 setModalOpen={setModalOpen}
-                setDonationOpen={setDonationOpen}
+                setDonationConfirmationOpen={setDonationConfirmationOpen}
               />
             </>
           ) : active === "inOpen" ? (
-            <TableInOpen fullNotReceivedDonations={fullNotReceivedDonations} />
+            <TableInOpen
+              fullNotReceivedDonations={fullNotReceivedDonations}
+              setDonationOpen={setDonationOpen}
+              setModalOpen={setModalOpen}
+            />
           ) : active === "inScheduled" ? (
-            <TableScheduled 
+            <TableScheduled
               scheduled={scheduled}
               setModalOpen={setModalOpen}
               setScheduledOpen={setScheduledOpen}
@@ -172,7 +179,7 @@ const Dashboard = () => {
         </section>
         {modalOpen && active === "inConfirmation" && (
           <ModalConfirmations
-            donationOpen={donationOpen}
+            donationConfirmationOpen={donationConfirmationOpen}
             onClose={() => setModalOpen(false)}
             setStatus={setStatus}
           />
@@ -185,7 +192,12 @@ const Dashboard = () => {
             nowScheduled={nowScheduled}
           />
         )}
-        <ToastContainer />
+        {modalOpen && active === "inOpen" && (
+          <ModalDonationInOpen
+            donationOpen={donationOpen}
+            onClose={() => setModalOpen(false)}
+          />
+        )}
       </>
     </main>
   );

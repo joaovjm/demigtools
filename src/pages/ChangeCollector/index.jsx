@@ -149,7 +149,7 @@ const ChangeCollector = () => {
 
       {openReason && (
         <div className="collector-reason">
-          <div>
+          <div className="input-field">
             <label className="label">Motivo</label>
             <input value={reason} autoFocus="true" type="text" onChange={(e) => setReason(e.target.value)}/>
           </div>

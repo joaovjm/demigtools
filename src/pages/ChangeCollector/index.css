@@ -69,8 +69,7 @@
 
 .collector-reason{
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-end;
     gap: 10px;
     padding: 10px;
     border: none;
@@ -80,7 +79,7 @@
 
 .btn-OK{
     width: 90px;
-    height: 32px;
+    height: 40px;
     border : none;
     border-radius: 6px;
     background-color: #385BAD;
