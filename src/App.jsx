@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom'
 import './App.css'
 import Navbar from './components/Navbar'
+import { ToastContainer } from 'react-toastify'
 
 function App() {
 
@@ -10,6 +11,7 @@ function App() {
       <main className='main-app-container'>
         {<Outlet/>}
       </main>
+      <ToastContainer />
       
     </>
   )
