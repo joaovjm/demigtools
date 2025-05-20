@@ -71,7 +71,7 @@ const getDonationNotReceived = (
           confirmations += 1;
           valueConfirmations += item.donation_value;
           fillDonationConfirmation(item);
-        } else if (operatorType === "Operador" && item.operator_code_id) {
+        } else if (operatorType === "Operador" && item.operator_code_id === operatorID) {
           confirmations += 1;
           valueConfirmations += item.donation_value;
           fillDonationConfirmation(item);

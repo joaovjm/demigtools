@@ -11,7 +11,7 @@ const ModalDonationInOpen = ({ donationOpen, onClose }) => {
           </div>
           <div className="modal-confirmations-body">
             <label>Name: {donationOpen.donor_name}</label>
-            <label>Endereço: {donationOpen.address}</label>
+            <label>Endereço: {donationOpen.donor_address}</label>
             <label>Tel 1: {donationOpen.donor_tel_1}</label>
             <label>
               Tel 2: {donationOpen.donor_tel_2 ? donationOpen.donor_tel_2 : "*****-****"}
