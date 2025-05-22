@@ -94,7 +94,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     donations();
-  }, [active, modalOpen, status]);
+  }, [active, modalOpen, status, operatorData]);
 
   const handleClickCard = (e) => {
     setActive(e.currentTarget.id);

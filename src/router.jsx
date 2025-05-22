@@ -28,6 +28,7 @@ import Leads from "./pages/Leads";
 import Home from "./pages/Home";
 import Request from "./pages/Request";
 import DashboardAdmin from "./pages/DashboardAdmin";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const Approuter = () => {
   return (
@@ -37,14 +38,17 @@ const Approuter = () => {
         <Route element={<App />}>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
-          <Route
-            path="/dashboard"
-            element={
-              <Wrapper>
-                <Dashboard />
-              </Wrapper>
-            }
-          />
+          <Route element={<ProtectedRoute requiredRole="Operador" />}>
+            <Route
+              path="/dashboard"
+              element={
+                <Wrapper>
+                  <Dashboard />
+                </Wrapper>
+              }
+            />
+          </Route>
+
           <Route
             path="/searchdonor"
             element={<Wrapper>{<SearchDonor />}</Wrapper>}
@@ -201,14 +205,16 @@ const Approuter = () => {
               </Wrapper>
             }
           />
-          <Route
-            path="/dashboardAdmin"
-            element={
-              <Wrapper>
-                <DashboardAdmin />
-              </Wrapper>
-            }
-          />
+          <Route element={<ProtectedRoute requiredRole="Admin" />}>
+            <Route
+              path="/dashboardAdmin"
+              element={
+                <Wrapper>
+                  <DashboardAdmin />
+                </Wrapper>
+              }
+            />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

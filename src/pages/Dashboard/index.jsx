@@ -42,6 +42,7 @@ const Dashboard = () => {
   const [status, setStatus] = useState();
 
   const donations = async () => {
+    
     try {
       await getDonationNotReceived(
         setConfirmations,
@@ -50,8 +51,8 @@ const Dashboard = () => {
         setValueOpenDonations,
         setDonationConfirmation,
         setFullNotReceivedDonations,
-        operatorData.operator_code_id,
-        operatorData.operator_type
+        caracterOperator.operator_code_id,
+        caracterOperator.operator_type
       );
       await getDonationPerMonthReceived(
         monthref,
@@ -89,7 +90,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     donations();
-  }, [active, modalOpen, status]);
+  }, [active, modalOpen, status, operatorData]);
 
   const handleClickCard = (e) => {
     setActive(e.currentTarget.id);
@@ -99,6 +100,7 @@ const Dashboard = () => {
     <main className="mainDashboard">
       <>
         <section className="sectionHeader">
+          
           <div
             id="inScheduled"
             className={`divCard ${active === "inScheduled" ? "active" : ""}`}

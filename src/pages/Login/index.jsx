@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./login.css";
 import { FaEye, FaEyeSlash, FaRegUser } from "react-icons/fa";
 import supabase from "../../helper/superBaseClient";
@@ -6,19 +6,23 @@ import { Navigate, useNavigate } from "react-router";
 import Loader from "../../components/Loader";
 import OperatorSessionLogin from "../../auth/OperatorSessionLogin";
 import { ToastContainer } from "react-toastify";
+import { UserContext } from "../../context/UserContext";
 
 const Login = () => {
+  const caracterOperator = JSON.parse(localStorage.getItem("operatorData"));
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isSession, setIsSession] = useState(null);
   const [loading, setLoading] = useState(false);
-  
+  const { operatorData, setOperatorData } = useContext(UserContext);
+
   useEffect(() => {
-  
     const getSession = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
         setIsSession(session);
       } catch (err) {
         console.error("Login page - error checking session:", err);
@@ -26,12 +30,11 @@ const Login = () => {
     };
 
     getSession();
-    
 
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
       setIsSession(session);
     });
-    
+
     return () => {
       data?.subscription?.unsubscribe();
     };
@@ -48,14 +51,13 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await OperatorSessionLogin(
-        username,
-        password
-      );
+      const response = await OperatorSessionLogin(username, password);
 
       if (response) {
         setIsSession(response.session);
+
         navigate("/dashboard");
+
         return null;
       }
     } catch (err) {
@@ -70,7 +72,16 @@ const Login = () => {
   return (
     <>
       {isSession ? (
-        <Navigate to="/dashboard" />
+        caracterOperator ? (
+          caracterOperator.operator_type === "Admin" ? (
+            <Navigate to="/dashboardAdmin"/>
+          ) : (
+            <Navigate to="/dashboard" />
+          )
+        ) : (
+          <Loader/>
+        )
+        
       ) : (
         <main className="page_container">
           <div className="login_container">
@@ -128,7 +139,6 @@ const Login = () => {
                 </button>
               </div>
             </form>
-            <ToastContainer closeOnClick="true" pauseOnFocusLoss="false" />
           </div>
         </main>
       )}
