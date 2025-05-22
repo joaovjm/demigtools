@@ -7,7 +7,7 @@ import { DataNow } from "../../components/DataTime";
 import TableConfirmation from "../../components/TableConfirmation";
 import TableInOpen from "../../components/TableInOpen";
 import ModalConfirmations from "../../components/ModalConfirmations";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import TableScheduled from "../../components/TableScheduled";
 import getScheduledLeads from "../../helper/getScheduledLeads";
 import ModalScheduled from "../../components/ModalScheduled";
@@ -35,6 +35,7 @@ const Dashboard = () => {
   const [donationConfirmation, setDonationConfirmation] = useState([]);
   const [fullNotReceivedDonations, setFullNotReceivedDonations] = useState([]);
   const [scheduled, setScheduled] = useState([]);
+  const [donationFilterPerId, setDonationFilterPerId] = useState("");
 
   const [modalOpen, setModalOpen] = useState(false);
 

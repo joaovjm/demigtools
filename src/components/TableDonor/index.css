@@ -6,67 +6,9 @@
 .table-container {
     display: flex;
     box-sizing: border-box;
-    /* -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
-    scrollbar-width: thin; */
     position: relative;
 }
 
-
-
-/* Efeito de sombra nas bordas para indicar rolagem
-.table-container.has-scroll {
-    background: 
-        linear-gradient(to right, #383838 0%, rgba(56, 56, 56, 0) 5%),
-        linear-gradient(to left, #383838 0%, rgba(56, 56, 56, 0) 5%);
-    background-position: left center, right center;
-    background-repeat: no-repeat;
-    background-size: 20px 100%, 20px 100%;
-    background-attachment: local, local;
-} */
-
-/* Estilizando a barra de rolagem
-.table-container::-webkit-scrollbar {
-    height: 10px;
-}
-
-.table-container::-webkit-scrollbar-track {
-    background: #1f1d1d;
-    border-radius: 4px;
-}
-
-.table-container::-webkit-scrollbar-thumb {
-    background: #585858;
-    border-radius: 4px;
-}
-
-.table-container::-webkit-scrollbar-thumb:hover {
-    background: #727272;
-} */
-
-/* Dica de rolagem
-.scroll-hint {
-    position: absolute;
-    bottom: -25px;
-    left: 0;
-    right: 0;
-    text-align: center;
-    color: #FAF5E9;
-    font-size: 12px;
-    padding: 5px;
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 4px;
-    margin: 0 10px;
-    animation: pulse 2s infinite;
-    pointer-events: none;
-    z-index: 2;
-} */
-
-/* @keyframes pulse {
-    0% { opacity: 0.7; }
-    50% { opacity: 1; }
-    100% { opacity: 0.7; }
-} */
 
 .tabledonor {
     background-color: #000000;
@@ -76,9 +18,6 @@
     font-size: 13px;
 }
 
-.tableHead{
-    font-size: 11px;
-}
 
 .tableBody{
     font-size: 11px;

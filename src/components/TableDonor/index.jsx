@@ -1,11 +1,15 @@
-import { useEffect, useState, useRef, Fragment } from "react";
+import { useEffect, useState, useRef, Fragment, useContext } from "react";
 import "./index.css";
 import { getDonation } from "../../helper/getDonation";
+import { toast } from "react-toastify";
+import { UserContext } from "../../context/UserContext";
 
-const TableDonor = ({ idDonor, modalShow }) => {
+const TableDonor = ({ idDonor, modalShow, setModalEdit, setDonation, modalEdit }) => {
+  const caracterOperator = JSON.parse(localStorage.getItem("operatorData"));
   const [dados, setDados] = useState([]);
   const [showScrollHint, setShowScrollHint] = useState(true);
   const [canScroll, setCanScroll] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false)
   const tableContainerRef = useRef(null);
 
   // Carrega os dados da doação
@@ -19,57 +23,28 @@ const TableDonor = ({ idDonor, modalShow }) => {
           console.log(error.message);
         });
     }
-  }, [idDonor, modalShow]);
+  }, [idDonor, modalShow, modalEdit]);
 
-  // // Verifica se a tabela precisa de rolagem horizontal
-  // const checkScrollNeeded = () => {
-  //   const containerEl = tableContainerRef.current;
-  //   if (containerEl) {
-  //     // Se a largura do conteúdo for maior que a largura visível
-  //     const hasScroll = containerEl.scrollWidth > containerEl.clientWidth;
-  //     setCanScroll(hasScroll);
-  //     if (!hasScroll) {
-  //       setShowScrollHint(false);
-  //     }
-  //   }
-  // };
 
-  // // Monitora o scroll para esconder a dica após rolar
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     if (tableContainerRef.current && showScrollHint) {
-  //       setShowScrollHint(false);
-  //     }
-  //   };
-
-  //   const containerEl = tableContainerRef.current;
-  //   if (containerEl) {
-  //     containerEl.addEventListener("scroll", handleScroll);
-  //     window.addEventListener("resize", checkScrollNeeded);
-      
-  //     // Verifica inicialmente se há necessidade de rolagem
-  //     checkScrollNeeded();
-  //   }
-
-  //   return () => {
-  //     if (containerEl) {
-  //       containerEl.removeEventListener("scroll", handleScroll);
-  //     }
-  //     window.removeEventListener("resize", checkScrollNeeded);
-  //   };
-  // }, [showScrollHint]);
-  
-  // Força a rolagem para o início quando os dados mudam
-  useEffect(() => {
-    if (tableContainerRef.current) {
-      tableContainerRef.current.scrollLeft = 0;
+  const handleEditDonation = (item) => {
+    if (caracterOperator.operator_code_id !== item.operator_code_id){
+      if(caracterOperator.operator_type !== "Admin"){
+        toast.warning("Não pode editar movimento de outro operator!")
+        return;
+      } 
     }
-  }, [dados]);
+    if (item.donation_print === "Sim" || item.donation_received === "Sim"){
+      toast.warning("Impossível editar. Essa ficha já foi impressa ou já foi recebida!")
+      return;
+    }
+    setModalEdit(true)
+    setDonation(item)
+  };
 
   return (
     <div className="table-wrapper">
-      <div 
-        className= "table-container"
+      <div
+        className="table-container"
         // ref={tableContainerRef}
       >
         <table className="tabledonor">
@@ -93,44 +68,34 @@ const TableDonor = ({ idDonor, modalShow }) => {
             {dados && dados.length > 0 ? (
               dados.map((item) => (
                 <Fragment key={item.receipt_donation_id}>
-                  <tr className="trBody">
-                    <td className="tableBody">
-                      {item.receipt_donation_id}
-                    </td>
+                  <tr
+                    onClick={() => handleEditDonation(item)}
+                    className="trBody"
+                  >
+                    <td className="tableBody">{item.receipt_donation_id}</td>
                     <td className="tableBody">
                       {item.operator_code_id} - {item.operator?.operator_name}
                     </td>
-                    <td className="tableBody">
-                      {item.donation_value}
-                    </td>
-                    <td className="tableBody">
-                      {item.donation_extra}
-                    </td>
-                    <td className="tableBody">
-                      {item.donation_day_contact}
-                    </td>
+                    <td className="tableBody">{item.donation_value}</td>
+                    <td className="tableBody">{item.donation_extra}</td>
+                    <td className="tableBody">{item.donation_day_contact}</td>
                     <td className="tableBody">
                       {item.donation_day_to_receive}
                     </td>
+                    <td className="tableBody">{item.donation_day_received}</td>
+                    <td className="tableBody">{item.donation_print}</td>
+                    <td className="tableBody">{item.donation_received}</td>
+                    <td className="tableBody">{item.donation_monthref}</td>
                     <td className="tableBody">
-                      {item.donation_day_received}
-                    </td>
-                    <td className="tableBody">
-                      {item.donation_print}
-                    </td>
-                    <td className="tableBody">
-                      {item.donation_received}
-                    </td>
-                    <td className="tableBody">
-                      {item.donation_monthref}
-                    </td>
-                    <td className="tableBody">
-                      {item.collector_code_id} - {item.collector?.collector_name || ""}
+                      {item.collector_code_id} -{" "}
+                      {item.collector?.collector_name || ""}
                     </td>
                   </tr>
                   <tr className="trFoot">
                     <td colSpan="11" className="obs">
-                      {item.donation_description ? item.donation_description : "..."}
+                      {item.donation_description
+                        ? item.donation_description
+                        : "..."}
                     </td>
                   </tr>
                 </Fragment>
@@ -145,11 +110,7 @@ const TableDonor = ({ idDonor, modalShow }) => {
           </tbody>
         </table>
       </div>
-      {showScrollHint && canScroll && (
-        <div className="scroll-hint">
-          ← Deslize para ver mais informações →
-        </div>
-      )}
+      
     </div>
   );
 };

@@ -55,8 +55,8 @@ const Dashboard = () => {
         setValueOpenDonations,
         setDonationConfirmation,
         setFullNotReceivedDonations,
-        operatorData.operator_code_id,
-        operatorData.operator_type
+        caracterOperator.operator_code_id,
+        caracterOperator.operator_type
       );
       await getDonationPerMonthReceived(
         monthref,

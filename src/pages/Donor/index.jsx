@@ -18,9 +18,9 @@ import FormTextArea from "../../components/forms/FormTextArea";
 import FormDonorInput from "../../components/forms/FormDonorInput";
 import FormListSelect from "../../components/forms/FormListSelect";
 import { UserContext } from "../../context/UserContext";
+import ModalEditDonation from "../../components/ModalEditDonation";
 
 const Donor = () => {
-
   const { id } = useParams();
   const { operatorData, setOperatorData } = useContext(UserContext);
   const [donorData, SetDonorData] = useState({
@@ -39,6 +39,7 @@ const Donor = () => {
     observacao: "",
     referencia: "",
   });
+  const [donation, setDonation] = useState([])
 
   const [uiState, setUiState] = useState({
     edit: true,
@@ -46,11 +47,11 @@ const Donor = () => {
     showBtn: true,
     modalShow: false,
     loading: false,
+    modalEdit: false,
   });
 
   const params = {};
   if (id) params.id = id;
-
 
   useEffect(() => {
     const loadDonorData = async () => {
@@ -152,13 +153,15 @@ const Donor = () => {
             {ICONS.BACK} {BUTTON_TEXTS.BACK}
           </button>
           <div className="btns-donor">
-            <button
-              onClick={handleEditDonor}
-              className="btn-edit"
-              disabled={uiState.loading}
-            >
-              {uiState.loading ? <Loader /> : uiState.btnEdit}
-            </button>
+            {operatorData.operator_type === "Admin" && (
+              <button
+                onClick={handleEditDonor}
+                className="btn-edit"
+                disabled={uiState.loading}
+              >
+                {uiState.loading ? <Loader /> : uiState.btnEdit}
+              </button>
+            )}
 
             {uiState.showBtn && (
               <button
@@ -198,7 +201,6 @@ const Donor = () => {
             value={donorData.cpf}
             onChange={(e) => handleInputChange("cpf", e.target.value)}
             readOnly={uiState.edit}
-
           />
         )}
 
@@ -288,7 +290,15 @@ const Donor = () => {
         />
       </form>
       {uiState.showBtn && (
-        <TableDonor idDonor={id} modalShow={uiState.modalShow} />
+        <TableDonor
+          idDonor={id}
+          modalShow={uiState.modalShow}
+          setModalEdit={(showEdit) =>
+            setUiState((prev) => ({ ...prev, modalEdit: true }))
+          }
+          setDonation={setDonation}
+          modalEdit={uiState.modalEdit}
+        />
       )}
 
       {uiState.modalShow && (
@@ -300,6 +310,14 @@ const Donor = () => {
           mensalidade={donorData.mensalidade}
           tipo={donorData.tipo}
           donor_id={id}
+        />
+      )}
+      {uiState.modalEdit && (
+        <ModalEditDonation
+          setModalEdit={(showEdit) =>
+            setUiState((prev) => ({ ...prev, modalEdit: showEdit }))
+          }
+          donation={donation}
         />
       )}
     </main>
