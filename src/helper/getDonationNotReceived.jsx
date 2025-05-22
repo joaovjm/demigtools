@@ -45,6 +45,7 @@ const getDonationNotReceived = (
   const fillFullNotReceivedDonations = (item) => {
     tempFullNotReceivedDonations.push({
       receipt_donation_id: item.receipt_donation_id,
+      donor_id: item.donor_id,
       donor_name: item.donor.donor_name,
       donation_value: item.donation_value,
       collector_code_id: item.collector_code_id,

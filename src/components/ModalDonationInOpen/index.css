@@ -1,0 +1,19 @@
+.modal-confirmation-body{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+.btn-open-donation{
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    background-color: #284487;
+    color: #faf5e9;
+    cursor: pointer;
+
+    &:hover{
+        opacity: 0.8;
+    }
+}
