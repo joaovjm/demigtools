@@ -113,7 +113,6 @@ const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) =>
                   <label className="label">Observação</label>
                   <input
                     value={observation}
-                    style={{ width: "370px" }}
                     onChange={(e) => setObservation(e.target.value)}
                   />
                 </div>

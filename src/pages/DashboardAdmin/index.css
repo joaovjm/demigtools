@@ -166,7 +166,7 @@ p {
   justify-content: space-around;
 }
 
-@media (min-width: 379px) and (max-width: 599px) {
+@media (min-width: 379px) and (max-width:599px) {
   .sectionHeader {
     display: flex;
     justify-content: center;
@@ -222,9 +222,50 @@ p {
   }
 }
 
-@media (min-width: 600px) {
-  .mainDashboard {
+@media (min-width: 600px) and (max-width:768px){
+  .sectionHeader {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    gap: 6px;
   }
+
+  .divCard {
+    width: 170px;
+    height: 80px;
+    padding: 10px;
+  }
+
+  .section-table-and-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .table-body-confirmation-text{
+    padding: 12px 22px;
+    font-size: 12px;
+  }
+
+  .section-operators {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    width: 100%;
+    height: 100px;
+  }
+
+  .section-operators-card {
+    min-width: 130px;
+    max-width: 130px;
+  }
+
+  .section-table {
+    width: 100%;
+    height: 420px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1199px) {
   .sectionHeader {
     display: flex;
     justify-content: center;

@@ -1,120 +1,126 @@
-.modal-confirmations{
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+.modal-confirmations {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
-.modal-confirmations-div{
-    width: 768px;
-    border-radius: 6px;
-    background-color: #1F1D1D;
+.modal-confirmations-div {
+  width: 768px;
+  border-radius: 6px;
+  background-color: #1f1d1d;
 }
 
-.modal-confirmations-title{
-    display: flex;
-    justify-content: space-between;
-    margin: 12px;
-    padding: 12px;
-    border: 3px double #383838;
-    border-radius: 6px;
+.modal-confirmations-title {
+  display: flex;
+  justify-content: space-between;
+  margin: 12px;
+  padding: 12px;
+  border: 3px double #383838;
+  border-radius: 6px;
 }
 
-.btn-close{
-    width: 90px;
-    border : none;
-    border-radius: 6px;
-    background-color: #385BAD;
-    color: #FAF5E9;
-    cursor: pointer;
-    &:hover{
-        background-color: #284487;
-    }
+.btn-close {
+  width: 90px;
+  border: none;
+  border-radius: 6px;
+  background-color: #385bad;
+  color: #faf5e9;
+  cursor: pointer;
+  &:hover {
+    background-color: #284487;
+  }
 }
 
-.modal-confirmations-body{
-    display: grid;
-    grid-template-columns: auto auto;
-    margin: 12px;
-    border: 3px double #383838;
-    border-radius: 6px;
-    padding: 12px;
-    gap: 4px;
+.modal-confirmations-body {
+  display: grid;
+  grid-template-columns: auto auto;
+  margin: 12px;
+  border: 3px double #383838;
+  border-radius: 6px;
+  padding: 12px;
+  gap: 4px;
 
-    & Label{
-        font-size: 16px;
-    }
+  & Label {
+    font-size: 16px;
+  }
 
-    & h4{
-        grid-column: span 2;
-        margin-top: 12px;
-    }
+  & h4 {
+    grid-column: span 2;
+    margin-top: 12px;
+  }
 }
 
-.modal-confirmations-footer{
-    display: flex;
-    justify-content: space-evenly;
-    margin: 12px;
-    padding: 12px;
+.modal-confirmations-footer {
+  display: flex;
+  justify-content: space-evenly;
+  margin: 12px;
+  padding: 12px;
 }
 
-.btn-confirm{
-    width: 180px;
-    border-radius: 6px;
-    border: none;
-    background-color: #385BAD;
-    color: #FAF5E9;
-    cursor: pointer;
-    &:hover{
-        background-color: #284487;
-    }
+.btn-confirm {
+  width: 180px;
+  border-radius: 6px;
+  border: none;
+  background-color: #385bad;
+  color: #faf5e9;
+  cursor: pointer;
+  &:hover {
+    background-color: #284487;
+  }
 }
 
-.btn-delete{
-    width: 180px;
-    border-radius: 6px;
-    border: none;
-    background-color: #C70000;
-    color: #FAF5E9;
-    cursor: pointer;
-    &:hover{
-        background-color: #A60000;
-    }
+.btn-delete {
+  width: 180px;
+  border-radius: 6px;
+  border: none;
+  background-color: #c70000;
+  color: #faf5e9;
+  cursor: pointer;
+  &:hover {
+    background-color: #a60000;
+  }
 }
 
-.modal-confirmations-confirm{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 12px;
-    padding: 12px;
-    border: 3px double #383838;
-    border-radius: 6px;
-    gap: 32px;
+.modal-confirmations-confirm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 12px;
+  padding: 12px;
+  border: 3px double #383838;
+  border-radius: 6px;
+  gap: 32px;
 }
 
-.modal-confirmations-confirm-1{
-    display: flex;
-    align-items: center;
-    gap: 12px;
+.modal-confirmations-confirm-1 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.modal-confirmations-confirm-2{
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
+.modal-confirmations-confirm-2 {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+  & .btn-confirm {
+    height: 36px;
+  }
+}
+
+@media (min-width: 380px) and (max-width: 599px) {
+  .modal-confirmations-div {
+    max-width: 500px;
+  }
+
+  .input-field{
     width: 100%;
-    & .btn-confirm{
-        height: 36px;
-    }
-
-    & .btn-back{
-
-    }
+  }
 }
