@@ -27,6 +27,7 @@ import AuthMonitor from "./components/AuthMonitor";
 import Leads from "./pages/Leads";
 import Home from "./pages/Home";
 import Request from "./pages/Request";
+import DashboardAdmin from "./pages/DashboardAdmin";
 
 const Approuter = () => {
   return (
@@ -197,6 +198,14 @@ const Approuter = () => {
             element={
               <Wrapper>
                 <Request />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="/dashboardAdmin"
+            element={
+              <Wrapper>
+                <DashboardAdmin />
               </Wrapper>
             }
           />
