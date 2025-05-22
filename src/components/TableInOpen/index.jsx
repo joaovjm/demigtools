@@ -1,10 +1,18 @@
 import React from "react";
 
-const TableInOpen = ({ fullNotReceivedDonations, setDonationOpen, setModalOpen }) => {
+const TableInOpen = ({
+  fullNotReceivedDonations,
+  setDonationOpen,
+  setModalOpen,
+  donationFilterPerId
+}) => {
   const handleClick = (donation) => {
-    setDonationOpen(donation)
-    setModalOpen(true)
+    setDonationOpen(donation);
+    setModalOpen(true);
   };
+
+  const filterFullNotReceiverDonations = fullNotReceivedDonations.filter(
+    (filter) => filter.operator_code_id === donationFilterPerId  );
 
   return (
     <>
@@ -19,7 +27,8 @@ const TableInOpen = ({ fullNotReceivedDonations, setDonationOpen, setModalOpen }
             </tr>
           </thead>
           <tbody className="table-body-confirmation">
-            {fullNotReceivedDonations.map((donation) => (
+            {donationFilterPerId ? (
+              filterFullNotReceiverDonations.map((donation) => (
               <tr
                 className="table-body-confirmation-tr"
                 key={donation.receipt_donation_id}
@@ -41,7 +50,32 @@ const TableInOpen = ({ fullNotReceivedDonations, setDonationOpen, setModalOpen }
                   - {donation.collector_name ? donation.collector_name : "-"}
                 </td>
               </tr>
-            ))}
+            ))) : (
+              fullNotReceivedDonations.map((donation) => (
+              <tr
+                className="table-body-confirmation-tr"
+                key={donation.receipt_donation_id}
+                onClick={() => handleClick(donation)}
+              >
+                <td className="table-body-confirmation-text">
+                  {donation.donation_day_to_receive}
+                </td>
+                <td className="table-body-confirmation-text">
+                  {donation.donor_name}
+                </td>
+                <td className="table-body-confirmation-text">
+                  {donation.donation_value}
+                </td>
+                <td className="table-body-confirmation-text">
+                  {donation.collector_code_id
+                    ? donation.collector_code_id
+                    : "-"}{" "}
+                  - {donation.collector_name ? donation.collector_name : "-"}
+                </td>
+              </tr>
+            )))}
+            
+            
           </tbody>
         </table>
       ) : (

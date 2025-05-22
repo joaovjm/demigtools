@@ -1,7 +1,6 @@
 import React from "react";
 
-const TableScheduled = ({ scheduled, setModalOpen, setScheduledOpen, setNowScheduled }) => {
-
+const TableScheduled = ({ scheduled, setModalOpen, setScheduledOpen, setNowScheduled, donationFilterPerId }) => {
   const handleClick = (e) => {
 
     setScheduledOpen({
@@ -27,42 +26,82 @@ const TableScheduled = ({ scheduled, setModalOpen, setScheduledOpen, setNowSched
     setModalOpen(true);
   };
 
+  const filterScheduled = scheduled.filter(
+    (filter) => filter.operator_code_id === donationFilterPerId  );
+
   return (
     <>
-      {scheduled.length !== 0 ? (
-        <table className="table-confirmation">
-          <thead className="table-head-confirmation">
-            <tr>
-              <th className="table-head-confirmation-text">Nome</th>
-              <th className="table-head-confirmation-text">Observação</th>
-              <th className="table-head-confirmation-text">
-                Agendado para
-              </th>
-            </tr>
-          </thead>
-          <tbody className="table-body-confirmation">
-            {scheduled?.map((item) => (
-              <tr
-                key={item.leads_id}
-                className="table-body-confirmation-tr"
-                onClick={() => handleClick(item)}
-              >
-                <td className="table-body-confirmation-text">
-                  {item.leads_name}
-                </td>
-                <td className="table-body-confirmation-text">
-                  {item.leads_observation}
-                </td>
-                <td className="table-body-confirmation-text">
-                  {item.leads_scheduling_date}
-                </td>
+      {donationFilterPerId ? (
+        filterScheduled?.length !== 0 ? (
+          <table className="table-confirmation">
+            <thead className="table-head-confirmation">
+              <tr>
+                <th className="table-head-confirmation-text">Nome</th>
+                <th className="table-head-confirmation-text">Observação</th>
+                <th className="table-head-confirmation-text">
+                  Agendado para
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="table-body-confirmation">
+              {filterScheduled?.map((item) => (
+                <tr
+                  key={item.leads_id}
+                  className="table-body-confirmation-tr"
+                  onClick={() => handleClick(item)}
+                >
+                  <td className="table-body-confirmation-text">
+                    {item.leads_name}           
+                  </td>
+                  <td className="table-body-confirmation-text">
+                    {item.leads_observation}
+                  </td>
+                  <td className="table-body-confirmation-text">
+                    {item.leads_scheduling_date}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+        "Nenhuma ficha agendada"
+        )) : (
+          scheduled?.length !== 0 ? (
+          <table className="table-confirmation">
+            <thead className="table-head-confirmation">
+              <tr>
+                <th className="table-head-confirmation-text">Nome</th>
+                <th className="table-head-confirmation-text">Observação</th>
+                <th className="table-head-confirmation-text">
+                  Agendado para
+                </th>
+              </tr>
+            </thead>
+            <tbody className="table-body-confirmation">
+              {scheduled?.map((item) => (
+                <tr
+                  key={item.leads_id}
+                  className="table-body-confirmation-tr"
+                  onClick={() => handleClick(item)}
+                >
+                  <td className="table-body-confirmation-text">
+                    {item.leads_name}
+                  </td>
+                  
+                  <td className="table-body-confirmation-text">
+                    {item.leads_observation}
+                  </td>
+                  <td className="table-body-confirmation-text">
+                    {item.leads_scheduling_date}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
       ) : (
         "Nenhuma ficha agendada"
-      )}
+      ))}
+        
     </>
   );
 };

@@ -40,7 +40,7 @@ const TableConfirmation = ({
         <table className="table-confirmation">
           <thead className="table-head-confirmation">
             <tr>
-              <th className="table-head-confirmation-text">Recibo</th>
+              <th className="table-head-confirmation-text">Data</th>
               <th className="table-head-confirmation-text">Nome</th>
               <th className="table-head-confirmation-text">Valor</th>
               <th className="table-head-confirmation-text">Motivo</th>
@@ -54,7 +54,7 @@ const TableConfirmation = ({
                 onClick={() => handleClick(donation)}
               >
                 <td className="table-body-confirmation-text">
-                  {donation.receipt_donation_id}
+                  {donation.donation_day_to_receive}
                 </td>
                 <td className="table-body-confirmation-text">
                   {donation.donor_name}
