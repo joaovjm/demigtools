@@ -3,7 +3,7 @@ import { UserContext } from "../context/UserContext"
 import { Navigate, Outlet } from "react-router";
 
 const ProtectedRoute = ({requiredRole}) => {
-    const { operatorData } = useContext(UserContext);
+    // const { operatorData } = useContext(UserContext);
     const caracterOperator = JSON.parse(localStorage.getItem("operatorData"))
     if(!caracterOperator){
         return <div>Carregando...</div>;
