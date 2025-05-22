@@ -13,6 +13,7 @@ import getScheduledLeads from "../../helper/getScheduledLeads";
 import ModalScheduled from "../../components/ModalScheduled";
 import { UserContext } from "../../context/UserContext";
 import ModalDonationInOpen from "../../components/ModalDonationInOpen";
+import { useLocation } from "react-router";
 
 const Dashboard = () => {
   const caracterOperator = JSON.parse(localStorage.getItem("operatorData"));
@@ -40,6 +41,8 @@ const Dashboard = () => {
   const monthref = DataNow("mesref");
 
   const [status, setStatus] = useState();
+
+  const location = useLocation();
 
   const donations = async () => {
     
@@ -91,6 +94,12 @@ const Dashboard = () => {
   useEffect(() => {
     donations();
   }, [active, modalOpen, status, operatorData]);
+
+  useEffect(() => {
+    setActive(false);
+    setDonationFilterPerId("");
+    setModalOpen(false);
+  }, [location.pathname])
 
   const handleClickCard = (e) => {
     setActive(e.currentTarget.id);

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./navbar.css";
 import Loader from "../Loader";
 import { MdOutlineLogin } from "react-icons/md";
@@ -9,7 +9,6 @@ import { FaAngleDown } from "react-icons/fa";
 
 import { AdminMenu, Navitens, OperadorMenu, RelatórioMenu } from "../Navitens";
 import supabase from "../../helper/superBaseClient";
-import { UserContext } from "../../context/UserContext";
 
 const Navbar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -23,7 +22,9 @@ const Navbar = () => {
   const mobileMenuRef = useRef(null);
 
   const navigate = useNavigate();
-  const [ operatorData, setOperatorData ] = useState();
+  const location = useLocation();
+
+  const [operatorData, setOperatorData] = useState();
 
   const fetchOperatorData = async (email) => {
     const username = email.split("@")[0];
@@ -58,7 +59,6 @@ const Navbar = () => {
     }
   };
 
-  
   useEffect(() => {
     const checkSession = async () => {
       const stored = localStorage.getItem("operatorData");
@@ -106,7 +106,6 @@ const Navbar = () => {
     };
   }, [setOperatorData]);
 
-  
   useEffect(() => {
     if (isAuthenticated && !operatorData) {
       const timer = setTimeout(async () => {
@@ -127,7 +126,6 @@ const Navbar = () => {
     }
   }, [isAuthenticated, operatorData, setOperatorData]);
 
-  
   const onClickUserIcon = () => setIsOpen(!isOpen);
   const onClickOutside = (e) => {
     if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -144,7 +142,6 @@ const Navbar = () => {
     }
   };
 
-  
   useEffect(() => {
     if (isOpen) {
       document.addEventListener("mousedown", onClickOutside);
@@ -159,7 +156,6 @@ const Navbar = () => {
     };
   }, [isOpen, mobileMenuOpen]);
 
-  
   const signOut = async () => {
     if (window.confirm("Tem certeza que deseja sair?")) {
       setLoading(true);
@@ -175,6 +171,14 @@ const Navbar = () => {
     }
   };
 
+  const handleLogoClick = (e) => {
+    if (location.pathname === e) {
+      navigate(location.pathname);
+    } else {
+      navigate(e);
+    }
+  };
+
   return (
     <>
       <header className="header-nav">
@@ -182,18 +186,20 @@ const Navbar = () => {
           <div className="nav-logo">
             {isAuthenticated ? (
               operatorData ? (
-                <Link
-                  to={
-                    operatorData.operator_type === "Admin"
-                      ? "/dashboardAdmin"
-                      : "/dashboard"
+                <div
+                  onClick={() =>
+                    handleLogoClick(
+                      operatorData.operator_type === "Admin"
+                        ? "/dashboardAdmin"
+                        : "/dashboard"
+                    )
                   }
                   className="logo"
                 >
                   <span className="span-logo-1">DEMI</span>
                   <span className="span-logo-2">GT</span>
                   <span className="span-logo-3">ools</span>
-                </Link>
+                </div>
               ) : (
                 <Loader />
               )

@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router";
 //import Navbar from "./components/Navbar";
 import App from "./App";
 import Login from "./pages/Login";
@@ -30,193 +30,200 @@ import Request from "./pages/Request";
 import DashboardAdmin from "./pages/DashboardAdmin";
 import ProtectedRoute from "./components/ProtectedRoute";
 
+const AppRoutesContent = () => {
+  const location = useLocation();
+
+  return (
+    <Routes location={location} key={location.pathname}>
+      <Route element={<App />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route element={<ProtectedRoute requiredRole="Operador" />}>
+          <Route
+            path="/dashboard"
+            element={
+              <Wrapper>
+                <Dashboard />
+              </Wrapper>
+            }
+          />
+        </Route>
+
+        <Route
+          path="/searchdonor"
+          element={<Wrapper>{<SearchDonor />}</Wrapper>}
+        />
+        <Route
+          path="/donor/:id"
+          element={
+            <Wrapper>
+              <Donor />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/newdonor"
+          element={
+            <Wrapper>
+              <NewDonor />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <Wrapper>
+              <Page404 />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/receiverdonations"
+          element={
+            <Wrapper>
+              <ReceiverDonations />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/changecollector"
+          element={
+            <Wrapper>
+              <ChangeCollector />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/checkprint"
+          element={
+            <Wrapper>
+              <CheckPrint />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/areastoprint"
+          element={
+            <Wrapper>
+              <AreasToPrint />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/collectorsmoviment"
+          element={
+            <Wrapper>
+              <CollectorsMoviment />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/countdonations"
+          element={
+            <Wrapper>
+              <CountDonations />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/donationsreceived"
+          element={
+            <Wrapper>
+              <DonationsReceived />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/operators"
+          element={
+            <Wrapper>
+              <Operators />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/operatorwork"
+          element={
+            <Wrapper>
+              <OperatorWork />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/workhistory"
+          element={
+            <Wrapper>
+              <WorkHistory />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/worklist"
+          element={
+            <Wrapper>
+              <WorkList />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/usersmanager"
+          element={
+            <Wrapper>
+              <UsersManager />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/createmensaldonation"
+          element={
+            <Wrapper>
+              <CreateMensalDonation />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/loadleads"
+          element={
+            <Wrapper>
+              <LoadLeads />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/leads"
+          element={
+            <Wrapper>
+              <Leads />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/request"
+          element={
+            <Wrapper>
+              <Request />
+            </Wrapper>
+          }
+        />
+        <Route element={<ProtectedRoute requiredRole="Admin" />}>
+          <Route
+            path="/dashboardAdmin"
+            element={
+              <Wrapper>
+                <DashboardAdmin />
+              </Wrapper>
+            }
+          />
+        </Route>
+      </Route>
+    </Routes>
+  );
+};
+
 const Approuter = () => {
   return (
     <BrowserRouter>
-      <AuthMonitor />
-      <Routes>
-        <Route element={<App />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route element={<ProtectedRoute requiredRole="Operador" />}>
-            <Route
-              path="/dashboard"
-              element={
-                <Wrapper>
-                  <Dashboard />
-                </Wrapper>
-              }
-            />
-          </Route>
-
-          <Route
-            path="/searchdonor"
-            element={<Wrapper>{<SearchDonor />}</Wrapper>}
-          />
-          <Route
-            path="/donor/:id"
-            element={
-              <Wrapper>
-                <Donor />
-              </Wrapper>
-            }
-          />
-          <Route
-            path="/newdonor"
-            element={
-              <Wrapper>
-                <NewDonor />
-              </Wrapper>
-            }
-          />
-          <Route
-            path="*"
-            element={
-              <Wrapper>
-                <Page404 />
-              </Wrapper>
-            }
-          />
-          <Route
-            path="/receiverdonations"
-            element={
-              <Wrapper>
-                <ReceiverDonations />
-              </Wrapper>
-            }
-          />
-          <Route
-            path="/changecollector"
-            element={
-              <Wrapper>
-                <ChangeCollector />
-              </Wrapper>
-            }
-          />
-          <Route
-            path="/checkprint"
-            element={
-              <Wrapper>
-                <CheckPrint />
-              </Wrapper>
-            }
-          />
-          <Route
-            path="/areastoprint"
-            element={
-              <Wrapper>
-                <AreasToPrint />
-              </Wrapper>
-            }
-          />
-          <Route
-            path="/collectorsmoviment"
-            element={
-              <Wrapper>
-                <CollectorsMoviment />
-              </Wrapper>
-            }
-          />
-          <Route
-            path="/countdonations"
-            element={
-              <Wrapper>
-                <CountDonations />
-              </Wrapper>
-            }
-          />
-          <Route
-            path="/donationsreceived"
-            element={
-              <Wrapper>
-                <DonationsReceived />
-              </Wrapper>
-            }
-          />
-          <Route
-            path="/operators"
-            element={
-              <Wrapper>
-                <Operators />
-              </Wrapper>
-            }
-          />
-          <Route
-            path="/operatorwork"
-            element={
-              <Wrapper>
-                <OperatorWork />
-              </Wrapper>
-            }
-          />
-          <Route
-            path="/workhistory"
-            element={
-              <Wrapper>
-                <WorkHistory />
-              </Wrapper>
-            }
-          />
-          <Route
-            path="/worklist"
-            element={
-              <Wrapper>
-                <WorkList />
-              </Wrapper>
-            }
-          />
-          <Route
-            path="/usersmanager"
-            element={
-              <Wrapper>
-                <UsersManager />
-              </Wrapper>
-            }
-          />
-          <Route
-            path="/createmensaldonation"
-            element={
-              <Wrapper>
-                <CreateMensalDonation />
-              </Wrapper>
-            }
-          />
-          <Route
-            path="/loadleads"
-            element={
-              <Wrapper>
-                <LoadLeads />
-              </Wrapper>
-            }
-          />
-          <Route
-            path="/leads"
-            element={
-              <Wrapper>
-                <Leads />
-              </Wrapper>
-            }
-          />
-          <Route
-            path="/request"
-            element={
-              <Wrapper>
-                <Request />
-              </Wrapper>
-            }
-          />
-          <Route element={<ProtectedRoute requiredRole="Admin" />}>
-            <Route
-              path="/dashboardAdmin"
-              element={
-                <Wrapper>
-                  <DashboardAdmin />
-                </Wrapper>
-              }
-            />
-          </Route>
-        </Route>
-      </Routes>
+      <AppRoutesContent />
     </BrowserRouter>
   );
 };
