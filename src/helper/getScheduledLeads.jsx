@@ -5,14 +5,17 @@ const getScheduledLeads = async (
   setScheduled,
   setScheduling
 ) => {
-  const { data, error } = await supabase
+   let query = supabase
     .from("leads")
-    .select("*")
-    .eq("operator_code_id", operator_code_id)
+    .select("*, operator_name: operator_code_id(operator_name)")
     .eq("leads_status", "agendado")
     .order("leads_scheduling_date", { ascending: true })
-    .limit(10);
 
+    if(operator_code_id){
+      query = query.eq("operator_code_id", operator_code_id);
+    }
+    
+  const { data, error } = await query;
   if (error) {
     console.error("Error fetching scheduled leads:", error);
     setScheduled([]);
