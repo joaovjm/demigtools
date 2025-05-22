@@ -1,0 +1,68 @@
+.modal-editDonation-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 1000;
+}
+
+.modal-editDonation {
+  position: relative;
+  z-index: 1;
+  background-color: #1f1d1d;
+  border-radius: 6px;
+  
+}
+
+.form-modal-editDonation{
+    width: 300px;
+    height: 350px;
+    border: 3px double #383838;
+    border-radius: 6px;
+    padding: 16px;
+    background-color: #1f1d1d;
+
+}
+
+.form-modal-editDonation-header{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn-exit-editDonation, .btn-confirm-editDonoation{
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: #385BAD;
+    color: #FAF5E9;
+
+    &:hover{
+        opacity: 0.8;
+    }
+}
+
+.form-modal-editDonation-body{
+    width: 100%;
+    height: 78%;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-modal-editDonation-footer{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 6px;
+}
+
+.btn-confirm-editDonoation{
+    width: 70%;
+}
