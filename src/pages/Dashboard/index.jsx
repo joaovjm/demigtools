@@ -14,6 +14,8 @@ import ModalScheduled from "../../components/ModalScheduled";
 import { UserContext } from "../../context/UserContext";
 import ModalDonationInOpen from "../../components/ModalDonationInOpen";
 import { useLocation } from "react-router";
+import supabase from "../../helper/superBaseClient";
+import MotivationalPhrases from "../../components/MotivationalPhrases";
 
 const Dashboard = () => {
   const caracterOperator = JSON.parse(localStorage.getItem("operatorData"));
@@ -46,7 +48,6 @@ const Dashboard = () => {
   const location = useLocation();
 
   const donations = async () => {
-    
     try {
       await getDonationNotReceived(
         setConfirmations,
@@ -92,6 +93,14 @@ const Dashboard = () => {
     setStatus(null);
   };
 
+  const motivationalPhrases = async () => {
+    const { data } = await supabase
+      .from("demigtool_motivational_phrases")
+      .select();
+
+    return data;
+  };
+
   useEffect(() => {
     donations();
   }, [active, modalOpen, status, operatorData]);
@@ -100,7 +109,7 @@ const Dashboard = () => {
     setActive(false);
     setDonationFilterPerId("");
     setModalOpen(false);
-  }, [location.pathname])
+  }, [location.pathname]);
 
   const handleClickCard = (e) => {
     setActive(e.currentTarget.id);
@@ -110,7 +119,6 @@ const Dashboard = () => {
     <main className="mainDashboard">
       <>
         <section className="sectionHeader">
-          
           <div
             id="inScheduled"
             className={`divCard ${active === "inScheduled" ? "active" : ""}`}
@@ -164,6 +172,11 @@ const Dashboard = () => {
           </div> */}
         </section>
 
+        {!active && (
+          <section className="motivational">
+            <div className="motivational-card">{<MotivationalPhrases/>}</div>
+          </section>
+        )}
         <section className="sectionGrafico">
           {active === "inConfirmation" ? (
             <>
