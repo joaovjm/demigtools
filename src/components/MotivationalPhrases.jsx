@@ -29,14 +29,14 @@ const MotivationalPhrases = () => {
         if (totalPhrases.length > 0) {
           const random = Math.floor(Math.random() * totalPhrases.length);
           const randomPhrase = totalPhrases[random];
-          console.log(randomPhrase)
+         
           const { data: updatePhrase, error: updateError } = await supabase
           .from("demigtool_motivational_phrases")
           .update({ date_phrase: today })
           .eq("id", randomPhrase.id);
           
           if (updateError) throw updateError
-          setPhrase(updatePhrase[0].motivational_phrases)
+          setPhrase(randomPhrase.motivational_phrases)
         }
       }
     } catch (error) {
