@@ -68,7 +68,28 @@ const newDonorAndDonation = async (
   const handleLeadCopyAndDelete = async () => {
     const copyLeadResponse = await supabase
       .from("leads_excludes")
-      .insert(nowScheduled)
+      .insert(
+        {
+          leads_address: nowScheduled.leads_address,
+          leads_city: nowScheduled.leads_city,
+          leads_date_accessed: nowScheduled.leads_date_accessed,
+          leads_icpf: nowScheduled.leads_icpf,
+          leads_id: nowScheduled.leads_id,
+          leads_name: nowScheduled.leads_name,
+          leads_neighborhod: nowScheduled.leads_neighborhod,
+          leads_observation: nowScheduled.leads_observation,
+          leads_scheduling_date: nowScheduled.leads_scheduling_date,
+          leads_status: nowScheduled.leads_status,
+          leads_tel_1: nowScheduled.leads_tel_1,
+          leads_tel_2: nowScheduled.leads_tel_2,
+          leads_tel_3: nowScheduled.leads_tel_3,
+          leads_tel_4: nowScheduled.leads_tel_4,
+          leads_tel_5: nowScheduled.leads_tel_5,
+          leads_tel_6: nowScheduled.leads_tel_6,
+          operator_code_id: nowScheduled.operator_code_id
+
+        }
+        )
       .select();
     if (copyLeadResponse.error)
       throw new Error("Erro ao copiar lead: " + copyLeadResponse.error.message);
