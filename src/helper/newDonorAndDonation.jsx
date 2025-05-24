@@ -28,7 +28,7 @@ const newDonorAndDonation = async (
   const handleDonorCreation = async () => {
     const response = await insertDonor(
       name,
-      "lista",
+      "Lista",
       address,
       city,
       neighborhood,
@@ -49,12 +49,12 @@ const newDonorAndDonation = async (
       operatorID,
       valueDonation,
       null,
-      DataNow(),
+      DataNow("noformated"),
       date,
       false,
       false,
       null,
-      DataNow("mesref"),
+      DataNow("mesrefnf"),
       observation,
       campain
     );

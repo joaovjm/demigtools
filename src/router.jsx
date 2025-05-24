@@ -77,6 +77,110 @@ const AppRoutesContent = () => {
             </Wrapper>
           }
         />
+        
+        
+        
+        <Route
+          path="/worklist"
+          element={
+            <Wrapper>
+              <WorkList />
+            </Wrapper>
+          }
+        />
+        
+        
+        
+        <Route element={<ProtectedRoute requiredRole="Admin" />}>
+          <Route
+            path="/dashboardAdmin"
+            element={
+              <Wrapper>
+                <DashboardAdmin />
+              </Wrapper>
+            }
+          />
+          <Route
+          path="/request"
+          element={
+            <Wrapper>
+              <Request />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/loadleads"
+          element={
+            <Wrapper>
+              <LoadLeads />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/leads"
+          element={
+            <Wrapper>
+              <Leads />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/usersmanager"
+          element={
+            <Wrapper>
+              <UsersManager />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/createmensaldonation"
+          element={
+            <Wrapper>
+              <CreateMensalDonation />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/operators"
+          element={
+            <Wrapper>
+              <Operators />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/operatorwork"
+          element={
+            <Wrapper>
+              <OperatorWork />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/workhistory"
+          element={
+            <Wrapper>
+              <WorkHistory />
+            </Wrapper>
+          }
+        />
+        </Route>
+        <Route
+          path="/countdonations"
+          element={
+            <Wrapper>
+              <CountDonations />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/donationsreceived"
+          element={
+            <Wrapper>
+              <DonationsReceived />
+            </Wrapper>
+          }
+        />
         <Route
           path="/receiverdonations"
           element={
@@ -117,104 +221,6 @@ const AppRoutesContent = () => {
             </Wrapper>
           }
         />
-        <Route
-          path="/countdonations"
-          element={
-            <Wrapper>
-              <CountDonations />
-            </Wrapper>
-          }
-        />
-        <Route
-          path="/donationsreceived"
-          element={
-            <Wrapper>
-              <DonationsReceived />
-            </Wrapper>
-          }
-        />
-        <Route
-          path="/operators"
-          element={
-            <Wrapper>
-              <Operators />
-            </Wrapper>
-          }
-        />
-        <Route
-          path="/operatorwork"
-          element={
-            <Wrapper>
-              <OperatorWork />
-            </Wrapper>
-          }
-        />
-        <Route
-          path="/workhistory"
-          element={
-            <Wrapper>
-              <WorkHistory />
-            </Wrapper>
-          }
-        />
-        <Route
-          path="/worklist"
-          element={
-            <Wrapper>
-              <WorkList />
-            </Wrapper>
-          }
-        />
-        <Route
-          path="/usersmanager"
-          element={
-            <Wrapper>
-              <UsersManager />
-            </Wrapper>
-          }
-        />
-        <Route
-          path="/createmensaldonation"
-          element={
-            <Wrapper>
-              <CreateMensalDonation />
-            </Wrapper>
-          }
-        />
-        <Route
-          path="/loadleads"
-          element={
-            <Wrapper>
-              <LoadLeads />
-            </Wrapper>
-          }
-        />
-        <Route
-          path="/leads"
-          element={
-            <Wrapper>
-              <Leads />
-            </Wrapper>
-          }
-        />
-        <Route
-          path="/request"
-          element={
-            <Wrapper>
-              <Request />
-            </Wrapper>
-          }
-        />
-        <Route element={<ProtectedRoute requiredRole="Admin" />}>
-          <Route
-            path="/dashboardAdmin"
-            element={
-              <Wrapper>
-                <DashboardAdmin />
-              </Wrapper>
-            }
-          />
-        </Route>
       </Route>
     </Routes>
   );

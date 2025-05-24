@@ -4,7 +4,7 @@ import "./index.css";
 import { FaDollarSign } from "react-icons/fa";
 import { insertDonation } from "../../helper/insertDonation";
 import { DataNow, DataSelect } from "../DataTime";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
 const ModalDonation = ({
   modalShow,
@@ -24,7 +24,7 @@ const ModalDonation = ({
   const [operator, setOperator] = useState(null);
   const [campain, setCampain] = useState("");
 
-  const data_contato = DataNow();
+  const data_contato = DataNow("noformated");
 
   useEffect(() => {
     const operatorData = JSON.parse(localStorage.getItem("operatorData"));
@@ -48,7 +48,7 @@ const ModalDonation = ({
       valor,
       comissao,
       data_contato,
-      formatedData,
+      data_receber,
       impresso,
       recebido,
       descricao,
@@ -82,14 +82,9 @@ const ModalDonation = ({
     if (now > value) {
       value = now;
     }
-    setFormatedData(`${DataSelect(value)}`);
     setData_receber(value);
 
-    const monthYear = `${DataSelect(value, "month")}/${DataSelect(
-      value,
-      "year"
-    )}`;
-
+    const monthYear = `${DataSelect(value,"year")}-${DataSelect(value, "month")}`;
     setMesref(monthYear);
   };
 

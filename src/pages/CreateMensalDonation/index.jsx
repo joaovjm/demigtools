@@ -22,8 +22,8 @@ const CreateMensalDonation = () => {
   const handleGerar = async (e) => {
     e.preventDefault();
     const count = await monthlyfeeGenerator(
-      DataSelect(mesrefGenerator),
-      DataSelect(mesrefGenerator, "mesref"),
+      mesrefGenerator,
+      DataSelect(mesrefGenerator, "mesrefnf"),
       DataSelect(mesrefGenerator, "day"),
       DataSelect(mesrefGenerator, "month"),
       DataSelect(mesrefGenerator, "year")

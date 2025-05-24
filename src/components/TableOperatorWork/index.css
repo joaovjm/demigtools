@@ -1,0 +1,23 @@
+.table-operatorWork{
+    padding: 6px;
+}
+
+.table-operatorWork-header{
+    background-color: #000000;
+    border-radius: 6px;
+    
+    th{
+        padding: 6px;
+        border-radius: 6px;
+    }
+}
+
+.table-operatorWork-body{
+    background-color: #1F1D1D;
+    border-radius: 6px;
+    
+    td{
+        padding: 6px;
+        border-radius: 6px;
+    }
+}

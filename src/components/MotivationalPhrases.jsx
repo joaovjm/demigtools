@@ -6,7 +6,7 @@ const MotivationalPhrases = () => {
   const [phrase, setPhrase] = useState("")
 
   const motivationalPhases = async () => {
-    const today = DataNow();
+    const today = DataNow("noformated");
     try {
       const { data: existingPhrase, error: fetchError } = await supabase
         .from("demigtool_motivational_phrases")

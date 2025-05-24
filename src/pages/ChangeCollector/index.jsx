@@ -53,7 +53,7 @@ const ChangeCollector = () => {
     }
 
     try {
-      const dateFormat = DataSelect(formData.date);
+      const dateFormat = formData.date;
       const result = await changeCollector(
         Number(formData.collector),
         formData.search,

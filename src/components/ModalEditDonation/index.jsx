@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import "./index.css";
 import supabase from "../../helper/superBaseClient";
-import { DataSelect } from "../DataTime";
 import { toast } from "react-toastify";
 
 const ModalEditDonation = ({ donation, setModalEdit }) => {
@@ -24,7 +23,7 @@ const ModalEditDonation = ({ donation, setModalEdit }) => {
       const { data, error } = await supabase.from("donation").update([
         {
           donation_value: value,
-          donation_day_to_receive: DataSelect(date),
+          donation_day_to_receive: date,
           donation_description: observation,
         },
       ])
@@ -36,6 +35,7 @@ const ModalEditDonation = ({ donation, setModalEdit }) => {
       if (data.length > 0){
         toast.success("Doação atualizado com sucesso")
         setModalEdit(false)
+        setObservation("")
       }
 
     } catch (error) {

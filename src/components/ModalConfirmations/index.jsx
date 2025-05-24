@@ -6,6 +6,7 @@ import supabase from "../../helper/superBaseClient";
 import { DataNow, DataSelect } from "../DataTime";
 
 const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) => {
+  console.log(donationConfirmationOpen)
   const [isConfirmation, setIsConfirmation] = useState(false);
   const [dateConfirm, setDateConfirm] = useState("");
   const [observation, setObservation] = useState("");
@@ -42,8 +43,8 @@ const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) =>
         const { data: updateConfirm, error: errorConfirm } = await supabase
           .from("donation")
           .update({
-            donation_day_contact: DataNow(),
-            donation_day_to_receive: DataSelect(dateConfirm),
+            donation_day_contact: DataNow("noformated"),
+            donation_day_to_receive: dateConfirm,
             donation_description: observation,
             donation_received: "Não",
             collector_code_id: null,

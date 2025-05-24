@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 
 const OperatorCard = ({ operatorCount, setDonationFilterPerId }) => {
   
-
   const [operators, setOperators] =useState([])
   const [count, setCount] =useState()
   const [add, setAdd] = useState(0)

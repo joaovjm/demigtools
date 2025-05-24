@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 const ConfirmationCard = ({ operatorCount, setDonationFilterPerId }) => {
-
+  
   const [operators, setOperators] =useState([])
   const [count, setCount] =useState()
   const [add, setAdd] = useState()

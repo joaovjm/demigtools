@@ -11,7 +11,7 @@ function App() {
       <main className='main-app-container'>
         {<Outlet/>}
       </main>
-      <ToastContainer />
+      <ToastContainer closeOnClick="true" pauseOnFocusLoss="false" autoClose="2000"/>
       
     </>
   )

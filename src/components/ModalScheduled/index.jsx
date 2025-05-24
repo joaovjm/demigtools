@@ -50,8 +50,7 @@ const ModalScheduled = ({ scheduledOpen, onClose, setStatus, nowScheduled }) => 
   const handleDateChange = (e) => {
     const selectedDate = e.target.value;
     const currentDate = DataNow("noformated");
-    const selectedDateFormatted = DataSelect(selectedDate);
-    setDateScheduling(selectedDateFormatted < currentDate ? DataNow("noformated") : selectedDate);
+    setDateScheduling(selectedDate < currentDate ? DataNow("noformated") : selectedDate);
   };
 
   const handleNewDonorAndDonation = async () => {

@@ -3,7 +3,7 @@ import { insertDonation } from "./insertDonation";
 import { insertMonthHistory } from "./insertMonthHistory";
 import supabase from "./superBaseClient";
 
-export const monthlyfeeGenerator = async (dataSelected, mesref, day, month, year) => {
+export const monthlyfeeGenerator = async (mesRefGenerator, mesref, day, month, year) => {
 
   let count = 0;
   try {
@@ -24,12 +24,12 @@ export const monthlyfeeGenerator = async (dataSelected, mesref, day, month, year
               521,
               item.donor_mensal.donor_mensal_monthly_fee,
               null,
-              `${DataNow().toLocaleString('pt-BR')}`, //data do contato
-              `${item.donor_mensal.donor_mensal_day}/${month}/${year}`, //Data a receber
+              `${DataNow("noformated")}`, //data do contato
+              `${year}-${month}-${item.donor_mensal.donor_mensal_day}`, //Data a receber
               false,
               false,
-              `Auto Criado ${DataNow().toLocaleString('pt-BR')}`,
-              `${month}/${year}` //Mês Referente
+              `Auto Criado ${DataNow("noformated")}`,
+              `${year}-${month}` //Mês Referente
               
             );
             count = count + 1
@@ -38,7 +38,7 @@ export const monthlyfeeGenerator = async (dataSelected, mesref, day, month, year
         });
       }
 
-    const status = await insertMonthHistory(dataSelected)
+    const status = await insertMonthHistory(mesRefGenerator)
 
     if(status){
       

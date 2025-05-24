@@ -52,8 +52,7 @@ const ReceiverDonations = () => {
 
   const handleDataChange = (e) => {
     const value = e.target.value;
-    const modifiedDate = DataSelect(value);
-    setFormData((prev) => ({ ...prev, date: value, modifiedDate }));
+    setFormData((prev) => ({ ...prev, date: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -75,7 +74,7 @@ const ReceiverDonations = () => {
       return;
     }
     const status = await receiveDonation(
-      formData.modifiedDate,
+      formData.date,
       Number(formData.collector),
       formData.search,
       setTableReceipt
