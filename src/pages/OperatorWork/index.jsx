@@ -14,6 +14,7 @@ const OperatorWork = () => {
     setRelatory(response)
   }
   
+  console.log(relatory)
   return (
     <div className="operator-work">
       <div className='operator-work-header'>
@@ -36,8 +37,8 @@ const OperatorWork = () => {
           <button onClick={handleGenerate} className='btn-gerar'>Gerar</button>
         </div>
       </div>
-      {relatory && (
-        <TableOperatorWork relatory={relatory}/>
+      {relatory && relatory.names.length !== 0 && (
+        <TableOperatorWork relatory={relatory} filter={filter}/>
       )}
       
     </div>
