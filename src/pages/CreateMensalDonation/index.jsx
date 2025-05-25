@@ -14,8 +14,7 @@ const CreateMensalDonation = () => {
   const onMonthHystoryChecker = async (e) => {
     const value = e.target.value;
     setMesrefGenerator(value);
-    const formatedValue = DataSelect(value);
-    setIsDisable(await monthHystoryChecker(formatedValue));
+    setIsDisable(await monthHystoryChecker(value));
     setConfirmed(false);
   };
 
