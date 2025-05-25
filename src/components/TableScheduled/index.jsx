@@ -1,4 +1,5 @@
 import React from "react";
+import { DataSelect } from "../DataTime";
 
 const TableScheduled = ({ scheduled, setModalOpen, setScheduledOpen, setNowScheduled, donationFilterPerId }) => {
   const handleClick = (e) => {
@@ -57,7 +58,7 @@ const TableScheduled = ({ scheduled, setModalOpen, setScheduledOpen, setNowSched
                     {item.leads_observation}
                   </td>
                   <td className="table-body-confirmation-text">
-                    {item.leads_scheduling_date}
+                    {DataSelect(item.leads_scheduling_date)}
                   </td>
                 </tr>
               ))}
@@ -92,7 +93,7 @@ const TableScheduled = ({ scheduled, setModalOpen, setScheduledOpen, setNowSched
                     {item.leads_observation}
                   </td>
                   <td className="table-body-confirmation-text">
-                    {item.leads_scheduling_date}
+                    {DataSelect(item.leads_scheduling_date)}
                   </td>
                 </tr>
               ))}

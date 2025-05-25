@@ -1,4 +1,5 @@
 import React from "react";
+import { DataSelect } from "../DataTime";
 
 const TableInOpen = ({
   fullNotReceivedDonations,
@@ -35,7 +36,7 @@ const TableInOpen = ({
                 onClick={() => handleClick(donation)}
               >
                 <td className="table-body-confirmation-text">
-                  {donation.donation_day_to_receive}
+                  {DataSelect(donation.donation_day_to_receive)}
                 </td>
                 <td className="table-body-confirmation-text">
                   {donation.donor_name}
@@ -58,7 +59,7 @@ const TableInOpen = ({
                 onClick={() => handleClick(donation)}
               >
                 <td className="table-body-confirmation-text">
-                  {donation.donation_day_to_receive}
+                  {DataSelect(donation.donation_day_to_receive)}
                 </td>
                 <td className="table-body-confirmation-text">
                   {donation.donor_name}

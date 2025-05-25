@@ -3,6 +3,7 @@ import "./index.css";
 import { getDonation } from "../../helper/getDonation";
 import { toast } from "react-toastify";
 import { UserContext } from "../../context/UserContext";
+import { DataSelect } from "../DataTime";
 
 const TableDonor = ({ idDonor, modalShow, setModalEdit, setDonation, modalEdit }) => {
   const caracterOperator = JSON.parse(localStorage.getItem("operatorData"));
@@ -78,14 +79,14 @@ const TableDonor = ({ idDonor, modalShow, setModalEdit, setDonation, modalEdit }
                     </td>
                     <td className="tableBody">{item.donation_value}</td>
                     <td className="tableBody">{item.donation_extra}</td>
-                    <td className="tableBody">{item.donation_day_contact}</td>
+                    <td className="tableBody">{DataSelect(item.donation_day_contact)}</td>
                     <td className="tableBody">
-                      {item.donation_day_to_receive}
+                      {DataSelect(item.donation_day_to_receive)}
                     </td>
-                    <td className="tableBody">{item.donation_day_received}</td>
+                    <td className="tableBody">{DataSelect(item.donation_day_received)}</td>
                     <td className="tableBody">{item.donation_print}</td>
                     <td className="tableBody">{item.donation_received}</td>
-                    <td className="tableBody">{item.donation_monthref}</td>
+                    <td className="tableBody">{DataSelect(item.donation_monthref, "mesref")}</td>
                     <td className="tableBody">
                       {item.collector_code_id} -{" "}
                       {item.collector?.collector_name || ""}

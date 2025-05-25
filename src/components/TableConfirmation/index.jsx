@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import "./index.css";
+import { DataSelect } from "../DataTime";
 
 const TableConfirmation = ({
   donationConfirmation,
@@ -54,7 +55,7 @@ const TableConfirmation = ({
                 onClick={() => handleClick(donation)}
               >
                 <td className="table-body-confirmation-text">
-                  {donation.donation_day_to_receive}
+                  {DataSelect(donation.donation_day_to_receive)}
                 </td>
                 <td className="table-body-confirmation-text">
                   {donation.donor_name}

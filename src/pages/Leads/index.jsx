@@ -12,6 +12,7 @@ import {
   insertDonor_cpf,
   insertDonor_reference,
   insertDonor_tel_2,
+  insertDonor_tel_3,
 } from "../../helper/insertDonor";
 import getSession from "../../auth/getSession";
 import Loader from "../../components/Loader";
@@ -200,7 +201,7 @@ const Leads = () => {
               await insertDonor_tel_2(data[0].donor_id, newTel2);
             }
             if (newTel3 !== "") {
-              await insertDonor_tel_2(data[0].donor_id, newTel3);
+              await insertDonor_tel_3(data[0].donor_id, newTel3);
             }
             if (reference !== "") {
               await insertDonor_reference(data[0].donor_id, reference);
@@ -216,8 +217,8 @@ const Leads = () => {
                     donor_id: data[0].donor_id,
                     operator_code_id: operatorID,
                     donation_value: valueDonation,
-                    donation_day_contact: DataNow(),
-                    donation_day_to_receive: DataSelect(dateDonation),
+                    donation_day_contact: DataNow("noformated"),
+                    donation_day_to_receive: dateDonation,
                     donation_print: "Não",
                     donation_received: "Não",
                     donation_description: observation,
@@ -271,7 +272,7 @@ const Leads = () => {
             setDateDonation("");
             setValueDonation("");
 
-            return successMessage;
+            return "Processo concluido com sucesso!";
           } catch (error) {
             console.error("Erro na operação:", error.message);
             throw error;
