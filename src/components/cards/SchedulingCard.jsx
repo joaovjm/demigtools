@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 const SchedulingCard = ({ operatorCount, setDonationFilterPerId }) => {
+  console.log(operatorCount)
 
   const [operators, setOperators] =useState([])
   const [count, setCount] =useState()
@@ -10,6 +11,7 @@ const SchedulingCard = ({ operatorCount, setDonationFilterPerId }) => {
         operators.operator_code_id,
         { id: operators.operator_code_id, name: operators.operator_name.operator_name },
       ])
+      
     ).values(),
   ];
 

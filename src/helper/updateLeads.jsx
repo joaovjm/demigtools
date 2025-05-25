@@ -3,7 +3,7 @@ import supabase from "./superBaseClient";
 
 const updateLeads = async (status_leads, operator_code_id, leads_id) => {
   const updateData = {
-    leads_date_accessed: DataNow(),
+    leads_date_accessed: DataNow("noformated"),
     leads_status: status_leads,
     ...(operator_code_id !== null &&
       operator_code_id !== undefined && { operator_code_id: operator_code_id }),

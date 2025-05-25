@@ -58,12 +58,12 @@ const Dashboard = () => {
         caracterOperator.operator_code_id,
         caracterOperator.operator_type
       );
-      await getDonationPerMonthReceived(
-        monthref,
-        setMonthReceived,
-        setValueMonthReceived,
-        setReceivedPercent
-      );
+      // await getDonationPerMonthReceived(
+      //   monthref,
+      //   setMonthReceived,
+      //   setValueMonthReceived,
+      //   setReceivedPercent
+      // );
       await getScheduledLeads(
         null,
         setScheduled,

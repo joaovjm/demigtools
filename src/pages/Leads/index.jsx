@@ -122,7 +122,6 @@ const Leads = () => {
     if (value < now) {
       value = now;
     }
-    setFormatedDate(`${DataSelect(value)}`);
     setDateScheduling(value);
   };
 
@@ -140,8 +139,8 @@ const Leads = () => {
         .from("leads")
         .update([
           {
-            leads_date_accessed: DataNow(),
-            leads_scheduling_date: formatedDate,
+            leads_date_accessed: DataNow("noformated"),
+            leads_scheduling_date: dateScheduling,
             leads_status: "agendado",
             leads_observation: observationScheduling,
           },

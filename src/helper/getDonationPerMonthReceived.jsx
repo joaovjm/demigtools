@@ -24,7 +24,7 @@ const getDonationPerMonthReceived = (
       }
     }
 
-    setReceivedPercent(((cont/operatorValue.length)*100).toFixed(2))
+    // setReceivedPercent(((cont/operatorValue.length)*100).toFixed(2))
 
     setValueMonthReceived(totalValue);
   };
