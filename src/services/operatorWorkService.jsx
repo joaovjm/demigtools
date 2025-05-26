@@ -1,6 +1,5 @@
 import { toast } from "react-toastify";
 import getReceiveDonationPerOperator from "../helper/getReceiveDonationPerOperator";
-import { DataSelect } from "../components/DataTime";
 
 const filterName = async (operatorWork) => {
   const operator = [
@@ -45,14 +44,6 @@ const filterValueNotReceived = (operatorWork, metode) => {
 };
 
 export const operatorWorkService = async (startDate, endDate) => {
-  if ([startDate, endDate].some((v) => v === "")) {
-    toast.warning("Selecione as datas de inicio e fim!");
-    return;
-  }
-  if (endDate < startDate) {
-    toast.warning("A data final não pode ser menor que a data inicial");
-    return;
-  }
 
   const operatorWork = await getReceiveDonationPerOperator(startDate, endDate);
   const names = await filterName(operatorWork);
