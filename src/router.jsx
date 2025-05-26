@@ -23,7 +23,6 @@ import UsersManager from "./pages/UsersManager";
 import Dashboard from "./pages/Dashboard";
 import CreateMensalDonation from "./pages/CreateMensalDonation";
 import LoadLeads from "./pages/LoadLeads";
-import AuthMonitor from "./components/AuthMonitor";
 import Leads from "./pages/Leads";
 import Home from "./pages/Home";
 import Request from "./pages/Request";
