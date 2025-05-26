@@ -38,6 +38,14 @@ const AppRoutesContent = () => {
       <Route element={<App />}>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route
+          path="/leads"
+          element={
+            <Wrapper>
+              <Leads />
+            </Wrapper>
+          }
+        />
         <Route element={<ProtectedRoute requiredRole="Operador" />}>
           <Route
             path="/dashboard"
@@ -113,14 +121,6 @@ const AppRoutesContent = () => {
           element={
             <Wrapper>
               <LoadLeads />
-            </Wrapper>
-          }
-        />
-        <Route
-          path="/leads"
-          element={
-            <Wrapper>
-              <Leads />
             </Wrapper>
           }
         />
