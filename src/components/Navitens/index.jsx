@@ -37,8 +37,8 @@ export const AdminMenu = [
     },
     {
         id: 4,
-        title: "Areas a Imprimir",
-        path: "./areastoprint",
+        title: "Administração",
+        path: "./adminmanager",
         cName: "submenu-itens",
     },
     {
