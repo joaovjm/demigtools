@@ -54,6 +54,11 @@
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+  gap: 36px;
+
+  .input-field{
+    max-width: 200px;
+  }
 }
 
 .file-upload-label {

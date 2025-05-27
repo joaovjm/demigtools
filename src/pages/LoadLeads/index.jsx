@@ -7,6 +7,7 @@ import insertNewLeads from "../../components/insertNewLeads";
 const LoadLeads = () => {
   const [fileName, setFileName] = useState("Nenhum arquivo selecionado");
   const [excelData, setExcelData] = useState([]);
+  const [typeLead, setTypeLead] = useState("");
   const [headers, setHeaders] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
   const [insertedCount, setInsertedCount] = useState(0);
@@ -24,13 +25,20 @@ const LoadLeads = () => {
 
   const handleInsertNewLead = async (e) => {
     e.preventDefault();
-    const response = await insertNewLeads(excelData, setInsertedCount, setTotalCount);
-    if (response){
-      setFileName("Nenhum arquivo selecionado")
-      setExcelData([])
+    const response = await insertNewLeads(
+      excelData,
+      setInsertedCount,
+      setTotalCount,
+      typeLead
+    );
+    if (response) {
+      setFileName("Nenhum arquivo selecionado");
+      setExcelData([]);
       setSuccessMessage(response);
     }
-    
+  };
+
+  const handleTypeLead = () => {
 
   }
 
@@ -54,23 +62,31 @@ const LoadLeads = () => {
                 className="input-file"
                 onChange={handleFileChange}
               />
-              
+              <div className="input-field">
+                <select onChange={(e) => setTypeLead(e.target.value)} value={typeLead}>
+                  <option value="">Selecione...</option>
+                  <option value="Lead Principal">Lead Principal</option>
+                  <option value="Lead Casa">Lead Casa</option>
+                </select>
+              </div>
             </div>
             <div className="lead-info-btn">
               <div className="file-name">{fileName}</div>
               {excelData.length > 0 && (
-                <button onClick={handleInsertNewLead} className="save-lead-btn">Salvar novo lead</button>
+                <button onClick={handleInsertNewLead} className="save-lead-btn">
+                  Salvar novo lead
+                </button>
               )}
-              
             </div>
-            
-            
           </div>
           <div className="lead-message">
             {successMessage && (
               <div className="lead-success-message">
                 <p>[ {insertedCount} ] lead(s) inseridos</p>
-                <p>[ {totalCount-insertedCount} ] leads já existem e não foram inseridos</p>
+                <p>
+                  [ {totalCount - insertedCount} ] leads já existem e não foram
+                  inseridos
+                </p>
               </div>
             )}
           </div>
