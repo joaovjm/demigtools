@@ -71,12 +71,11 @@ const Leads = () => {
       setItems,
       setCurrentLead,
       currentOperatorID,
-      nowLead
+      operatorData.operator_type
     );
 
-    setNowLead(lead.leads_id);
     if (lead[0].leads_id) {
-      await updateLeads("Aberto", Number(currentOperatorID), lead[0].leads_id);
+      await updateLeads("Aberto", Number(currentOperatorID), lead[0].leads_id, operatorData.operator_type);
     }
 
     setIsLoading(false);

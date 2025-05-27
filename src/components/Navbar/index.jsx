@@ -323,7 +323,7 @@ const Navbar = () => {
                 </button>
               </div>
             </div>
-          ) : isAuthenticated && operatorData?.operator_type === "Operador" ? (
+          ) : isAuthenticated && (operatorData?.operator_type === "Operador" || operatorData?.operator_type === "Operador Casa") ? (
             <div className="menu-and-logo">
               <div className="nav-item-content">
                 <ul className="nav-items">
@@ -513,7 +513,7 @@ const Navbar = () => {
           </div>
         ) : (
           isAuthenticated &&
-          operatorData?.operator_type === "Operador" && (
+          (operatorData?.operator_type === "Operador" || operatorData?.operator_type === "Operador Casa") && (
             <div
               ref={mobileMenuRef}
               className={`mobile-menu ${mobileMenuOpen ? "active" : ""}`}
