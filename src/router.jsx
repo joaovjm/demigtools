@@ -10,7 +10,7 @@ import Page404 from "./pages/Page404";
 import ReceiverDonations from "./pages/ReceiverDonations";
 import ChangeCollector from "./pages/ChangeCollector";
 import CheckPrint from "./pages/CheckPrint";
-import AreasToPrint from "./pages/AreasToPrint";
+import AdminManager from "./pages/AdminManager";
 import CollectorsMoviment from "./pages/CollectorsMoviment";
 import CountDonations from "./pages/CountDonations";
 import DonationsReceived from "./pages/DonationsReceived";
@@ -205,10 +205,10 @@ const AppRoutesContent = () => {
           }
         />
         <Route
-          path="/areastoprint"
+          path="/adminmanager"
           element={
             <Wrapper>
-              <AreasToPrint />
+              <AdminManager />
             </Wrapper>
           }
         />
