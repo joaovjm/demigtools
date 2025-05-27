@@ -1,7 +1,13 @@
 import { DataNow } from "../components/DataTime";
 import supabase from "./superBaseClient";
 
-const updateLeads = async (status_leads, operator_code_id, leads_id) => {
+const updateLeads = async (status_leads, operator_code_id, leads_id, operator_type) => {
+  let operatorType;
+  if(operator_type === "Operador Casa"){
+    operatorType = "leads_casa"
+  } else {
+    operatorType = "leads"
+  }
   const updateData = {
     leads_date_accessed: DataNow("noformated"),
     leads_status: status_leads,
@@ -11,7 +17,7 @@ const updateLeads = async (status_leads, operator_code_id, leads_id) => {
 
   try {
     const { data, error } = await supabase
-      .from("leads")
+      .from(operatorType)
       .update(updateData)
       .eq("leads_id", leads_id)
       .select();
