@@ -42,10 +42,13 @@ const Leads = () => {
   const [valueDonation, setValueDonation] = useState("");
   const [nowLead, setNowLead] = useState("");
   const [operatorID, setOperatorID] = useState(null);
+  const [operatorType, setOperatorType] = useState(null)
 
   useEffect(() => {
     const operatorData = JSON.parse(localStorage.getItem("operatorData"));
     setOperatorID(operatorData?.operator_code_id);
+    setOperatorType(operatorData?.operator_type)
+
   }, []);
 
   useEffect(() => {
@@ -134,9 +137,15 @@ const Leads = () => {
   };
 
   const handleSchedulingClick = async () => {
+    let typeOperator;
+    if(operatorType === "Operador Casa"){
+      typeOperator = "leads_casa"
+    } else {
+      typeOperator = "leads"
+    }
     try {
       const { data, error } = await supabase
-        .from("leads")
+        .from(typeOperator)
         .update([
           {
             leads_date_accessed: DataNow("noformated"),
