@@ -61,11 +61,7 @@ const Dashboard = () => {
         caracterOperator.operator_type
       );
 
-      await getScheduledLeads(
-        null,
-        setScheduled,
-        setScheduling
-      );
+      await getScheduledLeads(null, setScheduled, setScheduling);
     } catch (error) {
       console.error("Error fetching donations:", error);
     }
@@ -91,131 +87,142 @@ const Dashboard = () => {
 
   const lead = async () => {
     const response = await leadsHistoryService();
-  }
+  };
 
   useEffect(() => {
     donations();
-    lead()
+    lead();
   }, [active, modalOpen, status, operatorData]);
 
   const handleClickCard = (e) => {
     setActive(e.currentTarget.id);
-    setDonationFilterPerId(null)
+    setDonationFilterPerId(null);
   };
 
   return (
     <main className="mainDashboard">
       <>
         <section className="sectionHeader">
-          <div
-            id="inScheduled"
-            className={`divCard ${active === "inScheduled" ? "active" : ""}`}
-            onClick={handleClickCard}
-          >
-            <div className="divHeader">
-              <h3 className="h3Header">Agendados</h3>
+          <div className="sectionHeader-item">
+            <div
+              id="inScheduled"
+              className={`divCard ${active === "inScheduled" ? "active" : ""}`}
+              onClick={handleClickCard}
+            >
+              <div className="divHeader">
+                <h3 className="h3Header">Agendados</h3>
+              </div>
+              <div className="divBody">
+                <p>{scheduling}</p>
+              </div>
             </div>
-            <div className="divBody">
-              <p>{scheduling}</p>
+            {/* Card 1 */}
+            <div
+              id="inConfirmation"
+              className={`divCard ${
+                active === "inConfirmation" ? "active" : ""
+              }`}
+              onClick={handleClickCard}
+            >
+              <div className="divHeader">
+                <h3 className="h3Header">Em Confirmação</h3>
+              </div>
+              <div className="divBody">
+                <p>{confirmations}</p>
+                <p>R$ {valueConfirmations}</p>
+              </div>
             </div>
-          </div>
-          {/* Card 1 */}
-          <div
-            id="inConfirmation"
-            className={`divCard ${active === "inConfirmation" ? "active" : ""}`}
-            onClick={handleClickCard}
-          >
-            <div className="divHeader">
-              <h3 className="h3Header">Em Confirmação</h3>
-            </div>
-            <div className="divBody">
-              <p>{confirmations}</p>
-              <p>R$ {valueConfirmations}</p>
-            </div>
-          </div>
 
-          <div
-            id="inOpen"
-            className={`divCard ${active === "inOpen" ? "active" : ""}`}
-            onClick={handleClickCard}
-          >
-            <div className="divHeader">
-              <h3 className="h3Header">Em Aberto</h3>
+            <div
+              id="inOpen"
+              className={`divCard ${active === "inOpen" ? "active" : ""}`}
+              onClick={handleClickCard}
+            >
+              <div className="divHeader">
+                <h3 className="h3Header">Em Aberto</h3>
+              </div>
+              <div className="divBody">
+                <p>{openDonations}</p>
+                <p>R$ {valueOpenDonations}</p>
+              </div>
             </div>
-            <div className="divBody">
-              <p>{openDonations}</p>
-              <p>R$ {valueOpenDonations}</p>
-            </div>
-          </div>
-          <div
-            id="leads"
-            className={`divCard ${active === "leads" ? "active" : ""}`}
-            onClick={handleClickCard}
-          >
-            <div className="divHeader">
-              <h3 className="h3Header">Leads</h3>
-            </div>
-            <div className="divBody" style={{display: "flex", justifyContent: "center"}}>
-              <p>{confirmations}</p>
+            <div
+              id="leads"
+              className={`divCard ${active === "leads" ? "active" : ""}`}
+              onClick={handleClickCard}
+            >
+              <div className="divHeader">
+                <h3 className="h3Header">Leads</h3>
+              </div>
+              <div
+                className="divBody"
+                style={{ display: "flex", justifyContent: "center" }}
+              >
+                <p>{confirmations}</p>
+              </div>
             </div>
           </div>
         </section>
 
         {active && active !== "leads" ? (
           <section className="section-grafic">
-          <div className="section-table-and-info">
-            <div className="section-operators">
-              {active === "inConfirmation" ? (
-                <ConfirmationCard
-                operatorCount={donationConfirmation}
-                setDonationFilterPerId={setDonationFilterPerId}
-                />
-                
-              ) : active === "inOpen" ? (
-                <OperatorCard
-                operatorCount={fullNotReceivedDonations}
-                setDonationFilterPerId={setDonationFilterPerId}
-              />
-              ) : active === "inScheduled" && <SchedulingCard
-                operatorCount={scheduled}
-                setDonationFilterPerId={setDonationFilterPerId}
-              />}
-              
-            </div>
+            <div className="section-table-and-info">
+              <div className="section-operators">
+                {active === "inConfirmation" ? (
+                  <ConfirmationCard
+                    operatorCount={donationConfirmation}
+                    setDonationFilterPerId={setDonationFilterPerId}
+                  />
+                ) : active === "inOpen" ? (
+                  <OperatorCard
+                    operatorCount={fullNotReceivedDonations}
+                    setDonationFilterPerId={setDonationFilterPerId}
+                  />
+                ) : (
+                  active === "inScheduled" && (
+                    <SchedulingCard
+                      operatorCount={scheduled}
+                      setDonationFilterPerId={setDonationFilterPerId}
+                    />
+                  )
+                )}
+              </div>
 
-            <div className="section-table">
-              {active === "inConfirmation" ? (
-                <TableConfirmation
-                  donationConfirmation={donationConfirmation}
-                  setModalOpen={setModalOpen}
-                  setDonationConfirmationOpen={setDonationConfirmationOpen}
-                  donationFilterPerId={donationFilterPerId}
-                />
-              ) : active === "inOpen" ? (
-                <TableInOpen
-                  fullNotReceivedDonations={fullNotReceivedDonations}
-                  setDonationOpen={setDonationOpen}
-                  setModalOpen={setModalOpen}
-                  donationFilterPerId={donationFilterPerId}
-                />
-              ) : active === "inScheduled" ? (
-                <TableScheduled
-                  scheduled={scheduled}
-                  setModalOpen={setModalOpen}
-                  setScheduledOpen={setScheduledOpen}
-                  setNowScheduled={setNowScheduled}
-                  donationFilterPerId={donationFilterPerId}
-                />
-              ) : null}
+              <div className="section-table">
+                {active === "inConfirmation" ? (
+                  <TableConfirmation
+                    donationConfirmation={donationConfirmation}
+                    setModalOpen={setModalOpen}
+                    setDonationConfirmationOpen={setDonationConfirmationOpen}
+                    donationFilterPerId={donationFilterPerId}
+                  />
+                ) : active === "inOpen" ? (
+                  <TableInOpen
+                    fullNotReceivedDonations={fullNotReceivedDonations}
+                    setDonationOpen={setDonationOpen}
+                    setModalOpen={setModalOpen}
+                    donationFilterPerId={donationFilterPerId}
+                  />
+                ) : active === "inScheduled" ? (
+                  <TableScheduled
+                    scheduled={scheduled}
+                    setModalOpen={setModalOpen}
+                    setScheduledOpen={setScheduledOpen}
+                    setNowScheduled={setNowScheduled}
+                    donationFilterPerId={donationFilterPerId}
+                  />
+                ) : null}
+              </div>
             </div>
-          </div>
-        </section>
-        ) : <section className="section-grafic">
-          <div className="div-leads">
-            <h1>Função em desenvolvimento...</h1>
-          </div>
-        </section> }
-        
+          </section>
+        ) : (
+          <section className="section-grafic">
+            <div className="div-leads">
+              <h1>Função em desenvolvimento...</h1>
+            </div>
+          </section>
+        )}
+
         {modalOpen && active === "inConfirmation" && (
           <ModalConfirmations
             donationConfirmationOpen={donationConfirmationOpen}

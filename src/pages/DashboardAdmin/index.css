@@ -6,11 +6,15 @@
   padding: 4px;
 }
 
-.sectionHeader {
+.sectionHeader{
+  display: flex;
+  overflow-y: auto;
+}
+.sectionHeader-item{
   display: flex;
   justify-content: center;
   padding: 20px;
-  gap: 20px;
+  gap: 8px;
 }
 
 .divCard {
@@ -176,11 +180,19 @@ p {
 }
 
 @media (min-width: 379px) and (max-width: 599px) {
-  .sectionHeader {
+  .sectionHeader{
+    max-width: 100%;
+    overflow-y: auto;
+    justify-content: start;
+    box-sizing: border-box;
+  }
+  .sectionHeader-item {
+    width: 490px;
     display: flex;
-    justify-content: center;
     padding: 10px;
     gap: 6px;
+    
+    
   }
 
   .section-table-and-info {
@@ -197,8 +209,8 @@ p {
   }
 
   .section-operators-card {
-    min-width: 130px;
-    max-width: 130px;
+    min-width: 120px;
+    max-height: 70px;
   }
 
   .section-table {
