@@ -6,11 +6,11 @@
   padding: 4px;
 }
 
-.sectionHeader{
+.sectionHeader {
   display: flex;
   overflow-y: auto;
 }
-.sectionHeader-item{
+.sectionHeader-item {
   display: flex;
   justify-content: center;
   padding: 20px;
@@ -168,19 +168,8 @@ p {
   justify-content: space-around;
 }
 
-.div-leads {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 500px;
-  height: 360px;
-  border: 3px double #2f2d2d;
-  border-radius: 6px;
-  background-color: #1f1d1d;
-}
-
 @media (min-width: 379px) and (max-width: 599px) {
-  .sectionHeader{
+  .sectionHeader {
     max-width: 100%;
     overflow-y: auto;
     justify-content: start;
@@ -191,8 +180,6 @@ p {
     display: flex;
     padding: 10px;
     gap: 6px;
-    
-    
   }
 
   .section-table-and-info {
@@ -324,14 +311,16 @@ p {
     height: 380px;
     width: 600px;
   }
-  
 
-  .section-operators-card{
-    width: 160px;
+  .section-operators {
+    width: 186px;
+  }
+  .section-operators-card {
+    width: 154px;
   }
 
-  .section-operators-card-value{
-    label{
+  .section-operators-card-value {
+    label {
       font-size: 12px;
     }
   }

@@ -5,9 +5,11 @@ const getLeads = async () => {
   try {
     const { data, error } = await supabase
       .from("leads")
-      .select("operator_code_id, operator_name: operator_code_id(operator_name), leads_status")
+      .select(
+        "operator_code_id, operator_name: operator_code_id(operator_name), leads_status"
+      )
       .or(
-        "leads_status.eq.agendado, leads_status.eq.Não pode ajudar, leads_status.eq.Não Atendeu"
+        "leads_status.eq.agendado, leads_status.eq.Não pode ajudar, leads_status.eq.Não Atendeu, leads_status.eq.Sucesso"
       );
 
     if (error) throw error;
@@ -21,9 +23,11 @@ const getLeadsCasa = async () => {
   try {
     const { data, error } = await supabase
       .from("leads_casa")
-      .select()
+      .select(
+        "operator_code_id, operator_name: operator_code_id(operator_name), leads_status"
+      )
       .or(
-        "leads_status.eq.agendado, leads_status.eq.Não pode ajudar, leads_status.eq.Não Atendeu"
+        "leads_status.eq.agendado, leads_status.eq.Não pode ajudar, leads_status.eq.Não Atendeu, leads_status.eq.Sucesso"
       );
     if (error) throw error;
     if (!error) return data;
@@ -32,9 +36,7 @@ const getLeadsCasa = async () => {
   }
 };
 
-
 export const getLeadsHistory = async (startDate, endDate) => {
-
   const leads = await getLeads();
   const leadsCasa = await getLeadsCasa();
 

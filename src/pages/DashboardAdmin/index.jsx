@@ -18,6 +18,7 @@ import ConfirmationCard from "../../components/cards/ConfirmationCard";
 import SchedulingCard from "../../components/cards/SchedulingCard";
 import { getLeadsHistory } from "../../helper/getLeadsHistory";
 import { leadsHistoryService } from "../../services/leadsHistoryService";
+import TableLeadHistory from "../../components/TableLeadHistory";
 
 const Dashboard = () => {
   const caracterOperator = JSON.parse(localStorage.getItem("operatorData"));
@@ -39,6 +40,18 @@ const Dashboard = () => {
   const [donationConfirmation, setDonationConfirmation] = useState([]);
   const [fullNotReceivedDonations, setFullNotReceivedDonations] = useState([]);
   const [scheduled, setScheduled] = useState([]);
+  const [operator, setOperator] = useState([]);
+  const [operatorCasa, setOperatorCasa] = useState([]);
+  const [schedule, setSchedule] = useState([]);
+  const [scheduleCasa, setScheduleCasa] = useState([]);
+  const [countLeads, setCountLeads] = useState([]);
+  const [countLeadsCasa, setCountLeadsCasa] = useState([]);
+  const [leadsNA, setLeadsNA] = useState([]);
+  const [leadsNACasa, setLeadsNACasa] = useState([]);
+  const [leadsNP, setLeadsNP] = useState([]);
+  const [leadsNPCasa, setLeadsNPCasa] = useState([]);
+  const [leadsSuccess, setLeadsSuccess] = useState([]);
+  const [leadsSuccessCasa, setLeadsSuccessCasa] = useState([]);
 
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -86,7 +99,32 @@ const Dashboard = () => {
   };
 
   const lead = async () => {
-    const response = await leadsHistoryService();
+    const {
+      operator,
+      operatorCasa,
+      scheduled,
+      scheduledCasa,
+      leadsNA,
+      leadsNACasa,
+      leadsNP,
+      leadsNPCasa,
+      leadsSuccess,
+      leadsSuccessCasa,
+      countLeads,
+      countLeadsCasa
+    } = await leadsHistoryService();
+    setOperator(operator);
+    setOperatorCasa(operatorCasa);
+    setSchedule(scheduled);
+    setScheduleCasa(scheduledCasa);
+    setLeadsNA(leadsNA);
+    setLeadsNACasa(leadsNACasa);
+    setLeadsNP(leadsNP);
+    setLeadsNPCasa(leadsNPCasa)
+    setLeadsSuccess(leadsSuccess);
+    setLeadsSuccessCasa(leadsSuccessCasa)
+    setCountLeads(countLeads);
+    setCountLeadsCasa(countLeadsCasa)
   };
 
   useEffect(() => {
@@ -218,7 +256,20 @@ const Dashboard = () => {
         ) : (
           <section className="section-grafic">
             <div className="div-leads">
-              <h1>Função em desenvolvimento...</h1>
+              <TableLeadHistory
+                operator={operator}
+                operatorCasa={operatorCasa}
+                schedule={schedule}
+                scheduleCasa={scheduleCasa}
+                leadsNA={leadsNA}
+                leadsNACasa={leadsNACasa}
+                leadsNP={leadsNP}
+                leadsNPCasa={leadsNPCasa}
+                leadsSuccess={leadsSuccess}
+                leadsSuccessCasa={leadsSuccessCasa}
+                countLeads={countLeads}
+                countLeadsCasa={countLeadsCasa}
+              />
             </div>
           </section>
         )}
