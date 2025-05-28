@@ -16,6 +16,7 @@ import ModalDonationInOpen from "../../components/ModalDonationInOpen";
 import OperatorCard from "../../components/cards/OperatorCard";
 import ConfirmationCard from "../../components/cards/ConfirmationCard";
 import SchedulingCard from "../../components/cards/SchedulingCard";
+import { getLeadsHistory } from "../../helper/getLeadsHistory";
 
 const Dashboard = () => {
   const caracterOperator = JSON.parse(localStorage.getItem("operatorData"));
@@ -37,6 +38,7 @@ const Dashboard = () => {
   const [donationConfirmation, setDonationConfirmation] = useState([]);
   const [fullNotReceivedDonations, setFullNotReceivedDonations] = useState([]);
   const [scheduled, setScheduled] = useState([]);
+  const [leadsHistory, setLeadsHistory] = useState([]);
 
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -58,12 +60,7 @@ const Dashboard = () => {
         caracterOperator.operator_code_id,
         caracterOperator.operator_type
       );
-      // await getDonationPerMonthReceived(
-      //   monthref,
-      //   setMonthReceived,
-      //   setValueMonthReceived,
-      //   setReceivedPercent
-      // );
+
       await getScheduledLeads(
         null,
         setScheduled,
@@ -92,8 +89,13 @@ const Dashboard = () => {
     setStatus(null);
   };
 
+  const leads = async () => {
+    const leadsHistory = await getLeadsHistory()
+    console.log(leadsHistory)
+  }
   useEffect(() => {
     donations();
+    // leads();
   }, [active, modalOpen, status, operatorData]);
 
   const handleClickCard = (e) => {
@@ -145,9 +147,22 @@ const Dashboard = () => {
               <p>R$ {valueOpenDonations}</p>
             </div>
           </div>
+          <div
+            id="leads"
+            className={`divCard ${active === "leads" ? "active" : ""}`}
+            onClick={handleClickCard}
+          >
+            <div className="divHeader">
+              <h3 className="h3Header">Leads</h3>
+            </div>
+            <div className="divBody" style={{display: "flex", justifyContent: "center"}}>
+              <p>{confirmations}</p>
+            </div>
+          </div>
         </section>
 
-        <section className="section-grafic">
+        {active && active !== "leads" ? (
+          <section className="section-grafic">
           <div className="section-table-and-info">
             <div className="section-operators">
               {active === "inConfirmation" ? (
@@ -161,7 +176,7 @@ const Dashboard = () => {
                 operatorCount={fullNotReceivedDonations}
                 setDonationFilterPerId={setDonationFilterPerId}
               />
-              ) : <SchedulingCard
+              ) : active === "inScheduled" && <SchedulingCard
                 operatorCount={scheduled}
                 setDonationFilterPerId={setDonationFilterPerId}
               />}
@@ -195,6 +210,12 @@ const Dashboard = () => {
             </div>
           </div>
         </section>
+        ) : <section className="section-grafic">
+          <div className="div-leads">
+
+          </div>
+        </section> }
+        
         {modalOpen && active === "inConfirmation" && (
           <ModalConfirmations
             donationConfirmationOpen={donationConfirmationOpen}

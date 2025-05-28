@@ -42,13 +42,12 @@ const Leads = () => {
   const [valueDonation, setValueDonation] = useState("");
   const [nowLead, setNowLead] = useState("");
   const [operatorID, setOperatorID] = useState(null);
-  const [operatorType, setOperatorType] = useState(null)
+  const [operatorType, setOperatorType] = useState(null);
 
   useEffect(() => {
     const operatorData = JSON.parse(localStorage.getItem("operatorData"));
     setOperatorID(operatorData?.operator_code_id);
-    setOperatorType(operatorData?.operator_type)
-
+    setOperatorType(operatorData?.operator_type);
   }, []);
 
   useEffect(() => {
@@ -78,7 +77,12 @@ const Leads = () => {
     );
 
     if (lead[0].leads_id) {
-      await updateLeads("Aberto", Number(currentOperatorID), lead[0].leads_id, operatorData.operator_type);
+      await updateLeads(
+        "Aberto",
+        Number(currentOperatorID),
+        lead[0].leads_id,
+        operatorData.operator_type
+      );
     }
 
     setIsLoading(false);
@@ -138,10 +142,10 @@ const Leads = () => {
 
   const handleSchedulingClick = async () => {
     let typeOperator;
-    if(operatorType === "Operador Casa"){
-      typeOperator = "leads_casa"
+    if (operatorType === "Operador Casa") {
+      typeOperator = "leads_casa";
     } else {
-      typeOperator = "leads"
+      typeOperator = "leads";
     }
     try {
       const { data, error } = await supabase
@@ -173,6 +177,12 @@ const Leads = () => {
   };
 
   const handleNewDonorAndDonation = async () => {
+    let type;
+    if (operatorType === "Operador Casa") {
+      type = "leads_casa";
+    } else {
+      type = "leads";
+    }
     if (
       address === "" ||
       city === "" ||
@@ -236,34 +246,16 @@ const Leads = () => {
                 .select();
 
               if (donationError) throw donationError;
-              successMessage = "Doação criada com sucesso!";
             }
 
-            const { data: ChangeLead, error: ErroChange } = await supabase
-              .from("leads_excludes")
-              .insert(currentLead)
-              .select();
+            console.log(type);
 
-            if (ErroChange) {
-              console.error(
-                "Erro ao inserir em leads_excludes:",
-                ErroChange.message
-              );
-              throw ErroChange;
-            }
+            const { data: update, error } = await supabase
+              .from(type)
+              .update({ leads_status: "Sucesso" })
+              .eq("leads_id", currentLead.leads_id);
+            if (error) throw error;
 
-            const { data: DeleteLead, error: ErroDelete } = await supabase
-              .from("leads")
-              .delete()
-              .eq("leads_id", currentLead.leads_id)
-              .select();
-
-            if (ErroDelete) {
-              console.error("Erro ao deletar de leads:", ErroDelete.message);
-              throw ErroDelete;
-            }
-
-            // Reset form after successful operation
             const next = currentItem + 1;
             setCurrentItem(next);
             setIsOpen(false);
@@ -441,23 +433,21 @@ const Leads = () => {
                     </option>
                   )}
                 </select>
-                
               </div>
               <FormInput
-                  label="Tel. 2"
-                  value={newTel2}
-                  type="text"
-                  name="newtel2"
-                  onChange={(e) => setNewTel2(e.target.value)}
-                  
-                />
-                <FormInput
-                  label="Tel. 3"
-                  value={newTel3}
-                  type="text"
-                  name="newtel3"
-                  onChange={(e) => setNewTel3(e.target.value)}
-                />
+                label="Tel. 2"
+                value={newTel2}
+                type="text"
+                name="newtel2"
+                onChange={(e) => setNewTel2(e.target.value)}
+              />
+              <FormInput
+                label="Tel. 3"
+                value={newTel3}
+                type="text"
+                name="newtel3"
+                onChange={(e) => setNewTel3(e.target.value)}
+              />
             </div>
 
             <div className="input-group">
@@ -465,8 +455,6 @@ const Leads = () => {
                 label="Valor"
                 value={valueDonation}
                 onChange={(e) => setValueDonation(e.target.value)}
-          
-                
               />
               <FormInput
                 label="Data"
@@ -491,9 +479,7 @@ const Leads = () => {
 
             <div className="input-group">
               <div className="input-field">
-                <label>
-                  Observação da Ficha
-                </label>
+                <label>Observação da Ficha</label>
                 <textarea
                   className="text-area"
                   value={observation}
@@ -503,9 +489,7 @@ const Leads = () => {
                 />
               </div>
               <div className="input-field">
-                <label>
-                  Referência do Doador
-                </label>
+                <label>Referência do Doador</label>
                 <textarea
                   className="text-area"
                   value={reference}
@@ -546,9 +530,7 @@ const Leads = () => {
               type="date"
             />
             <div className="input-field">
-              <label>
-                Observação
-              </label>
+              <label>Observação</label>
               <textarea
                 value={observationScheduling}
                 onChange={(e) => {

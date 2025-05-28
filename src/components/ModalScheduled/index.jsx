@@ -58,7 +58,9 @@ const ModalScheduled = ({ scheduledOpen, onClose, setStatus, nowScheduled }) => 
       toast.warning("Preencha todos os campos obrigatórios");
       return;
     }
+
     const response = await newDonorAndDonation(
+      scheduledOpen.id,
       scheduledOpen.name,
       address,
       neighborhood,
@@ -66,9 +68,9 @@ const ModalScheduled = ({ scheduledOpen, onClose, setStatus, nowScheduled }) => 
       telSuccess,
       tel2,
       tel3,
-      scheduledOpen.cpf,
+      scheduledOpen.leads_icpf,
       valueDonation,
-      DataSelect(dateScheduling),
+      dateScheduling,
       campain,
       observation,
       scheduledOpen.operator_code_id,

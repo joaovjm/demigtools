@@ -27,7 +27,7 @@ export const DataNow = (x) => {
     return `${month}/${year}`;
   }
   if (x === "mesrefnf"){
-    return `${year}-${month}`
+    return `${year}-${month}-01`
   }
   if (x === undefined) {
     return `${day}/${month}/${year}`;

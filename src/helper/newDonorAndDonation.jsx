@@ -10,6 +10,7 @@ import {
 import supabase from "./superBaseClient";
 
 const newDonorAndDonation = async (
+  id,
   name,
   address,
   neighborhood,
@@ -25,6 +26,7 @@ const newDonorAndDonation = async (
   operatorID,
   nowScheduled
 ) => {
+  console.log(id)
   const handleDonorCreation = async () => {
     const response = await insertDonor(
       name,
@@ -63,52 +65,40 @@ const newDonorAndDonation = async (
         "Doador foi criado, mas houve um erro ao criar a doação: " +
           donationResponse.error?.message
       );
+
+    return donationResponse
   };
 
-  const handleLeadCopyAndDelete = async () => {
-    const copyLeadResponse = await supabase
-      .from("leads_excludes")
-      .insert(
-        {
-          leads_address: nowScheduled.leads_address,
-          leads_city: nowScheduled.leads_city,
-          leads_date_accessed: nowScheduled.leads_date_accessed,
-          leads_icpf: nowScheduled.leads_icpf,
-          leads_id: nowScheduled.leads_id,
-          leads_name: nowScheduled.leads_name,
-          leads_neighborhod: nowScheduled.leads_neighborhod,
-          leads_observation: nowScheduled.leads_observation,
-          leads_scheduling_date: nowScheduled.leads_scheduling_date,
-          leads_status: nowScheduled.leads_status,
-          leads_tel_1: nowScheduled.leads_tel_1,
-          leads_tel_2: nowScheduled.leads_tel_2,
-          leads_tel_3: nowScheduled.leads_tel_3,
-          leads_tel_4: nowScheduled.leads_tel_4,
-          leads_tel_5: nowScheduled.leads_tel_5,
-          leads_tel_6: nowScheduled.leads_tel_6,
-          operator_code_id: nowScheduled.operator_code_id
-
-        }
-        )
-      .select();
-    if (copyLeadResponse.error)
-      throw new Error("Erro ao copiar lead: " + copyLeadResponse.error.message);
-    const deleteLeadResponse = await supabase
+  const handleUpdateStatusLead = async () => {
+    
+    try{
+      const { data: updateLead, error: errorUpdate } = await supabase
       .from("leads")
-      .delete()
-      .eq("leads_id", nowScheduled.leads_id)
-      .select();
-    if (deleteLeadResponse.error)
-      throw new Error("Erro ao deletar lead: " + deleteLeadResponse.error.message);
+      .update({leads_status: "Sucesso"})
+      .eq("leads_id", id);
+
+      if (errorUpdate) throw errorUpdate;
+      if (!errorUpdate) return updateLead;
+    } catch (error) {
+      console.log("Erro: ", error)
+    }
+    
   };
+
 
   const result = await toast.promise(
     new Promise(async (resolve, reject) => {
       try {
         const donor_id = await handleDonorCreation();
-        await handleDonationCreation(donor_id);
-        await handleLeadCopyAndDelete();
+        const donation = await handleDonationCreation(donor_id);
+        const leadStatus = await handleUpdateStatusLead();
+        
+        console.log(donor_id)
+        console.log(donation)
+        console.log(leadStatus)
+        
         resolve("Operação completada com sucesso!");
+        
       } catch (err) {
         reject(err);
       }
