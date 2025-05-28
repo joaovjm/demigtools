@@ -114,12 +114,12 @@
 
 @media (min-width: 1200px){
     .receiver-donations-header{
-        width: 900px;
+        width: 800px;
     }
     .receiver-donations-form{
         display: flex;
-        width: 900px;
-        gap: 12px;
+        width: 800px;
+        gap: 32px;
 
     }
 }

@@ -20,7 +20,7 @@ body{
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   width: 100%;
 }
 
@@ -40,7 +40,7 @@ body{
 .input-field input,
 .input-field select,
 .input-field textarea {
-  padding: 8px;
+ 
   border-radius: 6px;
   border: 1px solid #888;
   background-color: #2b2b2b;

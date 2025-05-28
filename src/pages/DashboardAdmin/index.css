@@ -73,14 +73,13 @@ p {
 .section-table-and-info {
   width: 100%;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   gap: 12px;
 }
 
 .section-operators {
   display: flex;
   flex-direction: column;
-  width: 20%;
   height: 380px;
   padding: 6px;
   gap: 6px;
@@ -143,7 +142,6 @@ p {
 .section-operators-card {
   display: flex;
   flex-direction: column;
-  width: 100%;
   background-color: #1f1d1d;
   padding: 8px;
   border-radius: 6px;
@@ -166,7 +164,7 @@ p {
   justify-content: space-around;
 }
 
-.div-leads{
+.div-leads {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -177,7 +175,7 @@ p {
   background-color: #1f1d1d;
 }
 
-@media (min-width: 379px) and (max-width:599px) {
+@media (min-width: 379px) and (max-width: 599px) {
   .sectionHeader {
     display: flex;
     justify-content: center;
@@ -208,7 +206,7 @@ p {
     height: 420px;
   }
 
-  .table-body-confirmation-text{
+  .table-body-confirmation-text {
     padding: 12px 12px;
     font-size: 10px;
   }
@@ -233,17 +231,22 @@ p {
   }
 }
 
-@media (min-width: 600px) and (max-width:768px){
+@media (min-width: 600px) and (max-width: 768px) {
   .sectionHeader {
+    width: 100%;
     display: flex;
     justify-content: center;
     padding: 10px;
     gap: 6px;
+    overflow-x: auto;
+    h3 {
+      font-size: 12px;
+    }
   }
 
   .divCard {
-    width: 170px;
-    height: 80px;
+    width: 140px;
+    height: 70px;
     padding: 10px;
   }
 
@@ -252,7 +255,7 @@ p {
     flex-direction: column;
   }
 
-  .table-body-confirmation-text{
+  .table-body-confirmation-text {
     padding: 12px 22px;
     font-size: 12px;
   }
@@ -307,9 +310,18 @@ p {
 @media (min-width: 1200px) {
   .section-table {
     height: 380px;
+    width: 600px;
   }
-  .section-operators {
-    height: 380px;
+  
+
+  .section-operators-card{
+    width: 160px;
+  }
+
+  .section-operators-card-value{
+    label{
+      font-size: 12px;
+    }
   }
 
   .section-grafic {
@@ -317,9 +329,23 @@ p {
     border: none;
   }
 
-  .divCard{
-    height: 80px;
-    width: 180px;
-    padding: 12px;
+  .divCard {
+    height: 70px;
+    width: 140px;
+    padding: 8px;
+
+    h3 {
+      font-size: 12px;
+    }
+
+    p {
+      font-size: 13px;
+    }
+  }
+
+  .table-head-confirmation-text,
+  .table-body-confirmation-tr,
+  .section-operators-card {
+    font-size: 12px;
   }
 }

@@ -6,7 +6,6 @@
   min-height: calc(100vh - 10.8vh);
 }
 
-
 .section-info-leads {
   display: flex;
   flex-direction: column;
@@ -29,7 +28,7 @@
   border-radius: 6px;
   margin-top: 12px;
   padding: 6px 12px;
-  gap: 16px;
+  gap: 6px;
 }
 
 .info-possible-donor-loading {
@@ -116,7 +115,6 @@
   border: 3px #383838 solid;
   border-radius: 6px;
   padding: 6px 12px;
-  
 }
 
 .address-area,
@@ -141,7 +139,7 @@
   gap: 8px;
   padding: 8px 0px 16px 0px;
 
-  .input-field{
+  .input-field {
     width: 80%;
   }
 }
@@ -210,9 +208,28 @@
   }
 }
 
-@media (min-width: 1100px){
-  .info-possible-donor{
-    max-height: 360px;
+@media (min-width: 1100px) {
+  .section-info-leads{
+    width: 800px;
   }
 
+  .info-possible-donor {
+    min-height: 120px;
+
+    h3{
+      font-size: 14px;
+    }
+    p{
+      font-size: 12px;
+    }
+  }
+
+  .menu-action-lead {
+    .input-field input,
+    .input-field select,
+    .input-field textarea {
+      font-size: 12px;
+      
+    }
+  }
 }
