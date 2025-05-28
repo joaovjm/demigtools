@@ -17,6 +17,7 @@ import OperatorCard from "../../components/cards/OperatorCard";
 import ConfirmationCard from "../../components/cards/ConfirmationCard";
 import SchedulingCard from "../../components/cards/SchedulingCard";
 import { getLeadsHistory } from "../../helper/getLeadsHistory";
+import { leadsHistoryService } from "../../services/leadsHistoryService";
 
 const Dashboard = () => {
   const caracterOperator = JSON.parse(localStorage.getItem("operatorData"));
@@ -38,7 +39,6 @@ const Dashboard = () => {
   const [donationConfirmation, setDonationConfirmation] = useState([]);
   const [fullNotReceivedDonations, setFullNotReceivedDonations] = useState([]);
   const [scheduled, setScheduled] = useState([]);
-  const [leadsHistory, setLeadsHistory] = useState([]);
 
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -89,13 +89,13 @@ const Dashboard = () => {
     setStatus(null);
   };
 
-  const leads = async () => {
-    const leadsHistory = await getLeadsHistory()
-    console.log(leadsHistory)
+  const lead = async () => {
+    const response = await leadsHistoryService();
   }
+
   useEffect(() => {
     donations();
-    // leads();
+    lead()
   }, [active, modalOpen, status, operatorData]);
 
   const handleClickCard = (e) => {
@@ -212,7 +212,7 @@ const Dashboard = () => {
         </section>
         ) : <section className="section-grafic">
           <div className="div-leads">
-
+            <h1>Função em desenvolvimento...</h1>
           </div>
         </section> }
         
