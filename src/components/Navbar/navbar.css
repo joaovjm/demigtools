@@ -66,6 +66,17 @@
   color: #7C7C8C;
 }
 
+.meta{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 50%;
+  border: 3px double #7C7C8C;
+  border-radius: 6px;
+  font-weight: 700;
+}
+
 .link_login {
   display: flex;
   align-items: center;

@@ -9,6 +9,7 @@ import { FaAngleDown } from "react-icons/fa";
 
 import { AdminMenu, Navitens, OperadorMenu, RelatórioMenu } from "../Navitens";
 import supabase from "../../helper/superBaseClient";
+import getOperatorMeta from "../../helper/getOperatorMeta";
 
 const Navbar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -17,6 +18,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeMobileDropdown, setActiveMobileDropdown] = useState(null);
+  const [operatorMeta, setOperatorMeta] = useState([]);
 
   const dropdownRef = useRef(null);
   const mobileMenuRef = useRef(null);
@@ -58,6 +60,18 @@ const Navbar = () => {
       console.error("Nenhum operador encontrado para o email:", email);
     }
   };
+
+  useEffect(() => {
+    const meta = async () => {
+      if (operatorData && operatorData.operator_code_id) {
+        const operatorMeta = await getOperatorMeta(
+          operatorData.operator_code_id
+        );
+        setOperatorMeta(operatorMeta);
+      }
+    };
+    meta();
+  }, [operatorData]);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -211,6 +225,14 @@ const Navbar = () => {
               </Link>
             )}
           </div>
+          {operatorData?.operator_type === "Operador" ||
+            (operatorData?.operator_type === "Operador Casa" && (
+              <div className="meta">
+                <label>
+                  META: R$ {operatorMeta?.[0]?.meta || ""}
+                </label>
+              </div>
+            ))}
 
           {isAuthenticated && operatorData?.operator_type === "Admin" ? (
             <div className="menu-and-logo">
@@ -323,7 +345,9 @@ const Navbar = () => {
                 </button>
               </div>
             </div>
-          ) : isAuthenticated && (operatorData?.operator_type === "Operador" || operatorData?.operator_type === "Operador Casa") ? (
+          ) : isAuthenticated &&
+            (operatorData?.operator_type === "Operador" ||
+              operatorData?.operator_type === "Operador Casa") ? (
             <div className="menu-and-logo">
               <div className="nav-item-content">
                 <ul className="nav-items">
@@ -513,7 +537,8 @@ const Navbar = () => {
           </div>
         ) : (
           isAuthenticated &&
-          (operatorData?.operator_type === "Operador" || operatorData?.operator_type === "Operador Casa") && (
+          (operatorData?.operator_type === "Operador" ||
+            operatorData?.operator_type === "Operador Casa") && (
             <div
               ref={mobileMenuRef}
               className={`mobile-menu ${mobileMenuOpen ? "active" : ""}`}

@@ -161,15 +161,15 @@ const Dashboard = () => {
           </div>
 
           {/* Card 4 */}
-          {/* <div className="divCard">
+        <div className="divCard">
             <div className="divHeader">
-              <h3 className="h3Header">Recebida Mês Atual</h3>
+              <h3 className="h3Header">Recebida</h3>
             </div>
             <div className="divBody">
-              <p>{receivedPercent}%</p>
-              <p>R$ {valueMonthReceived}</p>
+              <p>In development</p>
+              <p>R$</p>
             </div>
-          </div> */}
+          </div>
         </section>
 
         {!active && (
@@ -200,6 +200,7 @@ const Dashboard = () => {
               setNowScheduled={setNowScheduled}
             />
           ) : null}
+          
         </section>
         {modalOpen && active === "inConfirmation" && (
           <ModalConfirmations

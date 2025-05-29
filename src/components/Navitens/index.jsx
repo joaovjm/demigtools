@@ -86,18 +86,6 @@ export const RelatórioMenu = [
         path: "./workhistory",
         cName: "submenu-itens",
     },
-    {
-        id: 4,
-        title:"Movimento dos Coletadores",
-        path: "./collectorsmoviment",
-        cName: "submenu-itens",
-    },
-    {
-        id: 5,
-        title:"Contar Doações",
-        path: "./countdonations",
-        cName: "submenu-itens",
-    }
 ];
 
 export const OperadorMenu = [

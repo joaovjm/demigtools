@@ -44,11 +44,48 @@
     height: 500px;
     background-color: #1F1D1D;
     border-radius: 0 6px 6px 0;
-    padding: 24px;
+    padding: 12px;
+    overflow-y: auto;
+}
+
+.admin-manager-content::-webkit-scrollbar{
+    width: 8px;
+}
+
+.admin-manager-content::-webkit-scrollbar-track{
+    background-color: #2f2d2d;
+}
+
+.admin-manager-content::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+.admin-manager-content::-webkit-scrollbar-thumb:hover {
+  background-color: #1f1d1d;
 }
 
 .admin-manager-content-operator{
     display: flex;
     gap: 12px;
+    border: 3px double #363A3D;
+    border-radius: 6px;
+    padding: 6px;
+
+    strong{
+        font-size: 12px;
+    }
+}
+
+.admin-manager-content-operator-btns{
+    display: flex;
+    align-items: flex-end;
+
+    button{
+        width: 60px;
+        height: 30px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
 }
 
