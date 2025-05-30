@@ -229,7 +229,7 @@ const Navbar = () => {
             (operatorData?.operator_type === "Operador Casa" && (
               <div className="meta">
                 <label>
-                  META: R$ {operatorMeta?.[0]?.meta || ""}
+                  META: R$ {operatorMeta?.[0]?.meta || "?"}
                 </label>
               </div>
             ))}

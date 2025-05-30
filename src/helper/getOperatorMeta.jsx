@@ -1,7 +1,11 @@
 import supabase from "./superBaseClient";
 
 const getOperatorMeta = async (operator) => {
-  let query = supabase.from("operator_meta").select();
+  let query = supabase
+    .from("operator_meta")
+    .select(
+      "id, meta, operator_code_id, operator_name: operator_code_id(operator_name), start_date"
+    );
   if (operator) {
     query = await query.eq("operator_code_id", operator);
   } else {
