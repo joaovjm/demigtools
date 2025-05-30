@@ -225,14 +225,13 @@ const Navbar = () => {
               </Link>
             )}
           </div>
-          {operatorData?.operator_type === "Operador" ||
-            (operatorData?.operator_type === "Operador Casa" && (
+          {operatorData?.operator_type !== "Admin" && (
               <div className="meta">
                 <label>
                   META: R$ {operatorMeta?.[0]?.meta || "?"}
                 </label>
               </div>
-            ))}
+            )}
 
           {isAuthenticated && operatorData?.operator_type === "Admin" ? (
             <div className="menu-and-logo">

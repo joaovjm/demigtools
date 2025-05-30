@@ -40,7 +40,6 @@ const GetOperator = async (nameOrCode, login) => {
 };
 
 const OperatorSessionLogin = async (login, password) => {
-  console.log("OperatorSessionLogin started", { login });
   if (!login || !password) {
     toast.warning("Preencha os campos");
     return;
@@ -51,7 +50,6 @@ const OperatorSessionLogin = async (login, password) => {
   if (data && data.length > 0) {
     const username = data[0].operator_name;
     const login = username.normalize("NFD").replace(/[\u0300-\u036f\s]/g, "").toLocaleLowerCase();
-    console.log("Processing login for:", username, login);
 
     if (data[0].operator_active) {
       try {
