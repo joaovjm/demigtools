@@ -52,7 +52,7 @@ const ModalDonation = ({
       impresso,
       recebido,
       descricao,
-      mesref,
+      mesref-1,
       campain
     );
 
