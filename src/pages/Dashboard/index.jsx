@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import "./index.css";
 //import getDonationReceived from "../../helper/getDonationReceived";
 import getDonationNotReceived from "../../helper/getDonationNotReceived";
-import getDonationPerMonthReceived from "../../helper/getDonationPerMonthReceived";
+// import getDonationPerMonthReceived from "../../helper/getDonationPerMonthReceived";
 import { DataNow } from "../../components/DataTime";
 import TableConfirmation from "../../components/TableConfirmation";
 import TableInOpen from "../../components/TableInOpen";
@@ -16,6 +16,8 @@ import ModalDonationInOpen from "../../components/ModalDonationInOpen";
 import { useLocation } from "react-router";
 import supabase from "../../helper/superBaseClient";
 import MotivationalPhrases from "../../components/MotivationalPhrases";
+import getOperatorMeta from "../../helper/getOperatorMeta";
+import getDonationReceived from "../../helper/getDonationReceived";
 
 const Dashboard = () => {
   const caracterOperator = JSON.parse(localStorage.getItem("operatorData"));
@@ -23,7 +25,7 @@ const Dashboard = () => {
   const [valueConfirmations, setValueConfirmations] = useState(null); //Total valor na confirmação
   const [openDonations, setOpenDonations] = useState(null); //Quantidades de fichas em aberto
   const [valueOpenDonations, setValueOpenDonations] = useState(null); //Total valor de fichas em aberto
-  const [monthReceived, setMonthReceived] = useState(null); //Total de fichas recebidas em determinado mês
+  const [metaValue, setMetaValue] = useState(null); //Total de fichas recebidas em determinado mês
   const [valueMonthReceived, setValueMonthReceived] = useState(null); //Total valor dos recebidos do atual Mês
   const [receivedPercent, setReceivedPercent] = useState(null);
   const [scheduling, setScheduling] = useState(0); //Total de leads agendadas
@@ -38,6 +40,7 @@ const Dashboard = () => {
   const [fullNotReceivedDonations, setFullNotReceivedDonations] = useState([]);
   const [scheduled, setScheduled] = useState([]);
   const [donationFilterPerId, setDonationFilterPerId] = useState("");
+  const [meta, setMeta] = useState([]);
 
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -59,12 +62,8 @@ const Dashboard = () => {
         caracterOperator.operator_code_id,
         caracterOperator.operator_type
       );
-      await getDonationPerMonthReceived(
-        monthref,
-        setMonthReceived,
-        setValueMonthReceived,
-        setReceivedPercent
-      );
+      const donationReceived = await getDonationReceived(caracterOperator.operator_code_id, meta);
+      setValueMonthReceived(donationReceived.totalValue)
       await getScheduledLeads(
         caracterOperator.operator_code_id,
         setScheduled,
@@ -93,17 +92,18 @@ const Dashboard = () => {
     setStatus(null);
   };
 
-  const motivationalPhrases = async () => {
-    const { data } = await supabase
-      .from("demigtool_motivational_phrases")
-      .select();
+  useEffect(() => {
+    const getMeta = async () => {
+      const metaInfo = await getOperatorMeta(caracterOperator.operator_code_id);
+      setMeta(metaInfo);
 
-    return data;
-  };
+    };
+    getMeta();
+  }, []);
 
   useEffect(() => {
     donations();
-  }, [active, modalOpen, status, operatorData]);
+  }, [active, modalOpen, status, operatorData, meta]);
 
   useEffect(() => {
     setActive(false);
@@ -161,20 +161,20 @@ const Dashboard = () => {
           </div>
 
           {/* Card 4 */}
-        <div className="divCard">
+          <div className="divCard">
             <div className="divHeader">
-              <h3 className="h3Header">Recebida</h3>
+              <h3 className="h3Header">Recebida / Falta</h3>
             </div>
             <div className="divBody">
-              <p>In development</p>
-              <p>R$</p>
+              <p>R$ {valueMonthReceived}</p>
+              <p>R$ {meta?.[0]?.meta - valueMonthReceived}</p>
             </div>
           </div>
         </section>
 
         {!active && (
           <section className="motivational">
-            <div className="motivational-card">{<MotivationalPhrases/>}</div>
+            <div className="motivational-card">{<MotivationalPhrases />}</div>
           </section>
         )}
         <section className="sectionGrafico">
@@ -200,7 +200,6 @@ const Dashboard = () => {
               setNowScheduled={setNowScheduled}
             />
           ) : null}
-          
         </section>
         {modalOpen && active === "inConfirmation" && (
           <ModalConfirmations

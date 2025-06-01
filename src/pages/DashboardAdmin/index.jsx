@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import "./index.css";
 //import getDonationReceived from "../../helper/getDonationReceived";
 import getDonationNotReceived from "../../helper/getDonationNotReceived";
-import getDonationPerMonthReceived from "../../helper/getDonationPerMonthReceived";
+// import getDonationPerMonthReceived from "../../helper/getDonationPerMonthReceived";
 import { DataNow } from "../../components/DataTime";
 import TableConfirmation from "../../components/TableConfirmation";
 import TableInOpen from "../../components/TableInOpen";
