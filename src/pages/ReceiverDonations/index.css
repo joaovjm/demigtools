@@ -120,6 +120,9 @@
         display: flex;
         width: 800px;
         gap: 32px;
+    }
 
+    .receiver-donations-table{
+        width: 800px;
     }
 }
