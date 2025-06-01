@@ -55,7 +55,6 @@ const Navbar = () => {
     if (userData) {
       localStorage.setItem("operatorData", JSON.stringify(userData));
       setOperatorData(userData);
-      console.log("Operador encontrado e salvo:", userData);
     } else {
       console.error("Nenhum operador encontrado para o email:", email);
     }
@@ -225,7 +224,7 @@ const Navbar = () => {
               </Link>
             )}
           </div>
-          {operatorData?.operator_type !== "Admin" && (
+          {(operatorData?.operator_type === "Operador" || operatorData?.operator_type === "Operador Casa") && (
               <div className="meta">
                 <label>
                   META: R$ {operatorMeta?.[0]?.meta || "?"}
