@@ -16,6 +16,7 @@ export const insertDonation = async (
   let print = "";
   let received = "";
 
+
   if (impresso === true) {
     print = "Sim";
   } else {
