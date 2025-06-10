@@ -10,7 +10,6 @@ const filterName = async (operatorWork) => {
       ])
     ).values(),
   ];
-
   return operator;
 };
 

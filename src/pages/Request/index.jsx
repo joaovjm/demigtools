@@ -1,47 +1,83 @@
 import { useEffect, useState } from "react";
 import "./index.css";
+import DateSelected from "../../components/Request/DateSelected";
+import DonationValues from "../../components/Request/DonationValues";
+import CreatePackage from "../../components/Request/CreatePackage";
+import DonationTable from "../../components/Request/DonationTable";
+import RequestCard from "../../components/Request/RequestCard";
+import {distributePackageService} from "../../services/distributePackageService";
 
 const Request = () => {
-  const [list1, setList1] = useState([
-    { id: 1, name: "Item 1" },
-    { id: 2, name: "Item 2" },
-    { id: 3, name: "Item 3" },
-    { id: 4, name: "Item 4" },
-    { id: 5, name: "Item 5" },
-  ]);
-
-  const Items = () => (
-    <div className="form-request-list1-items">
-      {list1.map((item) => (
-        <div className="form-request-list1-items-item" key={item.id}>
-          {item.name}
-        </div>
-      ))}
-    </div>
-  );
+  const [dataForm, setDataForm] = useState(false);
+  const [filterForm, setFilterForm] = useState(false);
+  const [requestForm, setRequestForm] = useState(false);
+  const [createPackage, setCreatePackage] = useState([]);
+  const [date, setDate] = useState([]);
+  const [perOperator, setPerOperator] = useState({});
+  const [unassigned, setUnassigned] = useState([]);
+  const [operatorID, setOperatorID] = useState([]);
+  const [operatorName, setOperatorName] = useState({});
+  const [selected, setSelected] = useState(null);
 
   useEffect(() => {
-    console.log("entrou no useEffect");
-  }, [list1]);
-
-  const handleAddItem = () => {
-    setList1((prev) => [
-      ...prev,
-      { id: prev.length + 1, name: `Item ${prev.length + 1}` },
-    ]);
-  };
+    distributePackageService(
+      createPackage,
+      setPerOperator,
+      setUnassigned,
+      setOperatorID,
+      setOperatorName
+    );
+  }, [createPackage]);
 
   return (
-    <div>
-      <h1>Development started</h1>
-      <div className="form-request">
-        <div className="form-request-list1">
-          <h5>Lista 1</h5>
-          <Items />
-          <button onClick={handleAddItem} className="btn-add-item">
-            +
-          </button>
+    <div className="request-main">
+      <div className="request-front">
+        <div className="request-front-left">
+          <CreatePackage
+            setDataForm={setDataForm}
+            setCreatePackage={setCreatePackage}
+            setDate={setDate}
+          />
+
+          {dataForm ? (
+            <DateSelected
+              date={date}
+              setDataForm={setDataForm}
+              setFilterForm={setFilterForm}
+            />
+          ) : filterForm ? (
+            <DonationValues
+              createPackage={createPackage}
+              setFilterForm={setFilterForm}
+              setRequestForm={setRequestForm}
+            />
+          ) : (
+            requestForm && (
+              <DonationTable
+                unassigned={unassigned}
+                selected={selected}
+                setSelected={setSelected}
+              />
+            )
+          )}
         </div>
+        {requestForm && (
+          <div className="request-front-right">
+            {operatorID?.map((cp) => (
+              <RequestCard
+                perOperator={perOperator[cp]}
+                setPerOperator={setPerOperator}
+                key={cp}
+                operatorName={operatorName[cp]}
+                operatorID={cp}
+                selected={selected}
+                setSelected={setSelected}
+                createPackage={createPackage}
+                setCreatePackage={setCreatePackage}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

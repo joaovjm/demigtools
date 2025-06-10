@@ -6,7 +6,6 @@ export const distributePackageService = async (
   setUnassigned,
   setOperatorID,
   setOperatorName,
-  setCreatePackage
 ) => {
   const response = await getOperators(
     true,
