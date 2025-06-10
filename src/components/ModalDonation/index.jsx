@@ -52,7 +52,7 @@ const ModalDonation = ({
       impresso,
       recebido,
       descricao,
-      mesref-1,
+      mesref,
       campain
     );
 
@@ -84,7 +84,7 @@ const ModalDonation = ({
     }
     setData_receber(value);
 
-    const monthYear = `${DataSelect(value,"year")}-${DataSelect(value, "month")}`;
+    const monthYear = `${DataSelect(value,"year")}-${DataSelect(value, "month")}-01`;
     setMesref(monthYear);
   };
 
