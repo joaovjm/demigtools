@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import Loader from "../Loader";
 import getPackage from "../../helper/getPackage";
 
-const CreatePackage = ({setDataForm, setCreatePackage, setDate}) => {
+const CreatePackage = ({setDataForm, setCreatePackage, setDate, date}) => {
   const [requestPackage, setRequestPackage] = useState({
     name: "",
     type: "",
     startDate: "",
     endDate: "",
   });
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const handlePackageChange = (field, value) => {
     setRequestPackage((prev) => ({ ...prev, [field]: value }));
@@ -27,7 +27,17 @@ const CreatePackage = ({setDataForm, setCreatePackage, setDate}) => {
       return;
     }
     setLoading(true)
-    // const response = await getPackage(requestPackage);
+    if (new Date(requestPackage.startDate) > new Date(requestPackage.endDate)) {
+      toast.error("A data de início não pode ser maior que a data de término");
+      setLoading(false)
+      return;
+    }
+    if (date.some((d) => requestPackage.startDate >= d.startDate && requestPackage.startDate <= d.endDate)) {
+      toast.error("Já existe um pacote com essas datas");
+      setLoading(false)
+      return;
+    }
+
     const response = await getPackage(requestPackage)
     if (response){
        setDataForm(true)

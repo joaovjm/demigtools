@@ -68,6 +68,7 @@ const Request = () => {
             setDataForm={setDataForm}
             setCreatePackage={setCreatePackage}
             setDate={setDate}
+            date={date}
           />
 
           {dataForm ? (
