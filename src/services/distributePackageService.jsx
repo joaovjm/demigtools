@@ -5,7 +5,7 @@ export const distributePackageService = async (
   setPerOperator,
   setUnassigned,
   setOperatorID,
-  setOperatorName,
+  setOperatorName
 ) => {
   const response = await getOperators(
     true,
@@ -24,32 +24,85 @@ export const distributePackageService = async (
     }
     return acc;
   }, {});
-  const perOperator = {};
+
+  const newPerOperator = {};
   const unassigned = [];
 
   createPackage?.forEach((donation) => {
     if (opFilter.includes(donation.operator_code_id)) {
-      if (!perOperator[donation.operator_code_id]) {
-        perOperator[donation.operator_code_id] = [];
+      if (!newPerOperator[donation.operator_code_id]) {
+        newPerOperator[donation.operator_code_id] = [];
       }
-      perOperator[donation.operator_code_id].push(donation);
+      newPerOperator[donation.operator_code_id].push(donation);
     } else {
       unassigned.push(donation);
     }
   });
 
-  setPerOperator(perOperator);
+  setPerOperator(newPerOperator);
   setUnassigned(unassigned);
   setOperatorID(opFilter);
   setOperatorName(opName);
 };
 
-export function assignPackage(selected, operatorID, createPackage, setCreatePackage) {
+export function assignPackage(
+  selected,
+  operatorID,
+  createPackage,
+  setCreatePackage
+) {
   const update = createPackage?.map((pkg) => {
     if (pkg.receipt_donation_id === selected) {
       return {
         ...pkg,
         operator_code_id: operatorID,
+      };
+    }
+    return pkg;
+  });
+  setCreatePackage(update);
+}
+
+export function removePackage() {}
+
+export function assignAllPackage(
+  createPackage,
+  unassigned,
+  operatorID,
+  setCreatePackage,
+  maxValue,
+  countValue
+) {
+  let count = countValue;
+  const update = createPackage?.map((pkg) => {
+    if (
+      unassigned.some(
+        (item) => item.receipt_donation_id === pkg.receipt_donation_id
+      )
+    ) {
+      if (count < maxValue) {
+        if (count + pkg.donation_value > maxValue) {
+          return pkg;
+        }
+        count = count + pkg.donation_value;
+        return {
+          ...pkg,
+          operator_code_id: operatorID,
+        };
+      } 
+
+    }
+    return pkg;
+  });
+  setCreatePackage(update);
+}
+
+export function removeAllPackage(createPackage, operatorID, setCreatePackage) {
+  const update = createPackage?.map((pkg) => {
+    if (pkg.operator_code_id === operatorID) {
+      return {
+        ...pkg,
+        operator_code_id: null,
       };
     }
     return pkg;

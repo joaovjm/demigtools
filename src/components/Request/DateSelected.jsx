@@ -1,11 +1,12 @@
 import React from "react";
 import { ICONS } from "../../constants/constants";
 
-const DateSelected = ({ date, setDataForm, setFilterForm }) => {
+const DateSelected = ({ date, setDataForm, setFilterForm, setContinueClick }) => {
 
   const handleDateForm = () => {
     setFilterForm(true)
     setDataForm(false)
+    setContinueClick(true);
   }
   return (
     <div className="request-front-left-bottom">

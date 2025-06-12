@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { assignPackage } from "../../services/distributePackageService";
+import { assignAllPackage, assignPackage, removeAllPackage } from "../../services/distributePackageService";
 
 const RequestCard = ({
   perOperator,
@@ -9,13 +9,15 @@ const RequestCard = ({
   selected,
   setSelected,
   createPackage,
-  setCreatePackage
+  setCreatePackage,
+  unassigned
 }) => {
   const [countValue, setCountValue] = useState(0);
   const [countQuant, setCountQuant] = useState(0);
+  const [maxValue, setMaxValue] = useState(0);
 
   const calculateValues = () => {
-    if (perOperator) {
+    if (perOperator && perOperator.length > 0) {
       const value = perOperator.reduce(
         (acc, item) => acc + item.donation_value,
         0
@@ -24,6 +26,9 @@ const RequestCard = ({
 
       setCountValue(value);
       setCountQuant(quantity);
+    } else {
+      setCountValue(0);
+      setCountQuant(0);
     }
   };
 
@@ -48,6 +53,25 @@ const RequestCard = ({
     setSelected(null);
   };
 
+  const addAll = () => {
+    assignAllPackage(
+      createPackage,
+      unassigned,
+      operatorID,
+      setCreatePackage,
+      maxValue,
+      countValue
+    );
+  }
+
+  const removeAll = () => {
+    removeAllPackage(
+      createPackage,
+      operatorID,
+      setCreatePackage
+    );
+  }
+
   return (
     <div className="request-front-right-card">
       <h4>
@@ -64,14 +88,14 @@ const RequestCard = ({
         <label>Doações: {countQuant || 0}</label>
         <div className="input-field">
           <label>Max</label>
-          <input type="text" />
+          <input type="text" onChange={(e) => setMaxValue(e.target.value)} />
         </div>
       </div>
       <div className="request-front-right-card-btn">
-        <button className="btn-delete">All</button>
-        <button className="btn-delete">-1</button>
+        <button className="btn-delete" onClick={removeAll}>All</button>
+        <button className="btn-delete" onClick={() => addSingle("remove")}>-1</button>
         <label>|</label>
-        <button className="btn-add-card">All</button>
+        <button className="btn-add-card" onClick={addAll}>All</button>
         <button className="btn-add-card" onClick={addSingle}>
           +1
         </button>
