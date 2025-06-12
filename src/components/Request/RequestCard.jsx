@@ -93,7 +93,7 @@ const RequestCard = ({
       </div>
       <div className="request-front-right-card-btn">
         <button className="btn-delete" onClick={removeAll}>All</button>
-        <button className="btn-delete" onClick={() => addSingle("remove")}>-1</button>
+        <button className="btn-delete">-1</button>
         <label>|</label>
         <button className="btn-add-card" onClick={addAll}>All</button>
         <button className="btn-add-card" onClick={addSingle}>
