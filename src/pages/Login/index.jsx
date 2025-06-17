@@ -1,11 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./login.css";
 import { FaEye, FaEyeSlash, FaRegUser } from "react-icons/fa";
 import supabase from "../../helper/superBaseClient";
 import { Navigate, useNavigate } from "react-router";
 import Loader from "../../components/Loader";
 import OperatorSessionLogin from "../../auth/OperatorSessionLogin";
-import { ToastContainer } from "react-toastify";
 import { UserContext } from "../../context/UserContext";
 
 const Login = () => {

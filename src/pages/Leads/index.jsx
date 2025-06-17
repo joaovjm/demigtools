@@ -93,28 +93,56 @@ const Leads = () => {
   }, [currentItem]);
 
   const handleNext = async () => {
-    if (currentItem < items && currentLead?.leads_id) {
-      const data = await updateLeads(
-        "Não Atendeu",
-        operatorID,
-        currentLead.leads_id
-      );
-      if (data[0].leads_status === "Não Atendeu") {
-        const next = currentItem + 1;
-        setCurrentItem(next);
+    if (operatorType === "Operador Casa") {
+      if (currentItem < items && currentLead?.leads_id) {
+        const data = await updateLeads(
+          "Não Atendeu",
+          operatorID,
+          currentLead.leads_id,
+          "Operador Casa"
+        );
+        if (data[0].leads_status === "Não Atendeu") {
+          const next = currentItem + 1;
+          setCurrentItem(next);
+        }
+      }
+    } else {
+      if (currentItem < items && currentLead?.leads_id) {
+        const data = await updateLeads(
+          "Não Atendeu",
+          operatorID,
+          currentLead.leads_id
+        );
+        if (data[0].leads_status === "Não Atendeu") {
+          const next = currentItem + 1;
+          setCurrentItem(next);
+        }
       }
     }
   };
 
   const handleNoDonation = async () => {
-    const response = await updateLeads(
-      "Não pode ajudar",
-      Number(operatorID),
-      currentLead.leads_id
-    );
-    if (response.length > 0) {
-      const next = currentItem + 1;
-      setCurrentItem(next);
+    if (operatorType === "Operador Casa") {
+      const response = await updateLeads(
+        "Não pode ajudar",
+        Number(operatorID),
+        currentLead.leads_id,
+        "Operador Casa"
+      );
+      if (response.length > 0) {
+        const next = currentItem + 1;
+        setCurrentItem(next);
+      }
+    } else {
+      const response = await updateLeads(
+        "Não pode ajudar",
+        Number(operatorID),
+        currentLead.leads_id
+      );
+      if (response.length > 0) {
+        const next = currentItem + 1;
+        setCurrentItem(next);
+      }
     }
   };
 
