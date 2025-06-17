@@ -3,10 +3,17 @@ import supabase from "./superBaseClient";
 const getScheduledLeads = async (
   operator_code_id,
   setScheduled,
-  setScheduling
+  setScheduling,
+  leads
 ) => {
+  let lead;
+  if(leads === "Operador Casa"){
+    lead = "leads_casa";
+  } else {
+    lead = "leads"
+  }
    let query = supabase
-    .from("leads")
+    .from(lead)
     .select("*, operator_name: operator_code_id(operator_name)")
     .eq("leads_status", "agendado")
     .order("leads_scheduling_date", { ascending: true })

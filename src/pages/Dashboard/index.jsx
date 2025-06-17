@@ -62,13 +62,25 @@ const Dashboard = () => {
         caracterOperator.operator_code_id,
         caracterOperator.operator_type
       );
-      const donationReceived = await getDonationReceived(caracterOperator.operator_code_id, meta);
-      setValueMonthReceived(donationReceived.totalValue)
-      await getScheduledLeads(
+      const donationReceived = await getDonationReceived(
         caracterOperator.operator_code_id,
-        setScheduled,
-        setScheduling
+        meta
       );
+      setValueMonthReceived(donationReceived.totalValue);
+      if (operatorData.operator_type === "Operador Casa") {
+        await getScheduledLeads(
+          caracterOperator.operator_code_id,
+          setScheduled,
+          setScheduling,
+          "Operador Casa"
+        );
+      } else {
+        await getScheduledLeads(
+          caracterOperator.operator_code_id,
+          setScheduled,
+          setScheduling
+        );
+      }
     } catch (error) {
       console.error("Error fetching donations:", error);
     }
@@ -96,7 +108,6 @@ const Dashboard = () => {
     const getMeta = async () => {
       const metaInfo = await getOperatorMeta(caracterOperator.operator_code_id);
       setMeta(metaInfo);
-
     };
     getMeta();
   }, []);
