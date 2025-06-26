@@ -1,9 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaAngleDown, FaAngleUp, FaEye, FaEyeSlash } from "react-icons/fa";
 
 const DonationTable = ({ unassigned, setSelected, selected }) => {
   const [visible, setVisible] = useState(true);
   const [packageCount, setPackageCount] = useState(0);
+  const [nowPage, setNowPage] = useState(1);
+
+  const itemsPerPage = 50;
+  const endPage = nowPage * itemsPerPage;
+  const startPage = endPage - itemsPerPage;
+
+  const itemsPaginated = unassigned.slice(startPage, endPage);
+  const totalPage = Math.ceil(unassigned.length / itemsPerPage);
 
   useEffect(() => {
     const countPackage = () => {
@@ -28,7 +36,14 @@ const DonationTable = ({ unassigned, setSelected, selected }) => {
       </div>
       <div className="input-field">
         <label>Total</label>
-        <input type="text" value={packageCount} disabled />
+        <input
+          type="text"
+          value={packageCount.toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+          })}
+          disabled
+        />
       </div>
       <div className="input-field">
         <label>Filtro</label>
@@ -53,7 +68,7 @@ const DonationTable = ({ unassigned, setSelected, selected }) => {
           <label>Ultima OP</label>
         </div>
         <div className="request-front-left-bottom-3-table-body">
-          {unassigned?.map((cp) => (
+          {itemsPaginated?.map((cp) => (
             <div
               key={cp.receipt_donation_id}
               onClick={() => handleUnassignedClick(cp.receipt_donation_id)}
@@ -78,6 +93,21 @@ const DonationTable = ({ unassigned, setSelected, selected }) => {
       </div>
       <div className="request-front-left-bottom-3-table-btn">
         <button>Distribuir Aleatóriamente</button>
+        <div className="request-front-left-bottom-3-table-pagination">
+          <button
+            onClick={() => setNowPage((prev) => Math.max(prev - 1, 1))}
+            disabled={nowPage === 1}
+          >
+            <FaAngleDown />
+          </button>
+          <label> {nowPage} </label>
+          <button
+            onClick={() => setNowPage((prev) => Math.min(prev + 1, totalPage))}
+            disabled={nowPage === totalPage}
+          >
+            <FaAngleUp />
+          </button>
+        </div>
       </div>
     </div>
   );

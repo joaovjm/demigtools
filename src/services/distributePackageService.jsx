@@ -63,7 +63,19 @@ export function assignPackage(
   setCreatePackage(update);
 }
 
-export function removePackage() {}
+export function removePackage(createPackage, setCreatePackage, operatorID) {
+  let updated = false;
+  const update = createPackage.map((pkg) => {
+    if (pkg.operator_code_id === operatorID) {
+      if (updated === false) {
+        updated = true;
+        return { ...pkg, operator_code_id: "" };
+      }
+    }
+    return pkg;
+  });
+  setCreatePackage(update);
+}
 
 export function assignAllPackage(
   createPackage,
@@ -89,8 +101,7 @@ export function assignAllPackage(
           ...pkg,
           operator_code_id: operatorID,
         };
-      } 
-
+      }
     }
     return pkg;
   });
@@ -108,4 +119,13 @@ export function removeAllPackage(createPackage, operatorID, setCreatePackage) {
     return pkg;
   });
   setCreatePackage(update);
+}
+
+export async function addEndDataInCreatePackage(createPackage, setCreatePackage, endDateRequest) {
+  const update = createPackage?.map((pkg) => ({
+    ...pkg, request_end_date: endDateRequest
+  }))
+
+  await setCreatePackage(update)
+  return update;
 }

@@ -5,7 +5,14 @@ import DonationValues from "../../components/Request/DonationValues";
 import CreatePackage from "../../components/Request/CreatePackage";
 import DonationTable from "../../components/Request/DonationTable";
 import RequestCard from "../../components/Request/RequestCard";
-import { distributePackageService } from "../../services/distributePackageService";
+import {
+  addEndDataInCreatePackage,
+  distributePackageService,
+} from "../../services/distributePackageService";
+import insertRequest from "../../helper/insertRequest";
+import { toast } from "react-toastify";
+import PackagesRequest from "../../components/Request/PackagesRequest";
+import { DataNow } from "../../components/DataTime";
 
 const Request = () => {
   const [dataForm, setDataForm] = useState(false);
@@ -20,6 +27,7 @@ const Request = () => {
   const [selected, setSelected] = useState(null);
   const [continueClick, setContinueClick] = useState(false);
   const [createPackageState, setCreatePackageState] = useState([]);
+  const [endDateRequest, setEndDateRequest] = useState("");
 
   useEffect(() => {
     distributePackageService(
@@ -56,20 +64,61 @@ const Request = () => {
     setCreatePackage(createPackageState);
   };
 
-  const handleConclude = () => {
-    console.log("Conclude button clicked");
+  const handleConclude = async () => {
+    if(endDateRequest === ""){
+    toast.warning("Preencha a data final da requisição!")
+    return;
+    }
+    if(endDateRequest < DataNow("noformated")){
+      toast.warning("A data final não pode ser menor que a data atual!")
+      return;
+    }
+    const updatePackage = await addEndDataInCreatePackage(
+      createPackage,
+      setCreatePackage,
+      endDateRequest
+    );
+    try {
+      await toast.promise(insertRequest(updatePackage), {
+        loading: 'Criando o pacote da requisição...',
+        success: 'Pacote criado com sucesso!',
+        error: 'Não fio possível criar o pacote! Contacte o administrador!'
+      });
+
+      setDataForm(false);
+      setFilterForm(false);
+      setRequestForm(false);
+      setCreatePackage([]);
+      setDate([]);
+      setPerOperator({});
+      setUnassigned([]);
+      setOperatorID([]);
+      setOperatorName({});
+      setSelected(null);
+      setContinueClick(false);
+      setCreatePackageState([]);
+      setEndDateRequest("");
+    } catch (error) {
+      console.error(error.message);
+    }
   };
 
   return (
     <div className="request-main">
       <div className="request-front">
         <div className="request-front-left">
-          <CreatePackage
-            setDataForm={setDataForm}
-            setCreatePackage={setCreatePackage}
-            setDate={setDate}
-            date={date}
-          />
+          {!filterForm && !requestForm && (
+              <CreatePackage
+                setDataForm={setDataForm}
+                setCreatePackage={setCreatePackage}
+                setDate={setDate}
+                date={date}
+              />
+          )}
+
+          {!dataForm && !filterForm && !requestForm && (
+            <PackagesRequest />
+          )}
 
           {dataForm ? (
             <DateSelected
@@ -109,10 +158,19 @@ const Request = () => {
                   createPackage={createPackage}
                   setCreatePackage={setCreatePackage}
                   unassigned={unassigned}
+                  setUnassigned={setUnassigned}
                 />
               ))}
             </div>
             <div className="request-front-right-bottom">
+              <div className="input-field">
+                <label>Data fim da requisição</label>
+                <input
+                  type="date"
+                  value={endDateRequest}
+                  onChange={(e) => setEndDateRequest(e.target.value)}
+                />
+              </div>
               <button
                 onClick={handleCancel}
                 className="request-front-right-bottom-cancel"

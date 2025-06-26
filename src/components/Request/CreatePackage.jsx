@@ -39,9 +39,13 @@ const CreatePackage = ({setDataForm, setCreatePackage, setDate, date}) => {
     }
 
     const response = await getPackage(requestPackage)
+  
     if (response){
        setDataForm(true)
-       setCreatePackage((cp) => ([...(cp || []), ...response]))
+       const cPackage = response.map((item) => ({
+        ...item, request_name: requestPackage.name
+       }))
+       setCreatePackage((cp) => ([...(cp || []), ...cPackage]))
        setDate((date) => [...date, {startDate: requestPackage.startDate, endDate: requestPackage.endDate}])
     }
     setLoading(false)

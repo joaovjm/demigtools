@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { assignAllPackage, assignPackage, removeAllPackage, removePackage } from "../../services/distributePackageService";
 import { toast } from "react-toastify";
-import { assignAllPackage, assignPackage, removeAllPackage } from "../../services/distributePackageService";
 
 const RequestCard = ({
   perOperator,
@@ -36,18 +36,17 @@ const RequestCard = ({
     calculateValues();
   }, [perOperator]);
 
-  const addSingle = (unassign) => {
-    if (!selected) {
-      toast.warning("Selecione uma doação para adicionar");
-      return;
+  const addSingle = () => {
+    if(!selected){
+      toast.warning("Selecione uma doação!")
+      return
     }
-
     assignPackage(
       selected,
       operatorID,
       createPackage, 
       setCreatePackage,
-      unassign
+      unassigned
     )
   
     setSelected(null);
@@ -72,6 +71,14 @@ const RequestCard = ({
     );
   }
 
+  const removeSingle = () => {
+    removePackage(
+      createPackage,
+      setCreatePackage,
+      operatorID
+    )
+  }
+
   return (
     <div className="request-front-right-card">
       <h4>
@@ -93,7 +100,7 @@ const RequestCard = ({
       </div>
       <div className="request-front-right-card-btn">
         <button className="btn-delete" onClick={removeAll}>All</button>
-        <button className="btn-delete">-1</button>
+        <button className="btn-delete" onClick={removeSingle}>-1</button>
         <label>|</label>
         <button className="btn-add-card" onClick={addAll}>All</button>
         <button className="btn-add-card" onClick={addSingle}>

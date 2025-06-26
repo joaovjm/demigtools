@@ -1,31 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { ICONS } from "../../constants/constants";
+import Loader from "../Loader";
 
 const DonationValues = ({ createPackage, setRequestForm, setFilterForm }) => {
-
   const [packageCount, setPackageCount] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const countPackage = () => {
-    const count = createPackage?.reduce((acc, item) => {
-      return acc + item.donation_value
-    }, 0)
+      const count = createPackage?.reduce((acc, item) => {
+        return acc + item.donation_value;
+      }, 0);
 
-    setPackageCount(count)
-  }
-  countPackage()
-  }, [createPackage])
+      setPackageCount(count);
+    };
+    countPackage();
+  }, [createPackage]);
 
   const handleRequestTable = () => {
-    setFilterForm(false)
-    setRequestForm(true)
-  }
+    setLoading(true);
+    setFilterForm(false);
+    setRequestForm(true);
+    setLoading(false);
+  };
 
   return (
     <div className="request-front-left-bottom-2">
       <div className="input-field">
         <label>Doação</label>
-        <input type="text" value={createPackage.length} disabled/>
+        <input type="text" value={createPackage.length} disabled />
       </div>
       <div className="input-field">
         <label>Total</label>
@@ -58,7 +61,9 @@ const DonationValues = ({ createPackage, setRequestForm, setFilterForm }) => {
       </div>
       <div className="request-front-left-bottom-2-btn">
         <button className="btn-cancel">Cancelar</button>
-        <button onClick={handleRequestTable} className="btn-search">{ICONS.SEARCH} Buscar</button>
+        <button onClick={handleRequestTable} className="btn-search">
+          {loading ? (<Loader/>) : (<>{ICONS.SEARCH} Buscar </>)}
+        </button>
       </div>
     </div>
   );
