@@ -2,7 +2,7 @@ import React from "react";
 import getCollectorPerReceived from "../helper/getReceiveDonationPerCollector";
 
 const filterName = async (collectorWork) => {
-  console.log(collectorWork);
+
   const collector = [
     ...new Map(
       collectorWork?.map((cl) => [
@@ -48,12 +48,6 @@ export const collectorWorkService = async (startDate, endDate) => {
   const addValueReceived = await filterValueReceived(collectorWork);
   const countNotReceived = await filterValueNotReceived(collectorWork, "count");
   const addValueNotReceived = await filterValueNotReceived(collectorWork);
-
-  console.log(names)
-  console.log(countReceived)
-  console.log(addValueReceived)
-  console.log(countNotReceived)
-  console.log(addValueNotReceived)
 
   return {
     names,

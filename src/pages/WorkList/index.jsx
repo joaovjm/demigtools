@@ -1,9 +1,103 @@
-import React from 'react'
+import { useContext, useEffect, useState } from "react";
+import "./index.css";
+import {
+  fetchWorklist,
+  getWorklistRequests,
+} from "../../services/worklistService";
+import { UserContext } from "../../context/UserContext";
+import { DataSelect } from "../../components/DataTime";
+import { useNavigate } from "react-router";
 
 const WorkList = () => {
-  return (
-    <div>Page in Development</div>
-  )
-}
+  const { operatorData, setOperatorData } = useContext(UserContext);
+  const [worklist, setWorklist] = useState([]);
+  const [workSelect, setWorkSelect] = useState("");
+  const [worklistRequest, setWorklistRequest] = useState([]);
+  const [active, setActive] = useState("");
 
-export default WorkList
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const getWorklist = async () => {
+      const worklistName = await fetchWorklist();
+      const listRequest = await getWorklistRequests(
+        operatorData.operator_code_id,
+        workSelect
+      );
+      setWorklist(worklistName);
+      setWorklistRequest(listRequest);
+    };
+    getWorklist();
+  }, [workSelect]);
+
+  const handleRequest = (list) => {
+    setActive(list.receipt_donation_id);
+    console.log(list.receipt_donation_id);
+    // navigate(`/donor/${id}`);
+  };
+
+  return (
+    <div className="worklist-container">
+      <div className="input-field">
+        <label>Lista de trabalho</label>
+        <select
+          value={workSelect}
+          onChange={(e) => setWorkSelect(e.target.value)}
+        >
+          <option value="" disabled>
+            Selecione...
+          </option>
+          {worklist &&
+            worklist?.map((list, index) => (
+              <option value={list.name} key={index}>
+                {list.name}
+              </option>
+            ))}
+        </select>
+      </div>
+      {worklistRequest?.length > 0 && (
+        <div className="worklist-list">
+          <table>
+            <thead className="worklist-list-head">
+              <tr className="worklist-list-head-tr">
+                <th>Nome</th>
+                <th>Valor</th>
+                <th>Data Recebida</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody className="worklist-list-body">
+              {worklistRequest?.map((list) => (
+                <tr
+                  className={`worklist-list-body-tr ${
+                    active === list.receipt_donation_id
+                      ? "active"
+                      : list.request_status === "NP"
+                      ? "NP"
+                      : list.request_status === "sucesso"
+                      ? "sucesso"
+                      : ""
+                  }`}
+                  key={list.receipt_donation_id}
+                  onClick={() => handleRequest(list)}
+                >
+                  <td>{list.donor.donor_name}</td>
+                  <td>
+                    {list.donation.donation_value.toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    })}
+                  </td>
+                  <td>{DataSelect(list.donation.donation_day_received)}</td>
+                  <td>{list.request_status}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default WorkList;

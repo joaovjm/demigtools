@@ -41,6 +41,10 @@
   padding: 12px;
 }
 
+.package-request-table::-webkit-scrollbar{
+  background-color: #383838;
+}
+
 .package-request-table-head, .package-request-table-body{
   width: 100%;
   

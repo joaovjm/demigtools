@@ -1,0 +1,84 @@
+.worklist-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: calc(100vh - 11.4vh);
+  padding: 12px;
+  gap: 12px;
+
+  .input-field {
+    width: 40%;
+    max-height: 14%;
+    background-color: #1f1d1d;
+    border-radius: 6px;
+    padding: 12px;
+  }
+  
+}
+
+.worklist-list {
+  display: flex;
+  width: 50%;
+  max-height: 80%;
+  border-radius: 6px;
+  overflow-y: auto;
+}
+
+.worklist-list table{
+    width: 100%;
+}
+
+.worklist-list::-webkit-scrollbar {
+  border: 1px;
+  width: 10px;
+}
+
+.worklist-list::-webkit-scrollbar-track {
+}
+
+.worklist-list::-webkit-scrollbar-thumb {
+  background-color: #1f1d1d;
+  padding: 2px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.worklist-list-head {
+}
+.worklist-list-head-tr {
+  th {
+    background-color: #1f1d1d;
+    font-size: 13px;
+    padding: 2px 12px;
+    border-radius: 6px;
+  }
+}
+
+.worklist-list-body-tr {
+  cursor: pointer;
+  background-color: #1f1d1d;
+  
+  td {
+    font-size: 13px;
+    padding: 2px 12px;
+    border-radius: 6px;
+  }
+}
+
+.worklist-list-body-tr.active{
+    background-color: #faa01c;
+}
+
+.worklist-list-body-tr.sucesso{
+    background-color: green;
+}
+
+.worklist-list-body-tr.NP{
+    background-color: #d60b0c;
+}
+
+.worklist-list-body-tr:hover {
+  background-color: #faa01c;
+}
