@@ -1,3 +1,4 @@
+import getWorklistRequests from "../helper/getWorklistRequests";
 import supabase from "../helper/superBaseClient";
 
 export async function fetchWorklist() {
@@ -22,16 +23,11 @@ export async function fetchWorklist() {
   }
 }
 
-export async function getWorklistRequests(operatorID, workSelect) {
-  const { data, error } = await supabase
-    .from("request")
-    .select(
-      "donor_id, donor: donor_id(donor_name), request_end_date, request_status, receipt_donation_id, donation: receipt_donation_id(donation_value, donation_day_received)"
-    )
-    .eq("operator_code_id", operatorID)
-    .eq("request_name", workSelect)
-    .eq("request_active", "True");
+export async function worklistRequests(operatorID, workSelect) {
+  const response = getWorklistRequests(operatorID, workSelect);
+  return response;
+}
 
-  if (error) throw error;
-  if (!error) return data;
+export async function newDonation () {
+  
 }

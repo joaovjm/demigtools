@@ -79,6 +79,10 @@
     background-color: #d60b0c;
 }
 
+.worklist-list-body-tr.NA{
+    background-color: #faa01c;
+}
+
 .worklist-list-body-tr:hover {
   background-color: #faa01c;
 }

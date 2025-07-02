@@ -1,13 +1,15 @@
 import React from "react";
 import supabase from "./superBaseClient";
 
-const getCollectorPerReceived = async () => {
+const getCollectorPerReceived = async (startDate, endDate) => {
   try {
     const { data, error } = await supabase
       .from("donation")
       .select(
         "collector_code_id, collector_name: collector_code_id(collector_name), donation_received, donation_value"
-      );
+      )
+      .gte("donation_day_received", startDate)
+      .lte("donation_day_received", endDate);
     if (error) throw error;
 
     return data;

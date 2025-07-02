@@ -1,0 +1,116 @@
+.modal-worklist {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.modal-worklist-main {
+  width: 768px;
+  max-height: 86vh;
+  overflow-y: auto;
+  border: 3px double #383838;
+  border-radius: 6px;
+  background-color: #1f1d1d;
+}
+
+.modal-worklist-main-header {
+  display: flex;
+  justify-content: space-between;
+  margin: 6px;
+  padding: 6px;
+  border-radius: 6px;
+}
+
+.modal-worklist-main-header button {
+  padding: 4px 8px;
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  background-color: #c70000;
+  color: #faf5e9;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.modal-worklist-main-body {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 6px;
+  margin: 6px;
+  padding: 6px;
+  border-radius: 6px;
+}
+
+.modal-worklist-main-buttons {
+  display: flex;
+  justify-content: space-evenly;
+  margin: 6px;
+  padding: 6px;
+
+  border-radius: 6px;
+}
+
+button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  color: #faf5e9;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.modal-worklist-main-buttons button:nth-child(1) {
+  background-color: #c70000;
+}
+
+.modal-worklist-main-buttons button:nth-child(2) {
+  background-color: #faa01c;
+}
+
+.modal-worklist-main-buttons button:nth-child(3) {
+  background-color: #385bad;
+}
+
+.modal-worklist-main-newdonation-header {
+  display: flex;
+  justify-content: space-between;
+  margin: 6px;
+  padding: 6px;
+}
+
+.modal-worklist-main-newdonation-body {
+  input-group {
+    & .input-field {
+      width: 100%;
+    }
+  }
+}
+
+.modal-worklist-main-newdonation-footer {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  padding: 12px;
+}
+
+.modal-worklist-main-newdonation-footer button:nth-child(1) {
+  background-color: #c70000;
+}
+
+.modal-worklist-main-newdonation-footer button:nth-child(2) {
+  background-color: #385bad;
+}

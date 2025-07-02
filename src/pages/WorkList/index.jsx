@@ -2,11 +2,12 @@ import { useContext, useEffect, useState } from "react";
 import "./index.css";
 import {
   fetchWorklist,
-  getWorklistRequests,
+  worklistRequests,
 } from "../../services/worklistService";
 import { UserContext } from "../../context/UserContext";
 import { DataSelect } from "../../components/DataTime";
-import { useNavigate } from "react-router";
+//
+import ModalWorklist from "../../components/ModalWorklist";
 
 const WorkList = () => {
   const { operatorData, setOperatorData } = useContext(UserContext);
@@ -14,13 +15,15 @@ const WorkList = () => {
   const [workSelect, setWorkSelect] = useState("");
   const [worklistRequest, setWorklistRequest] = useState([]);
   const [active, setActive] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [workListSelected, setWorkListSelected] = useState([]);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     const getWorklist = async () => {
       const worklistName = await fetchWorklist();
-      const listRequest = await getWorklistRequests(
+      const listRequest = await worklistRequests(
         operatorData.operator_code_id,
         workSelect
       );
@@ -28,11 +31,12 @@ const WorkList = () => {
       setWorklistRequest(listRequest);
     };
     getWorklist();
-  }, [workSelect]);
+  }, [workSelect, modalOpen]);
 
   const handleRequest = (list) => {
     setActive(list.receipt_donation_id);
-    console.log(list.receipt_donation_id);
+    setWorkListSelected(list);
+    setModalOpen(!modalOpen);
     // navigate(`/donor/${id}`);
   };
 
@@ -72,10 +76,12 @@ const WorkList = () => {
                   className={`worklist-list-body-tr ${
                     active === list.receipt_donation_id
                       ? "active"
-                      : list.request_status === "NP"
+                      : list.request_status === "Não Pode Ajudar"
                       ? "NP"
                       : list.request_status === "sucesso"
                       ? "sucesso"
+                      : list.request_status === "Não Atendeu"
+                      ? "NA"
                       : ""
                   }`}
                   key={list.receipt_donation_id}
@@ -95,6 +101,13 @@ const WorkList = () => {
             </tbody>
           </table>
         </div>
+      )}
+      {modalOpen && (
+        <ModalWorklist
+          setModalOpen={setModalOpen}
+          workListSelected={workListSelected}
+          setActive={setActive}
+        />
       )}
     </div>
   );
