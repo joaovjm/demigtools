@@ -21,3 +21,11 @@
         border-radius: 6px;
     }
 }
+
+.table-operatorWork-body-tr{
+    cursor: pointer;
+
+    &:hover{
+        background-color: #faa01c;
+    }
+}

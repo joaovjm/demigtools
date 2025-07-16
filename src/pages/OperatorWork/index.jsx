@@ -5,6 +5,7 @@ import TableOperatorWork from "../../components/TableOperatorWork";
 import { toast } from "react-toastify";
 import { collectorWorkService } from "../../services/collectorWorkService";
 import TableCollectorWork from "../../components/TableCollectorWork";
+import TableDonationsInOperatorsAndCollectors from "../../components/tables/TableDonationsInOperatorsAndCollectors";
 
 const OperatorWork = () => {
   const [startDate, setStartDate] = useState("");
@@ -12,6 +13,8 @@ const OperatorWork = () => {
   const [filter, setFilter] = useState("");
   const [relatoryOperator, setRelatoryOperator] = useState();
   const [relatoryCollector, setRelatoryCollector] = useState();
+  const [click, setClick] = useState(null);
+  const [tableDonationOpen, setTableDonationOpen] = useState(false);
 
   const handleGenerate = async () => {
     if ([startDate, endDate, filter].some((v) => v === "")) {
@@ -25,11 +28,11 @@ const OperatorWork = () => {
 
     if (filter === "Operadores") {
       const response = await operatorWorkService(startDate, endDate);
-      setRelatoryCollector(null)
+      setRelatoryCollector(null);
       setRelatoryOperator(response);
     } else if (filter === "Coletadores") {
       const response = await collectorWorkService(startDate, endDate);
-      setRelatoryOperator(null)
+      setRelatoryOperator(null);
       setRelatoryCollector(response);
     }
   };
@@ -68,10 +71,19 @@ const OperatorWork = () => {
         </div>
       </div>
       {relatoryOperator && relatoryOperator.names.length !== 0 && (
-        <TableOperatorWork relatory={relatoryOperator} />
+        <TableOperatorWork
+          relatory={relatoryOperator}
+          setClick={setClick}
+          setTableDonationOpen={setTableDonationOpen}
+        />
       )}
       {relatoryCollector && relatoryCollector.names.length !== 0 && (
         <TableCollectorWork relatory={relatoryCollector} />
+      )}
+      {tableDonationOpen && (
+        <TableDonationsInOperatorsAndCollectors
+          click={click}
+        />
       )}
     </div>
   );

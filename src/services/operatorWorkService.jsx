@@ -1,4 +1,3 @@
-import { toast } from "react-toastify";
 import getReceiveDonationPerOperator from "../helper/getReceiveDonationPerOperator";
 
 const filterName = async (operatorWork) => {
@@ -6,11 +5,10 @@ const filterName = async (operatorWork) => {
     ...new Map(
       operatorWork?.map((op) => [
         op.operator_name.operator_name,
-        { name: op.operator_name.operator_name },
+        { name: op.operator_name.operator_name, id: op.operator_code_id },
       ])
     ).values(),
   ];
-
   return operator;
 };
 
@@ -58,5 +56,6 @@ export const operatorWorkService = async (startDate, endDate) => {
     addValueReceived,
     countNotReceived,
     addValueNotReceived,
+    operatorWork
   };
 };
