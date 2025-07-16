@@ -93,10 +93,6 @@ const newDonorAndDonation = async (
         const donation = await handleDonationCreation(donor_id);
         const leadStatus = await handleUpdateStatusLead();
         
-        console.log(donor_id)
-        console.log(donation)
-        console.log(leadStatus)
-        
         resolve("Operação completada com sucesso!");
         
       } catch (err) {

@@ -6,7 +6,7 @@ import { newDonation } from "../../services/worklistService";
 import { useState } from "react";
 
 const ModalWorklist = ({ setModalOpen, workListSelected, setActive }) => {
-  console.log(workListSelected);
+
   const [newDonationOpen, setNewDonationOpen] = useState(false);
   const {
     id,
@@ -18,7 +18,7 @@ const ModalWorklist = ({ setModalOpen, workListSelected, setActive }) => {
       donor_tel_3: { donor_tel_3 },
     },
   } = workListSelected;
-  console.log(donor_tel_2);
+
   const handleClose = () => {
     setModalOpen(false);
     setActive("");

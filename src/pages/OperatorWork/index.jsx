@@ -1,20 +1,18 @@
 import React, { useState } from "react";
 import "./index.css";
 import { operatorWorkService } from "../../services/operatorWorkService";
-import TableOperatorWork from "../../components/TableOperatorWork";
+import TableOperatorAndCollectorWork from "../../components/TableOperatorAndCollectorWork";
 import { toast } from "react-toastify";
 import { collectorWorkService } from "../../services/collectorWorkService";
-import TableCollectorWork from "../../components/TableCollectorWork";
-import TableDonationsInOperatorsAndCollectors from "../../components/tables/TableDonationsInOperatorsAndCollectors";
+import ModalOperatorsAndCollectorsWork from "../../components/modals/ModalOperatorsAndCollectorsWork";
 
 const OperatorWork = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [filter, setFilter] = useState("");
-  const [relatoryOperator, setRelatoryOperator] = useState();
-  const [relatoryCollector, setRelatoryCollector] = useState();
+  const [relatory, setRelatory] = useState();
   const [click, setClick] = useState(null);
-  const [tableDonationOpen, setTableDonationOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const handleGenerate = async () => {
     if ([startDate, endDate, filter].some((v) => v === "")) {
@@ -28,12 +26,10 @@ const OperatorWork = () => {
 
     if (filter === "Operadores") {
       const response = await operatorWorkService(startDate, endDate);
-      setRelatoryCollector(null);
-      setRelatoryOperator(response);
+      setRelatory(response);
     } else if (filter === "Coletadores") {
       const response = await collectorWorkService(startDate, endDate);
-      setRelatoryOperator(null);
-      setRelatoryCollector(response);
+      setRelatory(response);
     }
   };
 
@@ -70,19 +66,22 @@ const OperatorWork = () => {
           </button>
         </div>
       </div>
-      {relatoryOperator && relatoryOperator.names.length !== 0 && (
-        <TableOperatorWork
-          relatory={relatoryOperator}
+      {relatory && relatory.names.length !== 0 && (
+        <TableOperatorAndCollectorWork
+          relatory={relatory}
           setClick={setClick}
-          setTableDonationOpen={setTableDonationOpen}
+          setTableDonationOpen={setModalOpen}
+          filter={filter}
         />
       )}
-      {relatoryCollector && relatoryCollector.names.length !== 0 && (
-        <TableCollectorWork relatory={relatoryCollector} />
-      )}
-      {tableDonationOpen && (
-        <TableDonationsInOperatorsAndCollectors
+
+      {modalOpen && (
+        <ModalOperatorsAndCollectorsWork
           click={click}
+          startDate={startDate}
+          endDate={endDate}
+          filter={filter}
+          setModalOpen={setModalOpen}
         />
       )}
     </div>

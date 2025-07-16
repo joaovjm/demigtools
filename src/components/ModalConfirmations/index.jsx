@@ -6,7 +6,6 @@ import supabase from "../../helper/superBaseClient";
 import { DataNow, DataSelect } from "../DataTime";
 
 const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) => {
-  console.log(donationConfirmationOpen)
   const [isConfirmation, setIsConfirmation] = useState(false);
   const [dateConfirm, setDateConfirm] = useState("");
   const [observation, setObservation] = useState("");

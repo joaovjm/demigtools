@@ -1,4 +1,3 @@
-import React from "react";
 import getCollectorPerReceived from "../helper/getReceiveDonationPerCollector";
 
 const filterName = async (collectorWork) => {
@@ -7,7 +6,7 @@ const filterName = async (collectorWork) => {
     ...new Map(
       collectorWork?.map((cl) => [
         cl.collector_code_id,
-        { name: cl.collector_name?.collector_name },
+        { name: cl.collector_name?.collector_name, id: cl.collector_code_id },
       ])
     ).values(),
   ];
