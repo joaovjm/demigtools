@@ -10,7 +10,8 @@
 
 .receiver-donations-header{
     display: flex;
-    align-items: center;
+    align-items: end;
+    justify-content: space-between;
     width: 1134px;
     border-radius: 10px;
 }
@@ -20,6 +21,10 @@
     align-items: center;
     font-size: 18px;
     gap: 6px;
+}
+
+.deposit-btn{
+    
 }
 
 .receiver-donations-form{

@@ -7,9 +7,10 @@ import FormInput from "../../components/forms/FormInput";
 import MessageStatus from "../../components/MessageStatus";
 import { useDonation } from "../../helper/receiveDonation";
 import { getCollector } from "../../helper/getCollector";
-import { DataSelect } from "../../components/DataTime";
 import { ModalConfirm } from "../../components/ModalConfirm";
 import FormSelect from "../../components/forms/FormSelect";
+import supabase from "../../helper/superBaseClient";
+import ModalReceiptSend from "../../components/modals/ModalReceiptSend";
 
 const ReceiverDonations = () => {
   const [formData, setFormData] = useState({
@@ -21,6 +22,8 @@ const ReceiverDonations = () => {
   const [collectors, setCollectors] = useState([]);
   const [tableReceipt, setTableReceipt] = useState([]);
   const [alert, setAlert] = useState({ message: "", type: null, icon: null });
+  const [deposit, setDeposit] = useState();
+  const [sendModalOpen, setSendModalOpen] = useState(false);
 
   const { receiveDonation, modalOpen, setModalOpen, modalConfig } =
     useDonation();
@@ -41,6 +44,19 @@ const ReceiverDonations = () => {
     };
     fetchCollectors();
   }, []);
+
+  useEffect(() => {
+    const fetchDeposit = async () => {
+      const { data, error } = await supabase
+        .from("donation")
+        .select("receipt_donation_id, donor_id, donor: donor_id(donor_name, donor_tel_1)")
+        .eq("donation_deposit_receipt_send", "Não")
+        .eq("collector_code_id", 22)
+        if (error) throw error;
+        if (!error) setDeposit(data);
+    };
+    fetchDeposit();
+  }, [tableReceipt]);
 
   useEffect(() => {
     setTableReceipt([]);
@@ -107,12 +123,21 @@ const ReceiverDonations = () => {
     }, 1000);
   };
 
+  const handleDeposit = () => {
+    setSendModalOpen(true)
+  };
+
   return (
     <main className="receiver-donations-main">
       <div className="receiver-donations-header">
         <h2 className="receiver-donations-header-title-text">
           {ICONS.MONEY} Receber Doações
         </h2>
+        {deposit && (
+          <button onClick={handleDeposit} className="deposit-btn">
+            Recibo Deposito ({deposit.length})
+          </button>
+        )}
       </div>
 
       <form onSubmit={handleSubmit} className="receiver-donations-form">
@@ -124,7 +149,6 @@ const ReceiverDonations = () => {
           options={collectors}
           disableOption="Selecione o coletador..."
           icon={ICONS.MOTORCYCLE}
-          
         />
 
         <FormInput
@@ -188,6 +212,8 @@ const ReceiverDonations = () => {
           ))}
         </tbody>
       </table>
+
+      {sendModalOpen && <ModalReceiptSend setSendModalOpen={setSendModalOpen} deposit={deposit} setDeposit={setDeposit}/> }
     </main>
   );
 };

@@ -31,7 +31,7 @@ export const AdminMenu = [
     },
     {
         id: 3,
-        title: "Verificar Impressão",
+        title: "Verificar e Imprimir",
         path: "./checkprint",
         cName: "submenu-itens",
     },
