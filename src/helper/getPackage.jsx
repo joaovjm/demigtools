@@ -9,7 +9,8 @@ const getPackage = async ({ type, startDate, endDate }) => {
     .eq("donor_type", type)
     .eq("donation_received", "Sim")
     .gte("donation_day_received", startDate)
-    .lte("donation_day_received", endDate);
+    .lte("donation_day_received", endDate)
+    .order("donation_value", {ascending: false})
 
   if (error) console.log(error.message);
   if (data.length !== 0) return data;

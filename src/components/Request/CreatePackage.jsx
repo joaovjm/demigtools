@@ -72,6 +72,7 @@ const CreatePackage = ({setDataForm, setCreatePackage, setDate, date}) => {
           </option>
           <option value="Avulso">Avulso</option>
           <option value="Mensal">Mensal</option>
+          <option value="Lista">Lista</option>
           <option value="Todos">Todos</option>
         </select>
       </div>

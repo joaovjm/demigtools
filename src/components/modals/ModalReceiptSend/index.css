@@ -1,0 +1,54 @@
+.modal-send-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 50%;
+  height: 96vh;
+  background-color: #1f1d1d;
+  border: none;
+  border-radius: 6px;
+}
+
+.modal-send-head {
+  display: flex;
+  width: 90%;
+  justify-content: space-between;
+  padding: 12px;
+}
+
+.modal-send-head-btn{
+    background-color: #d60b0c;
+}
+
+.modal-send-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-send-body-receipt {
+  display: grid;
+  grid-template-columns: 0.5fr 2fr 1fr 1fr;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  border: 3px double #383838;
+  border-radius: 6px;
+  padding: 6px;
+  gap: 12px;
+}
+
+.modal-send-body-receipt-btn {
+  display: flex;
+  gap: 12px;
+}
+
+.modal-send-body-receipt-btn-edit{
+    background-color: green;
+}
+
+.modal-send-body-receipt-edit{
+    display: flex;
+    grid-column: 1/5;
+    gap: 32px;
+}

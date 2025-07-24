@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import supabase from "../../helper/superBaseClient";
 import "./index.css"
 import { useNavigate } from "react-router";
+import { DataSelect } from "../DataTime";
 
 const TableDonationsInOperatorsAndCollectors = ({
   click,
@@ -72,7 +73,7 @@ const TableDonationsInOperatorsAndCollectors = ({
               {filter ===
                 "Coletadores" ? `${donation.operator?.operator_name}` : `${donation.collector?.collector_name}`}
             </td>
-            <td>{donation.donation_day_received}</td>
+            <td>{DataSelect(donation.donation_day_received)}</td>
             <td>{donation.donation_print}</td>
             <td>{donation.donation_received}</td>
           </tr>

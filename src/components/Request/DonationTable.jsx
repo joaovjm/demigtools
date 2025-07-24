@@ -28,6 +28,10 @@ const DonationTable = ({ unassigned, setSelected, selected }) => {
     setSelected(id);
   };
 
+  const handleDistribute = () => {
+    
+  }
+
   return (
     <div className="request-front-left-bottom-3">
       <div className="input-field">
