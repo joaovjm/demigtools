@@ -121,6 +121,22 @@ export function removeAllPackage(createPackage, operatorID, setCreatePackage) {
   setCreatePackage(update);
 }
 
+export function distribute(unassigned, createPackage, operatorID) {
+  let o = 0;
+  const update = createPackage.map((pkg) => ({...pkg}));
+  const unassignedID = unassigned.map(un => un.receipt_donation_id)
+  for(let i = 0; i < unassignedID.length; i++){
+    const find = createPackage.findIndex(pkg => pkg.receipt_donation_id === unassignedID[i])
+    if(o === operatorID.length) o = 0;
+    if(find !== -1){
+      update[find].operator_code_id = operatorID[o]
+      o++
+    }
+  }
+  return update;
+  
+}
+
 export async function addEndDataInCreatePackage(createPackage, setCreatePackage, endDateRequest) {
   const update = createPackage?.map((pkg) => ({
     ...pkg, request_end_date: endDateRequest

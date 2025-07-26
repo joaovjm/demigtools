@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ICONS } from "../../constants/constants";
 import Loader from "../Loader";
 
-const DonationValues = ({ createPackage, setRequestForm, setFilterForm }) => {
+const DonationValues = ({ createPackage, setRequestForm, setFilterForm, handleCancel }) => {
   const [packageCount, setPackageCount] = useState(0);
   const [loading, setLoading] = useState(false);
 
@@ -60,7 +60,7 @@ const DonationValues = ({ createPackage, setRequestForm, setFilterForm }) => {
         </select>
       </div>
       <div className="request-front-left-bottom-2-btn">
-        <button className="btn-cancel">Cancelar</button>
+        <button onClick={handleCancel} className="btn-cancel">Cancelar</button>
         <button onClick={handleRequestTable} className="btn-search">
           {loading ? (<Loader/>) : (<>{ICONS.SEARCH} Buscar </>)}
         </button>

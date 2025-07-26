@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { FaAngleDown, FaAngleUp, FaEye, FaEyeSlash } from "react-icons/fa";
+import { distribute } from "../../services/distributePackageService";
 
-const DonationTable = ({ unassigned, setSelected, selected }) => {
+const DonationTable = ({ unassigned, setSelected, selected, createPackage, setCreatePackage, operatorID }) => {
   const [visible, setVisible] = useState(true);
   const [packageCount, setPackageCount] = useState(0);
   const [nowPage, setNowPage] = useState(1);
@@ -27,9 +28,9 @@ const DonationTable = ({ unassigned, setSelected, selected }) => {
   const handleUnassignedClick = (id) => {
     setSelected(id);
   };
-
-  const handleDistribute = () => {
-    
+  const handleDistribute = async () => {
+    const response = await distribute(unassigned, createPackage, operatorID)
+    setCreatePackage(response);
   }
 
   return (
@@ -96,7 +97,7 @@ const DonationTable = ({ unassigned, setSelected, selected }) => {
         </div>
       </div>
       <div className="request-front-left-bottom-3-table-btn">
-        <button>Distribuir Aleatóriamente</button>
+        <button onClick={handleDistribute}>Distribuir Aleatóriamente</button>
         <div className="request-front-left-bottom-3-table-pagination">
           <button
             onClick={() => setNowPage((prev) => Math.max(prev - 1, 1))}

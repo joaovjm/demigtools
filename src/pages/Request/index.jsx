@@ -38,11 +38,11 @@ const Request = () => {
       setOperatorName
     );
   }, [createPackage]);
-
   useEffect(() => {
     if (continueClick) {
       setCreatePackageState(createPackage);
     }
+
   }, [continueClick]);
 
   const handleCancel = () => {
@@ -61,6 +61,7 @@ const Request = () => {
   };
 
   const handleReset = () => {
+    console.log(createPackageState)
     setCreatePackage(createPackageState);
   };
 
@@ -110,6 +111,7 @@ const Request = () => {
           {!filterForm && !requestForm && (
               <CreatePackage
                 setDataForm={setDataForm}
+                createPackage={createPackage}
                 setCreatePackage={setCreatePackage}
                 setDate={setDate}
                 date={date}
@@ -132,6 +134,7 @@ const Request = () => {
               createPackage={createPackage}
               setFilterForm={setFilterForm}
               setRequestForm={setRequestForm}
+              handleCancel={handleCancel}
             />
           ) : (
             requestForm && (
@@ -139,6 +142,9 @@ const Request = () => {
                 unassigned={unassigned}
                 selected={selected}
                 setSelected={setSelected}
+                createPackage={createPackage}
+                setCreatePackage={setCreatePackage}
+                operatorID={operatorID}
               />
             )
           )}
