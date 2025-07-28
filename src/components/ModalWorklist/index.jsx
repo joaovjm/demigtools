@@ -1,24 +1,18 @@
-import { toast } from "react-toastify";
-import supabase from "../../helper/superBaseClient";
 import "./index.css";
 import updateRequestSelected from "../../helper/updateRequestSelected";
 import { newDonation } from "../../services/worklistService";
 import { useState } from "react";
 
 const ModalWorklist = ({ setModalOpen, workListSelected, setActive }) => {
-
+  console.log(workListSelected)
   const [newDonationOpen, setNewDonationOpen] = useState(false);
   const {
     id,
     donor: { donor_name, donor_tel_1 },
-    donor_tel_2b: {
-      donor_tel_2: { donor_tel_2 },
-    },
-    donor_tel_3b: {
-      donor_tel_3: { donor_tel_3 },
-    },
   } = workListSelected;
-
+  const donor_tel_2 = workListSelected?.donor_tel_2b?.donor_tel_2?.donor_tel_2;
+  const donor_tel_3 = workListSelected?.donor_tel_3b?.donor_tel_3?.donor_tel_3;
+  
   const handleClose = () => {
     setModalOpen(false);
     setActive("");

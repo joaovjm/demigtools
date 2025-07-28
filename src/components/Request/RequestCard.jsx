@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { assignAllPackage, assignPackage, removeAllPackage, removePackage } from "../../services/distributePackageService";
+import {
+  assignAllPackage,
+  assignPackage,
+  removeAllPackage,
+  removePackage,
+} from "../../services/distributePackageService";
 import { toast } from "react-toastify";
 
 const RequestCard = ({
@@ -10,7 +15,7 @@ const RequestCard = ({
   setSelected,
   createPackage,
   setCreatePackage,
-  unassigned
+  unassigned,
 }) => {
   const [countValue, setCountValue] = useState(0);
   const [countQuant, setCountQuant] = useState(0);
@@ -32,23 +37,34 @@ const RequestCard = ({
     }
   };
 
+  const relatory = () => {
+    let pkgi = [];
+    createPackage.map((pkg) => {
+      if (pkg.operator_code_id === operatorID) {
+        pkgi.push(pkg);
+      }
+    });
+    console.log(pkgi);
+  };
+
   useEffect(() => {
     calculateValues();
+    relatory();
   }, [perOperator]);
 
   const addSingle = () => {
-    if(!selected){
-      toast.warning("Selecione uma doação!")
-      return
+    if (!selected) {
+      toast.warning("Selecione uma doação!");
+      return;
     }
     assignPackage(
       selected,
       operatorID,
-      createPackage, 
+      createPackage,
       setCreatePackage,
       unassigned
-    )
-  
+    );
+
     setSelected(null);
   };
 
@@ -61,23 +77,15 @@ const RequestCard = ({
       maxValue,
       countValue
     );
-  }
+  };
 
   const removeAll = () => {
-    removeAllPackage(
-      createPackage,
-      operatorID,
-      setCreatePackage
-    );
-  }
+    removeAllPackage(createPackage, operatorID, setCreatePackage);
+  };
 
   const removeSingle = () => {
-    removePackage(
-      createPackage,
-      setCreatePackage,
-      operatorID
-    )
-  }
+    removePackage(createPackage, setCreatePackage, operatorID);
+  };
 
   return (
     <div className="request-front-right-card">
@@ -99,10 +107,16 @@ const RequestCard = ({
         </div>
       </div>
       <div className="request-front-right-card-btn">
-        <button className="btn-delete" onClick={removeAll}>All</button>
-        <button className="btn-delete" onClick={removeSingle}>-1</button>
+        <button className="btn-delete" onClick={removeAll}>
+          All
+        </button>
+        <button className="btn-delete" onClick={removeSingle}>
+          -1
+        </button>
         <label>|</label>
-        <button className="btn-add-card" onClick={addAll}>All</button>
+        <button className="btn-add-card" onClick={addAll}>
+          All
+        </button>
         <button className="btn-add-card" onClick={addSingle}>
           +1
         </button>
