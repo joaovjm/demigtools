@@ -14,22 +14,38 @@ const getPackage = async ({ type, startDate, endDate }) => {
     .order("donation_value", { ascending: false });
 
   if (error) console.log(error.message);
-  if (data.length !== 0) {
-     const { data: compareData, error: errorData } = await supabase
-       .from("donation_with_donor_operator")
-       .select()
-       .gte("donation_day_received", endDate);
-     if (errorData) console.log(errorData.message);
-     if (compareData.length > 0) {
-       data.forEach((id) => {
-         if(!compareData.some(cp => cp.donor_id === id.donor_id)){
-             createPackage.push(id)
-         }
-       })
-      
+  if (data.length > 0) {
+    const count = data.reduce((acc, curr) => {
+      acc[curr.donor_id] = (acc[curr.donor_id] || 0) + 1;
+      return acc;
+    }, {});
+    const duplicate = Object.keys(count).filter((f) => count[f] > 1);
+    const filteredDp = duplicate.map((dp) => {
+      const group = data.filter((item) => item.donor_id === Number(dp));
+      const selected = group.reduce((bigger, now) =>
+        now.donation_day_received > bigger.dontion_day_received ? now : bigger
+      );
+      return selected;
+    });
+
+    const unit = data.filter((dt) => !duplicate.includes(String(dt.donor_id)));
+
+    const filteredPackage = [...unit, ...filteredDp];
+
+    const { data: compareData, error: errorData } = await supabase
+      .from("donation_with_donor_operator")
+      .select()
+      .gte("donation_day_received", endDate);
+    if (errorData) console.log(errorData.message);
+    if (compareData.length > 0) {
+      filteredPackage.forEach((id) => {
+        if (!compareData.some((cp) => cp.donor_id === id.donor_id)) {
+          createPackage.push(id);
+        }
+      });
     }
-    return createPackage
   }
+  return createPackage
 };
 
 export default getPackage;
