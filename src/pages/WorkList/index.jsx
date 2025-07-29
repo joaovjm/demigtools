@@ -13,7 +13,7 @@ const WorkList = () => {
   const { operatorData, setOperatorData } = useContext(UserContext);
   const [worklist, setWorklist] = useState([]);
   const [workSelect, setWorkSelect] = useState("");
-  const [worklistRequest, setWorklistRequest] = useState([]);
+  const [worklistRequest, setWorklistRequest] = useState();
   const [active, setActive] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [workListSelected, setWorkListSelected] = useState([]);
@@ -23,15 +23,20 @@ const WorkList = () => {
   useEffect(() => {
     const getWorklist = async () => {
       const worklistName = await fetchWorklist();
-      const listRequest = await worklistRequests(
-        operatorData.operator_code_id,
-        workSelect
-      );
       setWorklist(worklistName);
-      setWorklistRequest(listRequest);
     };
     getWorklist();
   }, [workSelect, modalOpen]);
+
+  const handleChange = async (e) => {
+    const selected = e.target.value;
+    setWorkSelect(selected)
+    const listRequest = await worklistRequests(
+      operatorData.operator_code_id,
+      selected
+    );
+    setWorklistRequest(listRequest);
+  };
 
   const handleRequest = (list) => {
     setActive(list.receipt_donation_id);
@@ -44,10 +49,7 @@ const WorkList = () => {
     <div className="worklist-container">
       <div className="input-field">
         <label>Lista de trabalho</label>
-        <select
-          value={workSelect}
-          onChange={(e) => setWorkSelect(e.target.value)}
-        >
+        <select value={workSelect} onChange={handleChange}>
           <option value="" disabled>
             Selecione...
           </option>
@@ -59,7 +61,7 @@ const WorkList = () => {
             ))}
         </select>
       </div>
-      {worklistRequest?.length > 0 && (
+      {worklistRequest?.length > 0 ? (
         <div className="worklist-list">
           <table>
             <thead className="worklist-list-head">
@@ -101,7 +103,7 @@ const WorkList = () => {
             </tbody>
           </table>
         </div>
-      )}
+      ) : <></>}
       {modalOpen && (
         <ModalWorklist
           setModalOpen={setModalOpen}
