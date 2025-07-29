@@ -9,6 +9,7 @@ const getPackage = async ({ type, startDate, endDate }) => {
     )
     .eq("donor_type", type)
     .eq("donation_received", "Sim")
+    .neq("operator_code_id", 521)
     .gte("donation_day_received", startDate)
     .lte("donation_day_received", endDate)
     .order("donation_value", { ascending: false });
@@ -23,7 +24,7 @@ const getPackage = async ({ type, startDate, endDate }) => {
     const filteredDp = duplicate.map((dp) => {
       const group = data.filter((item) => item.donor_id === Number(dp));
       const selected = group.reduce((bigger, now) =>
-        new Date(now.donation_day_received) > new Date(bigger.donation_day_received) ? now : bigger
+        now.donation_value > bigger.donation_value ? now : bigger
       );      
       return selected;
     });
