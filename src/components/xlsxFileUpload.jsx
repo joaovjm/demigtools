@@ -37,7 +37,6 @@ const xlsxFileUpload = (file, setExcelData, setHeaders) => {
             const headerRow = Object.keys(jsonData[0]);
             setHeaders(headerRow);
 
-            // Dados já estão no formato de array de objetos
             setExcelData(jsonData);
             resolve();
           } catch (error) {

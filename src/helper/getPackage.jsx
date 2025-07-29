@@ -5,7 +5,7 @@ const getPackage = async ({ type, startDate, endDate }) => {
   const { data, error } = await supabase
     .from("donation_with_donor_operator")
     .select(
-      "donor_id, donor_name, donor_type, donor_tel_1, donation_value, receipt_donation_id, operator_code_id, operator_name"
+      "donor_id, donor_name, donor_type, donor_tel_1, donation_value, donation_day_received, receipt_donation_id, operator_code_id, operator_name"
     )
     .eq("donor_type", type)
     .eq("donation_received", "Sim")
@@ -23,8 +23,8 @@ const getPackage = async ({ type, startDate, endDate }) => {
     const filteredDp = duplicate.map((dp) => {
       const group = data.filter((item) => item.donor_id === Number(dp));
       const selected = group.reduce((bigger, now) =>
-        now.donation_day_received > bigger.dontion_day_received ? now : bigger
-      );
+        new Date(now.donation_day_received) > new Date(bigger.donation_day_received) ? now : bigger
+      );      
       return selected;
     });
 
@@ -45,7 +45,7 @@ const getPackage = async ({ type, startDate, endDate }) => {
       });
     }
   }
-  return createPackage
+  return createPackage;
 };
 
 export default getPackage;
