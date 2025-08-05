@@ -8,6 +8,7 @@ import { UserContext } from "../../context/UserContext";
 import { DataSelect } from "../../components/DataTime";
 //
 import ModalWorklist from "../../components/ModalWorklist";
+import { useLocation, useNavigate } from "react-router";
 
 const WorkList = () => {
   const { operatorData, setOperatorData } = useContext(UserContext);
@@ -18,7 +19,38 @@ const WorkList = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [workListSelected, setWorkListSelected] = useState([]);
 
-  // const navigate = useNavigate();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const pkg = params.get("pkg");
+    const activeID = params.get("active");
+    const modalFlag = params.get("modal");
+
+    if (pkg) {
+      setWorkSelect(pkg);
+      const fetchData = async () => {
+        const listRequest = await worklistRequests(
+          operatorData.operator_code_id,
+          pkg
+        );
+        setWorklistRequest(listRequest);
+
+        if (modalFlag === "true"){
+          
+          const selected = listRequest.find((item) => item.receipt_donation_id === Number(activeID))
+          if(selected){
+            setActive(activeID);
+            setWorkListSelected(selected);
+            setModalOpen(true);
+          }
+        }
+      };
+
+      fetchData();
+    }
+  }, [location.search]);
 
   useEffect(() => {
     const getWorklist = async () => {
@@ -30,7 +62,7 @@ const WorkList = () => {
 
   const handleChange = async (e) => {
     const selected = e.target.value;
-    setWorkSelect(selected)
+    setWorkSelect(selected);
     const listRequest = await worklistRequests(
       operatorData.operator_code_id,
       selected
@@ -39,10 +71,10 @@ const WorkList = () => {
   };
 
   const handleRequest = (list) => {
+    navigate(`?pkg=${workSelect}&active=${list.receipt_donation_id}&modal=true`);
     setActive(list.receipt_donation_id);
     setWorkListSelected(list);
     setModalOpen(!modalOpen);
-    // navigate(`/donor/${id}`);
   };
 
   return (
@@ -103,12 +135,15 @@ const WorkList = () => {
             </tbody>
           </table>
         </div>
-      ) : <></>}
+      ) : (
+        <></>
+      )}
       {modalOpen && (
         <ModalWorklist
           setModalOpen={setModalOpen}
           workListSelected={workListSelected}
           setActive={setActive}
+          workSelect={workSelect}
         />
       )}
     </div>

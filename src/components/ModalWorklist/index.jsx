@@ -4,8 +4,7 @@ import { newDonation } from "../../services/worklistService";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
-const ModalWorklist = ({ setModalOpen, workListSelected, setActive }) => {
-  console.log(workListSelected)
+const ModalWorklist = ({ setModalOpen, workListSelected, setActive, workSelect }) => {
   const [newDonationOpen, setNewDonationOpen] = useState(false);
   const {
     id,
@@ -19,6 +18,7 @@ const ModalWorklist = ({ setModalOpen, workListSelected, setActive }) => {
   const handleClose = () => {
     setModalOpen(false);
     setActive("");
+    navigate(`?pkg=${workSelect}`)
   };
 
   const handleNP = async () => {
@@ -36,6 +36,7 @@ const ModalWorklist = ({ setModalOpen, workListSelected, setActive }) => {
 
   const handleCancel = () => {
     setNewDonationOpen(false);
+    
   };
 
   const handleOpenDonator = () => {
