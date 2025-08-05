@@ -2,51 +2,63 @@ import { useEffect, useState } from "react";
 import "./index.css";
 import supabase from "../../helper/superBaseClient";
 import { toast } from "react-toastify";
+import { ICONS } from "../../constants/constants";
 
 const ModalEditDonation = ({ donation, setModalEdit }) => {
-  const [value, setValue] = useState("");
-  const [date, setDate] = useState("");
-  const [observation, setObservation] = useState("");
+  const [value, setValue] = useState(donation.donation_value);
+  const [date, setDate] = useState(donation.donation_day_to_receive);
+  const [observation, setObservation] = useState(donation.donation_description);
 
-  useEffect(() => {
-    setValue(donation.donation_value);
-    setObservation(donation.donation_description);
-  }, []);
-
-  const handleConfirm = async (e) => {
-    e.preventDefault();
-    if (value === "" || date === ""){
-        toast.warning("Valor e data devem ser preenchidos!")
-        return null;
+  const handleConfirm = async () => {
+    if (value === "" || date === "") {
+      toast.warning("Valor e data devem ser preenchidos!");
+      return null;
     }
     try {
-      const { data, error } = await supabase.from("donation").update([
-        {
-          donation_value: value,
-          donation_day_to_receive: date,
-          donation_description: observation,
-        },
-      ])
-      .eq("receipt_donation_id", donation.receipt_donation_id)
-      .select();
+      const { data, error } = await supabase
+        .from("donation")
+        .update([
+          {
+            donation_value: value,
+            donation_day_to_receive: date,
+            donation_description: observation,
+          },
+        ])
+        .eq("receipt_donation_id", donation.receipt_donation_id)
+        .select();
 
       if (error) throw error;
 
-      if (data.length > 0){
-        toast.success("Doação atualizado com sucesso")
-        setModalEdit(false)
-        setObservation("")
+      if (data.length > 0) {
+        toast.success("Doação atualizado com sucesso");
+        setModalEdit(false);
+        setObservation("");
       }
-
     } catch (error) {
       toast.error("Erro ao atualizar doação: ", error.message);
+    }
+  };
+
+  const handleDelete = async () => {
+    ;
+    if (window.confirm("Deseja deletar a doação?")) {
+      const { error } = await supabase
+        .from("donation")
+        .delete()
+        .eq("receipt_donation_id", donation.receipt_donation_id);
+      if (error) throw error;
+      if (!error) {
+        toast.success("Doação deletada com sucesso!")
+        setModalEdit(false)
+      } 
+      
     }
   };
 
   return (
     <main className="modal-editDonation-container">
       <div className="modal-editDonation">
-        <form onSubmit={handleConfirm} className="form-modal-editDonation">
+        <div onSubmit={handleConfirm} className="form-modal-editDonation">
           <div className="form-modal-editDonation-header">
             <h5>Recibo: </h5>
             <button
@@ -83,11 +95,12 @@ const ModalEditDonation = ({ donation, setModalEdit }) => {
             </div>
           </div>
           <div className="form-modal-editDonation-footer">
-            <button type="submit" className="btn-confirm-editDonoation">
+            <button onClick={handleConfirm} className="btn-confirm-editDonoation">
               Confirmar
             </button>
+            <button onClick={handleDelete} className="btn-confirm-deleteDonoation">{ICONS.TRASH}</button>
           </div>
-        </form>
+        </div>
       </div>
     </main>
   );

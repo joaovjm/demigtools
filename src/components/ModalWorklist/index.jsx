@@ -2,6 +2,7 @@ import "./index.css";
 import updateRequestSelected from "../../helper/updateRequestSelected";
 import { newDonation } from "../../services/worklistService";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 const ModalWorklist = ({ setModalOpen, workListSelected, setActive }) => {
   console.log(workListSelected)
@@ -12,6 +13,8 @@ const ModalWorklist = ({ setModalOpen, workListSelected, setActive }) => {
   } = workListSelected;
   const donor_tel_2 = workListSelected?.donor_tel_2b?.donor_tel_2?.donor_tel_2;
   const donor_tel_3 = workListSelected?.donor_tel_3b?.donor_tel_3?.donor_tel_3;
+
+  const navigate = useNavigate();
   
   const handleClose = () => {
     setModalOpen(false);
@@ -34,6 +37,10 @@ const ModalWorklist = ({ setModalOpen, workListSelected, setActive }) => {
   const handleCancel = () => {
     setNewDonationOpen(false);
   };
+
+  const handleOpenDonator = () => {
+    navigate(`/donor/${workListSelected.donor_id}`)
+  }
   return (
     <div className="modal-worklist">
       <div className="modal-worklist-main">
@@ -52,6 +59,7 @@ const ModalWorklist = ({ setModalOpen, workListSelected, setActive }) => {
             <button onClick={handleNP}>Não pode ajudar</button>
             <button onClick={handleNA}>Não atendeu</button>
             <button onClick={handleNewDonation}>Nova doação</button>
+            <button onClick={handleOpenDonator}>Abrir Doação</button>
           </div>
         ) : (
           <>

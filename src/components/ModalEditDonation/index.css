@@ -58,11 +58,17 @@
 .form-modal-editDonation-footer{
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
     margin-top: 6px;
+    gap: 16px;
 }
 
 .btn-confirm-editDonoation{
-    width: 70%;
+    width: 60%;
+}
+
+.btn-confirm-deleteDonoation{
+    display: flex;
+    background-color: red;
 }

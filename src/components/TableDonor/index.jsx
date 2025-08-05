@@ -1,17 +1,12 @@
-import { useEffect, useState, useRef, Fragment, useContext } from "react";
+import { useEffect, useState, Fragment } from "react";
 import "./index.css";
 import { getDonation } from "../../helper/getDonation";
 import { toast } from "react-toastify";
-import { UserContext } from "../../context/UserContext";
 import { DataSelect } from "../DataTime";
 
 const TableDonor = ({ idDonor, modalShow, setModalEdit, setDonation, modalEdit }) => {
   const caracterOperator = JSON.parse(localStorage.getItem("operatorData"));
   const [dados, setDados] = useState([]);
-  const [showScrollHint, setShowScrollHint] = useState(true);
-  const [canScroll, setCanScroll] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false)
-  const tableContainerRef = useRef(null);
 
   // Carrega os dados da doação
   useEffect(() => {
@@ -44,17 +39,13 @@ const TableDonor = ({ idDonor, modalShow, setModalEdit, setDonation, modalEdit }
 
   return (
     <div className="table-wrapper">
-      <div
-        className="table-container"
-        // ref={tableContainerRef}
-      >
         <table className="tabledonor">
           <thead>
             <tr className="trHead">
               <th className="tableHead">Recibo</th>
               <th className="tableHead">Operador</th>
               <th className="tableHead">Valor</th>
-              <th className="tableHead">Comissão</th>
+              <th className="tableHead">Extra</th>
               <th className="tableHead">Contato</th>
               <th className="tableHead">Receber</th>
               <th className="tableHead">Recebida</th>
@@ -77,8 +68,8 @@ const TableDonor = ({ idDonor, modalShow, setModalEdit, setDonation, modalEdit }
                     <td className="tableBody">
                       {item.operator_code_id} - {item.operator?.operator_name}
                     </td>
-                    <td className="tableBody">{item.donation_value}</td>
-                    <td className="tableBody">{item.donation_extra}</td>
+                    <td className="tableBody">{item.donation_value.toLocaleString("pt-BR", {style: 'currency', currency: 'BRL'})}</td>
+                    <td className="tableBody">{item?.donation_extra?.toLocaleString("pt-BR", {style: 'currency', currency: 'BRL'})}</td>
                     <td className="tableBody">{DataSelect(item.donation_day_contact)}</td>
                     <td className="tableBody">
                       {DataSelect(item.donation_day_to_receive)}
@@ -111,8 +102,6 @@ const TableDonor = ({ idDonor, modalShow, setModalEdit, setDonation, modalEdit }
           </tbody>
         </table>
       </div>
-      
-    </div>
   );
 };
 
