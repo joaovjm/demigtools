@@ -1,7 +1,7 @@
-import React from "react";
 import supabase from "./superBaseClient";
 
 const getWorklistRequests = async (operatorID, workSelect) => {
+  console.log(operatorID)
   const { data, error } = await supabase
     .from("request")
     .select(
@@ -11,7 +11,7 @@ const getWorklistRequests = async (operatorID, workSelect) => {
     .eq("request_name", workSelect)
     .eq("request_active", "True");
 
-  if (error) throw error; 
+  if (error) console.log(error.message); 
   if (!error) return data;
 };
 
