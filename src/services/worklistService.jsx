@@ -1,3 +1,4 @@
+import { getMaxAndMedDonations } from "../helper/getMaxAndMedDonations";
 import getWorklistRequests from "../helper/getWorklistRequests";
 import supabase from "../helper/superBaseClient";
 
@@ -24,8 +25,13 @@ export async function fetchWorklist() {
 }
 
 export async function worklistRequests(operatorID, workSelect) {
-  const response = getWorklistRequests(operatorID, workSelect);
+  const response = await getWorklistRequests(operatorID, workSelect);
   return response;
+}
+
+export async function fetchMaxAndMedDonations(id) {
+  const {max, day, med, penultimate}  = await getMaxAndMedDonations(id)
+  return {max, day, med, penultimate}
 }
 
 export async function newDonation () {

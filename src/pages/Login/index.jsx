@@ -54,9 +54,8 @@ const Login = () => {
 
       if (response) {
         setIsSession(response.session);
-
-        navigate("/dashboard");
-
+        setOperatorData(response.operator)
+        localStorage.setItem('operatorData', JSON.stringify(response.operator));
         return null;
       }
     } catch (err) {
