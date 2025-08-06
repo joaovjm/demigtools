@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 
 const ConfirmationCard = ({ operatorCount, setDonationFilterPerId }) => {
   
-  const [operators, setOperators] =useState([])
-  const [count, setCount] =useState()
-  const [add, setAdd] = useState()
+  const [operators, setOperators] =useState([]);
+  const [count, setCount] =useState();
+  const [add, setAdd] = useState();
+  const [active, setActive] = useState();
   const operatorInfo = [
     ...new Map(
       operatorCount?.map((operators) => [
@@ -33,6 +34,7 @@ const ConfirmationCard = ({ operatorCount, setDonationFilterPerId }) => {
 
   const handleClick = (id) => {
     setDonationFilterPerId(id);
+    setActive(id)
   };
 
   return (
@@ -40,7 +42,7 @@ const ConfirmationCard = ({ operatorCount, setDonationFilterPerId }) => {
       operators.map((operator) => (
       <div
         onClick={() => handleClick(operator.id)}
-        className="section-operators-card"
+        className={`section-operators-card ${active === operator.id ? "active" : ""}`}
         key={operator.id}
       >
         <div>{operator.name}</div>

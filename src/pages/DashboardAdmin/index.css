@@ -162,6 +162,10 @@ p {
   }
 }
 
+.section-operators-card.active{
+  background-color: #faa01c;
+}
+
 .section-operators-card-value {
   width: 100%;
   display: flex;

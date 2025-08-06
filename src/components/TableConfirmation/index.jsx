@@ -6,11 +6,9 @@ const TableConfirmation = ({
   donationConfirmation,
   setModalOpen,
   setDonationConfirmationOpen,
+  donationFilterPerId,
 }) => {
-  
-
   const handleClick = (donation) => {
-
     setDonationConfirmationOpen({
       id: donation.receipt_donation_id,
       donor_id: donation.donor_id,
@@ -34,6 +32,9 @@ const TableConfirmation = ({
     setModalOpen(true);
   };
 
+  const filterDonationConfirmation = donationConfirmation.filter(
+    (dc) => dc.operator_code_id === donationFilterPerId
+  );
 
   return (
     <>
@@ -48,26 +49,47 @@ const TableConfirmation = ({
             </tr>
           </thead>
           <tbody className="table-body-confirmation">
-            {donationConfirmation.map((donation) => (
-              <tr
-                className="table-body-confirmation-tr"
-                key={donation.receipt_donation_id}
-                onClick={() => handleClick(donation)}
-              >
-                <td className="table-body-confirmation-text">
-                  {DataSelect(donation.donation_day_to_receive)}
-                </td>
-                <td className="table-body-confirmation-text">
-                  {donation.donor_name}
-                </td>
-                <td className="table-body-confirmation-text">
-                  {donation.donation_value}
-                </td>
-                <td className="table-body-confirmation-text">
-                  {donation.donor_confirmation_reason}
-                </td>
-              </tr>
-            ))}
+            {donationFilterPerId
+              ? filterDonationConfirmation.map((donation) => (
+                  <tr
+                    className="table-body-confirmation-tr"
+                    key={donation.receipt_donation_id}
+                    onClick={() => handleClick(donation)}
+                  >
+                    <td className="table-body-confirmation-text">
+                      {DataSelect(donation.donation_day_to_receive)}
+                    </td>
+                    <td className="table-body-confirmation-text">
+                      {donation.donor_name}
+                    </td>
+                    <td className="table-body-confirmation-text">
+                      {donation.donation_value}
+                    </td>
+                    <td className="table-body-confirmation-text">
+                      {donation.donor_confirmation_reason}
+                    </td>
+                  </tr>
+                ))
+              : donationConfirmation.map((donation) => (
+                  <tr
+                    className="table-body-confirmation-tr"
+                    key={donation.receipt_donation_id}
+                    onClick={() => handleClick(donation)}
+                  >
+                    <td className="table-body-confirmation-text">
+                      {DataSelect(donation.donation_day_to_receive)}
+                    </td>
+                    <td className="table-body-confirmation-text">
+                      {donation.donor_name}
+                    </td>
+                    <td className="table-body-confirmation-text">
+                      {donation.donation_value}
+                    </td>
+                    <td className="table-body-confirmation-text">
+                      {donation.donor_confirmation_reason}
+                    </td>
+                  </tr>
+                ))}
           </tbody>
         </table>
       ) : (

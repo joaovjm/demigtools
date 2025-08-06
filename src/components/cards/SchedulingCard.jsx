@@ -4,6 +4,7 @@ const SchedulingCard = ({ operatorCount, setDonationFilterPerId }) => {
 
   const [operators, setOperators] =useState([])
   const [count, setCount] =useState()
+  const [active, setActive] = useState()
   const operatorInfo = [
     ...new Map(
       operatorCount?.map((operators) => [
@@ -29,6 +30,7 @@ const SchedulingCard = ({ operatorCount, setDonationFilterPerId }) => {
 
   const handleClick = (id) => {
     setDonationFilterPerId(id);
+    setActive(id)
   };
   
   return (
@@ -36,7 +38,7 @@ const SchedulingCard = ({ operatorCount, setDonationFilterPerId }) => {
       operators.map((operator) => (
       <div
         onClick={() => handleClick(operator.id)}
-        className="section-operators-card"
+        className={`section-operators-card ${active === operator.id ? "active" : ""}`}
         key={operator.id}
       >
         <div>{operator.name}</div>
