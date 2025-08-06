@@ -30,6 +30,11 @@
   border-radius: 6px;
 }
 
+.modal-worklist-main-header h3 {
+  text-decoration: underline 2px;
+  text-underline-offset: 6px;
+}
+
 .modal-worklist-main-header button {
   padding: 4px 8px;
   cursor: pointer;
@@ -44,12 +49,23 @@
 }
 
 .modal-worklist-main-body {
-  display: grid;
-  grid-template-columns: auto auto auto;
+  display: flex;
+  justify-content: space-between;
   gap: 6px;
   margin: 6px;
   padding: 6px;
   border-radius: 6px;
+}
+
+.modal-worklist-main-body-tel{
+  display: flex;
+  flex-direction: column;
+  
+}
+
+.modal-worklist-main-body-values{
+  display: flex;
+  flex-direction: column;
 }
 
 .modal-worklist-main-buttons {

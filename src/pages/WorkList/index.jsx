@@ -12,12 +12,13 @@ import { useLocation, useNavigate } from "react-router";
 
 const WorkList = () => {
   const { operatorData, setOperatorData } = useContext(UserContext);
-  const [worklist, setWorklist] = useState([]);
+  const [worklist, setWorklist] = useState();
   const [workSelect, setWorkSelect] = useState("");
   const [worklistRequest, setWorklistRequest] = useState();
   const [active, setActive] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [workListSelected, setWorkListSelected] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -37,10 +38,11 @@ const WorkList = () => {
         );
         setWorklistRequest(listRequest);
 
-        if (modalFlag === "true"){
-          
-          const selected = listRequest.find((item) => item.receipt_donation_id === Number(activeID))
-          if(selected){
+        if (modalFlag === "true") {
+          const selected = listRequest.find(
+            (item) => item.receipt_donation_id === Number(activeID)
+          );
+          if (selected) {
             setActive(activeID);
             setWorkListSelected(selected);
             setModalOpen(true);
@@ -52,26 +54,39 @@ const WorkList = () => {
     }
   }, [location.search]);
 
+  const getWorklist = async () => {
+    const worklistName = await fetchWorklist();
+    setWorklist(worklistName);
+  };
+  const request = async () => {
+    if (workSelect) {
+      setLoading(true)
+      const listRequest = await worklistRequests(
+        operatorData.operator_code_id,
+        workSelect
+      );
+      setWorklistRequest(listRequest);
+      setLoading(false)
+    }
+  };
+
   useEffect(() => {
-    const getWorklist = async () => {
-      const worklistName = await fetchWorklist();
-      setWorklist(worklistName);
-    };
     getWorklist();
-  }, [workSelect, modalOpen]);
+  }, []);
+
+  useEffect(() => {
+    request();
+  }, [modalOpen, workSelect]);
 
   const handleChange = async (e) => {
     const selected = e.target.value;
     setWorkSelect(selected);
-    const listRequest = await worklistRequests(
-      operatorData.operator_code_id,
-      selected
-    );
-    setWorklistRequest(listRequest);
   };
 
   const handleRequest = (list) => {
-    navigate(`?pkg=${workSelect}&active=${list.receipt_donation_id}&modal=true`);
+    navigate(
+      `?pkg=${workSelect}&active=${list.receipt_donation_id}&modal=true`
+    );
     setActive(list.receipt_donation_id);
     setWorkListSelected(list);
     setModalOpen(!modalOpen);
@@ -93,7 +108,9 @@ const WorkList = () => {
             ))}
         </select>
       </div>
-      {worklistRequest?.length > 0 ? (
+      {loading ? (
+        <p>CARREGANDO...</p>
+      ) : worklistRequest?.length > 0 ? (
         <div className="worklist-list">
           <table>
             <thead className="worklist-list-head">
@@ -110,11 +127,11 @@ const WorkList = () => {
                   className={`worklist-list-body-tr ${
                     active === list.receipt_donation_id
                       ? "active"
-                      : list.request_status === "Não Pode Ajudar"
+                      : list.request_status === "NP"
                       ? "NP"
-                      : list.request_status === "sucesso"
-                      ? "sucesso"
-                      : list.request_status === "Não Atendeu"
+                      : list.request_status === "Sucesso"
+                      ? "Sucesso"
+                      : list.request_status === "NA"
                       ? "NA"
                       : ""
                   }`}
@@ -135,9 +152,7 @@ const WorkList = () => {
             </tbody>
           </table>
         </div>
-      ) : (
-        <></>
-      )}
+      ) : <></>}
       {modalOpen && (
         <ModalWorklist
           setModalOpen={setModalOpen}
