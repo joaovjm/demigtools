@@ -7,6 +7,7 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { DataSelect } from "../DataTime";
+import { getCampains } from "../../helper/getCampains";
 
 const ModalWorklist = ({
   setModalOpen,
@@ -19,6 +20,8 @@ const ModalWorklist = ({
   const [medDonation, setMedDonation] = useState();
   const [day, setDay] = useState();
   const [penultimate, setPenultimate] = useState();
+  const [campains, setCampains] = useState([]);
+  const [campainSelected, setCampainSelected] = useState("");
   const {
     id,
     donor: { donor_name, donor_tel_1 },
@@ -38,8 +41,14 @@ const ModalWorklist = ({
     setPenultimate(penultimate);
   };
 
+  const fetchCampains = async () => {
+    const response = await getCampains();
+    setCampains(response)
+  }
+
   useEffect(() => {
     MaxAndMedDonations();
+    fetchCampains();
   }, []);
 
   const handleClose = () => {
@@ -133,10 +142,13 @@ const ModalWorklist = ({
                   </div>
                   <div className="input-field">
                     <label>Campanha</label>
-                    <select>
+                    <select value={campainSelected} onChange={(e) => setCampainSelected(e.target.value)}>
                       <option value="" disabled>
                         Selecione...
                       </option>
+                      {campains.map((cp) => (
+                        <option>{cp.campain_name}</option>
+                      ))}
                     </select>
                   </div>
                   <div className="input-field" style={{ gridColumn: "span 2" }}>
