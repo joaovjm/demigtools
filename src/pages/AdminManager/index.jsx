@@ -5,6 +5,7 @@ import getOperatorMeta from "../../helper/getOperatorMeta";
 import supabase from "../../helper/superBaseClient";
 import Meta from "../../components/AdminManager/Meta";
 import WhatsappManager from "../../components/AdminManager/WhatsappManager";
+import Campain from "../../components/AdminManager/Campain";
 
 const AdminManager = () => {
   const [active, setActive] = useState();
@@ -39,7 +40,7 @@ const AdminManager = () => {
       setInputs(metaObject);
     };
     fetchMeta();
-  }, []);  
+  }, []);
 
   return (
     <main className="admin-manager">
@@ -60,9 +61,17 @@ const AdminManager = () => {
         >
           Whatsapp
         </div>
+        <div
+          className={`admin-manager-menu-item ${
+            active === "campain" ? "active" : ""
+          }`}
+          onClick={() => setActive("campain")}
+        >
+          Campanha
+        </div>
       </div>
       <div className="admin-manager-content">
-        {active === "meta" && (
+        {active === "meta" ? (
           <Meta
             operators={operators}
             inputs={inputs}
@@ -70,12 +79,11 @@ const AdminManager = () => {
             read={read}
             setRead={setRead}
           />
-        )}
-
-        {active === "whatsapp" && (
-          <WhatsappManager/>
-        )}
-
+        ) : active === "whatsapp" ? (
+          <WhatsappManager />
+        ) : active === "campain" ? (
+          <Campain/>
+        ) : (<></>)}
       </div>
     </main>
   );
