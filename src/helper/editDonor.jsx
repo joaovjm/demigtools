@@ -5,6 +5,7 @@ export const editDonor = async (
   nome,
   tipo,
   cpf,
+  email,
   endereco,
   cidade,
   bairro,
@@ -53,6 +54,20 @@ export const editDonor = async (
     );
   } catch {
     console.log("CPF não foi salvo");
+  }
+
+  try {
+    await supabase.from("donor_email").upsert(
+      [
+        {
+          donor_id: id,
+          donor_cpf: email,
+        },
+      ],
+      { onConflict: ["donor_id"] }
+    );
+  } catch {
+    console.log("Email não foi salvo");
   }
 
   try {

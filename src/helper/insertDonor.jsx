@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import supabase from "./superBaseClient";
 
 export const insertDonor = async (
@@ -39,6 +40,19 @@ export const insertDonor_cpf = async (donor_id, cpf) => {
       return data;
     }
 };
+
+export const insertDonor_email = async (donor_id, email) => {
+  const {data, error} = await supabase.from("donor_email").insert([{
+    donor_id: donor_id,
+    donor_email: email
+  }]).select()
+
+  if (error) {
+    toast.warning("Não foi possível salvar o email")
+  } else {
+    return data;
+  }
+}
 
 export const insertDonor_tel_2 = async (donor_id, telefone2) => {
   const {data, error} = await supabase.from ("donor_tel_2").insert([{

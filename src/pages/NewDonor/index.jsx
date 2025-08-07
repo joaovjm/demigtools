@@ -1,13 +1,24 @@
 import React, { useEffect, useState } from "react";
-import "./index.css"
+import "./index.css";
 import { FaMoneyCheckDollar } from "react-icons/fa6";
 import { useNavigate } from "react-router";
-import { insertDonor, insertDonor_cpf, insertDonor_mensal, insertDonor_observation, insertDonor_reference, insertDonor_tel_2, insertDonor_tel_3 } from "../../helper/insertDonor";
+import {
+  insertDonor,
+  insertDonor_cpf,
+  insertDonor_email,
+  insertDonor_mensal,
+  insertDonor_observation,
+  insertDonor_reference,
+  insertDonor_tel_2,
+  insertDonor_tel_3,
+} from "../../helper/insertDonor";
+import { toast } from "react-toastify";
 
 const index = () => {
   const [nome, setNome] = useState("");
   const [tipo, setTipo] = useState("");
   const [cpf, setCpf] = useState("");
+  const [email, setEmail] = useState("");
   const [endereco, setEndereco] = useState("");
   const [cidade, setCidade] = useState("");
   const [bairro, setBairro] = useState("");
@@ -16,7 +27,6 @@ const index = () => {
   const [telefone3, setTelefone3] = useState("");
   const [dia, setDia] = useState(null);
   const [mensalidade, setMensalidade] = useState(null);
-  const [media, setMedia] = useState(null);
   const [observacao, setObservacao] = useState("");
   const [referencia, setReferencia] = useState("");
 
@@ -27,8 +37,12 @@ const index = () => {
   };
 
   const OnClickNewDonor = async () => {
-    if ((dia !== null && mensalidade !== null && tipo === "Mensal") || tipo === "Avulso" || tipo === "Lista"){
-      try{
+    if (
+      (dia !== null && mensalidade !== null && tipo === "Mensal") ||
+      tipo === "Avulso" ||
+      tipo === "Lista"
+    ) {
+      try {
         const data = await insertDonor(
           nome,
           tipo,
@@ -37,34 +51,36 @@ const index = () => {
           bairro,
           telefone1,
           dia,
-          mensalidade,
+          mensalidade
         );
         if (cpf !== "") {
-          insertDonor_cpf(data[0].donor_id, cpf)
+          insertDonor_cpf(data[0].donor_id, cpf);
         }
-        if (telefone2 !== ""){
-          insertDonor_tel_2(data[0].donor_id, telefone2)
+        if (email !== "") insertDonor_email(data[0].donor_id, email);
+        if (telefone2 !== "") {
+          insertDonor_tel_2(data[0].donor_id, telefone2);
         }
         if (telefone3 !== "") {
-          insertDonor_tel_3(data[0].donor_id, telefone3)
+          insertDonor_tel_3(data[0].donor_id, telefone3);
         }
         if (tipo === "Mensal") {
-          insertDonor_mensal(data[0].donor_id, dia, mensalidade)
+          insertDonor_mensal(data[0].donor_id, dia, mensalidade);
         }
-        if (observacao !== ""){
-          insertDonor_observation(data[0].donor_id, observacao)
+        if (observacao !== "") {
+          insertDonor_observation(data[0].donor_id, observacao);
         }
-        if (referencia !== ""){
-          insertDonor_reference(data[0].donor_id, referencia)
+        if (referencia !== "") {
+          insertDonor_reference(data[0].donor_id, referencia);
         }
         navigate("/donor/" + data[0].donor_id);
-      } catch (error) { 
-        window.alert("Erro ao criar doador: ", error);
+      } catch (error) {
+        toast.warning("Erro ao criar doador: ", error);
       }
     } else {
-      window.alert ("Os campos DIA e MENSALIDADE precisam ser preenchidos corretamente!")
-    }   
-
+      toast.warning(
+        "Os campos DIA e MENSALIDADE precisam ser preenchidos corretamente!"
+      );
+    }
   };
 
   useEffect(() => {
@@ -93,7 +109,7 @@ const index = () => {
 
       {/* Formulario com informações do doador */}
       <form className="formDonor">
-        <div className="div-inputs">
+        <div className="input-field">
           <label className="label">Nome</label>
           <input
             type="text"
@@ -103,7 +119,7 @@ const index = () => {
           />
         </div>
 
-        <div className="div-inputs">
+        <div className="input-field">
           <label htmlFor="dropdown" className="label">
             Tipo
           </label>
@@ -114,7 +130,7 @@ const index = () => {
           </select>
         </div>
 
-        <div className="div-inputs">
+        <div className="input-field">
           <label className="label">CPF</label>
           <input
             type="text"
@@ -122,8 +138,16 @@ const index = () => {
             onChange={(e) => setCpf(e.target.value)}
           />
         </div>
+        <div className="input-field">
+          <label className="label">Email</label>
+          <input
+            type="text"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
 
-        <div className="div-inputs">
+        <div className="input-field">
           <label className="label">Endereço</label>
           <input
             type="text"
@@ -132,7 +156,7 @@ const index = () => {
           />
         </div>
 
-        <div className="div-inputs">
+        <div className="input-field">
           <label className="label">Cidade</label>
           <input
             type="text"
@@ -141,7 +165,7 @@ const index = () => {
           />
         </div>
 
-        <div className="div-inputs">
+        <div className="input-field">
           <label className="label">bairro</label>
           <input
             type="text"
@@ -150,7 +174,7 @@ const index = () => {
           />
         </div>
 
-        <div className="div-inputs">
+        <div className="input-field">
           <label className="label">Telefone 1</label>
           <input
             type="text"
@@ -159,7 +183,7 @@ const index = () => {
           />
         </div>
 
-        <div className="div-inputs">
+        <div className="input-field">
           <label className="label">Telefone 2</label>
           <input
             type="text"
@@ -168,7 +192,7 @@ const index = () => {
           />
         </div>
 
-        <div className="div-inputs">
+        <div className="input-field">
           <label className="label">Telefone 3</label>
           <input
             type="text"
@@ -177,39 +201,32 @@ const index = () => {
           />
         </div>
 
-        <div className="div-inputs" style={{ width: 180 }}>
-          <label className="label">dia</label>
-          <input
-            type="text"
-            value={dia}
-            onChange={(e) => setDia(e.target.value)}
-            disabled={tipo === "Avulso" || tipo === "Lista" ? true : false}
-          />
-        </div>
+        {tipo === "Mensal" && (
+          <>
+            <div className="input-field" style={{ width: 180 }}>
+              <label className="label">dia</label>
+              <input
+                type="text"
+                value={dia}
+                onChange={(e) => setDia(e.target.value)}
+                disabled={tipo === "Avulso" || tipo === "Lista" ? true : false}
+              />
+            </div>
+            <div className="input-field" style={{ width: 180 }}>
+              <label className="label" style={{ width: 100 }}>
+                Mensalidade
+              </label>
+              <input
+                type="text"
+                value={mensalidade}
+                onChange={(e) => setMensalidade(e.target.value)}
+                disabled={tipo === "Avulso" || tipo === "Lista" ? true : false}
+              />
+            </div>
+          </>
+        )}
 
-        <div className="div-inputs" style={{ width: 180 }}>
-          <label className="label" style={{ width: 100 }}>
-            Mensalidade
-          </label>
-          <input
-            type="text"
-            value={mensalidade}
-            onChange={(e) => setMensalidade(e.target.value)}
-            disabled={tipo === "Avulso" || tipo === "Lista" ? true : false}
-          />
-        </div>
-
-        <div className="div-inputs" style={{ width: 180 }}>
-          <label className="label">Media</label>
-          <input
-            type="text"
-            value={media}
-            onChange={(e) => setMedia(e.target.value)}
-            disabled={tipo === "Avulso" || tipo === "Lista" ? true : false}
-          />
-        </div>
-
-        <div className="div-inputs" id="observation">
+        <div className="input-field" id="observation">
           <label className="label" style={{ width: "100px" }}>
             Observação
           </label>
@@ -219,7 +236,7 @@ const index = () => {
           />
         </div>
 
-        <div className="div-inputs" id="referencia">
+        <div className="input-field" id="referencia">
           <label className="label" style={{ width: "100px" }}>
             Referência
           </label>

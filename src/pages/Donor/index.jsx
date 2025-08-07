@@ -27,6 +27,7 @@ const Donor = () => {
     nome: "",
     tipo: "",
     cpf: "",
+    email:"",
     endereco: "",
     cidade: "",
     bairro: "",
@@ -107,6 +108,7 @@ const Donor = () => {
           donorData.nome,
           donorData.tipo,
           donorData.cpf,
+          donorData.email,
           donorData.endereco,
           donorData.cidade,
           donorData.bairro,
@@ -205,12 +207,19 @@ const Donor = () => {
         )}
 
         <FormDonorInput
+          label="Email"
+          value={donorData.email}
+          onChange={(e) => handleInputChange("email", e.target.value)}
+          readOnly={uiState.edit}
+        />
+
+        <FormDonorInput
           label={FORM_LABELS.ADDRESS}
           value={donorData.endereco}
           onChange={(e) => handleInputChange("endereco", e.target.value)}
           readOnly={uiState.edit}
         />
-
+        
         <FormDonorInput
           label={FORM_LABELS.CITY}
           value={donorData.cidade}
