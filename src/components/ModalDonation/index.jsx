@@ -5,6 +5,7 @@ import { FaDollarSign } from "react-icons/fa";
 import { insertDonation } from "../../helper/insertDonation";
 import { DataNow, DataSelect } from "../DataTime";
 import { toast } from "react-toastify";
+import { getCampains } from "../../helper/getCampains";
 
 const ModalDonation = ({
   modalShow,
@@ -16,19 +17,26 @@ const ModalDonation = ({
   const [comissao, setComissao] = useState("");
   const [valor, setValor] = useState("");
   const [data_receber, setData_receber] = useState(DataNow("noformated"));
-  const [formatedData, setFormatedData] = useState("");
+  // const [formatedData, setFormatedData] = useState("");
   const [descricao, setDescricao] = useState("");
   const [impresso, setImpresso] = useState("");
   const [recebido, setRecebido] = useState("");
   const [mesref, setMesref] = useState("");
   const [operator, setOperator] = useState(null);
-  const [campain, setCampain] = useState("");
+  const [campain, setCampain] = useState([]);
+  const [campainSelected, setCampainSelect] = useState();
 
   const data_contato = DataNow("noformated");
+
+  const fetchCampains = async () => {
+    const response = await getCampains();
+    setCampain(response);
+  };
 
   useEffect(() => {
     const operatorData = JSON.parse(localStorage.getItem("operatorData"));
     setOperator(operatorData.operator_code_id);
+    fetchCampains();
   }, []);
 
   useEffect(() => {
@@ -53,7 +61,7 @@ const ModalDonation = ({
       recebido,
       descricao,
       mesref,
-      campain
+      campainSelected
     );
 
     toast.promise(promise, {
@@ -84,7 +92,10 @@ const ModalDonation = ({
     }
     setData_receber(value);
 
-    const monthYear = `${DataSelect(value,"year")}-${DataSelect(value, "month")}-01`;
+    const monthYear = `${DataSelect(value, "year")}-${DataSelect(
+      value,
+      "month"
+    )}-01`;
     setMesref(monthYear);
   };
 
@@ -149,6 +160,24 @@ const ModalDonation = ({
               value={mesref}
               onChange={(e) => setMesref(e.target.value)}
             />
+          </div>
+
+          <div className="input-field">
+            <label>Campanha</label>
+            <select
+              type="text"
+              value={campainSelected}
+              onChange={(e) => setCampainSelect(e.target.value)}
+            >
+              <option value="" disable>
+                Selecione...
+              </option>
+              {campain.map((cp) => (
+                <option key={cp.id} value={cp.campain_name}>
+                  {cp.campain_name}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Descrição */}

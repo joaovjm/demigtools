@@ -196,7 +196,7 @@ const ModalWorklist = ({
                         Selecione...
                       </option>
                       {campains.map((cp) => (
-                        <option key={cp.id}>{cp.campain_name}</option>
+                        <option key={cp.id} value={cp.campain_name}>{cp.campain_name}</option>
                       ))}
                     </select>
                   </div>

@@ -158,6 +158,16 @@
     overflow-y: auto;
 }
 
+.campain-divs-body-campains::-webkit-scrollbar{
+    background-color: #1F1D1D;
+    width: 8px;
+}
+.campain-divs-body-campains::-webkit-scrollbar-thumb{
+    background-color: #2f2d2d;
+    cursor: pointer;
+    
+}
+
 .campain-divs-body-campains-itens{
     display: flex;
     justify-content: space-between;
