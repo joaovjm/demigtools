@@ -5,7 +5,6 @@ export const getCampains = async () => {
     if (error){
         console.log(error.message)
     } else {
-        console.log(data)
         return data;
     }
 }

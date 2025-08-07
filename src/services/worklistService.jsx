@@ -30,10 +30,6 @@ export async function worklistRequests(operatorID, workSelect) {
 }
 
 export async function fetchMaxAndMedDonations(id) {
-  const {max, day, med, penultimate}  = await getMaxAndMedDonations(id)
-  return {max, day, med, penultimate}
-}
-
-export async function newDonation () {
-  
+  const { max, day, med, penultimate } = await getMaxAndMedDonations(id);
+  return { max, day, med, penultimate };
 }

@@ -2,12 +2,14 @@ import "./index.css";
 import updateRequestSelected from "../../helper/updateRequestSelected";
 import {
   fetchMaxAndMedDonations,
-  newDonation,
 } from "../../services/worklistService";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { DataSelect } from "../DataTime";
+import { DataNow, DataSelect } from "../DataTime";
 import { getCampains } from "../../helper/getCampains";
+import { UserContext } from "../../context/UserContext";
+import { toast } from "react-toastify";
+import { insertDonation } from "../../helper/insertDonation";
 
 const ModalWorklist = ({
   setModalOpen,
@@ -15,6 +17,7 @@ const ModalWorklist = ({
   setActive,
   workSelect,
 }) => {
+  const { operatorData } = useContext(UserContext);
   const [newDonationOpen, setNewDonationOpen] = useState(false);
   const [maxDonation, setMaxDonation] = useState();
   const [medDonation, setMedDonation] = useState();
@@ -22,15 +25,19 @@ const ModalWorklist = ({
   const [penultimate, setPenultimate] = useState();
   const [campains, setCampains] = useState([]);
   const [campainSelected, setCampainSelected] = useState("");
+  const [value, setValue] = useState("");
+  const [date, setDate] = useState("");
+  const [observation, setObservation] = useState("");
+
   const {
     id,
+    donor_id,
     donor: { donor_name, donor_tel_1 },
   } = workListSelected;
   const donor_tel_2 = workListSelected?.donor_tel_2b?.donor_tel_2?.donor_tel_2;
   const donor_tel_3 = workListSelected?.donor_tel_3b?.donor_tel_3?.donor_tel_3;
-
+  
   const navigate = useNavigate();
-
   const MaxAndMedDonations = async () => {
     const { max, day, med, penultimate } = await fetchMaxAndMedDonations(
       workListSelected.donor_id
@@ -43,8 +50,8 @@ const ModalWorklist = ({
 
   const fetchCampains = async () => {
     const response = await getCampains();
-    setCampains(response)
-  }
+    setCampains(response);
+  };
 
   useEffect(() => {
     MaxAndMedDonations();
@@ -69,12 +76,37 @@ const ModalWorklist = ({
 
   const handleNewDonation = () => {
     setNewDonationOpen(true);
-    newDonation();
+    
   };
 
   const handleCancel = () => {
     setNewDonationOpen(false);
   };
+
+  const handleSaveNewDonation = async () => {
+    if([campainSelected, value, date].some(v => v === "")){
+      toast.warning("Preencha todos os campos corretamente")
+      return;
+    }
+    const response = await insertDonation(
+      donor_id,
+      operatorData.operator_code_id,
+      value,
+      value,
+      DataNow("noformated"),
+      date,
+      false,
+      false,
+      observation,
+      null,
+      campainSelected
+    );
+
+    if (response.length > 0){
+      updateRequestSelected("Sucesso", id, setModalOpen, setActive) 
+      navigate(`?pkg=${workSelect}`);
+    } 
+  }
 
   const handleOpenDonator = () => {
     navigate(`/donor/${workListSelected.donor_id}`);
@@ -97,21 +129,27 @@ const ModalWorklist = ({
 
           <div className="modal-worklist-main-body-values">
             <label>
-              Doação anterior: {penultimate?.[0].toLocaleString("pt-BR", {style: "currency", currency: "BRL"})} | {DataSelect(penultimate?.[1])}
+              Doação anterior:{" "}
+              {penultimate?.[0].toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              })}{" "}
+              | {DataSelect(penultimate?.[1])}
             </label>
             <label>
-              Maior Doação: {maxDonation?.toLocaleString("pt-BR", {
+              Maior Doação:{" "}
+              {maxDonation?.toLocaleString("pt-BR", {
                 style: "currency",
                 currency: "BRL",
               })}{" "}
               | DT: {DataSelect(day)}
             </label>
             <label>
-              Média: {medDonation?.toLocaleString("pt-BR", {
+              Média:{" "}
+              {medDonation?.toLocaleString("pt-BR", {
                 style: "currency",
                 currency: "BRL",
               })}
-              
             </label>
           </div>
         </div>
@@ -134,31 +172,46 @@ const ModalWorklist = ({
                 <div className="input-group">
                   <div className="input-field">
                     <label>Valor</label>
-                    <input type="text" />
+                    <input
+                      value={value}
+                      onChange={(e) => setValue(e.target.value)}
+                      type="text"
+                    />
                   </div>
                   <div className="input-field">
                     <label>Dt. Receber</label>
-                    <input type="date" />
+                    <input
+                      value={date}
+                      onChange={(e) => setDate(e.target.value)}
+                      type="date"
+                    />
                   </div>
                   <div className="input-field">
                     <label>Campanha</label>
-                    <select value={campainSelected} onChange={(e) => setCampainSelected(e.target.value)}>
+                    <select
+                      value={campainSelected}
+                      onChange={(e) => setCampainSelected(e.target.value)}
+                    >
                       <option value="" disabled>
                         Selecione...
                       </option>
                       {campains.map((cp) => (
-                        <option>{cp.campain_name}</option>
+                        <option key={cp.id}>{cp.campain_name}</option>
                       ))}
                     </select>
                   </div>
                   <div className="input-field" style={{ gridColumn: "span 2" }}>
                     <label>Observação</label>
-                    <input type="text" />
+                    <input
+                      value={observation}
+                      onChange={(e) => setObservation(e.target.value)}
+                      type="text"
+                    />
                   </div>
                 </div>
                 <div className="modal-worklist-main-newdonation-footer">
                   <button onClick={handleCancel}>Cancelar</button>
-                  <button onClick={handleCancel}>Salvar</button>
+                  <button onClick={handleSaveNewDonation}>Salvar</button>
                 </div>
               </div>
             </div>
