@@ -93,55 +93,59 @@ const Leads = () => {
   }, [currentItem]);
 
   const handleNext = async () => {
-    if (operatorType === "Operador Casa") {
-      if (currentItem < items && currentLead?.leads_id) {
-        const data = await updateLeads(
-          "Não Atendeu",
-          operatorID,
-          currentLead.leads_id,
-          "Operador Casa"
-        );
-        if (data[0].leads_status === "Não Atendeu") {
-          const next = currentItem + 1;
-          setCurrentItem(next);
+    if (window.confirm("Deseja passar para o proximo?")) {
+      if (operatorType === "Operador Casa") {
+        if (currentItem < items && currentLead?.leads_id) {
+          const data = await updateLeads(
+            "Não Atendeu",
+            operatorID,
+            currentLead.leads_id,
+            "Operador Casa"
+          );
+          if (data[0].leads_status === "Não Atendeu") {
+            const next = currentItem + 1;
+            setCurrentItem(next);
+          }
         }
-      }
-    } else {
-      if (currentItem < items && currentLead?.leads_id) {
-        const data = await updateLeads(
-          "Não Atendeu",
-          operatorID,
-          currentLead.leads_id
-        );
-        if (data[0].leads_status === "Não Atendeu") {
-          const next = currentItem + 1;
-          setCurrentItem(next);
+      } else {
+        if (currentItem < items && currentLead?.leads_id) {
+          const data = await updateLeads(
+            "Não Atendeu",
+            operatorID,
+            currentLead.leads_id
+          );
+          if (data[0].leads_status === "Não Atendeu") {
+            const next = currentItem + 1;
+            setCurrentItem(next);
+          }
         }
       }
     }
   };
 
   const handleNoDonation = async () => {
-    if (operatorType === "Operador Casa") {
-      const response = await updateLeads(
-        "Não pode ajudar",
-        Number(operatorID),
-        currentLead.leads_id,
-        "Operador Casa"
-      );
-      if (response.length > 0) {
-        const next = currentItem + 1;
-        setCurrentItem(next);
-      }
-    } else {
-      const response = await updateLeads(
-        "Não pode ajudar",
-        Number(operatorID),
-        currentLead.leads_id
-      );
-      if (response.length > 0) {
-        const next = currentItem + 1;
-        setCurrentItem(next);
+    if (window.confirm("Confirma que o colaborador não poderá ajudar?")) {
+      if (operatorType === "Operador Casa") {
+        const response = await updateLeads(
+          "Não pode ajudar",
+          Number(operatorID),
+          currentLead.leads_id,
+          "Operador Casa"
+        );
+        if (response.length > 0) {
+          const next = currentItem + 1;
+          setCurrentItem(next);
+        }
+      } else {
+        const response = await updateLeads(
+          "Não pode ajudar",
+          Number(operatorID),
+          currentLead.leads_id
+        );
+        if (response.length > 0) {
+          const next = currentItem + 1;
+          setCurrentItem(next);
+        }
       }
     }
   };
