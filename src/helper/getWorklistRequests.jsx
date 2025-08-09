@@ -1,7 +1,6 @@
 import supabase from "./superBaseClient";
 
 const getWorklistRequests = async (operatorID, workSelect) => {
-  console.log(operatorID)
   const { data, error } = await supabase
     .from("request")
     .select(

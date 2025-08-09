@@ -9,6 +9,7 @@ import { DataSelect } from "../../components/DataTime";
 //
 import ModalWorklist from "../../components/ModalWorklist";
 import { useLocation, useNavigate } from "react-router";
+import { toast } from "react-toastify";
 
 const WorkList = () => {
   const { operatorData, setOperatorData } = useContext(UserContext);
@@ -84,6 +85,10 @@ const WorkList = () => {
   };
 
   const handleRequest = (list) => {
+    if (list.request_status === "NP"){
+      toast.warning("Este colaborador não poderá ajudar nesta requisição...")
+      return;
+    }
     navigate(
       `?pkg=${workSelect}&active=${list.receipt_donation_id}&modal=true`
     );

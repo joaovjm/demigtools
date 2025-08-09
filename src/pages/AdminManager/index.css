@@ -44,7 +44,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 600px;
+    width: 900px;
     height: 500px;
     background-color: #1F1D1D;
     border-radius: 0 6px 6px 0;
@@ -136,7 +136,7 @@
     width: 100%;
     height: 80%;
     border: 1px solid red;
-    padding: 4px;
+    padding: 12px;
     gap: 32px;
     
 }
@@ -154,6 +154,7 @@
     border: 3px double #2f2d2d;
     border-radius: 6px;
     padding: 0 2px;
+    padding: 6px;
     gap: 4px;
     overflow-y: auto;
 }

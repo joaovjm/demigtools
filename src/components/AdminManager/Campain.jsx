@@ -93,7 +93,12 @@ const Campain = () => {
         </div>
       </div>
 
-      <div className="campain-divs"></div>
+      <div className="campain-divs">
+        <label>Mensagens Para Campanhas</label>
+          <div className="input-field">
+            <label></label>
+          </div>
+      </div>
       <div></div>
     </div>
   );
