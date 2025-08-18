@@ -3,7 +3,7 @@ import "./index.css";
 import { getOperators } from "../../helper/getOperators";
 import getOperatorMeta from "../../helper/getOperatorMeta";
 import Meta from "../../components/AdminManager/Meta";
-import WhatsappManager from "../../components/AdminManager/WhatsappManager";
+import WhatsappAndEmailManager from "../../components/AdminManager/WhatsappAndEmailManager";
 import Campain from "../../components/AdminManager/Campain";
 
 const AdminManager = () => {
@@ -57,8 +57,9 @@ const AdminManager = () => {
             active === "whatsapp" ? "active" : ""
           }`}
           onClick={() => setActive("whatsapp")}
+          style={{fontSize: 12}}
         >
-          Whatsapp
+          Whatsapp & Email
         </div>
         <div
           className={`admin-manager-menu-item ${
@@ -79,7 +80,7 @@ const AdminManager = () => {
             setRead={setRead}
           />
         ) : active === "whatsapp" ? (
-          <WhatsappManager />
+          <WhatsappAndEmailManager />
         ) : active === "campain" ? (
           <Campain/>
         ) : (<></>)}

@@ -1,25 +1,41 @@
 import { createTransport } from "nodemailer";
+import { useState } from "react";
 
-let transporter = createTransport({
-    service: 'gmail',
+export const emailServer = async () => {
+  // const [provider, setProvider] = useState();
+  // const [emailName, setEmailName] = useState("João Oliveira")
+  // const [email, setEmail] = useState("joao.oliveira18.jm@gmail.com");
+  // const [password, setPassword] = useState("kibu zmzy zqhr pkyj");
+  // const [emailTo, setEmailTo] = useState("infocelljm23@gmail.com");
+  // const [subject, setSubject] = useState("Teste de envio de Email");
+  // const [text, setText] = useState("Estou testando o envio deste email via reactJS");
+  // const [filename, setFilename] = useState("")
+  // const [archive, setArchive] = useState();
+  let transporter = createTransport({
+    service: "gmail",
     auth: {
-        user:"joao.oliveira18.jm@gmail.com",
-        pass: "kibu zmzy zqhr pkyj"
-    }
-})
+      user: `${email}` ,
+      pass: `${password}`,
+    },
+  });
 
-let options = {
-    from: 'João Oliveira <joao.oliveira18.jm@gmail.com>',
-    to: 'infocelljm23@gmail.com',
-    subject: "Teste de envio de Email",
-    text: "Estou testando o envio deste email via reactJS"
-}
+  let options = {
+    from: `${emailName} <${email}>`,
+    to: `${emailTo}`,
+    subject: `${subject}`,
+    text: `${text}`,
+    // attachments: [
+    //   {
+    //     filename: `${filename}`,
+    //     path: `${archive}`,
+    //   },
+    // ],
+  };
 
-export const sendEmail = async () => {
-    try{
-        await transporter.sendMail(options);
-        process.exit;
-    } catch (error) {
-        console.log("Erro ao enviar email: ", error)
-    }
-}
+  try {
+    await transporter.sendMail(options);
+    process.exit;
+  } catch (error) {
+    console.log("Erro ao enviar email: ", error);
+  }
+};
