@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import "./index.css";
 import { getOperators } from "../../helper/getOperators";
 import getOperatorMeta from "../../helper/getOperatorMeta";
-import supabase from "../../helper/superBaseClient";
 import Meta from "../../components/AdminManager/Meta";
 import WhatsappManager from "../../components/AdminManager/WhatsappManager";
 import Campain from "../../components/AdminManager/Campain";

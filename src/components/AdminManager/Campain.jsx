@@ -10,6 +10,7 @@ const Campain = () => {
   const [campains, setCampains] = useState([]);
   const [newCampain, setNewCampain] = useState();
   const [inEdit, setInEdit] = useState();
+  const [campainText, setCampainText] = useState("");
   const [reload, setReload] = useState(false);
 
   useEffect(() => {
@@ -40,7 +41,7 @@ const Campain = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Deseja mesmo deletar esta campanha?")) {
       await deleteCampain(id);
-      setReload(prev => !prev);
+      setReload((prev) => !prev);
     }
   };
 
@@ -50,7 +51,7 @@ const Campain = () => {
       return;
     }
     await insertNewCampain(newCampain);
-    setReload(prev => !prev)
+    setReload((prev) => !prev);
     setNewCampain("");
   };
 
@@ -93,11 +94,26 @@ const Campain = () => {
         </div>
       </div>
 
-      <div className="campain-divs">
+      <div className="campain-divs" style={{display: "flex", gap: 0}}>
         <label>Mensagens Para Campanhas</label>
+        <div className="input-field" style={{maxHeight: 166}}>
+          <label>Mensagem</label>
+          <textarea style={{ height: 90, padding: 4 }} onChange={(e) => setCampainText(e.target.value)} />
+        </div>
+        <div style={{display: "flex", gap: 16, alignItems: "flex-end", border: "1px solid red"}}>
           <div className="input-field">
-            <label></label>
+            <label>Campanha Associada</label>
+            <select>
+              <option value="" disabled>
+                Selecione...
+              </option>
+              {campains?.map((cp) => (
+                <option value={cp.id}>{cp.campain_name}</option>
+              ))}
+            </select>
           </div>
+          <button>{campainText === "" ? "Associar" : "Atualizar"}</button>  
+        </div>
       </div>
       <div></div>
     </div>
