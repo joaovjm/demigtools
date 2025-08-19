@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 const WhatsappAndEmailManager = () => {
   const [whatsappNumber, setWhatsappNumber] = useState();
@@ -12,6 +13,21 @@ const WhatsappAndEmailManager = () => {
   const [campain, setCampain] = useState();
 
   const text = "${****}";
+
+  const handleEmailServer = async () => {
+    try{
+      const response = await axios.post("https://email-server-beige.vercel.app/api/send-email", {
+        emailTo: "infocelljm23@gmail.com",
+        subject: "Teste de envio de Email",
+        text: "Estou testando o envio deste email via reactJS",
+      });
+      console.log(response.data.message);
+      toast.success("Email enviado com sucesso");
+    } catch (error) {
+      console.log(error);
+      toast.error("Erro ao enviar email");
+    }
+  };
   const handleAddEdit = () => {
     if (edit) {
       toast.success("Whatsapp adicionado com sucesso");
@@ -89,6 +105,7 @@ const WhatsappAndEmailManager = () => {
       </div>
       <div className="whatsappmanager">
         <h4>E-Mail</h4>
+        <button onClick={handleEmailServer}>Teste Email</button>
       </div>
     </div>
   );
