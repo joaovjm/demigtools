@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { emailServer } from "../../services/emailServer";
 
 const WhatsappAndEmailManager = () => {
   const [whatsappNumber, setWhatsappNumber] = useState();
@@ -90,9 +89,6 @@ const WhatsappAndEmailManager = () => {
       </div>
       <div className="whatsappmanager">
         <h4>E-Mail</h4>
-        <button onClick={emailServer}>
-          Teste Email
-        </button>
       </div>
     </div>
   );
