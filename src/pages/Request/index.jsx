@@ -8,6 +8,7 @@ import RequestCard from "../../components/Request/RequestCard";
 import {
   addEndDataInCreatePackage,
   distributePackageService,
+  fetchOperatorID,
 } from "../../services/distributePackageService";
 import insertRequest from "../../helper/insertRequest";
 import { toast } from "react-toastify";
@@ -22,10 +23,12 @@ const Request = () => {
   const [date, setDate] = useState([]);
   const [perOperator, setPerOperator] = useState({});
   const [unassigned, setUnassigned] = useState([]);
-  const [operatorID, setOperatorID] = useState([]);
+  const [operatorID, setOperatorID] = useState();
+  const [operatorIDState, setOperatorIDState] = useState()
   const [operatorName, setOperatorName] = useState({});
   const [selected, setSelected] = useState(null);
   const [continueClick, setContinueClick] = useState(false);
+  const [cancelClick, setCancelClick] = useState(false)
   const [createPackageState, setCreatePackageState] = useState([]);
   const [endDateRequest, setEndDateRequest] = useState("");
 
@@ -34,9 +37,9 @@ const Request = () => {
       createPackage,
       setPerOperator,
       setUnassigned,
-      setOperatorID,
       setOperatorName
     );
+
   }, [createPackage]);
   useEffect(() => {
     if (continueClick) {
@@ -44,6 +47,11 @@ const Request = () => {
     }
 
   }, [continueClick]);
+
+  useEffect(() => {
+    fetchOperatorID(setOperatorID, setOperatorIDState)
+    console.log("Rodou o useEffect para busca de operadores")
+  }, [cancelClick])
 
   const handleCancel = () => {
     setDataForm(false);
@@ -57,20 +65,22 @@ const Request = () => {
     setOperatorName({});
     setSelected(null);
     setContinueClick(false);
+    setCancelClick(c => !c)
     setCreatePackageState([]);
+    setOperatorIDState([])
   };
 
   const handleReset = () => {
-    console.log(createPackageState)
     setCreatePackage(createPackageState);
+    setOperatorID(operatorIDState)
   };
 
   const handleConclude = async () => {
-    if(endDateRequest === ""){
-    toast.warning("Preencha a data final da requisição!")
-    return;
+    if (endDateRequest === "") {
+      toast.warning("Preencha a data final da requisição!")
+      return;
     }
-    if(endDateRequest < DataNow("noformated")){
+    if (endDateRequest < DataNow("noformated")) {
       toast.warning("A data final não pode ser menor que a data atual!")
       return;
     }
@@ -97,25 +107,30 @@ const Request = () => {
       setOperatorName({});
       setSelected(null);
       setContinueClick(false);
+      setCancelClick(false)
       setCreatePackageState([]);
+      setOperatorIDState([]);
       setEndDateRequest("");
     } catch (error) {
       console.error(error.message);
     }
   };
 
+  console.log(operatorID)
+  console.log(operatorIDState)
+
   return (
     <div className="request-main">
       <div className="request-front">
         <div className="request-front-left">
           {!filterForm && !requestForm && (
-              <CreatePackage
-                setDataForm={setDataForm}
-                createPackage={createPackage}
-                setCreatePackage={setCreatePackage}
-                setDate={setDate}
-                date={date}
-              />
+            <CreatePackage
+              setDataForm={setDataForm}
+              createPackage={createPackage}
+              setCreatePackage={setCreatePackage}
+              setDate={setDate}
+              date={date}
+            />
           )}
 
           {!dataForm && !filterForm && !requestForm && (
@@ -165,6 +180,8 @@ const Request = () => {
                   setCreatePackage={setCreatePackage}
                   unassigned={unassigned}
                   setUnassigned={setUnassigned}
+                  allOperator={operatorID}
+                  setAllOperator={setOperatorID}
                 />
               ))}
             </div>

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { IoPersonRemoveSharp } from "react-icons/io5";
 import {
   assignAllPackage,
   assignPackage,
+  deleteOperatorInList,
   removeAllPackage,
   removePackage,
 } from "../../services/distributePackageService";
@@ -16,6 +18,8 @@ const RequestCard = ({
   createPackage,
   setCreatePackage,
   unassigned,
+  allOperator,
+  setAllOperator
 }) => {
   const [countValue, setCountValue] = useState(0);
   const [countQuant, setCountQuant] = useState(0);
@@ -44,7 +48,6 @@ const RequestCard = ({
         pkgi.push(pkg);
       }
     });
-    console.log(pkgi);
   };
 
   useEffect(() => {
@@ -79,6 +82,10 @@ const RequestCard = ({
     );
   };
 
+  const removeOperatorInList = () => {
+    deleteOperatorInList(allOperator, setAllOperator, operatorID, createPackage, setCreatePackage);
+  }
+
   const removeAll = () => {
     removeAllPackage(createPackage, operatorID, setCreatePackage);
   };
@@ -89,9 +96,13 @@ const RequestCard = ({
 
   return (
     <div className="request-front-right-card">
-      <h4>
-        {operatorID} - {operatorName}
-      </h4>
+      <div className="request-front-right-card-head">
+        <h4>
+          {operatorID} - {operatorName}
+        </h4>
+        <p onClick={removeOperatorInList}><IoPersonRemoveSharp /></p>
+      </div>
+
       <div className="request-front-right-card-body">
         <label>
           Valor:{" "}

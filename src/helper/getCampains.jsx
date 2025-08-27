@@ -7,4 +7,6 @@ export const getCampains = async () => {
     } else {
         return data;
     }
+
+    
 }
