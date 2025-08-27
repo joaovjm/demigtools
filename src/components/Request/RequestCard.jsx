@@ -90,6 +90,7 @@ const RequestCard = ({
 
   const removeOperatorInList = () => {
     deleteOperatorInList(allOperator, setAllOperator, operatorID, createPackage, setCreatePackage);
+    setSelection(selection.filter(f => f !== operatorID))
   }
 
   const removeAll = () => {
