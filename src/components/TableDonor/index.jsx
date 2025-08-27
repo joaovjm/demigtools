@@ -84,10 +84,13 @@ const TableDonor = ({ idDonor, modalShow, setModalEdit, setDonation, modalEdit }
                     </td>
                   </tr>
                   <tr className="trFoot">
-                    <td colSpan="11" className="obs">
+                    <td colSpan="5" className="obs">
                       {item.donation_description
                         ? item.donation_description
                         : "..."}
+                    </td>
+                    <td colSpan="6" className="obs">
+                      Campanha: {item.donation_campain}
                     </td>
                   </tr>
                 </Fragment>
