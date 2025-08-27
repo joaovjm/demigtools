@@ -10,6 +10,7 @@ import { DataSelect } from "../../components/DataTime";
 import ModalWorklist from "../../components/ModalWorklist";
 import { useLocation, useNavigate } from "react-router";
 import { toast } from "react-toastify";
+import supabase from "../../helper/superBaseClient";
 
 const WorkList = () => {
   const { operatorData, setOperatorData } = useContext(UserContext);
@@ -57,7 +58,17 @@ const WorkList = () => {
 
   const getWorklist = async () => {
     const worklistName = await fetchWorklist();
-    setWorklist(worklistName);
+    for (const list of worklistName) {
+      const { data, error } = await supabase.from("request").select().eq("operator_code_id", operatorData.operator_code_id).eq("request_name", list.name)
+      if (error) throw error;
+      if (data.length > 0) {
+        setWorklist([list]);
+        break;
+      }
+    }
+
+
+
   };
   const request = async () => {
     if (workSelect) {
@@ -85,7 +96,7 @@ const WorkList = () => {
   };
 
   const handleRequest = (list) => {
-    if (list.request_status === "NP"){
+    if (list.request_status === "NP") {
       toast.warning("Este colaborador não poderá ajudar nesta requisição...")
       return;
     }
@@ -129,17 +140,16 @@ const WorkList = () => {
             <tbody className="worklist-list-body">
               {worklistRequest?.map((list) => (
                 <tr
-                  className={`worklist-list-body-tr ${
-                    active === list.receipt_donation_id
-                      ? "active"
-                      : list.request_status === "NP"
+                  className={`worklist-list-body-tr ${active === list.receipt_donation_id
+                    ? "active"
+                    : list.request_status === "NP"
                       ? "NP"
                       : list.request_status === "Sucesso"
-                      ? "Sucesso"
-                      : list.request_status === "NA"
-                      ? "NA"
-                      : ""
-                  }`}
+                        ? "Sucesso"
+                        : list.request_status === "NA"
+                          ? "NA"
+                          : ""
+                    }`}
                   key={list.receipt_donation_id}
                   onClick={() => handleRequest(list)}
                 >
