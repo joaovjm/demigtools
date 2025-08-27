@@ -44,9 +44,9 @@ export const distributePackageService = async (
 };
 
 export async function fetchOperatorID (setOperatorID, setOperatorIDState) {
-  const response = await getOperators(
-    true,
-    "operator_name, operator_code_id, operator_type"
+  const response = await getOperators({
+    active: true,
+    item: "operator_name, operator_code_id, operator_type"}
   );
   const opFilter = response
     .filter((op) => op.operator_type === "Operador")

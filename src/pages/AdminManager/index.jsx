@@ -14,7 +14,7 @@ const AdminManager = () => {
 
   useEffect(() => {
     const fetchOperators = async () => {
-      const operator = await getOperators("true");
+      const operator = await getOperators({active: true});
       setOperators(operator);
 
       const initialReadState = {};
