@@ -38,7 +38,7 @@ const Operators = () => {
   useEffect(() => {
     const operators = async () => {
       try {
-        const data = await getOperators();
+        const data = await getOperators({from: 0, to: 20});
         const operatorsWithDisableState = data.map((op) => ({
           ...op,
           isDisable: true,
