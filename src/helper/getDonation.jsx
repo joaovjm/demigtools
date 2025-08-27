@@ -13,6 +13,7 @@ export const getDonation = async (donor_id) => {
             donation_received,
             donation_monthref,
             donation_description,
+            donation_campain,
             collector_code_id,
             operator_code_id,
             collector:collector_code_id (collector_name),
