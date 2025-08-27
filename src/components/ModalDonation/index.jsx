@@ -24,7 +24,7 @@ const ModalDonation = ({
   const [mesref, setMesref] = useState("");
   const [operator, setOperator] = useState(null);
   const [campain, setCampain] = useState([]);
-  const [campainSelected, setCampainSelect] = useState();
+  const [campainSelected, setCampainSelect] = useState("");
 
   const data_contato = DataNow("noformated");
 
@@ -49,7 +49,10 @@ const ModalDonation = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    if(campainSelected === "") {
+      toast.warning("Selecione a campanha")
+      return;
+    }
     const promise = insertDonation(
       donor_id,
       operator,
@@ -169,7 +172,7 @@ const ModalDonation = ({
               value={campainSelected}
               onChange={(e) => setCampainSelect(e.target.value)}
             >
-              <option value="" disable>
+              <option value="" disabled>
                 Selecione...
               </option>
               {campain.map((cp) => (
