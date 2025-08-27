@@ -3,12 +3,22 @@ import "./index.css";
 import supabase from "../../helper/superBaseClient";
 import { toast } from "react-toastify";
 import { ICONS } from "../../constants/constants";
+import { getCampains } from "../../helper/getCampains";
 
 const ModalEditDonation = ({ donation, setModalEdit }) => {
   const [value, setValue] = useState(donation.donation_value);
   const [date, setDate] = useState(donation.donation_day_to_receive);
   const [observation, setObservation] = useState(donation.donation_description);
+  const [campaign, setCampaign] = useState(donation.campaign_id);
+  const [campaigns, setCampaigns] = useState([]);
 
+  useEffect(() => {
+    const fetchCampaigns = async () => {
+      const response = await getCampains();
+      setCampaigns(response);
+    };
+    fetchCampaigns();
+  }, []);
   const handleConfirm = async () => {
     if (value === "" || date === "") {
       toast.warning("Valor e data devem ser preenchidos!");
@@ -38,7 +48,7 @@ const ModalEditDonation = ({ donation, setModalEdit }) => {
       toast.error("Erro ao atualizar doação: ", error.message);
     }
   };
-
+  console.log(campaigns)
   const handleDelete = async () => {
     ;
     if (window.confirm("Deseja deletar a doação?")) {
@@ -84,6 +94,21 @@ const ModalEditDonation = ({ donation, setModalEdit }) => {
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
               />
+            </div>
+            <div className="input-field">
+              <label>Campanha</label>
+              <select
+                value={campaign}
+                onChange={(e) => setCampaign(e.target.value)}
+                
+              >
+                <option value="" disabled>Selecione uma campanha</option>
+                {campaigns?.map((campaign) => (
+                  <option key={campaign.id} value={campaign.campain_name}>
+                    {campaign.campain_name}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="input-field">
               <label>Observação</label>

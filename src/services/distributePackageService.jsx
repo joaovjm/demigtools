@@ -4,7 +4,6 @@ export const distributePackageService = async (
   createPackage,
   setPerOperator,
   setUnassigned,
-  setOperatorID,
   setOperatorName
 ) => {
   const response = await getOperators(
@@ -38,12 +37,25 @@ export const distributePackageService = async (
       unassigned.push(donation);
     }
   });
-
   setPerOperator(newPerOperator);
   setUnassigned(unassigned);
-  setOperatorID(opFilter);
   setOperatorName(opName);
 };
+
+export async function fetchOperatorID (setOperatorID, setOperatorIDState) {
+  const response = await getOperators(
+    true,
+    "operator_name, operator_code_id, operator_type"
+  );
+  const opFilter = response
+    .filter((op) => op.operator_type === "Operador")
+    .map((op) => op.operator_code_id);
+
+
+  setOperatorID(opFilter);
+  setOperatorIDState(opFilter);
+  
+}
 
 export function assignPackage(
   selected,
@@ -135,6 +147,21 @@ export function distribute(unassigned, createPackage, operatorID) {
   }
   return update;
   
+}
+
+export function deleteOperatorInList (allOperator, setAllOperator, operatorID, createPackage, setCreatePackage) {
+  const updatePackage = createPackage.map((pkg) => {
+    if (pkg.operator_code_id === operatorID){
+      return {
+        ...pkg,
+        operator_code_id: null
+      }
+    }
+    return pkg;
+  })
+  const updateOperator = allOperator.filter(f => f !== operatorID)
+  setCreatePackage(updatePackage)
+  setAllOperator(updateOperator)
 }
 
 export async function addEndDataInCreatePackage(createPackage, setCreatePackage, endDateRequest) {
