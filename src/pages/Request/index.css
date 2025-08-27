@@ -382,6 +382,11 @@
   border-radius: 6px;
 }
 
+.request-front-right-card-body.active{
+  border: 3px double #faa01c;
+  box-shadow: 0 4px 12px rgba(250, 160, 28, 0.4);
+}
+
 .request-front-right-card-btn {
   display: flex;
   gap: 6px;

@@ -30,6 +30,7 @@ const Request = () => {
   const [continueClick, setContinueClick] = useState(false);
   const [cancelClick, setCancelClick] = useState(false)
   const [createPackageState, setCreatePackageState] = useState([]);
+  const [selection, setSelection] = useState([]);
   const [endDateRequest, setEndDateRequest] = useState("");
 
   useEffect(() => {
@@ -116,9 +117,6 @@ const Request = () => {
     }
   };
 
-  console.log(operatorID)
-  console.log(operatorIDState)
-
   return (
     <div className="request-main">
       <div className="request-front">
@@ -160,6 +158,7 @@ const Request = () => {
                 createPackage={createPackage}
                 setCreatePackage={setCreatePackage}
                 operatorID={operatorID}
+                selection={selection}
               />
             )
           )}
@@ -182,6 +181,8 @@ const Request = () => {
                   setUnassigned={setUnassigned}
                   allOperator={operatorID}
                   setAllOperator={setOperatorID}
+                  selection={selection}
+                  setSelection={setSelection}
                 />
               ))}
             </div>

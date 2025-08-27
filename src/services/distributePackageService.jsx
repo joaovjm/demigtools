@@ -4,7 +4,8 @@ export const distributePackageService = async (
   createPackage,
   setPerOperator,
   setUnassigned,
-  setOperatorName
+  setOperatorName,
+  
 ) => {
   const response = await getOperators(
     true,
@@ -133,15 +134,15 @@ export function removeAllPackage(createPackage, operatorID, setCreatePackage) {
   setCreatePackage(update);
 }
 
-export function distribute(unassigned, createPackage, operatorID) {
+export function distribute(unassigned, createPackage, selection) {
   let o = 0;
   const update = createPackage.map((pkg) => ({...pkg}));
   const unassignedID = unassigned.map(un => un.receipt_donation_id)
   for(let i = 0; i < unassignedID.length; i++){
     const find = createPackage.findIndex(pkg => pkg.receipt_donation_id === unassignedID[i])
-    if(o === operatorID.length) o = 0;
+    if(o === selection.length) o = 0;
     if(find !== -1){
-      update[find].operator_code_id = operatorID[o]
+      update[find].operator_code_id = selection[o]
       o++
     }
   }

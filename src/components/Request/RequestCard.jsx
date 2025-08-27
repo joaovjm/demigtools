@@ -19,11 +19,14 @@ const RequestCard = ({
   setCreatePackage,
   unassigned,
   allOperator,
-  setAllOperator
+  setAllOperator,
+  selection,
+  setSelection
 }) => {
   const [countValue, setCountValue] = useState(0);
   const [countQuant, setCountQuant] = useState(0);
   const [maxValue, setMaxValue] = useState(0);
+  
 
   const calculateValues = () => {
     if (perOperator && perOperator.length > 0) {
@@ -49,6 +52,9 @@ const RequestCard = ({
       }
     });
   };
+  useEffect(() => {
+    setSelection(prev => [...prev, operatorID])
+  }, [])
 
   useEffect(() => {
     calculateValues();
@@ -103,7 +109,7 @@ const RequestCard = ({
         <p onClick={removeOperatorInList}><IoPersonRemoveSharp /></p>
       </div>
 
-      <div className="request-front-right-card-body">
+      <div className={`request-front-right-card-body ${selection.includes(operatorID) ? "active" : ""}`} onClick={() => setSelection(prev => prev.includes(operatorID) ? prev.filter(id => id !== operatorID) : [...prev, operatorID])}>
         <label>
           Valor:{" "}
           {countValue?.toLocaleString("pt-BR", {

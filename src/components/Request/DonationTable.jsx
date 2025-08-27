@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaAngleDown, FaAngleUp, FaEye, FaEyeSlash } from "react-icons/fa";
 import { distribute } from "../../services/distributePackageService";
 
-const DonationTable = ({ unassigned, setSelected, selected, createPackage, setCreatePackage, operatorID }) => {
+const DonationTable = ({ unassigned, setSelected, selected, createPackage, setCreatePackage, operatorID, selection }) => {
   const [visible, setVisible] = useState(true);
   const [packageCount, setPackageCount] = useState(0);
   const [nowPage, setNowPage] = useState(1);
@@ -29,7 +29,7 @@ const DonationTable = ({ unassigned, setSelected, selected, createPackage, setCr
     setSelected(id);
   };
   const handleDistribute = async () => {
-    const response = await distribute(unassigned, createPackage, operatorID)
+    const response = await distribute(unassigned, createPackage, selection)
     setCreatePackage(response);
   }
 
