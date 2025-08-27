@@ -158,6 +158,7 @@ const ModalWorklist = ({
           <div className="modal-worklist-main-buttons">
             <button onClick={handleNP}>Não pode ajudar</button>
             <button onClick={handleNA}>Não atendeu</button>
+            <button>Agendar</button>
             <button onClick={handleNewDonation}>Nova doação</button>
             <button onClick={handleOpenDonator}>Abrir Doação</button>
           </div>

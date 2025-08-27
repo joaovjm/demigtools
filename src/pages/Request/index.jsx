@@ -51,7 +51,6 @@ const Request = () => {
 
   useEffect(() => {
     fetchOperatorID(setOperatorID, setOperatorIDState)
-    console.log("Rodou o useEffect para busca de operadores")
   }, [cancelClick])
 
   const handleCancel = () => {

@@ -1,6 +1,6 @@
 import supabase from "./superBaseClient";
 
-export const getSchedulingRequest = async ({operatorID, }) => {
+export const getSchedulingRequest = async ({operatorID}) => { 
   const { data, error } = await supabase
     .from("request")
     .select(
@@ -8,6 +8,7 @@ export const getSchedulingRequest = async ({operatorID, }) => {
     )
     .eq("operator_code_id", operatorID)
     if(error) throw error
+    console.log(data)
     if(data.length > 0) {
         console.log(data)
     }

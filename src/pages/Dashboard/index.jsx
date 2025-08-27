@@ -18,6 +18,7 @@ import supabase from "../../helper/superBaseClient";
 import MotivationalPhrases from "../../components/MotivationalPhrases";
 import getOperatorMeta from "../../helper/getOperatorMeta";
 import getDonationReceived from "../../helper/getDonationReceived";
+import { getSchedulingRequest } from "../../helper/getSchedulingRequest";
 
 const Dashboard = () => {
   const caracterOperator = JSON.parse(localStorage.getItem("operatorData"));
@@ -74,6 +75,7 @@ const Dashboard = () => {
           setScheduling,
           "Operador Casa"
         );
+        await getSchedulingRequest({operatorID: operatorData.operator_code_id})
       } else {
         await getScheduledLeads(
           caracterOperator.operator_code_id,

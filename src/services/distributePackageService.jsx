@@ -12,7 +12,7 @@ export const distributePackageService = async (
     "operator_name, operator_code_id, operator_type"
   );
   const opFilter = response
-    .filter((op) => op.operator_type === "Operador")
+    .filter((op) => op.operator_type === "Operador" || op.operator_type === "Operador Casa")
     .map((op) => op.operator_code_id);
 
   const opName = response.reduce((acc, op) => {
@@ -49,7 +49,7 @@ export async function fetchOperatorID (setOperatorID, setOperatorIDState) {
     item: "operator_name, operator_code_id, operator_type"}
   );
   const opFilter = response
-    .filter((op) => op.operator_type === "Operador")
+    .filter((op) => op.operator_type === "Operador" || op.operator_type === "Operador Casa")
     .map((op) => op.operator_code_id);
 
 

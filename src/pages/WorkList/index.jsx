@@ -57,15 +57,17 @@ const WorkList = () => {
   }, [location.search]);
 
   const getWorklist = async () => {
+    let tempList = [];
     const worklistName = await fetchWorklist();
     for (const list of worklistName) {
       const { data, error } = await supabase.from("request").select().eq("operator_code_id", operatorData.operator_code_id).eq("request_name", list.name)
       if (error) throw error;
       if (data.length > 0) {
-        setWorklist([list]);
-        break;
+        tempList.push(list)
+        
       }
     }
+    setWorklist(tempList)
 
 
 
