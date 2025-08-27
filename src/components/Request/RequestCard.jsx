@@ -26,7 +26,6 @@ const RequestCard = ({
   const [countValue, setCountValue] = useState(0);
   const [countQuant, setCountQuant] = useState(0);
   const [maxValue, setMaxValue] = useState(0);
-  
 
   const calculateValues = () => {
     if (perOperator && perOperator.length > 0) {
