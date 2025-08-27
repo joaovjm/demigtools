@@ -1,4 +1,6 @@
 import React from "react";
+import supabase from "../../helper/superBaseClient";
+import { toast } from "react-toastify";
 
 const Meta = ({ operators, inputs, setInputs, read, setRead }) => {
   const handleInputChange = (id, field, value) => {
@@ -21,6 +23,7 @@ const Meta = ({ operators, inputs, setInputs, read, setRead }) => {
   };
 
   const handleUpdateMeta = async (id) => {
+    console.log(id)
     const { total, date } = inputs[id];
     const { data, error } = await supabase
       .from("operator_meta")
@@ -37,6 +40,7 @@ const Meta = ({ operators, inputs, setInputs, read, setRead }) => {
     if (error) {
       console.log("error: ", error.message);
     } else {
+      toast.success("Atualizado com sucesso...")
       console.log("updated: ", data);
     }
   };
