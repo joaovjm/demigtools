@@ -19,7 +19,7 @@
 
 .worklist-list {
   display: flex;
-  width: 50%;
+  width: 66%;
   max-height: 80%;
   border-radius: 6px;
   overflow-y: auto;

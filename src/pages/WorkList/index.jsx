@@ -21,6 +21,7 @@ const WorkList = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [workListSelected, setWorkListSelected] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [dateAccessed, setDateAccessed] = useState();
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -60,27 +61,27 @@ const WorkList = () => {
     let tempList = [];
     const worklistName = await fetchWorklist();
     for (const list of worklistName) {
-      const { data, error } = await supabase.from("request").select().eq("operator_code_id", operatorData.operator_code_id).eq("request_name", list.name)
+      const { data, error } = await supabase
+        .from("request")
+        .select()
+        .eq("operator_code_id", operatorData.operator_code_id)
+        .eq("request_name", list.name);
       if (error) throw error;
       if (data.length > 0) {
-        tempList.push(list)
-        
+        tempList.push(list);
       }
     }
-    setWorklist(tempList)
-
-
-
+    setWorklist(tempList);
   };
   const request = async () => {
     if (workSelect) {
-      setLoading(true)
+      setLoading(true);
       const listRequest = await worklistRequests(
         operatorData.operator_code_id,
         workSelect
       );
       setWorklistRequest(listRequest);
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -97,9 +98,23 @@ const WorkList = () => {
     setWorkSelect(selected);
   };
 
-  const handleRequest = (list) => {
+  const handleRequest = async (list) => {
+    console.log(list);
+    const nowDate = new Date();
+    try {
+      const { data, error } = await supabase
+        .from("request")
+        .update({ request_date_accessed: nowDate })
+        .eq("id", list.id)
+        .select();
+
+      if (error) throw error;
+      console.log(dateAccessed);
+    } catch (error) {
+      console.error(error);
+    }
     if (list.request_status === "NP") {
-      toast.warning("Este colaborador não poderá ajudar nesta requisição...")
+      toast.warning("Este colaborador não poderá ajudar nesta requisição...");
       return;
     }
     navigate(
@@ -137,21 +152,23 @@ const WorkList = () => {
                 <th>Valor</th>
                 <th>Data Recebida</th>
                 <th>Status</th>
+                <th>Data Abertura</th>
               </tr>
             </thead>
             <tbody className="worklist-list-body">
               {worklistRequest?.map((list) => (
                 <tr
-                  className={`worklist-list-body-tr ${active === list.receipt_donation_id
-                    ? "active"
-                    : list.request_status === "NP"
+                  className={`worklist-list-body-tr ${
+                    active === list.receipt_donation_id
+                      ? "active"
+                      : list.request_status === "NP"
                       ? "NP"
                       : list.request_status === "Sucesso"
-                        ? "Sucesso"
-                        : list.request_status === "NA"
-                          ? "NA"
-                          : ""
-                    }`}
+                      ? "Sucesso"
+                      : list.request_status === "NA"
+                      ? "NA"
+                      : ""
+                  }`}
                   key={list.receipt_donation_id}
                   onClick={() => handleRequest(list)}
                 >
@@ -164,12 +181,25 @@ const WorkList = () => {
                   </td>
                   <td>{DataSelect(list.donation.donation_day_received)}</td>
                   <td>{list.request_status}</td>
+                  <td>
+                    {list?.request_date_accessed
+                      ? `${
+                          new Date(
+                            list?.request_date_accessed
+                          ).toLocaleDateString("pt-BR") || ""
+                        } - ${new Date(
+                          list?.request_date_accessed
+                        ).toLocaleTimeString("pt-BR")}`
+                      : ""}
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-      ) : <></>}
+      ) : (
+        <></>
+      )}
       {modalOpen && (
         <ModalWorklist
           setModalOpen={setModalOpen}

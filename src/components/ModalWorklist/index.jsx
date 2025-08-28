@@ -258,13 +258,16 @@ const ModalWorklist = ({
                       }}
                     />
                   </div>
-                  <button
-                    type="button"
-                    className="btn-scheduling"
-                    onClick={handleSchedulingClick}
-                  >
-                    Concluir
-                  </button>
+                  <div className="schedulingWorkList-foot">
+                    <button className="btn-cencel" onClick={() => setNewSchedulingOpen(false)}>Cancelar</button>
+                    <button
+                      type="button"
+                      className="btn-scheduling"
+                      onClick={handleSchedulingClick}
+                    >
+                      Concluir
+                    </button>
+                  </div>
                 </form>
               </div>
             )}
