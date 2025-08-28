@@ -35,6 +35,9 @@ export const DataNow = (x) => {
   if (x === "noformated"){
     return `${year}-${month}-${day}`
   }
+  if(x === "underday"){
+    return `${year}-${month}-${day-1}`
+  }
 };
 
 export const DataSelect = (e, props) => {
@@ -57,5 +60,8 @@ export const DataSelect = (e, props) => {
   }
   if (props === undefined) {
     return `${day}/${month}/${year}`;
+  }
+  if (props === "noformated"){
+    return `${year}-${month}-${day}`
   }
 };

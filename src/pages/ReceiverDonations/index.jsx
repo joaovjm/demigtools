@@ -11,11 +11,12 @@ import { ModalConfirm } from "../../components/ModalConfirm";
 import FormSelect from "../../components/forms/FormSelect";
 import supabase from "../../helper/superBaseClient";
 import ModalReceiptSend from "../../components/modals/ModalReceiptSend";
+import { DataNow } from "../../components/DataTime";
 
 const ReceiverDonations = () => {
   const [formData, setFormData] = useState({
     collector: "",
-    date: "",
+    date: DataNow("underday"),
     search: "",
   });
 
