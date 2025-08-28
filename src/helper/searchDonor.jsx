@@ -5,7 +5,7 @@ const searchDonor = async (params, donor_type) => {
     let query;
 
     if (params) {
-      if (/^\d{11}$/.test(params)) {
+      if (/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(params)) {
         query = supabase
           .from("donor")
           .select(
