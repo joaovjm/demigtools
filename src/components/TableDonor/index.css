@@ -40,12 +40,6 @@
   opacity: 0.5;
 }
 
-.tabledonor .no-data {
-  text-align: center;
-  padding: 20px;
-  font-style: italic;
-}
-
 .obs {
   font-size: 9px;
   font-weight: 600;
