@@ -3,9 +3,10 @@ import supabase from "./superBaseClient";
 const getDonationReceived = async (id, dateMeta) => {
   let totalValue = 0;
   let count = 0;
+  let donation = [];
   let query = supabase
     .from("donation")
-    .select("donation_value")
+    .select("donation_value, donor: donor_id(donor_name), donation_day_received")
     .eq("donation_received", "Sim")
     .eq("operator_code_id", id);
   
@@ -23,11 +24,12 @@ const getDonationReceived = async (id, dateMeta) => {
           totalValue = totalValue + value;
         }
       }
+      donation = operatorValue;
     } catch (error) {
       console.error("Error", error.message);
     }
 
-  return { totalValue, count };
+  return { totalValue, count, donation };
 };
 
 export default getDonationReceived;

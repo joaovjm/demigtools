@@ -1,0 +1,32 @@
+.table-received-container{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    overflow-x: auto;
+}
+
+.table-received-table-head{
+    display: flex;
+    
+
+    th{
+        width: 120px;
+        background-color: black;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+}
+
+.table-received-table-body{
+    display: flex;
+    td{
+        width: 120px;
+        padding: 2px 12px;
+        background-color: #1F1D1D;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+}
+
+
+/*background-color: #faa01c;*/

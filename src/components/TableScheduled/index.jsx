@@ -1,9 +1,14 @@
 import React from "react";
 import { DataSelect } from "../DataTime";
 
-const TableScheduled = ({ scheduled, setModalOpen, setScheduledOpen, setNowScheduled, donationFilterPerId }) => {
+const TableScheduled = ({
+  scheduled,
+  setModalOpen,
+  setScheduledOpen,
+  setNowScheduled,
+  donationFilterPerId,
+}) => {
   const handleClick = (e) => {
-
     setScheduledOpen({
       id: e.leads_id,
       name: e.leads_name,
@@ -22,60 +27,60 @@ const TableScheduled = ({ scheduled, setModalOpen, setScheduledOpen, setNowSched
       observation: e.leads_observation,
       scheduling_date: e.leads_scheduling_date,
       operator_code_id: e.operator_code_id,
-    })
-    setNowScheduled(e)
+    });
+    setNowScheduled(e);
     setModalOpen(true);
   };
 
   const filterScheduled = scheduled.filter(
-    (filter) => filter.operator_code_id === donationFilterPerId  );
+    (filter) => filter.operator_code_id === donationFilterPerId
+  );
 
   return (
     <>
-      {donationFilterPerId ? (
-        filterScheduled?.length !== 0 ? (
-          <table className="table-confirmation">
-            <thead className="table-head-confirmation">
-              <tr>
-                <th className="table-head-confirmation-text">Nome</th>
-                <th className="table-head-confirmation-text">Observação</th>
-                <th className="table-head-confirmation-text">
-                  Agendado para
-                </th>
-              </tr>
-            </thead>
-            <tbody className="table-body-confirmation">
-              {filterScheduled?.map((item) => (
-                <tr
-                  key={item.leads_id}
-                  className="table-body-confirmation-tr"
-                  onClick={() => handleClick(item)}
-                >
-                  <td className="table-body-confirmation-text">
-                    {item.leads_name}           
-                  </td>
-                  <td className="table-body-confirmation-text">
-                    {item.leads_observation}
-                  </td>
-                  <td className="table-body-confirmation-text">
-                    {DataSelect(item.leads_scheduling_date)}
-                  </td>
+      <div className="table-confirmation-container">
+        {donationFilterPerId ? (
+          filterScheduled?.length !== 0 ? (
+            <table className="table-confirmation">
+              <thead className="table-head-confirmation">
+                <tr>
+                  <th className="table-head-confirmation-text">Nome</th>
+                  <th className="table-head-confirmation-text">Observação</th>
+                  <th className="table-head-confirmation-text">
+                    Agendado para
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-        "Nenhuma ficha agendada"
-        )) : (
-          scheduled?.length !== 0 ? (
+              </thead>
+              <tbody className="table-body-confirmation">
+                {filterScheduled?.map((item) => (
+                  <tr
+                    key={item.leads_id}
+                    className="table-body-confirmation-tr"
+                    onClick={() => handleClick(item)}
+                  >
+                    <td className="table-body-confirmation-text">
+                      {item.leads_name}
+                    </td>
+                    <td className="table-body-confirmation-text">
+                      {item.leads_observation}
+                    </td>
+                    <td className="table-body-confirmation-text">
+                      {DataSelect(item.leads_scheduling_date)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            "Nenhuma ficha agendada"
+          )
+        ) : scheduled?.length !== 0 ? (
           <table className="table-confirmation">
             <thead className="table-head-confirmation">
               <tr>
                 <th className="table-head-confirmation-text">Nome</th>
                 <th className="table-head-confirmation-text">Observação</th>
-                <th className="table-head-confirmation-text">
-                  Agendado para
-                </th>
+                <th className="table-head-confirmation-text">Agendado para</th>
               </tr>
             </thead>
             <tbody className="table-body-confirmation">
@@ -88,7 +93,7 @@ const TableScheduled = ({ scheduled, setModalOpen, setScheduledOpen, setNowSched
                   <td className="table-body-confirmation-text">
                     {item.leads_name}
                   </td>
-                  
+
                   <td className="table-body-confirmation-text">
                     {item.leads_observation}
                   </td>
@@ -99,10 +104,10 @@ const TableScheduled = ({ scheduled, setModalOpen, setScheduledOpen, setNowSched
               ))}
             </tbody>
           </table>
-      ) : (
-        "Nenhuma ficha agendada"
-      ))}
-        
+        ) : (
+          "Nenhuma ficha agendada"
+        )}
+      </div>
     </>
   );
 };

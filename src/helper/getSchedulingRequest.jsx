@@ -7,8 +7,8 @@ export const getSchedulingRequest = async ({operatorID}) => {
       "donor_id, donor: donor_id(donor_name), request_scheduled_date, request_observation"
     )
     .eq("operator_code_id", operatorID)
+    .eq("request_status", "Agendado")
     if(error) throw error
-    console.log(data)
     if(data.length > 0) {
         console.log(data)
     }

@@ -1,14 +1,20 @@
-.table-confirmation{
+.table-confirmation-container{
     max-width: 1120px;
+    table-layout: auto;
+}
+
+.table-confirmation{
+    width: 100%;
 }
 
 .table-head-confirmation{
-    background-color: black;
+    position: sticky;
 }
 
 .table-head-confirmation-text{
     border-radius: 6px;
     padding: 6px 12px;
+    background-color: black;
 }
 
 .table-body-confirmation-tr{
