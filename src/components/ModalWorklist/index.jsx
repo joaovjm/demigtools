@@ -144,7 +144,7 @@ const ModalWorklist = ({
                 currency: "BRL",
               })}{" "}
               |{" "}
-              {penultimate?.[1]?.toLocaleDateString("pt-BR", {
+              {new Date(penultimate?.[1])?.toLocaleDateString("pt-BR", {
                 timeZone: "UTC",
               }) || "**/**/***"}
             </label>
