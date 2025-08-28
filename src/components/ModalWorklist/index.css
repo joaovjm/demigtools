@@ -57,13 +57,12 @@
   border-radius: 6px;
 }
 
-.modal-worklist-main-body-tel{
+.modal-worklist-main-body-tel {
   display: flex;
   flex-direction: column;
-  
 }
 
-.modal-worklist-main-body-values{
+.modal-worklist-main-body-values {
   display: flex;
   flex-direction: column;
 }
@@ -132,4 +131,18 @@ button {
 
 .modal-worklist-main-newdonation-footer button:nth-child(2) {
   background-color: #385bad;
+}
+
+.schedulingWorkList {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.schedulingWorkList-form {
+  width: 60%;
+  height: 30%;
+  border: 1px solid red;
 }
