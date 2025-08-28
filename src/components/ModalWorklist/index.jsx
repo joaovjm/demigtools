@@ -1,8 +1,6 @@
 import "./index.css";
 import updateRequestSelected from "../../helper/updateRequestSelected";
-import {
-  fetchMaxAndMedDonations,
-} from "../../services/worklistService";
+import { fetchMaxAndMedDonations } from "../../services/worklistService";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { DataNow, DataSelect } from "../DataTime";
@@ -36,16 +34,18 @@ const ModalWorklist = ({
   } = workListSelected;
   const donor_tel_2 = workListSelected?.donor_tel_2b?.donor_tel_2?.donor_tel_2;
   const donor_tel_3 = workListSelected?.donor_tel_3b?.donor_tel_3?.donor_tel_3;
-  
+
   const navigate = useNavigate();
   const MaxAndMedDonations = async () => {
     const { max, day, med, penultimate } = await fetchMaxAndMedDonations(
       workListSelected.donor_id
     );
-    setMaxDonation(max);
-    setMedDonation(med);
-    setDay(day);
-    setPenultimate(penultimate);
+    if ([max, day, med, penultimate].some((v) => v)) {
+      setMaxDonation(max);
+      setMedDonation(med);
+      setDay(day);
+      setPenultimate(penultimate);
+    }
   };
 
   const fetchCampains = async () => {
@@ -76,7 +76,6 @@ const ModalWorklist = ({
 
   const handleNewDonation = () => {
     setNewDonationOpen(true);
-    
   };
 
   const handleCancel = () => {
@@ -84,8 +83,8 @@ const ModalWorklist = ({
   };
 
   const handleSaveNewDonation = async () => {
-    if([campainSelected, value, date].some(v => v === "")){
-      toast.warning("Preencha todos os campos corretamente")
+    if ([campainSelected, value, date].some((v) => v === "")) {
+      toast.warning("Preencha todos os campos corretamente");
       return;
     }
     const response = await insertDonation(
@@ -102,11 +101,11 @@ const ModalWorklist = ({
       campainSelected
     );
 
-    if (response.length > 0){
-      updateRequestSelected("Sucesso", id, setModalOpen, setActive) 
+    if (response.length > 0) {
+      updateRequestSelected("Sucesso", id, setModalOpen, setActive);
       navigate(`?pkg=${workSelect}`);
-    } 
-  }
+    }
+  };
 
   const handleOpenDonator = () => {
     navigate(`/donor/${workListSelected.donor_id}`);
@@ -130,11 +129,14 @@ const ModalWorklist = ({
           <div className="modal-worklist-main-body-values">
             <label>
               Doação anterior:{" "}
-              {penultimate?.[0].toLocaleString("pt-BR", {
+              {penultimate?.[0]?.toLocaleString("pt-BR", {
                 style: "currency",
                 currency: "BRL",
               })}{" "}
-              | {DataSelect(penultimate?.[1])}
+              |{" "}
+              {penultimate?.[1]?.toLocaleDateString("pt-BR", {
+                timeZone: "UTC",
+              }) || "**/**/***"}
             </label>
             <label>
               Maior Doação:{" "}
@@ -142,7 +144,9 @@ const ModalWorklist = ({
                 style: "currency",
                 currency: "BRL",
               })}{" "}
-              | DT: {DataSelect(day)}
+              | DT:{" "}
+              {new Date(day)?.toLocaleDateString("pt-BR", { timeZone: "UTC" }) ||
+                "**/**/***"}
             </label>
             <label>
               Média:{" "}
@@ -197,7 +201,9 @@ const ModalWorklist = ({
                         Selecione...
                       </option>
                       {campains.map((cp) => (
-                        <option key={cp.id} value={cp.campain_name}>{cp.campain_name}</option>
+                        <option key={cp.id} value={cp.campain_name}>
+                          {cp.campain_name}
+                        </option>
                       ))}
                     </select>
                   </div>

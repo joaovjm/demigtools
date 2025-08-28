@@ -13,12 +13,14 @@ export const getMaxAndMedDonations = async (id) => {
     .order("donation_day_received", {ascending: false})
     if(error){
         console.log(error.message)
-    } else {
+    }
+    console.log(data)
+    if (data.length > 0){
         for(let i = 0; i < data.length; i++){
             if(data[i].donation_value > max){
-                max = data[i].donation_value
-                day = data[i].donation_day_received
-                penultimate = [data[i+1].donation_value, data[i+1].donation_day_received]
+                max = data[i]?.donation_value
+                day = data[i]?.donation_day_received
+                penultimate = [data[i+1]?.donation_value, data[i+1]?.donation_day_received]
             }
             total += data[i].donation_value;
         }
