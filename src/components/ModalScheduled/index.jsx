@@ -23,8 +23,10 @@ const ModalScheduled = ({ scheduledOpen, onClose, setStatus, nowScheduled }) => 
   const [tel6, setTel6] = useState("");
   const [campain, setCampain] = useState("");
   const [valueDonation, setValueDonation] = useState("");
+  const [name, setName] = useState("");
 
   const handleNewDonation = () => {
+    setName(scheduledOpen.name);
     setAddress(scheduledOpen.address);
     setNeighborhood(scheduledOpen.neighborhood);
     setCity(scheduledOpen.city || "RIO DE JANEIRO");
@@ -108,6 +110,10 @@ const ModalScheduled = ({ scheduledOpen, onClose, setStatus, nowScheduled }) => 
         {isScheduling && (
           <div className="modal-confirmations-confirm">
             <div className="input-group">
+            <div className="input-field">
+                <label>Nome</label>
+                <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+              </div>
               <div className="input-field">
                 <label>Endereço</label>
                 <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} />
