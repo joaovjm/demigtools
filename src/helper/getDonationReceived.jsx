@@ -1,3 +1,4 @@
+import { DataNow } from "../components/DataTime";
 import supabase from "./superBaseClient";
 
 const getDonationReceived = async (id, dateMeta) => {
@@ -12,6 +13,8 @@ const getDonationReceived = async (id, dateMeta) => {
   
     if (dateMeta?.[0]) {
       query = query.gte("donation_day_received", dateMeta[0].start_date);
+    } else {
+      query = query.gte("donation_day_received", `${DataNow("mesrefnf")}`)
     }
 
     try {

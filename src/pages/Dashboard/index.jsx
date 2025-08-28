@@ -113,7 +113,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const getMeta = async () => {
-      const metaInfo = await getOperatorMeta(caracterOperator.operator_code_id);
+      const metaInfo = await getOperatorMeta(operatorData.operator_code_id);
       setMeta(metaInfo);
     };
     getMeta();
@@ -132,6 +132,8 @@ const Dashboard = () => {
   const handleClickCard = (e) => {
     setActive(e.currentTarget.id);
   };
+
+  console.log(meta)
 
   return (
     <main className="mainDashboard">
