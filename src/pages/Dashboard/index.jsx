@@ -19,6 +19,7 @@ import MotivationalPhrases from "../../components/MotivationalPhrases";
 import getOperatorMeta from "../../helper/getOperatorMeta";
 import getDonationReceived from "../../helper/getDonationReceived";
 import { getSchedulingRequest } from "../../helper/getSchedulingRequest";
+import TableReceived from "../../components/TableReceived";
 
 const Dashboard = () => {
   const caracterOperator = JSON.parse(localStorage.getItem("operatorData"));
@@ -41,6 +42,7 @@ const Dashboard = () => {
   const [fullNotReceivedDonations, setFullNotReceivedDonations] = useState([]);
   const [scheduled, setScheduled] = useState([]);
   const [donationFilterPerId, setDonationFilterPerId] = useState("");
+  const [donationsOperator, setDonationsOperator] = useState()
   const [meta, setMeta] = useState([]);
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -64,10 +66,11 @@ const Dashboard = () => {
         caracterOperator.operator_type
       );
       const donationReceived = await getDonationReceived(
-        caracterOperator.operator_code_id,
+        operatorData.operator_code_id,
         meta
       );
       setValueMonthReceived(donationReceived.totalValue);
+      setDonationsOperator(donationReceived.donation)
       if (operatorData.operator_type === "Operador Casa") {
         await getScheduledLeads(
           caracterOperator.operator_code_id,
@@ -75,7 +78,9 @@ const Dashboard = () => {
           setScheduling,
           "Operador Casa"
         );
-        await getSchedulingRequest({operatorID: operatorData.operator_code_id})
+        await getSchedulingRequest({
+          operatorID: operatorData.operator_code_id,
+        });
       } else {
         await getScheduledLeads(
           caracterOperator.operator_code_id,
@@ -174,7 +179,11 @@ const Dashboard = () => {
           </div>
 
           {/* Card 4 */}
-          <div className="divCard">
+          <div
+            id="received"
+            className={`divCard ${active === "received" ? "active" : ""}`}
+            onClick={handleClickCard}
+          >
             <div className="divHeader">
               <h3 className="h3Header">Recebida / Falta</h3>
             </div>
@@ -212,6 +221,8 @@ const Dashboard = () => {
               setScheduledOpen={setScheduledOpen}
               setNowScheduled={setNowScheduled}
             />
+          ) : active === "received" ? (
+            <TableReceived donationsOperator={donationsOperator} />
           ) : null}
         </section>
         {modalOpen && active === "inConfirmation" && (
