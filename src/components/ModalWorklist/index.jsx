@@ -8,6 +8,7 @@ import { getCampains } from "../../helper/getCampains";
 import { UserContext } from "../../context/UserContext";
 import { toast } from "react-toastify";
 import { insertDonation } from "../../helper/insertDonation";
+import ModalScheduled from "../ModalScheduled";
 
 const ModalWorklist = ({
   setModalOpen,
@@ -17,6 +18,7 @@ const ModalWorklist = ({
 }) => {
   const { operatorData } = useContext(UserContext);
   const [newDonationOpen, setNewDonationOpen] = useState(false);
+  const [newSchedulingOpen, setNewSchedulingOpen] = useState(false);
   const [maxDonation, setMaxDonation] = useState();
   const [medDonation, setMedDonation] = useState();
   const [day, setDay] = useState();
@@ -26,6 +28,8 @@ const ModalWorklist = ({
   const [value, setValue] = useState("");
   const [date, setDate] = useState("");
   const [observation, setObservation] = useState("");
+  const [dateScheduling, setDateScheduling] = useState("");
+  const [observationScheduling, setObservationScheduling] = useState("");
 
   const {
     id,
@@ -81,6 +85,12 @@ const ModalWorklist = ({
   const handleCancel = () => {
     setNewDonationOpen(false);
   };
+
+  const handleSchedulingOpen = () => {
+    setNewSchedulingOpen(true);
+  };
+
+  const handleSchedulingClick = () => {};
 
   const handleSaveNewDonation = async () => {
     if ([campainSelected, value, date].some((v) => v === "")) {
@@ -145,8 +155,9 @@ const ModalWorklist = ({
                 currency: "BRL",
               })}{" "}
               | DT:{" "}
-              {new Date(day)?.toLocaleDateString("pt-BR", { timeZone: "UTC" }) ||
-                "**/**/***"}
+              {new Date(day)?.toLocaleDateString("pt-BR", {
+                timeZone: "UTC",
+              }) || "**/**/***"}
             </label>
             <label>
               Média:{" "}
@@ -158,70 +169,105 @@ const ModalWorklist = ({
           </div>
         </div>
 
-        {!newDonationOpen ? (
+        {!newDonationOpen && !newSchedulingOpen ? (
           <div className="modal-worklist-main-buttons">
             <button onClick={handleNP}>Não pode ajudar</button>
             <button onClick={handleNA}>Não atendeu</button>
-            <button>Agendar</button>
+            <button onClick={handleSchedulingOpen}>Agendar</button>
             <button onClick={handleNewDonation}>Nova doação</button>
             <button onClick={handleOpenDonator}>Abrir Doação</button>
           </div>
         ) : (
           <>
             <hr />
-            <div className="modal-worklist-main-newdonation">
-              <div className="modal-worklist-main-newdonation-header">
-                <h4> Nova Doação</h4>
-              </div>
-              <div className="modal-worklist-main-newdonation-body">
-                <div className="input-group">
-                  <div className="input-field">
-                    <label>Valor</label>
-                    <input
-                      value={value}
-                      onChange={(e) => setValue(e.target.value)}
-                      type="text"
-                    />
-                  </div>
-                  <div className="input-field">
-                    <label>Dt. Receber</label>
-                    <input
-                      value={date}
-                      onChange={(e) => setDate(e.target.value)}
-                      type="date"
-                    />
-                  </div>
-                  <div className="input-field">
-                    <label>Campanha</label>
-                    <select
-                      value={campainSelected}
-                      onChange={(e) => setCampainSelected(e.target.value)}
-                    >
-                      <option value="" disabled>
-                        Selecione...
-                      </option>
-                      {campains.map((cp) => (
-                        <option key={cp.id} value={cp.campain_name}>
-                          {cp.campain_name}
+            {newDonationOpen ? (
+              <div className="modal-worklist-main-newdonation">
+                <div className="modal-worklist-main-newdonation-header">
+                  <h4> Nova Doação</h4>
+                </div>
+                <div className="modal-worklist-main-newdonation-body">
+                  <div className="input-group">
+                    <div className="input-field">
+                      <label>Valor</label>
+                      <input
+                        value={value}
+                        onChange={(e) => setValue(e.target.value)}
+                        type="text"
+                      />
+                    </div>
+                    <div className="input-field">
+                      <label>Dt. Receber</label>
+                      <input
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
+                        type="date"
+                      />
+                    </div>
+                    <div className="input-field">
+                      <label>Campanha</label>
+                      <select
+                        value={campainSelected}
+                        onChange={(e) => setCampainSelected(e.target.value)}
+                      >
+                        <option value="" disabled>
+                          Selecione...
                         </option>
-                      ))}
-                    </select>
+                        {campains.map((cp) => (
+                          <option key={cp.id} value={cp.campain_name}>
+                            {cp.campain_name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div
+                      className="input-field"
+                      style={{ gridColumn: "span 2" }}
+                    >
+                      <label>Observação</label>
+                      <input
+                        value={observation}
+                        onChange={(e) => setObservation(e.target.value)}
+                        type="text"
+                      />
+                    </div>
                   </div>
-                  <div className="input-field" style={{ gridColumn: "span 2" }}>
-                    <label>Observação</label>
-                    <input
-                      value={observation}
-                      onChange={(e) => setObservation(e.target.value)}
-                      type="text"
-                    />
+                  <div className="modal-worklist-main-newdonation-footer">
+                    <button onClick={handleCancel}>Cancelar</button>
+                    <button onClick={handleSaveNewDonation}>Salvar</button>
                   </div>
-                </div>
-                <div className="modal-worklist-main-newdonation-footer">
-                  <button onClick={handleCancel}>Cancelar</button>
-                  <button onClick={handleSaveNewDonation}>Salvar</button>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="schedulingWorkList">
+                <form className="schedulingWorkList-form">
+                  <h3>Agendamento</h3>
+                  <div className="input-field">
+                    <label>Data</label>
+                    <input
+                      type="date"
+                      value={dateScheduling}
+                      onChange={(e) => setDateScheduling(e.target.value)}
+                    />
+                  </div>
+                  <div className="input-field">
+                    <label>Observação</label>
+                    <textarea
+                      value={observationScheduling}
+                      onChange={(e) => {
+                        setObservationScheduling(e.target.value);
+                      }}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    className="btn-scheduling"
+                    onClick={handleSchedulingClick}
+                  >
+                    Concluir
+                  </button>
+                </form>
+              </div>
+            )}
           </>
         )}
       </div>
