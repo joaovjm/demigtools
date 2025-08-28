@@ -15,16 +15,13 @@ const DonationsReceived = () => {
   const fetchDonationReceived = async (i) => {
     let dateAdd;
 
-
     if (i >= 0) {
       const newDate = new Date(startDate);
       newDate.setDate(newDate.getDate() + i);
       const newDateAdd = newDate;
       dateAdd = DataSelect(newDateAdd, "noformated");
-
     } else {
       dateAdd = startDate;
-
     }
     try {
       const { data, error } = await supabase
@@ -33,13 +30,13 @@ const DonationsReceived = () => {
         .eq("donation_day_received", dateAdd);
 
       if (error) throw error;
-      if (data.length > 0) {
+      if (data) {
         const valueDonation = data.reduce(
           (acc, item) => acc + item.donation_value,
           0
         );
         const count = data.length;
-        
+
         return { valueDonation, count, dateAdd };
       }
     } catch (error) {
@@ -68,11 +65,12 @@ const DonationsReceived = () => {
         ]);
 
         totalValue = totalValue + valueDonation;
-        totalCount = totalCount + count
+        totalCount = totalCount + count;
       }
     }
+    
     setTotalValue(totalValue);
-    setTotalCount(totalCount)
+    setTotalCount(totalCount);
     setIsLoading(false);
   };
 
@@ -110,8 +108,8 @@ const DonationsReceived = () => {
               </tr>
             </thead>
             <tbody>
-              {donationReceived?.map((item) => (
-                <tr className="donation-received-table-body-tr">
+              {donationReceived?.map((item, index) => (
+                <tr key={index} className="donation-received-table-body-tr">
                   <td>
                     {new Date(item.dateAdd).toLocaleDateString("pt-BR", {
                       timeZone: "UTC",
@@ -130,10 +128,18 @@ const DonationsReceived = () => {
           </table>
         ) : null}
       </div>
-      <div className="donation-received-result">
-        <label>Fichas: {totalCount}</label>
-        <label>Total Geral: {totalValue.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})}</label>
-      </div>
+      {donationReceived.length > 0 ? (
+        <div className="donation-received-result">
+          <label>Fichas: {totalCount}</label>
+          <label>
+            Total Geral:{" "}
+            {totalValue?.toLocaleString("pt-BR", {
+              style: "currency",
+              currency: "BRL",
+            })}
+          </label>
+        </div>
+      ) : null}
     </div>
   );
 };
