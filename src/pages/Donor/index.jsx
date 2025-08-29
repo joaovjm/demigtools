@@ -27,7 +27,7 @@ const Donor = () => {
     nome: "",
     tipo: "",
     cpf: "",
-    email:"",
+    email: "",
     endereco: "",
     cidade: "",
     bairro: "",
@@ -40,7 +40,7 @@ const Donor = () => {
     observacao: "",
     referencia: "",
   });
-  const [donation, setDonation] = useState([])
+  const [donation, setDonation] = useState([]);
 
   const [uiState, setUiState] = useState({
     edit: true,
@@ -155,15 +155,13 @@ const Donor = () => {
             {ICONS.BACK} {BUTTON_TEXTS.BACK}
           </button>
           <div className="btns-donor">
-            {operatorData.operator_type === "Admin" && (
-              <button
-                onClick={handleEditDonor}
-                className="btn-edit"
-                disabled={uiState.loading}
-              >
-                {uiState.loading ? <Loader /> : uiState.btnEdit}
-              </button>
-            )}
+            <button
+              onClick={handleEditDonor}
+              className="btn-edit"
+              disabled={uiState.loading}
+            >
+              {uiState.loading ? <Loader /> : uiState.btnEdit}
+            </button>
 
             {uiState.showBtn && (
               <button
@@ -219,7 +217,7 @@ const Donor = () => {
           onChange={(e) => handleInputChange("endereco", e.target.value)}
           readOnly={uiState.edit}
         />
-        
+
         <FormDonorInput
           label={FORM_LABELS.CITY}
           value={donorData.cidade}
