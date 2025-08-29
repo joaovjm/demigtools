@@ -26,7 +26,7 @@ const newDonorAndDonation = async (
   operatorID,
   nowScheduled
 ) => {
-  console.log(id)
+  
   const handleDonorCreation = async () => {
     const response = await insertDonor(
       name,
@@ -85,10 +85,27 @@ const newDonorAndDonation = async (
     
   };
 
+  const donorExist = async () => {
+    const { data, error } = await supabase.from("donor").select().eq("donor_id", id)
+    if (error) throw error;
+    if (data.length > 0){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
 
   const result = await toast.promise(
     new Promise(async (resolve, reject) => {
       try {
+        if (donorExist === true) {
+          console.log("existe")
+          return;
+        } else {
+          console.log("Não existe")
+          return;
+        }
         const donor_id = await handleDonorCreation();
         const donation = await handleDonationCreation(donor_id);
         const leadStatus = await handleUpdateStatusLead();

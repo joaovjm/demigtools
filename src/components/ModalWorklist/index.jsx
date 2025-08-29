@@ -8,7 +8,7 @@ import { getCampains } from "../../helper/getCampains";
 import { UserContext } from "../../context/UserContext";
 import { toast } from "react-toastify";
 import { insertDonation } from "../../helper/insertDonation";
-import ModalScheduled from "../ModalScheduled";
+import { updateRequestList } from "../../helper/updateRequestList";
 
 const ModalWorklist = ({
   setModalOpen,
@@ -29,6 +29,7 @@ const ModalWorklist = ({
   const [date, setDate] = useState("");
   const [observation, setObservation] = useState("");
   const [dateScheduling, setDateScheduling] = useState("");
+  const [telScheduling, setTelScheduling] = useState("");
   const [observationScheduling, setObservationScheduling] = useState("");
 
   const {
@@ -90,7 +91,15 @@ const ModalWorklist = ({
     setNewSchedulingOpen(true);
   };
 
-  const handleSchedulingClick = () => {};
+  const handleSchedulingClick = () => {
+    const response = updateRequestList({
+      id: id,
+      observationScheduling: observationScheduling,
+      dateScheduling: dateScheduling,
+      telScheduling: telScheduling
+    });
+    response ? toast.success("Agendado com sucesso!") : toast.error("Erro ao agendar!")
+  };
 
   const handleSaveNewDonation = async () => {
     if ([campainSelected, value, date].some((v) => v === "")) {
@@ -250,6 +259,18 @@ const ModalWorklist = ({
                     />
                   </div>
                   <div className="input-field">
+                    <label>Telefone contactado</label>
+                    <select
+                      value={telScheduling}
+                      onChange={(e) => setTelScheduling(e.target.value)}
+                    >
+                      <option value="" disabled>Selecione...</option>
+                      <option value={donor_tel_1}>{donor_tel_1}</option>
+                      {donor_tel_2 && <option value={donor_tel_2}>{donor_tel_2}</option>}
+                      {donor_tel_3 && <option value={donor_tel_3}>{donor_tel_3}</option>}
+                    </select>
+                  </div>
+                  <div className="input-field">
                     <label>Observação</label>
                     <textarea
                       value={observationScheduling}
@@ -259,7 +280,12 @@ const ModalWorklist = ({
                     />
                   </div>
                   <div className="schedulingWorkList-foot">
-                    <button className="btn-cencel" onClick={() => setNewSchedulingOpen(false)}>Cancelar</button>
+                    <button
+                      className="btn-cencel"
+                      onClick={() => setNewSchedulingOpen(false)}
+                    >
+                      Cancelar
+                    </button>
                     <button
                       type="button"
                       className="btn-scheduling"

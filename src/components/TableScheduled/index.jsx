@@ -10,12 +10,12 @@ const TableScheduled = ({
 }) => {
   const handleClick = (e) => {
     setScheduledOpen({
-      id: e.leads_id,
-      name: e.leads_name,
+      id: e.leads_id ? e.leads_id : e.id && e.id,
+      name: e.leads_name || e.donor.donor_name,
       address: e.leads_address,
       city: e.leads_city,
       neighborhood: e.leads_neighborhood,
-      phone: e.leads_tel_1,
+      phone: e.leads_tel_1 || e.donor.donor_tel_1,
       phone2: e.leads_tel_2,
       phone3: e.leads_tel_3,
       phone4: e.leads_tel_4,
@@ -24,7 +24,7 @@ const TableScheduled = ({
       leads: e.leads_created,
       date_accessed: e.leads_date_accessed,
       leads_icpf: e.leads_icpf,
-      observation: e.leads_observation,
+      observation: e.leads_observation || e.request_observation,
       scheduling_date: e.leads_scheduling_date,
       operator_code_id: e.operator_code_id,
     });
@@ -81,25 +81,35 @@ const TableScheduled = ({
                 <th className="table-head-confirmation-text">Nome</th>
                 <th className="table-head-confirmation-text">Observação</th>
                 <th className="table-head-confirmation-text">Agendado para</th>
+                <th className="table-head-confirmation-text">Telefone Contactado</th>
               </tr>
             </thead>
             <tbody className="table-body-confirmation">
               {scheduled?.map((item) => (
                 <tr
-                  key={item.leads_id}
+                  key={item.leads_id ? item.leads_id : item.id && item.id}
                   className="table-body-confirmation-tr"
                   onClick={() => handleClick(item)}
                 >
                   <td className="table-body-confirmation-text">
-                    {item.leads_name}
+                    {item.leads_name
+                      ? item.leads_name
+                      : item.donor.donor_name
+                      ? item.donor.donor_name
+                      : ""}
                   </td>
 
                   <td className="table-body-confirmation-text">
-                    {item.leads_observation}
+                    {item.leads_observation
+                      ? item.leads_observation
+                      : item.request_observation
+                      ? item.request_observation
+                      : ""}
                   </td>
                   <td className="table-body-confirmation-text">
-                    {DataSelect(item.leads_scheduling_date)}
+                    {new Date(item.request_scheduled_date).toLocaleDateString("pt-BR", {timeZone: "UTC"})}
                   </td>
+                  <td className="table-body-confirmation-text">{item.request_tel_success || ""}</td>
                 </tr>
               ))}
             </tbody>

@@ -1,15 +1,20 @@
 import supabase from "./superBaseClient";
 
-export const getSchedulingRequest = async ({operatorID}) => { 
+export const getSchedulingRequest = async ({
+  operatorID,
+  scheduled,
+  setScheduled,
+  setScheduling,
+}) => {
   const { data, error } = await supabase
     .from("request")
     .select(
-      "donor_id, donor: donor_id(donor_name), request_scheduled_date, request_observation"
+      "id, donor_id, donor: donor_id(donor_name, donor_tel_1),request_scheduled_date, request_observation, request_tel_success"
     )
     .eq("operator_code_id", operatorID)
-    .eq("request_status", "Agendado")
-    if(error) throw error
-    if(data.length > 0) {
-        console.log(data)
-    }
+    .eq("request_status", "Agendado");
+  if (error) throw error;
+  if (data.length > 0) {
+    setScheduled((prev) => [...prev, ...data]);
+  }
 };

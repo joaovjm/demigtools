@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import "./index.css";
 import { ICONS } from "../../constants/constants";
-import supabase from "../../helper/superBaseClient";
-import { DataNow, DataSelect } from "../DataTime";
+import { DataNow } from "../DataTime";
 import updateLeads from "../../helper/updateLeads";
 import { toast } from "react-toastify";
 import newDonorAndDonation from "../../helper/newDonorAndDonation";
@@ -82,6 +81,8 @@ const ModalScheduled = ({
       toast.warning("Preencha todos os campos obrigatórios");
       return;
     }
+
+    
 
     const response = await newDonorAndDonation(
       scheduledOpen.id,

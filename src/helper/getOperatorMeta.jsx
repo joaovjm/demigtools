@@ -15,7 +15,6 @@ const getOperatorMeta = async (operator) => {
 
   try {
     const { data, error } = await query;
-    console.log(data)
     if (error) throw error;
     if (!error) return data;
   } catch (error) {
