@@ -7,7 +7,12 @@ import updateLeads from "../../helper/updateLeads";
 import { toast } from "react-toastify";
 import newDonorAndDonation from "../../helper/newDonorAndDonation";
 
-const ModalScheduled = ({ scheduledOpen, onClose, setStatus, nowScheduled }) => {
+const ModalScheduled = ({
+  scheduledOpen,
+  onClose,
+  setStatus,
+  nowScheduled,
+}) => {
   const [isScheduling, setIsScheduling] = useState(false);
   const [dateScheduling, setDateScheduling] = useState("");
   const [observation, setObservation] = useState("");
@@ -41,7 +46,11 @@ const ModalScheduled = ({ scheduledOpen, onClose, setStatus, nowScheduled }) => 
 
   const handleCancel = async () => {
     if (window.confirm("Você tem certeza que deseja cancelar a ficha?")) {
-      const response = await updateLeads("Não pode Ajudar", scheduledOpen.operator_code_id, scheduledOpen.id);
+      const response = await updateLeads(
+        "Não pode Ajudar",
+        scheduledOpen.operator_code_id,
+        scheduledOpen.id
+      );
       if (response) {
         toast.success("Processo concluído com sucesso");
         onClose();
@@ -52,11 +61,24 @@ const ModalScheduled = ({ scheduledOpen, onClose, setStatus, nowScheduled }) => 
   const handleDateChange = (e) => {
     const selectedDate = e.target.value;
     const currentDate = DataNow("noformated");
-    setDateScheduling(selectedDate < currentDate ? DataNow("noformated") : selectedDate);
+    setDateScheduling(
+      selectedDate < currentDate ? DataNow("noformated") : selectedDate
+    );
   };
 
   const handleNewDonorAndDonation = async () => {
-    if ([address, neighborhood, city, tel1, tel2, tel3, valueDonation, dateScheduling].some(v => v === "")) {
+    if (
+      [
+        address,
+        neighborhood,
+        city,
+        tel1,
+        tel2,
+        tel3,
+        valueDonation,
+        dateScheduling,
+      ].some((v) => v === "")
+    ) {
       toast.warning("Preencha todos os campos obrigatórios");
       return;
     }
@@ -86,7 +108,9 @@ const ModalScheduled = ({ scheduledOpen, onClose, setStatus, nowScheduled }) => 
       <div className="modal-confirmations-div">
         <div className="modal-confirmations-title">
           <h2>Nome: {scheduledOpen.name}</h2>
-          <button onClick={onClose} className="btn-close">Fechar</button>
+          <button onClick={onClose} className="btn-close">
+            Fechar
+          </button>
         </div>
 
         <div className="modal-confirmations-body">
@@ -102,86 +126,155 @@ const ModalScheduled = ({ scheduledOpen, onClose, setStatus, nowScheduled }) => 
 
         {!isScheduling && (
           <div className="modal-confirmations-footer">
-            <button onClick={handleNewDonation} className="btn-confirm">Criar Doação</button>
-            <button onClick={handleCancel} className="btn-delete">Não pode ajudar</button>
+            <button onClick={handleNewDonation} className="btn-confirm">
+              Criar Doação
+            </button>
+            <button onClick={handleCancel} className="btn-delete">
+              Não pode ajudar
+            </button>
           </div>
         )}
 
         {isScheduling && (
           <div className="modal-confirmations-confirm">
             <div className="input-group">
-            <div className="input-field">
+              <div className="input-field">
                 <label>Nome</label>
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
               </div>
               <div className="input-field">
                 <label>Endereço</label>
-                <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} />
+                <input
+                  type="text"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                />
               </div>
               <div className="input-field">
                 <label>Bairro</label>
-                <input type="text" value={neighborhood} onChange={(e) => setNeighborhood(e.target.value)} />
+                <input
+                  type="text"
+                  value={neighborhood}
+                  onChange={(e) => setNeighborhood(e.target.value)}
+                />
               </div>
               <div className="input-field">
                 <label>Cidade</label>
-                <input type="text" value={city} onChange={(e) => setCity(e.target.value)} />
+                <input
+                  type="text"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                />
               </div>
-            </div>
-
-            <div className="input-group">
               <div className="input-field">
                 <label>Qual contactado?</label>
-                <select value={telSuccess} onChange={(e) => setTelSuccess(e.target.value)}>
-                  {scheduledOpen.phone && <option value={scheduledOpen.phone}>{scheduledOpen.phone}</option>}
-                  {scheduledOpen.phone2 && <option value={scheduledOpen.phone2}>{scheduledOpen.phone2}</option>}
-                  {scheduledOpen.phone3 && <option value={scheduledOpen.phone3}>{scheduledOpen.phone3}</option>}
-                  {scheduledOpen.phone4 && <option value={scheduledOpen.phone4}>{scheduledOpen.phone4}</option>}
-                  {scheduledOpen.phone5 && <option value={scheduledOpen.phone5}>{scheduledOpen.phone5}</option>}
-                  {scheduledOpen.phone6 && <option value={scheduledOpen.phone6}>{scheduledOpen.phone6}</option>}
+                <select
+                  value={telSuccess}
+                  onChange={(e) => setTelSuccess(e.target.value)}
+                >
+                  {scheduledOpen.phone && (
+                    <option value={scheduledOpen.phone}>
+                      {scheduledOpen.phone}
+                    </option>
+                  )}
+                  {scheduledOpen.phone2 && (
+                    <option value={scheduledOpen.phone2}>
+                      {scheduledOpen.phone2}
+                    </option>
+                  )}
+                  {scheduledOpen.phone3 && (
+                    <option value={scheduledOpen.phone3}>
+                      {scheduledOpen.phone3}
+                    </option>
+                  )}
+                  {scheduledOpen.phone4 && (
+                    <option value={scheduledOpen.phone4}>
+                      {scheduledOpen.phone4}
+                    </option>
+                  )}
+                  {scheduledOpen.phone5 && (
+                    <option value={scheduledOpen.phone5}>
+                      {scheduledOpen.phone5}
+                    </option>
+                  )}
+                  {scheduledOpen.phone6 && (
+                    <option value={scheduledOpen.phone6}>
+                      {scheduledOpen.phone6}
+                    </option>
+                  )}
                 </select>
               </div>
               <div className="input-field">
                 <label>Tel. 2</label>
-                <input type="text" value={tel2} onChange={(e) => setTel2(e.target.value)} />
+                <input
+                  type="text"
+                  value={tel2}
+                  onChange={(e) => setTel2(e.target.value)}
+                />
               </div>
               <div className="input-field">
                 <label>Tel. 3</label>
-                <input type="text" value={tel3} onChange={(e) => setTel3(e.target.value)} />
+                <input
+                  type="text"
+                  value={tel3}
+                  onChange={(e) => setTel3(e.target.value)}
+                />
               </div>
-            </div>
-
-            <div className="input-group">
               <div className="input-field">
                 <label>Valor</label>
-                <input type="text" value={valueDonation} onChange={(e) => setValueDonation(e.target.value)} />
+                <input
+                  type="text"
+                  value={valueDonation}
+                  onChange={(e) => setValueDonation(e.target.value)}
+                />
               </div>
               <div className="input-field">
                 <label>Data</label>
-                <input type="date" value={dateScheduling} onChange={handleDateChange} />
+                <input
+                  type="date"
+                  value={dateScheduling}
+                  onChange={handleDateChange}
+                />
               </div>
               <div className="input-field">
                 <label>Campanha</label>
-                <select value={campain} onChange={(e) => setCampain(e.target.value)}>
-                  <option value="" disabled>Selecione...</option>
+                <select
+                  value={campain}
+                  onChange={(e) => setCampain(e.target.value)}
+                >
+                  <option value="" disabled>
+                    Selecione...
+                  </option>
                   <option value="fralda">Fralda</option>
                   <option value="leite">Leite</option>
                   <option value="manutenção">Manutenção</option>
                 </select>
               </div>
-            </div>
-
-            <div className="input-group">
-              <div className="input-field" style={{ flex: '2' }}>
+              <div className="input-field" style={{ flex: "2" }}>
                 <label>Observação</label>
-                <input value={observation} onChange={(e) => setObservation(e.target.value)} />
+                <input
+                  value={observation}
+                  onChange={(e) => setObservation(e.target.value)}
+                />
               </div>
+              
             </div>
 
             <div className="modal-confirmations-confirm-2">
-              <button onClick={() => setIsScheduling(false)} className="btn-back">
+              <button
+                onClick={() => setIsScheduling(false)}
+                className="btn-back"
+              >
                 {ICONS.BACK} Voltar
               </button>
-              <button onClick={handleNewDonorAndDonation} className="btn-confirm">
+              <button
+                onClick={handleNewDonorAndDonation}
+                className="btn-confirm"
+              >
                 Concluir
               </button>
             </div>
