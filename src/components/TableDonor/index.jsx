@@ -95,18 +95,18 @@ const TableDonor = ({
                         <td className="tableBody">
                           {new Date(
                             item.donation_day_contact
-                          ).toLocaleDateString("pt-BR")}
+                          ).toLocaleDateString("pt-BR", {timeZone: "UTC"})}
                         </td>
                         <td className="tableBody">
                           {new Date(
                             item.donation_day_to_receive
-                          ).toLocaleDateString("pt-BR")}
+                          ).toLocaleDateString("pt-BR", {timeZone: "UTC"})}
                         </td>
                         <td className="tableBody">
                           {item.donation_day_received
                             ? `${new Date(
                                 item?.donation_day_received
-                              ).toLocaleDateString("pt-BR")}`
+                              ).toLocaleDateString("pt-BR", {timeZone: "UTC"})}`
                             : ""}
                         </td>
                         <td className="tableBody">{item.donation_print}</td>
