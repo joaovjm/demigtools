@@ -27,9 +27,7 @@ const Dashboard = () => {
   const [valueConfirmations, setValueConfirmations] = useState(null); //Total valor na confirmação
   const [openDonations, setOpenDonations] = useState(null); //Quantidades de fichas em aberto
   const [valueOpenDonations, setValueOpenDonations] = useState(null); //Total valor de fichas em aberto
-  const [metaValue, setMetaValue] = useState(null); //Total de fichas recebidas em determinado mês
   const [valueMonthReceived, setValueMonthReceived] = useState(null); //Total valor dos recebidos do atual Mês
-  const [receivedPercent, setReceivedPercent] = useState(null);
   const [scheduling, setScheduling] = useState(0); //Total de leads agendadas
   const [active, setActive] = useState(false);
   const [nowScheduled, setNowScheduled] = useState(null);
@@ -80,6 +78,10 @@ const Dashboard = () => {
         );
         await getSchedulingRequest({
           operatorID: operatorData.operator_code_id,
+          setScheduled: setScheduled,
+          scheduled: scheduled,
+          scheduling: scheduling,
+          setScheduling: setScheduling
         });
       } else {
         await getScheduledLeads(
@@ -87,6 +89,13 @@ const Dashboard = () => {
           setScheduled,
           setScheduling
         );
+        await getSchedulingRequest({
+          operatorID: operatorData.operator_code_id,
+          setScheduled: setScheduled,
+          scheduled: scheduled,
+          scheduling: scheduling,
+          setScheduling: setScheduling
+        });
       }
     } catch (error) {
       console.error("Error fetching donations:", error);
@@ -132,8 +141,6 @@ const Dashboard = () => {
   const handleClickCard = (e) => {
     setActive(e.currentTarget.id);
   };
-
-  console.log(meta)
 
   return (
     <main className="mainDashboard">
