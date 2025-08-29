@@ -107,9 +107,9 @@ const TableScheduled = ({
                       : ""}
                   </td>
                   <td className="table-body-confirmation-text">
-                    {new Date(item.request_scheduled_date).toLocaleDateString("pt-BR", {timeZone: "UTC"})}
+                    {new Date(item.request_scheduled_date || item.leads_scheduling_date).toLocaleDateString("pt-BR", {timeZone: "UTC"})}
                   </td>
-                  <td className="table-body-confirmation-text">{item.request_tel_success || ""}</td>
+                  <td className="table-body-confirmation-text">{item.request_tel_success || item.leads_tel_success}</td>
                 </tr>
               ))}
             </tbody>

@@ -38,6 +38,7 @@ const Leads = () => {
   const [reference, setReference] = useState("");
   const [dateDonation, setDateDonation] = useState("");
   const [dateScheduling, setDateScheduling] = useState("");
+  const [telScheduling, setTelScheduling] = useState("");
   const [observationScheduling, setObservationScheduling] = useState("");
   const [valueDonation, setValueDonation] = useState("");
   const [nowLead, setNowLead] = useState("");
@@ -174,6 +175,9 @@ const Leads = () => {
 
   const handleSchedulingClick = async () => {
     let typeOperator;
+    if(!dateScheduling || !telScheduling) {
+      toast.warning("Preencha data e telefone usado para contato...")
+    }
     if (operatorType === "Operador Casa") {
       typeOperator = "leads_casa";
     } else {
@@ -188,6 +192,7 @@ const Leads = () => {
             leads_scheduling_date: dateScheduling,
             leads_status: "agendado",
             leads_observation: observationScheduling,
+            leads_tel_success: telScheduling
           },
         ])
         .eq("leads_id", currentLead.leads_id)
@@ -280,8 +285,6 @@ const Leads = () => {
               if (donationError) throw donationError;
             }
 
-            console.log(type);
-
             const { data: update, error } = await supabase
               .from(type)
               .update({ leads_status: "Sucesso" })
@@ -318,6 +321,7 @@ const Leads = () => {
       );
     }
   };
+
   return (
     <main className="main-leads">
       <div className="section-info-leads">
@@ -552,7 +556,7 @@ const Leads = () => {
         )}
 
         {isSchedulingOpen && (
-          <form className="scheduling">
+          <form className="schedulingLead">
             <h3>Agendamento</h3>
 
             <FormInput
@@ -561,6 +565,23 @@ const Leads = () => {
               onChange={handleSchedulingDateChange}
               type="date"
             />
+            <div className="input-field">
+              <label>Observação</label>
+              <select
+                value={telScheduling}
+                onChange={(e) => {
+                  setTelScheduling(e.target.value);
+                }}
+              >
+                <option value="" disabled>Selecione...</option>
+                {currentLead.leads_tel_1 && <option value={currentLead.leads_tel_1}>{currentLead.leads_tel_1}</option>}
+                {currentLead.leads_tel_2 && <option value={currentLead.leads_tel_2}>{currentLead.leads_tel_2}</option>}
+                {currentLead.leads_tel_3 && <option value={currentLead.leads_tel_3}>{currentLead.leads_tel_3}</option>}
+                {currentLead.leads_tel_4 && <option value={currentLead.leads_tel_4}>{currentLead.leads_tel_4}</option>}
+                {currentLead.leads_tel_5 && <option value={currentLead.leads_tel_5}>{currentLead.leads_tel_5}</option>}
+                {currentLead.leads_tel_6 && <option value={currentLead.leads_tel_6}>{currentLead.leads_tel_6}</option>}
+              </select>
+            </div>
             <div className="input-field">
               <label>Observação</label>
               <textarea

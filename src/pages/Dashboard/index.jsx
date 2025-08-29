@@ -155,7 +155,7 @@ const Dashboard = () => {
               <h3 className="h3Header">Agendados</h3>
             </div>
             <div className="divBody">
-              <p>{scheduling}</p>
+              <p>{scheduled.length}</p>
             </div>
           </div>
           {/* Card 1 */}
