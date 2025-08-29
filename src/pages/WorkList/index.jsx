@@ -99,7 +99,6 @@ const WorkList = () => {
   };
 
   const handleRequest = async (list) => {
-    console.log(list);
     const nowDate = new Date();
     try {
       const { data, error } = await supabase
@@ -113,10 +112,7 @@ const WorkList = () => {
     } catch (error) {
       console.error(error);
     }
-    if (list.request_status === "NP") {
-      toast.warning("Este colaborador não poderá ajudar nesta requisição...");
-      return;
-    }
+    
     navigate(
       `?pkg=${workSelect}&active=${list.receipt_donation_id}&modal=true`
     );
@@ -167,6 +163,8 @@ const WorkList = () => {
                       ? "Sucesso"
                       : list.request_status === "NA"
                       ? "NA"
+                      : list.request_status === "Agendado"
+                      ? "Agendado"
                       : ""
                   }`}
                   key={list.receipt_donation_id}

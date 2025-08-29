@@ -19,7 +19,7 @@
 
 .worklist-list {
   display: flex;
-  width: 66%;
+  width: 76%;
   max-height: 80%;
   border-radius: 6px;
   overflow-y: auto;
@@ -78,6 +78,10 @@
 
 .worklist-list-body-tr.NA{
     background-color: #faa01c;
+}
+
+.worklist-list-body-tr.Agendado{
+  background-color: #385BAD;
 }
 
 .worklist-list-body-tr:hover {
