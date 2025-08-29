@@ -92,13 +92,23 @@ const ModalWorklist = ({
   };
 
   const handleSchedulingClick = () => {
+    if(!telScheduling) {
+      toast.warning("Escolha o telefone de contato usado...")
+      return;
+    } 
     const response = updateRequestList({
       id: id,
       observationScheduling: observationScheduling,
       dateScheduling: dateScheduling,
-      telScheduling: telScheduling
+      telScheduling: telScheduling,
     });
-    response ? toast.success("Agendado com sucesso!") : toast.error("Erro ao agendar!")
+    if (response) {
+      toast.success("Agendado com sucesso!");
+      setModalOpen(false)
+
+    } else {
+      toast.error("Erro ao agendar!");
+    }
   };
 
   const handleSaveNewDonation = async () => {
@@ -264,10 +274,16 @@ const ModalWorklist = ({
                       value={telScheduling}
                       onChange={(e) => setTelScheduling(e.target.value)}
                     >
-                      <option value="" disabled>Selecione...</option>
+                      <option value="" disabled>
+                        Selecione...
+                      </option>
                       <option value={donor_tel_1}>{donor_tel_1}</option>
-                      {donor_tel_2 && <option value={donor_tel_2}>{donor_tel_2}</option>}
-                      {donor_tel_3 && <option value={donor_tel_3}>{donor_tel_3}</option>}
+                      {donor_tel_2 && (
+                        <option value={donor_tel_2}>{donor_tel_2}</option>
+                      )}
+                      {donor_tel_3 && (
+                        <option value={donor_tel_3}>{donor_tel_3}</option>
+                      )}
                     </select>
                   </div>
                   <div className="input-field">
