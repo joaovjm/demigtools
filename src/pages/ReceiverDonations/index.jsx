@@ -50,11 +50,13 @@ const ReceiverDonations = () => {
     const fetchDeposit = async () => {
       const { data, error } = await supabase
         .from("donation")
-        .select("receipt_donation_id, donor_id, donor: donor_id(donor_name, donor_tel_1)")
+        .select(
+          "receipt_donation_id, donor_id, donor: donor_id(donor_name, donor_tel_1)"
+        )
         .eq("donation_deposit_receipt_send", "Não")
-        .eq("collector_code_id", 22)
-        if (error) throw error;
-        if (!error) setDeposit(data);
+        .eq("collector_code_id", 22);
+      if (error) throw error;
+      if (!error) setDeposit(data);
     };
     fetchDeposit();
   }, [tableReceipt]);
@@ -125,7 +127,7 @@ const ReceiverDonations = () => {
   };
 
   const handleDeposit = () => {
-    setSendModalOpen(true)
+    setSendModalOpen(true);
   };
 
   return (
@@ -192,6 +194,18 @@ const ReceiverDonations = () => {
         title={modalConfig.title}
         message={modalConfig.message}
       />
+      {tableReceipt.length > 0 && (
+        <div className="receive-donations-count">
+          <label>Total Fichas: {tableReceipt.length}</label>
+          <label>
+            Valor Total:{" "}
+            {tableReceipt.reduce((acc, item) => {
+              return (acc += item.value);
+            }, 0).toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}
+          </label>
+        </div>
+      )}
+
       <table className="receiver-donations-table">
         {tableReceipt.length > 0 && (
           <thead className="receiver-donations-table-header">
@@ -208,13 +222,19 @@ const ReceiverDonations = () => {
             <tr key={item.search}>
               <td>{item.search}</td>
               <td>{item.name}</td>
-              <td>{item.value}</td>
+              <td>{item.value.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}</td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      {sendModalOpen && <ModalReceiptSend setSendModalOpen={setSendModalOpen} deposit={deposit} setDeposit={setDeposit}/> }
+      {sendModalOpen && (
+        <ModalReceiptSend
+          setSendModalOpen={setSendModalOpen}
+          deposit={deposit}
+          setDeposit={setDeposit}
+        />
+      )}
     </main>
   );
 };

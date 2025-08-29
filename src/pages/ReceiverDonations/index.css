@@ -88,6 +88,18 @@
     }
 }
 
+.receive-donations-count{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 800px;
+    height: 30px;
+    background-color: #1F1D1D;
+    border-radius: 6px;
+    gap: 32px;
+    padding-right: 12px;
+}
+
 @media (max-width: 479px) {
     .receiver-donations-form{
         display: flex;
