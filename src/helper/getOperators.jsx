@@ -13,8 +13,6 @@ export const getOperators = async ({ active, item, from, to }) => {
     .order("operator_code_id", {ascending: false});
 
   const { data, error } = await query
-    
-  console.log(data)
   if (data) {
     return data;
   }

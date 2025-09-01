@@ -7,6 +7,7 @@ import { DataNow, DataSelect } from "../DataTime";
 import { toast } from "react-toastify";
 import { getCampains } from "../../helper/getCampains";
 import { UserContext } from "../../context/UserContext";
+import { getOperators } from "../../helper/getOperators";
 
 const ModalDonation = ({
   modalShow,
@@ -26,6 +27,7 @@ const ModalDonation = ({
   const [operator, setOperator] = useState(operatorData.operator_code_id);
   const [campain, setCampain] = useState([]);
   const [campainSelected, setCampainSelect] = useState("");
+  const [operators, setOperators] = useState([]);
 
   const data_contato = DataNow("noformated");
 
@@ -34,11 +36,17 @@ const ModalDonation = ({
     setCampain(response);
   };
 
+  const fetchOperators = async () => {
+    const response = await getOperators({active: true, item: "operator_code_id, operator_name"});
+    setOperators(response);
+  };
+
   useEffect(() => {
-    const operatorData = JSON.parse(localStorage.getItem("operatorData"));
-    setOperator(operatorData.operator_code_id);
     fetchCampains();
+    fetchOperators();
   }, []);
+
+
 
   useEffect(() => {
     if (mensalidade && comissao == "") {
@@ -52,6 +60,10 @@ const ModalDonation = ({
     e.preventDefault();
     if(campainSelected === "") {
       toast.warning("Selecione a campanha")
+      return;
+    }
+    if (!operators.find((op) => op.operator_code_id === operator)) {
+      toast.warning("Operador não encontrado ou desativado!");
       return;
     }
     const promise = insertDonation(
@@ -102,7 +114,7 @@ const ModalDonation = ({
     )}-01`;
     setMesref(monthYear);
   };
-
+  console.log(operators.operator_name)
   return (
     <main className="modal-container">
       <div className="modal">
@@ -168,12 +180,19 @@ const ModalDonation = ({
 
           <div className="input-field">
             <label>Operador</label>
-            <input
-              type="text"
-              placeholder="cd. operador"
+            <select
               value={operator}
               onChange={(e) => setOperator(e.target.value)}
-            />
+            >
+              <option value="" disabled>
+                Selecione...
+              </option>
+              {operators.map((op) => (
+                <option key={op.operator_code_id} value={op.operator_code_id}>
+                  {op.operator_code_id} - {op.operator_name}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="input-field">

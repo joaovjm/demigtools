@@ -4,6 +4,7 @@ import supabase from "../../helper/superBaseClient";
 import { toast } from "react-toastify";
 import { ICONS } from "../../constants/constants";
 import { getCampains } from "../../helper/getCampains";
+import { getOperators } from "../../helper/getOperators";
 
 const ModalEditDonation = ({ donation, setModalEdit }) => {
   const [value, setValue] = useState(donation.donation_value);
@@ -12,6 +13,8 @@ const ModalEditDonation = ({ donation, setModalEdit }) => {
   const [campaign, setCampaign] = useState(donation.campaign_id);
   const [campaigns, setCampaigns] = useState([]);
   const [operator, setOperator] = useState(donation.operator_code_id);
+
+  const [operators, setOperators] = useState([]);
   useEffect(() => {
     const fetchCampaigns = async () => {
       const response = await getCampains();
@@ -19,10 +22,26 @@ const ModalEditDonation = ({ donation, setModalEdit }) => {
     };
     fetchCampaigns();
   }, []);
+
+  useEffect(() => {
+    const fetchOperators = async () => {
+      const response = await getOperators({active: true, item: "operator_code_id, operator_name"});
+      setOperators(response);
+    };
+    fetchOperators();
+  }, []);
   const handleConfirm = async () => {
+    if (operator === "") {
+      toast.warning("Operador deve ser preenchido!");
+      return;
+    }
+    if (!operators.find((op) => op.operator_code_id === operator)) {
+      toast.warning("Operador não encontrado ou desativado!");
+      return;
+    }
     if (value === "" || date === "") {
       toast.warning("Valor e data devem ser preenchidos!");
-      return null;
+      return;
     }
     try {
       const { data, error } = await supabase
@@ -98,11 +117,19 @@ const ModalEditDonation = ({ donation, setModalEdit }) => {
             </div>
             <div className="input-field">
               <label>Operador</label>
-              <input
-                type="text"
+              <select
                 value={operator}
                 onChange={(e) => setOperator(e.target.value)}
-              />
+              >
+                <option value="" disabled>
+                  Selecione...
+                </option>
+                {operators.map((op) => (
+                  <option key={op.operator_code_id} value={op.operator_code_id}>
+                    {op.operator_code_id} - {op.operator_name}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="input-field">
               <label>Campanha</label>
