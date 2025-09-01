@@ -11,7 +11,7 @@ const ModalEditDonation = ({ donation, setModalEdit }) => {
   const [observation, setObservation] = useState(donation.donation_description);
   const [campaign, setCampaign] = useState(donation.campaign_id);
   const [campaigns, setCampaigns] = useState([]);
-
+  const [operator, setOperator] = useState(donation.operator_code_id);
   useEffect(() => {
     const fetchCampaigns = async () => {
       const response = await getCampains();
@@ -32,6 +32,7 @@ const ModalEditDonation = ({ donation, setModalEdit }) => {
             donation_value: value,
             donation_day_to_receive: date,
             donation_description: observation,
+            operator_code_id: operator,
           },
         ])
         .eq("receipt_donation_id", donation.receipt_donation_id)
@@ -48,7 +49,7 @@ const ModalEditDonation = ({ donation, setModalEdit }) => {
       toast.error("Erro ao atualizar doação: ", error.message);
     }
   };
-  console.log(campaigns)
+
   const handleDelete = async () => {
     ;
     if (window.confirm("Deseja deletar a doação?")) {
@@ -93,6 +94,14 @@ const ModalEditDonation = ({ donation, setModalEdit }) => {
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
+              />
+            </div>
+            <div className="input-field">
+              <label>Operador</label>
+              <input
+                type="text"
+                value={operator}
+                onChange={(e) => setOperator(e.target.value)}
               />
             </div>
             <div className="input-field">

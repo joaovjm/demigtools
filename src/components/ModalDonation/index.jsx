@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./index.css";
 
 import { FaDollarSign } from "react-icons/fa";
@@ -6,6 +6,7 @@ import { insertDonation } from "../../helper/insertDonation";
 import { DataNow, DataSelect } from "../DataTime";
 import { toast } from "react-toastify";
 import { getCampains } from "../../helper/getCampains";
+import { UserContext } from "../../context/UserContext";
 
 const ModalDonation = ({
   modalShow,
@@ -17,12 +18,12 @@ const ModalDonation = ({
   const [comissao, setComissao] = useState("");
   const [valor, setValor] = useState("");
   const [data_receber, setData_receber] = useState(DataNow("noformated"));
-  // const [formatedData, setFormatedData] = useState("");
+  const {operatorData} = useContext(UserContext);
   const [descricao, setDescricao] = useState("");
   const [impresso, setImpresso] = useState("");
   const [recebido, setRecebido] = useState("");
   const [mesref, setMesref] = useState("");
-  const [operator, setOperator] = useState(null);
+  const [operator, setOperator] = useState(operatorData.operator_code_id);
   const [campain, setCampain] = useState([]);
   const [campainSelected, setCampainSelect] = useState("");
 
@@ -162,6 +163,16 @@ const ModalDonation = ({
               placeholder="Mês"
               value={mesref}
               onChange={(e) => setMesref(e.target.value)}
+            />
+          </div>
+
+          <div className="input-field">
+            <label>Operador</label>
+            <input
+              type="text"
+              placeholder="cd. operador"
+              value={operator}
+              onChange={(e) => setOperator(e.target.value)}
             />
           </div>
 
