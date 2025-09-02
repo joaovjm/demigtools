@@ -19,6 +19,7 @@ import FormDonorInput from "../../components/forms/FormDonorInput";
 import FormListSelect from "../../components/forms/FormListSelect";
 import { UserContext } from "../../context/UserContext";
 import ModalEditDonation from "../../components/ModalEditDonation";
+import { setActivityHistoric } from "../../helper/setActivityHistoric";
 
 const Donor = () => {
   const { id } = useParams();
@@ -122,6 +123,7 @@ const Donor = () => {
         );
 
         if (success) {
+          setActivityHistoric({dbID: id, dataBase: "donor", operatorID: operatorData.operator_code_id})
           setUiState({
             edit: true,
             btnEdit: BUTTON_TEXTS.EDIT,
