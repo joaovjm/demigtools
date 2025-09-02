@@ -35,10 +35,7 @@ const ModalEditDonation = ({ donation, setModalEdit }) => {
       toast.warning("Operador deve ser preenchido!");
       return;
     }
-    if (!operators.find((op) => op.operator_code_id === operator)) {
-      toast.warning("Operador não encontrado ou desativado!");
-      return;
-    }
+
     if (value === "" || date === "") {
       toast.warning("Valor e data devem ser preenchidos!");
       return;

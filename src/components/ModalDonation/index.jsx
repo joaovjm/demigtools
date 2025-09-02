@@ -37,7 +37,8 @@ const ModalDonation = ({
   };
 
   const fetchOperators = async () => {
-    const response = await getOperators({active: true, item: "operator_code_id, operator_name"});
+    const response = await getOperators({active: "true", item: "operator_code_id, operator_name"});
+    
     setOperators(response);
   };
 
@@ -58,14 +59,12 @@ const ModalDonation = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     if(campainSelected === "") {
       toast.warning("Selecione a campanha")
       return;
     }
-    if (!operators.find((op) => op.operator_code_id === operator)) {
-      toast.warning("Operador não encontrado ou desativado!");
-      return;
-    }
+
     const promise = insertDonation(
       donor_id,
       operator,
@@ -114,7 +113,7 @@ const ModalDonation = ({
     )}-01`;
     setMesref(monthYear);
   };
-  console.log(operators.operator_name)
+
   return (
     <main className="modal-container">
       <div className="modal">
