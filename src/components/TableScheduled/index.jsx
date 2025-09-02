@@ -11,11 +11,11 @@ const TableScheduled = ({
   const handleClick = (e) => {
     setScheduledOpen({
       id: e.leads_id ? e.leads_id : e.id && e.id,
-      name: e.leads_name || e.donor.donor_name,
+      name: e.leads_name || e.donor?.donor_name,
       address: e.leads_address,
       city: e.leads_city,
       neighborhood: e.leads_neighborhood,
-      phone: e.leads_tel_1 || e.donor.donor_tel_1,
+      phone: e.leads_tel_1 || e.donor?.donor_tel_1,
       phone2: e.leads_tel_2,
       phone3: e.leads_tel_3,
       phone4: e.leads_tel_4,
