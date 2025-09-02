@@ -1,9 +1,23 @@
-import React from 'react'
+import React, { useState } from "react";
+import { setActivityHistoric } from "../../helper/setActivityHistoric";
 
 const WorkHistory = () => {
-  return (
-    <div>Page in Development</div>
-  )
-}
+  const [timeZone, setTimeZone] = useState()
 
-export default WorkHistory
+  const handleTimeZone = async () => {
+    const response = setActivityHistoric()
+    console.log(await response)
+    setTimeZone(response)
+  }
+  return (
+    <>
+      <button onClick={handleTimeZone}>Aperte</button>
+
+      <div>
+        
+      </div>
+    </>
+  );
+};
+
+export default WorkHistory;

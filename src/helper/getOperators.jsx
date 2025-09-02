@@ -7,11 +7,12 @@ export const getOperators = async ({ active, item, from, to }) => {
   } else {
     query = query.select();
   }
+  if (from !== undefined && from !== null) {
+    query = query.range(from, to)
+    
+  }
   if (active) query = query.eq("operator_active", active);
-  if (from) query = query.select("*", { count: "exact" })
-    .range(from, to)
-    .order("operator_code_id", {ascending: false});
-
+  
   const { data, error } = await query
   if (data) {
     return data;

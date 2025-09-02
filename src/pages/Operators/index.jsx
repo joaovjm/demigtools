@@ -34,16 +34,21 @@ const Operators = () => {
   });
   const [modalConfirmOpen, setModalConfirmOpen] = useState(false);
   const [status, setStatus] = useState("");
+  const [active, setActive] = useState("Ativos");
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const operators = async () => {
+      setIsLoading(true)
       try {
-        const data = await getOperators({from: 0, to: 20});
-        const operatorsWithDisableState = data.map((op) => ({
-          ...op,
-          isDisable: true,
-        }));
-        setTableOperators(operatorsWithDisableState);
+        let status;
+        if (active === "Ativos"){
+          status = "true"
+        } else {
+          status = "false"
+        }
+        const data = await getOperators({active: status});
+        setTableOperators(data);
 
         if (data.length > 0) {
           const operator = data[0];
@@ -60,7 +65,8 @@ const Operators = () => {
       }
     };
     operators();
-  }, [modalShow === false, modalConfirmOpen === false]);
+    setIsLoading(false)
+  }, [modalShow === false, modalConfirmOpen === false, active]);
 
   const handleInputChange = (e, operator) => {
     const { name, value, type, checked } = e.target;
@@ -144,7 +150,24 @@ const Operators = () => {
   const typeOperator = ["Admin", "Operator", "Mensal", "Confirmação"];
   return (
     <div className="operators">
-      <div className="header-btn">
+      <div className="header-btns">
+        <div className="header-btns-type">
+          <button
+            style={{ width: 120 }}
+            className={`${active === "Ativos" ? "active" : ""}`}
+            onClick={() => setActive("Ativos")}
+          >
+            Ativos
+          </button>
+          <button
+            style={{ width: 120 }}
+            className={`${active === "Desativados" ? "active" : ""}`}
+            onClick={() => setActive("Desativados")}
+          >
+            Desativados
+          </button>
+        </div>
+
         <BtnNewOperator
           className="btn-new-operator"
           onClick={(e) => handleSubmit(e, "newoperator")}
@@ -162,7 +185,7 @@ const Operators = () => {
 
       <div className="operators-table">
         <div className="operators-table-inner">
-          {tableOperators ? (
+          {isLoading ? (<div><Loader/></div>) : (
             tableOperators.map((operator, index) => (
               <form
                 key={operator.operator_code_id || index}
@@ -246,8 +269,6 @@ const Operators = () => {
                 )}
               </form>
             ))
-          ) : (
-            <Loader />
           )}
         </div>
       </div>

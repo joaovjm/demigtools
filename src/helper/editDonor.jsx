@@ -17,6 +17,7 @@ export const editDonor = async (
   observacao,
   referencia
 ) => {
+ 
   const { data, error } = await supabase
     .from("donor")
     .update([
@@ -27,119 +28,129 @@ export const editDonor = async (
         donor_city: cidade,
         donor_neighborhood: bairro,
         donor_tel_1: telefone1,
-        //dia: dia,
-        //mensalidade: mensalidade,
-        //media: media,
       },
     ])
     .eq("donor_id", id)
     .select();
 
-  if (data) {
-    window.alert("Doador atualizado com sucesso!");
-  }
   if (error) {
     window.alert("Erro ao atualizar dados do doador: ", error.message);
   }
-
-  try {
-    await supabase.from("donor_cpf").upsert(
-      [
-        {
-          donor_id: id,
-          donor_cpf: cpf,
-        },
-      ],
-      { onConflict: ["donor_id"] }
-    );
-  } catch {
-    console.log("CPF não foi salvo");
+  if (cpf !== undefined && cpf !== null){
+    try {
+      await supabase.from("donor_cpf").upsert(
+        [
+          {
+            donor_id: id,
+            donor_cpf: cpf,
+          },
+        ],
+        { onConflict: ["donor_id"] }
+      );
+    } catch {
+      console.log("CPF não foi salvo");
+    }
+  }
+  if (email !== undefined && email !== null){
+    try {
+      await supabase.from("donor_email").upsert(
+        [
+          {
+            donor_id: id,
+            donor_cpf: email,
+          },
+        ],
+        { onConflict: ["donor_id"] }
+      );
+    } catch {
+      console.log("Email não foi salvo");
+    }
+  }
+  if (telefone2 !== undefined && telefone2 !== null){
+    try {
+      await supabase.from("donor_tel_2").upsert(
+        [
+          {
+            donor_id: id,
+            donor_tel_2: telefone2,
+          },
+        ],
+        { onConflict: ["donor_id"] }
+      );
+    } catch {
+      console.log("Telefone 2 não foi salvo");
+    }
   }
 
-  try {
-    await supabase.from("donor_email").upsert(
-      [
-        {
-          donor_id: id,
-          donor_cpf: email,
-        },
-      ],
-      { onConflict: ["donor_id"] }
-    );
-  } catch {
-    console.log("Email não foi salvo");
+  if (telefone3 !== undefined && telefone3 !== null){
+    try {
+      await supabase.from("donor_tel_3").upsert(
+        [
+          {
+            donor_id: id,
+            donor_tel_3: telefone3,
+          },
+        ],
+        { onConflict: ["donor_id"] }
+      );
+    } catch {
+      console.log("Telefone 3 não foi salvo");
+    }
   }
 
-  try {
-    await supabase.from("donor_tel_2").upsert(
-      [
-        {
-          donor_id: id,
-          donor_tel_2: telefone2,
-        },
-      ],
-      { onConflict: ["donor_id"] }
-    );
-  } catch {
-    console.log("Telefone 2 não foi salvo");
+  if (observacao !== undefined && observacao !== null){
+    try {
+      await supabase.from("donor_observation").upsert(
+        [
+          {
+            donor_id: id,
+            donor_observation: observacao,
+          },
+        ],
+        { onConflict: ["donor_id"] }
+      );
+    } catch {
+      console.log("Observação não foi salva ");
+    }
   }
 
-  try {
-    await supabase.from("donor_tel_3").upsert(
-      [
-        {
-          donor_id: id,
-          donor_tel_3: telefone3,
-        },
-      ],
-      { onConflict: ["donor_id"] }
-    );
-  } catch {
-    console.log("Telefone 3 não foi salvo");
+  if (referencia !== undefined && referencia !== null){
+    try {
+      await supabase.from("donor_reference").upsert(
+        [
+          {
+            donor_id: id,
+            donor_reference: referencia,
+          },
+        ],
+        { onConflict: ["donor_id"] }
+      );
+    } catch {
+      console.log("Referência não foi salva ");
+    }
   }
 
-  try {
-    await supabase.from("donor_observation").upsert(
-      [
-        {
-          donor_id: id,
-          donor_observation: observacao,
-        },
-      ],
-      { onConflict: ["donor_id"] }
-    );
-  } catch {
-    console.log("Observação não foi salva ");
+  if (mensalidade !== undefined && mensalidade !== null){
+    try {
+      await supabase.from("donor_mensal").upsert(
+        [
+          {
+            donor_id: id,
+            donor_mensal_day: dia,
+            donor_mensal_monthly_fee: mensalidade,
+          },
+        ],
+        { onConflict: ["donor_id"] }
+      );
+    } catch {
+      console.log("Valores do mensal não foram salvos");
+    }
   }
+  
 
-  try {
-    await supabase.from("donor_reference").upsert(
-      [
-        {
-          donor_id: id,
-          donor_reference: referencia,
-        },
-      ],
-      { onConflict: ["donor_id"] }
-    );
-  } catch {
-    console.log("Referência não foi salva ");
-  }
+  
 
-  try {
-    await supabase.from("donor_mensal").upsert(
-      [
-        {
-          donor_id: id,
-          donor_mensal_day: dia,
-          donor_mensal_monthly_fee: mensalidade,
-        },
-      ],
-      { onConflict: ["donor_id"] }
-    );
-  } catch {
-    console.log("Valores do mensal não foram salvos");
-  }
+  
 
   return data;
 };

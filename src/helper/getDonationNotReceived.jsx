@@ -93,7 +93,7 @@ const getDonationNotReceived = (
         (operatorType === "Operador" && operatorID === item.operator_code_id) && item.collector_code_id !== 11||
         operatorType === "Admin" && item.collector_code_id !== 11
       ) {
-        console.log(item.collector_code_id)
+        
         fillFullNotReceivedDonations(item);
         valueOpenDonations += item.donation_value;
         openCount += 1;

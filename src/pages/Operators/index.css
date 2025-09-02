@@ -1,5 +1,5 @@
 .operators-table {
-  overflow-x: auto;
+  overflow-y: auto;
   width: 100%;
   box-sizing: border-box;
 }
@@ -70,11 +70,29 @@
   opacity: 0.8;
 }
 
-.header-btn {
+.header-btns{
   display: flex;
   width: 100%;
-  justify-content: flex-end;
+  justify-content: space-between;
   margin-bottom: 8px;
+}
+
+.header-btns-type{
+  display: flex;
+  gap: 32px;
+
+  button{
+    background-color: #1f1d1d;
+    cursor: pointer;
+
+    &:hover{
+      box-shadow: 0 4px 12px rgba(250, 160, 28, 0.4);
+    }
+  }
+
+  button.active{
+    border: 3px double #faa01c;
+  }
 }
 
 @media (max-width: 768px) {
