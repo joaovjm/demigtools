@@ -34,12 +34,15 @@ const TableDonor = ({
         return;
       }
     }
-    if (item.donation_print === "Sim" || item.donation_received === "Sim") {
-      toast.warning(
-        "Impossível editar. Essa ficha já foi impressa ou já foi recebida!"
-      );
-      return;
+    if (caracterOperator.operator_type !== "Admin") {
+      if (item.donation_print === "Sim" || item.donation_received === "Sim") {
+        toast.warning(
+          "Impossível editar. Essa ficha já foi impressa ou já foi recebida!"
+        );
+        return;
+      }
     }
+
     setModalEdit(true);
     setDonation(item);
   };
@@ -95,18 +98,20 @@ const TableDonor = ({
                         <td className="tableBody">
                           {new Date(
                             item.donation_day_contact
-                          ).toLocaleDateString("pt-BR", {timeZone: "UTC"})}
+                          ).toLocaleDateString("pt-BR", { timeZone: "UTC" })}
                         </td>
                         <td className="tableBody">
                           {new Date(
                             item.donation_day_to_receive
-                          ).toLocaleDateString("pt-BR", {timeZone: "UTC"})}
+                          ).toLocaleDateString("pt-BR", { timeZone: "UTC" })}
                         </td>
                         <td className="tableBody">
                           {item.donation_day_received
                             ? `${new Date(
                                 item?.donation_day_received
-                              ).toLocaleDateString("pt-BR", {timeZone: "UTC"})}`
+                              ).toLocaleDateString("pt-BR", {
+                                timeZone: "UTC",
+                              })}`
                             : ""}
                         </td>
                         <td className="tableBody">{item.donation_print}</td>
