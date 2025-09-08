@@ -5,6 +5,7 @@ import getOperatorMeta from "../../helper/getOperatorMeta";
 import Meta from "../../components/AdminManager/Meta";
 import WhatsappAndEmailManager from "../../components/AdminManager/WhatsappAndEmailManager";
 import Campain from "../../components/AdminManager/Campain";
+import ReceiptConfig from "../../components/AdminManager/ReceiptConfig";
 
 const AdminManager = () => {
   const [active, setActive] = useState();
@@ -14,7 +15,7 @@ const AdminManager = () => {
 
   useEffect(() => {
     const fetchOperators = async () => {
-      const operator = await getOperators({active: true});
+      const operator = await getOperators({ active: true });
       setOperators(operator);
 
       const initialReadState = {};
@@ -57,7 +58,7 @@ const AdminManager = () => {
             active === "whatsapp" ? "active" : ""
           }`}
           onClick={() => setActive("whatsapp")}
-          style={{fontSize: 12}}
+          style={{ fontSize: 12 }}
         >
           Whatsapp & Email
         </div>
@@ -68,6 +69,14 @@ const AdminManager = () => {
           onClick={() => setActive("campain")}
         >
           Campanha
+        </div>
+        <div
+          className={`admin-manager-menu-item ${
+            active === "receipt" ? "active" : ""
+          }`}
+          onClick={() => setActive("receipt")}
+        >
+          Config. Recibo
         </div>
       </div>
       <div className="admin-manager-content">
@@ -82,8 +91,12 @@ const AdminManager = () => {
         ) : active === "whatsapp" ? (
           <WhatsappAndEmailManager />
         ) : active === "campain" ? (
-          <Campain/>
-        ) : (<></>)}
+          <Campain />
+        ) : active === "receipt" ? (
+          <ReceiptConfig />
+        ) : (
+          <></>
+        )}
       </div>
     </main>
   );

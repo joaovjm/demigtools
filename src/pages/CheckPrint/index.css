@@ -1,0 +1,68 @@
+.checkprint-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: calc(100vh - 11.6vh);
+    padding: 6px;
+    gap: 12px;
+}
+
+.ckeckprint-container-header{
+    display: flex;
+    align-items: flex-end;
+    width: 50%;
+    max-height: 16%;
+    background-color: #1F1D1D;
+    border-radius: 6px;
+    padding: 20px;
+    gap: 32px;
+}
+
+.checkprint-container-body{
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    max-height: 500px;
+    background-color: #1F1D1D;
+    border-radius: 6px;
+    padding: 6px;
+    overflow-y: auto;
+}
+
+.checkprint-container-body-header{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.chechprint-container-body-exibitionBtn{
+    background: transparent;
+    font-size: 18px;
+    margin-left: 50px;
+    transition: transform 0.2s linear;
+}
+
+.chechprint-container-body-exibitionBtn.open{
+    transform: rotate(90deg);
+}
+
+.checkprint-container-body-body{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    
+}
+
+.checkprint-container-body-body-item{
+    width: 99%;
+    display: flex;
+    align-items: center;
+    border: 3px double #363A3D;
+    border-radius: 6px;
+    padding: 6px;
+    gap: 6px;
+}
+
+

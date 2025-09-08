@@ -216,3 +216,18 @@
     padding: 6px;
 }
 
+.receiptconfig-pix{
+    display: flex;
+    flex-direction: column;
+}
+
+.receiptconfig-pix-inputs{
+    display: flex;
+    gap: 16px;
+}
+
+.receiptconfig-message{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}

@@ -1,12 +1,11 @@
 import BwipJs from "bwip-js";
 
 export async function barCodeGenerator(value) {
-  console.log(value)
   const canvas = document.createElement("canvas");
   try {
     BwipJs.toCanvas(canvas, {
       bcid: "code128",
-      text: value,
+      text: value.toString(),
       scale: 3,
       height: 8,
       includetext: true,
