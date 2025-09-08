@@ -26,7 +26,6 @@ const newDonorAndDonation = async (
   operatorID,
   nowScheduled
 ) => {
-  
   const handleDonorCreation = async () => {
     const response = await insertDonor(
       name,
@@ -66,52 +65,49 @@ const newDonorAndDonation = async (
           donationResponse.error?.message
       );
 
-    return donationResponse
+    return donationResponse;
   };
 
   const handleUpdateStatusLead = async () => {
-    
-    try{
+    try {
       const { data: updateLead, error: errorUpdate } = await supabase
-      .from("leads")
-      .update({leads_status: "Sucesso"})
-      .eq("leads_id", id);
+        .from("leads")
+        .update({ leads_status: "Sucesso" })
+        .eq("leads_id", id);
 
       if (errorUpdate) throw errorUpdate;
       if (!errorUpdate) return updateLead;
     } catch (error) {
-      console.log("Erro: ", error)
+      console.log("Erro: ", error);
     }
-    
   };
 
   const donorExist = async () => {
-    const { data, error } = await supabase.from("donor").select().eq("donor_id", id)
+    const { data, error } = await supabase
+      .from("donor")
+      .select()
+      .eq("donor_id", id);
     if (error) throw error;
-    if (data.length > 0){
+    if (data.length > 0) {
       return true;
     } else {
       return false;
     }
-  }
-
+  };
 
   const result = await toast.promise(
     new Promise(async (resolve, reject) => {
       try {
         if (donorExist === true) {
-          console.log("existe")
+          console.log("existe");
           return;
         } else {
-          console.log("Não existe")
-          return;
+          const donor_id = await handleDonorCreation();
+          const donation = await handleDonationCreation(donor_id);
+          const leadStatus = await handleUpdateStatusLead();
+
+          resolve("Operação completada com sucesso!");
         }
-        const donor_id = await handleDonorCreation();
-        const donation = await handleDonationCreation(donor_id);
-        const leadStatus = await handleUpdateStatusLead();
-        
-        resolve("Operação completada com sucesso!");
-        
       } catch (err) {
         reject(err);
       }
