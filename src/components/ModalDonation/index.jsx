@@ -23,7 +23,7 @@ const ModalDonation = ({
   const [descricao, setDescricao] = useState("");
   const [impresso, setImpresso] = useState("");
   const [recebido, setRecebido] = useState("");
-  const [mesref, setMesref] = useState("");
+  const [mesref, setMesref] = useState(DataNow("noformated"));
   const [operator, setOperator] = useState(operatorData.operator_code_id);
   const [campain, setCampain] = useState([]);
   const [campainSelected, setCampainSelect] = useState("");
@@ -102,16 +102,19 @@ const ModalDonation = ({
   const handleDate = (e) => {
     var value = e.target.value;
     const now = DataNow("noformated");
-    if (now > value) {
-      value = now;
-    }
+    //if (now > value) {
+    //  if(operatorData.operator_type !== "Admin"){
+    //    value = now;
+    //  }
+      
+    //}
     setData_receber(value);
 
     const monthYear = `${DataSelect(value, "year")}-${DataSelect(
       value,
       "month"
     )}-01`;
-    setMesref(monthYear);
+    setMesref(value);
   };
 
   return (
@@ -138,7 +141,6 @@ const ModalDonation = ({
               type="text"
               value={valor}
               onChange={(e) => setValor(e.target.value)}
-              readOnly={tipo === "Mensal" ? true : false}
             />
           </div>
 
@@ -172,7 +174,7 @@ const ModalDonation = ({
             <input
               type="text"
               placeholder="Mês"
-              value={mesref}
+              value={new Date(mesref).toLocaleDateString("pt-BR", {timeZone: "UTC", month: "numeric", year: "numeric"})}
               onChange={(e) => setMesref(e.target.value)}
             />
           </div>

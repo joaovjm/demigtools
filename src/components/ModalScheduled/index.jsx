@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./index.css";
 import { ICONS } from "../../constants/constants";
 import { DataNow } from "../DataTime";
 import updateLeads from "../../helper/updateLeads";
 import { toast } from "react-toastify";
 import newDonorAndDonation from "../../helper/newDonorAndDonation";
+import { getCampains } from "../../helper/getCampains";
 
 const ModalScheduled = ({
   scheduledOpen,
@@ -28,6 +29,15 @@ const ModalScheduled = ({
   const [campain, setCampain] = useState("");
   const [valueDonation, setValueDonation] = useState("");
   const [name, setName] = useState("");
+  const [campains, setCampains] = useState([]);
+
+  const fetchCampain = async() => {
+    const response = await getCampains();
+    setCampains(response)
+  }
+  useEffect(() => {
+    fetchCampain()
+  }, [])
 
   const handleNewDonation = () => {
     setName(scheduledOpen.name);
@@ -250,9 +260,9 @@ const ModalScheduled = ({
                   <option value="" disabled>
                     Selecione...
                   </option>
-                  <option value="fralda">Fralda</option>
-                  <option value="leite">Leite</option>
-                  <option value="manutenção">Manutenção</option>
+                  {campains?.map((campain) => (
+                    <option key={campain.id} value={campain.campain_name}>{campain.campain_name}</option>
+                  ))}
                 </select>
               </div>
               <div className="input-field" style={{ flex: "2" }}>
