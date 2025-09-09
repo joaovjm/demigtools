@@ -19,9 +19,9 @@ const ReceiptConfig = () => {
 
   const fetchReceipt = async () => {
     const response = await getEditReceipt();
-    const { pixKey, pixName, pixCity, description, backOfReceipt } =
+    const { pixKey, pixName, pixCity, description, backOfReceipt, instagram, facebook, email } =
       response[0];
-    setEditReceipt({ pixKey, pixName, pixCity, description, backOfReceipt });
+    setEditReceipt({ pixKey, pixName, pixCity, description, backOfReceipt, instagram, facebook, email });
   };
   useEffect(() => {
     fetchReceipt();

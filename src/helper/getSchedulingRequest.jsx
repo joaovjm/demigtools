@@ -9,7 +9,7 @@ export const getSchedulingRequest = async ({
   const { data, error } = await supabase
     .from("request")
     .select(
-      "id, donor_id, donor: donor_id(donor_name, donor_tel_1),request_scheduled_date, request_observation, request_tel_success"
+      "id, donor_id, donor: donor_id(donor_name, donor_tel_1, donor_address), operator_code_id, request_scheduled_date, request_observation, request_tel_success"
     )
     .eq("operator_code_id", operatorID)
     .eq("request_status", "Agendado");

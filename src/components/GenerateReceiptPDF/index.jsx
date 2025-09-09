@@ -1,19 +1,36 @@
 import React from "react";
 import pdfMake, { fonts } from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
-import { imagesInBase64 } from "../../assets/imagesInBase64";
 import { barCodeGenerator } from "../../services/barCodeGenerator";
+import { DataNow } from "../DataTime";
+import extenso from "extenso";
+import { generatePixPayload } from "../../services/generatePixPayload";
+import { receiptLogo } from "../../assets/receiptLogo";
+import { toast } from "react-toastify";
 
 pdfMake.vfs = pdfFonts.vfs;
 
 // Função para gerar código de barras em base64 no navegador
 
-const GenerateReceiptPDF = ({ cards }) => {
+const GenerateReceiptPDF = ({ cards, receiptConfig }) => {
   
   const gerarPDF = async () => {
+    if (cards.some(v => v.collector_code_id === "" || v.collector_code_id === null)){
+      toast.warning("Exitem recibos sem coletador!")
+      return
+    }
     const recibos = await Promise.all(
       cards.map(async (data) => {
-        const barcode = await barCodeGenerator(data.recibo);
+        console.log(data);
+        const payload = generatePixPayload({
+          pixKey: "+55" + receiptConfig.pixKey,
+          //description: "Doação Teste",
+          merchantName: receiptConfig.pixName.toUpperCase(),
+          merchantCity: receiptConfig.pixCity.toUpperCase(),
+          amount: data.donation_value,
+          txid: data.receipt_donation_id.toString(),
+        });
+        const barcode = await barCodeGenerator(data.receipt_donation_id);
         return {
           stack: [
             {
@@ -30,7 +47,7 @@ const GenerateReceiptPDF = ({ cards }) => {
                     },
                     { text: "", margin: [0, 5] },
                     {
-                      text: `DOADOR: ${data.nome}`,
+                      text: `DOADOR: ${data.donor.donor_name.toUpperCase()}`,
                       margin: [0, 0, 0, 2],
                       style: "label",
                     },
@@ -48,17 +65,55 @@ const GenerateReceiptPDF = ({ cards }) => {
                       ],
                     },
                     {
-                      text: `TEL: ${data.telefone}`,
+                      text: `TEL: ${data.donor.donor_tel_1}`,
                       style: "label",
                       margin: [0, 0, 0, 2],
                     },
                     {
-                      text: `ENDEREÇO: ${data.endereco}`,
+                      columns: [
+                        {
+                          width: 250,
+                          noWrap: false, // garante que pode quebrar
+                          margin: [0, 0, 0, 2],
+                          text: `ENDEREÇO: ${String(
+                            data.donor.donor_address || ""
+                          ).toUpperCase()}`,
+                          style: "title",
+                        },
+                      ],
+                    },
+                    {
+                      text: `BAIRRO: ${data.donor.donor_neighborhood.toUpperCase()}  CIDADE: ${data.donor.donor_city.toUpperCase()}`,
+                      style: "label",
+                      margin: [0, 0, 0, 2],
+                    },
+                    {
+                      canvas: [
+                        {
+                          type: "line",
+                          x1: 0,
+                          y1: 0,
+                          x2: 250,
+                          y2: 0,
+                          lineWidth: 0.5,
+                          lineColor: "#000000",
+                        },
+                      ],
+                    },
+                    {
+                      text: `VALOR: ${data.donation_value.toLocaleString(
+                        "pt-BR",
+                        { style: "currency", currency: "BRL" }
+                      )} - TIPO: ${data.donor.donor_type.toUpperCase()}`,
                       style: "title",
                       margin: [0, 0, 0, 2],
                     },
                     {
-                      text: `BAIRRO: ${data.bairro}  CIDADE: ${data.cidade}`,
+                      text: `RECIBO: ${
+                        data.receipt_donation_id
+                      } | DT.REC: ${new Date(
+                        data.donation_day_to_receive
+                      ).toLocaleDateString("pt-BR", { timeZone: "UTC" })}`,
                       style: "label",
                       margin: [0, 0, 0, 2],
                     },
@@ -76,14 +131,21 @@ const GenerateReceiptPDF = ({ cards }) => {
                       ],
                     },
                     {
-                      text: `VALOR: R$${data.valor} - TIPO: ${data.tipo}`,
-                      style: "title",
-                      margin: [0, 0, 0, 2],
-                    },
-                    {
-                      text: `RECIBO: ${data.recibo} | DT.REC: ${data.dataRecibo}`,
-                      style: "label",
-                      margin: [0, 0, 0, 2],
+                      columns: [
+                        {
+                          text: `U.COL: ${data.ucol}${` | R.COL: ${
+                            data.collector_code_id
+                          } - ${data.collector.collector_name.toUpperCase()}`} | OP: ${
+                            data.operator_code_id
+                          } - ${data.operator.operator_name.toUpperCase()} | U: ${
+                            data.dataUltima
+                          }`,
+                          style: "label",
+                          margin: [0, 0, 0, 2],
+                          width: 250,
+                          noWrap: false,
+                        },
+                      ],
                     },
                     {
                       canvas: [
@@ -98,35 +160,37 @@ const GenerateReceiptPDF = ({ cards }) => {
                         },
                       ],
                     },
-                    {
-                      text: `U.COL: ${data.ucol}${
-                        data.rcol
-                          ? ` | R.COL: ${data.rcol} ${data.nomeColetador}`
-                          : ""
-                      } | OP: ${data.operador} ${data.nomeOperador} | U: ${
-                        data.dataUltima
-                      }`,
-                      style: "label",
-                      margin: [0, 0, 0, 2],
-                    },
-                    {
-                      canvas: [
+                    data.donor.donor_observation.donor_observation && {
+                      columns: [
                         {
-                          type: "line",
-                          x1: 0,
-                          y1: 0,
-                          x2: 250,
-                          y2: 0,
-                          lineWidth: 0.5,
-                          lineColor: "#000000",
+                          text: `OBS: ${data.donor.donor_observation.donor_observation?.toUpperCase()}`,
+                          style: "label",
+                          width: 250,
+                          noWrap: false,
                         },
                       ],
                     },
-                    { text: `OBS: ${data.observacao}`, style: "label" },
-                    data.aviso && {
-                      text: `AVISO: ${data.aviso}`,
-                      style: "title",
-                      margin: [0, 0, 0, 2],
+                    data.donor.donor_reference.donor_reference && {
+                      columns: [
+                        {
+                          text: `Ref: ${data.donor.donor_reference.donor_reference?.toUpperCase()}`,
+                          style: "label",
+                          margin: [0, 4, 0, 2],
+                          width: 250,
+                          noWrap: false,
+                        },
+                      ],
+                    },
+                    data.donation_description && {
+                      columns: [
+                        {
+                          text: `AVISO: ${data.donation_description?.toUpperCase()}`,
+                          style: "title",
+                          margin: [0, 10, 0, 2],
+                          width: 250,
+                          noWrap: false,
+                        },
+                      ],
                     },
                     "\n",
                   ],
@@ -137,13 +201,12 @@ const GenerateReceiptPDF = ({ cards }) => {
                     {
                       table: {
                         widths: [110],
-
+                        heights: [188],
                         body: [
                           [
                             {
-                              image: imagesInBase64.manancialLogo,
-                              width: 160,
-                              height: 180,
+                              qr: payload,
+                              fit: 130,
                               alignment: "center",
                             },
                           ],
@@ -164,23 +227,70 @@ const GenerateReceiptPDF = ({ cards }) => {
                         },
                       },
                     },
-                    { text: "@cg.manancial", fontSize: 9 },
-                    { text: "@centrogeriatrico.manancial", fontSize: 9 },
-                    { text: "cgmanancial@gmail.com", fontSize: 9 },
+                    {
+                      columns: [
+                        {
+                          image: receiptLogo.instagram,
+                          fontSize: 9,
+                          width: 14,
+                          margin: [-12, 0, 4, 0],
+                        },
+                        {
+                          text: receiptConfig.instagram,
+                          fontSize: 9,
+                          width: 130,
+                          margin: [8, 2, 0, 0],
+                        },
+                      ],
+                    },
+                    {
+                      columns: [
+                        {
+                          image: receiptLogo.facebook,
+                          fontSize: 9,
+                          width: 14,
+                          margin: [-12, 0, 4, 0],
+                        },
+                        {
+                          text: receiptConfig.facebook,
+                          fontSize: 9,
+                          width: 130,
+                          margin: [8, 2, 0, 0],
+                        },
+                      ],
+                    },
+                    {
+                      columns: [
+                        {
+                          image: receiptLogo.email,
+                          fontSize: 9,
+                          width: 14,
+                          margin: [-12, 0, 4, 0],
+                        },
+                        {
+                          text: receiptConfig.email,
+                          fontSize: 9,
+                          width: 130,
+                          margin: [8, 2, 0, 0],
+                        },
+                      ],
+                    },
+                    /*{ text: receiptConfig.instagram, fontSize: 9 },
+                    { text: receiptConfig.facebook, fontSize: 9 },
+                    { text: receiptConfig.email, fontSize: 9 },*/
                   ],
                 },
               ],
-              columnGap: -15,
+              columnGap: -16,
             },
             {
               text: "",
-              margin: [0, 50],
+              margin: [0, 34],
             },
             {
               columns: [
-                {},
+                { width: 220, text: "" },
                 {
-                  widths: ["*"],
                   table: {
                     widths: [36, 50],
                     heights: [20, 20],
@@ -188,7 +298,7 @@ const GenerateReceiptPDF = ({ cards }) => {
                       [
                         { text: "RECIBO:", style: "tableReceipt" },
                         {
-                          text: data.recibo,
+                          text: data.receipt_donation_id,
                           style: "label",
                           alignment: "center",
                           margin: [0, 5],
@@ -197,7 +307,10 @@ const GenerateReceiptPDF = ({ cards }) => {
                       [
                         { text: "VALOR:", style: "tableReceipt" },
                         {
-                          text: data.valor,
+                          text: data.donation_value.toLocaleString("pt-BR", {
+                            style: "currency",
+                            currency: "BRL",
+                          }),
                           style: "label",
                           alignment: "center",
                           margin: [0, 5],
@@ -220,6 +333,7 @@ const GenerateReceiptPDF = ({ cards }) => {
                     },
                   },
                 },
+                { width: 60, text: "" },
                 {
                   table: {
                     widths: [90],
@@ -244,30 +358,46 @@ const GenerateReceiptPDF = ({ cards }) => {
             {
               stack: [
                 {
-                  text: `Recebemos de ${data.nome} | CPF: ${
+                  text: `Recebemos de ${data.donor.donor_name.toUpperCase()} | CPF: ${
                     data.cpf || "___________"
                   }.`,
                   style: "label",
+                  margin: [0, 5],
                 },
                 {
-                  text: `a importância de ${data.valorExtenso}`,
+                  text: `a importância de ${extenso(
+                    Number(data.donation_value),
+                    { mode: "currency" }
+                  ).toUpperCase()}`,
                   style: "label",
+                  margin: [0, 5],
                 },
                 {
-                  text: `que será destinada à campanha OBRAS ASSISTENCIAIS`,
+                  text: `que será destinada à campanha ${data.donation_campain.toUpperCase()}`,
                   style: "label",
+                  margin: [0, 5],
                 },
                 {
-                  text: `Rio de Janeiro, ${data.dataReciboExtenso}`,
+                  text: `Rio de Janeiro, ${DataNow()}`,
                   style: "label",
+                  margin: [0, 5],
                 },
                 "\n",
+                "\n",
                 {
-                  text: "LAVEM AS MÃOS\nESTAMOS TODOS CONTRA O COVID-19",
-                  style: "rodape",
-                  alignment: "center",
+                  columns: [
+                    {
+                      text: receiptConfig.backOfReceipt.toUpperCase(),
+                      style: "rodape",
+                      width: 340,
+                      alignment: "center",
+                      noWrap: false,
+                      margin: [70, 0, 0, 0],
+                    },
+                  ],
                 },
               ],
+              margin: [30, 0, 0, 0],
             },
           ],
           margin: [10, 10, 10, 10],
@@ -296,15 +426,14 @@ const GenerateReceiptPDF = ({ cards }) => {
         title: { fontSize: 12, bold: true, margin: [0, 0, 0, 10] },
         rodape: { fontSize: 10, bold: true },
         tableReceipt: {
-        fontSize: 9,
-        margin: [0, 5]
-      }
+          fontSize: 9,
+          margin: [0, 5],
+        },
       },
-      
     };
     pdfMake.createPdf(docDefinition).download("recibos.pdf");
   };
-  return <button onClick={gerarPDF}>Gerar Recibos em PDF</button>;
+  return <button onClick={gerarPDF}>Imprimir</button>;
 };
 
 export default GenerateReceiptPDF;

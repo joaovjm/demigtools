@@ -28,6 +28,7 @@ import Home from "./pages/Home";
 import Request from "./pages/Request";
 import DashboardAdmin from "./pages/DashboardAdmin";
 import ProtectedRoute from "./components/ProtectedRoute";
+import SendCampain from "./pages/SendCampain";
 
 const AppRoutesContent = () => {
   const location = useLocation();
@@ -92,6 +93,15 @@ const AppRoutesContent = () => {
           element={
             <Wrapper>
               <WorkList />
+            </Wrapper>
+          }
+        />
+
+        <Route
+          path="/sendcampain"
+          element={
+            <Wrapper>
+              <SendCampain />
             </Wrapper>
           }
         />

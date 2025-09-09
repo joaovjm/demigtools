@@ -1,7 +1,6 @@
 import supabase from "./superBaseClient";
 
 const getOperatorMeta = async (operator) => {
-  console.log(operator)
   let query = supabase
     .from("operator_meta")
     .select(

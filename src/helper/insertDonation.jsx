@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import supabase from "./superBaseClient";
 
 export const insertDonation = async (
@@ -48,6 +49,7 @@ export const insertDonation = async (
     if(error) throw error
 
     if(!error){
+      toast.success("Doação criada com sucesso!")
       return data
     }
 

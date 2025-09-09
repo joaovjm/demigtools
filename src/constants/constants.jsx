@@ -40,7 +40,8 @@ export const ALERT_TYPES = {
 export const DONOR_TYPES = {
   CASUAL: "Avulso",
   MONTHLY: "Mensal",
-  LIST: "Lista"
+  LIST: "Lista",
+  EXCLUDE: "Excluso"
 }
 
 export const FORM_LABELS = {

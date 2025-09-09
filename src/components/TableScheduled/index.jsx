@@ -8,11 +8,13 @@ const TableScheduled = ({
   setNowScheduled,
   donationFilterPerId,
 }) => {
+  
   const handleClick = (e) => {
     setScheduledOpen({
       id: e.leads_id ? e.leads_id : e.id && e.id,
+      donor_id: e.donor_id,
       name: e.leads_name || e.donor?.donor_name,
-      address: e.leads_address,
+      address: e.leads_address || e.donor?.donor_address,
       city: e.leads_city,
       neighborhood: e.leads_neighborhood,
       phone: e.leads_tel_1 || e.donor?.donor_tel_1,
@@ -27,6 +29,7 @@ const TableScheduled = ({
       observation: e.leads_observation || e.request_observation,
       scheduling_date: e.leads_scheduling_date,
       operator_code_id: e.operator_code_id,
+      typeScheduled: e.leads_id ? "lead" : e.donor_id !== undefined && "request"
     });
     setNowScheduled(e);
     setModalOpen(true);

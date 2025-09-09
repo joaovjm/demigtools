@@ -10,7 +10,7 @@
   background-color: rgba(0, 0, 0, 0.9);
 }
 .modal {
-  height: 520px;
+  height: 540px;
   position: absolute;
   z-index: 1;
   background-color: #1f1d1d;
@@ -19,7 +19,6 @@
 
 .modal-form {
   display: grid;
-  position: relative;
   align-items: center;
   justify-content: center;
   width: 480px;

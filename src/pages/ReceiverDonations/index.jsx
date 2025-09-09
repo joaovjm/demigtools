@@ -54,8 +54,10 @@ const ReceiverDonations = () => {
           "receipt_donation_id, donor_id, donor: donor_id(donor_name, donor_tel_1)"
         )
         .eq("donation_deposit_receipt_send", "Não")
-        .eq("collector_code_id", 22);
+        .eq("collector_code_id", 22)
+        .eq("donation_received", "Sim")
       if (error) throw error;
+      console.log(data)
       if (!error) setDeposit(data);
     };
     fetchDeposit();
@@ -136,7 +138,7 @@ const ReceiverDonations = () => {
         <h2 className="receiver-donations-header-title-text">
           {ICONS.MONEY} Receber Doações
         </h2>
-        {deposit && (
+        {deposit?.length > 0 && (
           <button onClick={handleDeposit} className="deposit-btn">
             Recibo Deposito ({deposit.length})
           </button>

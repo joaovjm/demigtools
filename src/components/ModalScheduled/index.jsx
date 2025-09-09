@@ -6,6 +6,8 @@ import updateLeads from "../../helper/updateLeads";
 import { toast } from "react-toastify";
 import newDonorAndDonation from "../../helper/newDonorAndDonation";
 import { getCampains } from "../../helper/getCampains";
+import updateRequestSelected from "../../helper/updateRequestSelected";
+import { insertDonation } from "../../helper/insertDonation";
 
 const ModalScheduled = ({
   scheduledOpen,
@@ -13,6 +15,7 @@ const ModalScheduled = ({
   setStatus,
   nowScheduled,
 }) => {
+  
   const [isScheduling, setIsScheduling] = useState(false);
   const [dateScheduling, setDateScheduling] = useState("");
   const [observation, setObservation] = useState("");
@@ -31,13 +34,13 @@ const ModalScheduled = ({
   const [name, setName] = useState("");
   const [campains, setCampains] = useState([]);
 
-  const fetchCampain = async() => {
+  const fetchCampain = async () => {
     const response = await getCampains();
-    setCampains(response)
-  }
+    setCampains(response);
+  };
   useEffect(() => {
-    fetchCampain()
-  }, [])
+    fetchCampain();
+  }, []);
 
   const handleNewDonation = () => {
     setName(scheduledOpen.name);
@@ -55,14 +58,27 @@ const ModalScheduled = ({
 
   const handleCancel = async () => {
     if (window.confirm("Você tem certeza que deseja cancelar a ficha?")) {
-      const response = await updateLeads(
-        "Não pode Ajudar",
-        scheduledOpen.operator_code_id,
-        scheduledOpen.id
-      );
-      if (response) {
-        toast.success("Processo concluído com sucesso");
-        onClose();
+      if (scheduledOpen.typeScheduled === "lead") {
+        const response = await updateLeads(
+          "Não pode Ajudar",
+          scheduledOpen.operator_code_id,
+          scheduledOpen.id
+        );
+        if (response) {
+          toast.success("Processo concluído com sucesso");
+          onClose();
+        }
+      } else {
+        const response = await updateRequestSelected(
+          "NP",
+          scheduledOpen.donor_id,
+          onClose,
+          ""
+        );
+        if (response) {
+          toast.success("Processo concluído com sucesso");
+          onClose();
+        }
       }
     }
   };
@@ -92,8 +108,6 @@ const ModalScheduled = ({
       return;
     }
 
-    
-
     const response = await newDonorAndDonation(
       scheduledOpen.id,
       scheduledOpen.name,
@@ -112,6 +126,36 @@ const ModalScheduled = ({
       nowScheduled
     );
     if (response) onClose();
+  };
+
+  const handleNewRequestDonation = async () => {
+    if ([valueDonation, dateScheduling, campain, observation].some(v => v === "")){
+      toast.warning("Preencha todos os campos")
+      return;
+    }
+    const response = await insertDonation(
+      scheduledOpen.donor_id,
+      scheduledOpen.operator_code_id,
+      valueDonation,
+      null,
+      DataNow("noformated"),
+      dateScheduling,
+      false,
+      false,
+      observation,
+      null,
+      campain      
+    )
+    if (response){
+      const response = await updateRequestSelected(
+        "Sucesso",
+        scheduledOpen.id,
+        onClose
+      );
+      if (response) {
+        onClose();
+      }
+    } 
   };
 
   return (
@@ -149,92 +193,97 @@ const ModalScheduled = ({
         {isScheduling && (
           <div className="modal-confirmations-confirm">
             <div className="input-group">
-              <div className="input-field">
-                <label>Nome</label>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </div>
-              <div className="input-field">
-                <label>Endereço</label>
-                <input
-                  type="text"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                />
-              </div>
-              <div className="input-field">
-                <label>Bairro</label>
-                <input
-                  type="text"
-                  value={neighborhood}
-                  onChange={(e) => setNeighborhood(e.target.value)}
-                />
-              </div>
-              <div className="input-field">
-                <label>Cidade</label>
-                <input
-                  type="text"
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                />
-              </div>
-              <div className="input-field">
-                <label>Qual contactado?</label>
-                <select
-                  value={telSuccess}
-                  onChange={(e) => setTelSuccess(e.target.value)}
-                >
-                  {scheduledOpen.phone && (
-                    <option value={scheduledOpen.phone}>
-                      {scheduledOpen.phone}
-                    </option>
-                  )}
-                  {scheduledOpen.phone2 && (
-                    <option value={scheduledOpen.phone2}>
-                      {scheduledOpen.phone2}
-                    </option>
-                  )}
-                  {scheduledOpen.phone3 && (
-                    <option value={scheduledOpen.phone3}>
-                      {scheduledOpen.phone3}
-                    </option>
-                  )}
-                  {scheduledOpen.phone4 && (
-                    <option value={scheduledOpen.phone4}>
-                      {scheduledOpen.phone4}
-                    </option>
-                  )}
-                  {scheduledOpen.phone5 && (
-                    <option value={scheduledOpen.phone5}>
-                      {scheduledOpen.phone5}
-                    </option>
-                  )}
-                  {scheduledOpen.phone6 && (
-                    <option value={scheduledOpen.phone6}>
-                      {scheduledOpen.phone6}
-                    </option>
-                  )}
-                </select>
-              </div>
-              <div className="input-field">
-                <label>Tel. 2</label>
-                <input
-                  type="text"
-                  value={tel2}
-                  onChange={(e) => setTel2(e.target.value)}
-                />
-              </div>
-              <div className="input-field">
-                <label>Tel. 3</label>
-                <input
-                  type="text"
-                  value={tel3}
-                  onChange={(e) => setTel3(e.target.value)}
-                />
-              </div>
+              {scheduledOpen.typeScheduled === "lead" && (
+                <>
+                  <div className="input-field">
+                    <label>Nome</label>
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </div>
+                  <div className="input-field">
+                    <label>Endereço</label>
+                    <input
+                      type="text"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                    />
+                  </div>
+                  <div className="input-field">
+                    <label>Bairro</label>
+                    <input
+                      type="text"
+                      value={neighborhood}
+                      onChange={(e) => setNeighborhood(e.target.value)}
+                    />
+                  </div>
+                  <div className="input-field">
+                    <label>Cidade</label>
+                    <input
+                      type="text"
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
+                    />
+                  </div>
+                  <div className="input-field">
+                    <label>Qual contactado?</label>
+                    <select
+                      value={telSuccess}
+                      onChange={(e) => setTelSuccess(e.target.value)}
+                    >
+                      {scheduledOpen.phone && (
+                        <option value={scheduledOpen.phone}>
+                          {scheduledOpen.phone}
+                        </option>
+                      )}
+                      {scheduledOpen.phone2 && (
+                        <option value={scheduledOpen.phone2}>
+                          {scheduledOpen.phone2}
+                        </option>
+                      )}
+                      {scheduledOpen.phone3 && (
+                        <option value={scheduledOpen.phone3}>
+                          {scheduledOpen.phone3}
+                        </option>
+                      )}
+                      {scheduledOpen.phone4 && (
+                        <option value={scheduledOpen.phone4}>
+                          {scheduledOpen.phone4}
+                        </option>
+                      )}
+                      {scheduledOpen.phone5 && (
+                        <option value={scheduledOpen.phone5}>
+                          {scheduledOpen.phone5}
+                        </option>
+                      )}
+                      {scheduledOpen.phone6 && (
+                        <option value={scheduledOpen.phone6}>
+                          {scheduledOpen.phone6}
+                        </option>
+                      )}
+                    </select>
+                  </div>
+                  <div className="input-field">
+                    <label>Tel. 2</label>
+                    <input
+                      type="text"
+                      value={tel2}
+                      onChange={(e) => setTel2(e.target.value)}
+                    />
+                  </div>
+                  <div className="input-field">
+                    <label>Tel. 3</label>
+                    <input
+                      type="text"
+                      value={tel3}
+                      onChange={(e) => setTel3(e.target.value)}
+                    />
+                  </div>
+                </>
+              )}
+
               <div className="input-field">
                 <label>Valor</label>
                 <input
@@ -261,18 +310,19 @@ const ModalScheduled = ({
                     Selecione...
                   </option>
                   {campains?.map((campain) => (
-                    <option key={campain.id} value={campain.campain_name}>{campain.campain_name}</option>
+                    <option key={campain.id} value={campain.campain_name}>
+                      {campain.campain_name}
+                    </option>
                   ))}
                 </select>
               </div>
-              <div className="input-field" style={{ flex: "2" }}>
+              <div className="input-field">
                 <label>Observação</label>
                 <input
                   value={observation}
                   onChange={(e) => setObservation(e.target.value)}
                 />
               </div>
-              
             </div>
 
             <div className="modal-confirmations-confirm-2">
@@ -283,7 +333,11 @@ const ModalScheduled = ({
                 {ICONS.BACK} Voltar
               </button>
               <button
-                onClick={handleNewDonorAndDonation}
+                onClick={
+                  scheduledOpen.typeScheduled === "lead"
+                    ? handleNewDonorAndDonation
+                    : handleNewRequestDonation
+                }
                 className="btn-confirm"
               >
                 Concluir

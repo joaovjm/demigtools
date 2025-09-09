@@ -117,10 +117,10 @@ const TableDonor = ({
                         <td className="tableBody">{item.donation_print}</td>
                         <td className="tableBody">{item.donation_received}</td>
                         <td className="tableBody">
-                          {item.donation_monthred
+                          {item.donation_monthref
                             ? `${new Date(
                                 item?.donation_monthref
-                              ).toLocaleDateString("pt-BR")}`
+                              ).toLocaleDateString("pt-BR", {month: "numeric", year: "numeric", timeZone: "UTC"})}`
                             : ""}
                         </td>
                         <td className="tableBody">
