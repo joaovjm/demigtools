@@ -21,7 +21,6 @@ const GenerateReceiptPDF = ({ cards, receiptConfig }) => {
     }
     const recibos = await Promise.all(
       cards.map(async (data) => {
-        console.log(data);
         const payload = generatePixPayload({
           pixKey: "+55" + receiptConfig.pixKey,
           //description: "Doação Teste",
@@ -431,7 +430,7 @@ const GenerateReceiptPDF = ({ cards, receiptConfig }) => {
         },
       },
     };
-    pdfMake.createPdf(docDefinition).download("recibos.pdf");
+    pdfMake.createPdf(docDefinition).download(`Manancial - ${DataNow()}`);
   };
   return <button onClick={gerarPDF}>Imprimir</button>;
 };
