@@ -120,7 +120,7 @@ const CheckPrint = () => {
                   key={print.receipt_donation_id}
                   className="checkprint-container-body-body-item"
                 >
-                  <div className="input-field">
+                  <div className="input-field" style={{maxWidth: 80}}>
                     <label>Recibo</label>
                     <p>{print.receipt_donation_id}</p>
                   </div>
@@ -136,7 +136,7 @@ const CheckPrint = () => {
                     <label>Bairro</label>
                     <p>{print.donor.donor_neighborhood}</p>
                   </div>
-                  <div className="input-field">
+                  <div className="input-field" style={{maxWidth: 60}}>
                     <label>Valor</label>
                     <p>
                       {print.donation_value.toLocaleString("pt-BR", {
@@ -144,6 +144,10 @@ const CheckPrint = () => {
                         currency: "BRL",
                       })}
                     </p>
+                  </div>
+                  <div className="input-field">
+                    <label>Observação</label>
+                    <p>{print.donation_description}</p>
                   </div>
 
                   <div className="input-field">

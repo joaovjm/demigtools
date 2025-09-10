@@ -22,7 +22,7 @@ const GenerateReceiptPDF = ({ cards, receiptConfig }) => {
     const recibos = await Promise.all(
       cards.map(async (data) => {
         const payload = generatePixPayload({
-          pixKey: "+55" + receiptConfig.pixKey,
+          pixKey: receiptConfig.pixKey,
           //description: "Doação Teste",
           merchantName: receiptConfig.pixName.toUpperCase(),
           merchantCity: receiptConfig.pixCity.toUpperCase(),
