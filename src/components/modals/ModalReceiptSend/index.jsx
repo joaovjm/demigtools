@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./index.css";
 import { FaDollarSign } from "react-icons/fa6";
+import GenerateDepositPDF from "../../GenerateDepositPDF";
 const ModalReceiptSend = ({ setSendModalOpen, deposit, setDeposit }) => {
   const [whatsapp, setWhatsapp] = useState();
   const [inEdit, setInEdit] = useState("");
@@ -74,9 +75,8 @@ const ModalReceiptSend = ({ setSendModalOpen, deposit, setDeposit }) => {
                 >
                   {inEdit === item.receipt_donation_id ? "Salvar" : "Editar"}
                 </button>
-                <button className="modal-send-body-receipt-btn-send">
-                  Enviar
-                </button>
+
+                <GenerateDepositPDF data={item}/>
               </div>
             </div>
           ))}

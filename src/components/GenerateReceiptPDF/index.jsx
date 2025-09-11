@@ -38,7 +38,7 @@ const GenerateReceiptPDF = ({ cards, receiptConfig }) => {
               columns: [
                 {
                   width: 290,
-                  
+
                   table: {
                     heights: [260],
                     body: [
@@ -396,7 +396,15 @@ const GenerateReceiptPDF = ({ cards, receiptConfig }) => {
                   margin: [0, 5],
                 },
                 {
-                  text: `Rio de Janeiro, ${DataNow()}`,
+                  text: `Rio de Janeiro,     ${new Date().toLocaleDateString(
+                    "pt-BR",
+                    {
+                      timeZone: "UTC",
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    }
+                  )}`,
                   style: "label",
                   margin: [0, 5],
                 },

@@ -25,6 +25,7 @@
   width: 96%;
   flex-direction: column;
   align-items: center;
+  overflow-y: auto;
 }
 
 .modal-send-body-receipt {

@@ -51,7 +51,7 @@ const ReceiverDonations = () => {
       const { data, error } = await supabase
         .from("donation")
         .select(
-          "receipt_donation_id, donor_id, donor: donor_id(donor_name, donor_tel_1)"
+          "receipt_donation_id, donation_value, donation_campain, donor_id, donor: donor_id(donor_name, donor_tel_1)"
         )
         .eq("donation_deposit_receipt_send", "Não")
         .eq("collector_code_id", 22)

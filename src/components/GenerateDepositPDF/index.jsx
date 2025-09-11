@@ -2,10 +2,12 @@ import React from "react";
 import { barCodeGenerator } from "../../services/barCodeGenerator";
 import pdfMake from "pdfmake/build/pdfmake";
 import { imagesInBase64 } from "../../assets/imagesInBase64";
+import extenso from "extenso";
 
-const GenerateDepositPDF = ({data}) => {
+const GenerateDepositPDF = ({ data }) => {
+  console.log(data);
   const generatePDF = async () => {
-    const barcode = await barCodeGenerator(data[0].recibo);
+    const barcode = await barCodeGenerator(data.receipt_donation_id);
     const depositReceipt = [
       {
         columns: [
@@ -27,7 +29,7 @@ const GenerateDepositPDF = ({data}) => {
                     bold: true,
                   },
                   {
-                    text: data[0].recibo,
+                    text: data.receipt_donation_id,
                     alignment: "center",
                     margin: [0, 15],
                     fontSize: 18,
@@ -58,7 +60,10 @@ const GenerateDepositPDF = ({data}) => {
                     bold: true,
                   },
                   {
-                    text: `R$ ${data[0].valor}`,
+                    text: data.donation_value?.toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    }),
                     alignment: "center",
                     margin: [0, 15],
                     fontSize: 18,
@@ -120,44 +125,51 @@ const GenerateDepositPDF = ({data}) => {
                 margin: [0, 0, 0, 16],
               },
               {
-                text: data[0].nome.normalize("NFD").toUpperCase(),
+                text: data.donor?.donor_name.normalize("NFD").toUpperCase(),
                 fontSize: 20,
                 margin: [-120, -2, 0, 0],
-                decoration: 'underline'
+                decoration: "underline",
               },
-              {
+              /*{
                 text: `| CPF: ${data[0].cpf}` || "___________",
                 fontSize: 18,
                 margin: [-70, 0, 0, 0],
-              },
+              },*/
             ],
-            
           },
 
           {
             columns: [
               {
-                text: 'a importância de',
+                text: "a importância de",
                 fontSize: 16,
                 margin: [0, 0, 0, 16],
-              }, 
+              },
               {
-                text: data[0].valorExtenso.normalize("NFD").toUpperCase(),
+                text: `${extenso(Number(data.donation_value), {
+                  mode: "currency",
+                }).toUpperCase()}`,
                 fontSize: 16,
                 margin: [-224, 0, 0, 16],
-                decoration: 'underline',
-              }
+                decoration: "underline",
+              },
             ],
-                  
-            
           },
           {
-            text: `que será destinada à campanha OBRAS ASSISTENCIAIS`,
+            text: `que será destinada à campanha ${data.donation_campain?.toUpperCase()}`,
             fontSize: 16,
             margin: [0, 0, 0, 24],
           },
           {
-            text: `Rio de Janeiro,     ${data[0].dataReciboExtenso}`,
+            text: `Rio de Janeiro,     ${new Date().toLocaleDateString(
+              "pt-BR",
+              {
+                timeZone: "UTC",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              }
+            )}`,
             fontSize: 16,
             margin: [0, 0, 0, 56],
           },
@@ -198,7 +210,7 @@ const GenerateDepositPDF = ({data}) => {
 
     pdfMake.createPdf(docDefinition).download("deposito.pdf");
   };
-  return <button onClick={generatePDF}>Gerar Recibos em PDF</button>;
+  return <button onClick={generatePDF}>Enviar</button>;
 };
 
 export default GenerateDepositPDF;
