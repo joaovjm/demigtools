@@ -13,17 +13,19 @@ pdfMake.vfs = pdfFonts.vfs;
 // Função para gerar código de barras em base64 no navegador
 
 const GenerateReceiptPDF = ({ cards, receiptConfig }) => {
-  
   const gerarPDF = async () => {
-    if (cards.some(v => v.collector_code_id === "" || v.collector_code_id === null)){
-      toast.warning("Exitem recibos sem coletador!")
-      return
+    if (
+      cards.some(
+        (v) => v.collector_code_id === "" || v.collector_code_id === null
+      )
+    ) {
+      toast.warning("Exitem recibos sem coletador!");
+      return;
     }
     const recibos = await Promise.all(
       cards.map(async (data) => {
         const payload = generatePixPayload({
           pixKey: receiptConfig.pixKey,
-          //description: "Doação Teste",
           merchantName: receiptConfig.pixName.toUpperCase(),
           merchantCity: receiptConfig.pixCity.toUpperCase(),
           amount: data.donation_value,
@@ -36,163 +38,183 @@ const GenerateReceiptPDF = ({ cards, receiptConfig }) => {
               columns: [
                 {
                   width: 290,
-                  stack: [
-                    {
-                      columns: [
-                        { image: barcode, width: 70, margin: [0, 0, 0, 5] },
-                        { text: "MANANCIAL", style: "title" },
-                      ],
-                      columnGap: 32,
-                    },
-                    { text: "", margin: [0, 5] },
-                    {
-                      text: `DOADOR: ${data.donor.donor_name.toUpperCase()}`,
-                      margin: [0, 0, 0, 2],
-                      style: "label",
-                    },
-                    {
-                      canvas: [
+                  
+                  table: {
+                    heights: [260],
+                    body: [
+                      [
                         {
-                          type: "line",
-                          x1: 0,
-                          y1: 0,
-                          x2: 250,
-                          y2: 0,
-                          lineWidth: 0.5,
-                          lineColor: "#000000",
+                          stack: [
+                            {
+                              columns: [
+                                {
+                                  image: barcode,
+                                  width: 70,
+                                  height: 26,
+                                  margin: [0, 0, 0, 5],
+                                },
+                                { text: "MANANCIAL", style: "title" },
+                              ],
+                              columnGap: 32,
+                            },
+                            //{ text: "", margin: [0, 0] },
+                            {
+                              text: `DOADOR: ${data.donor.donor_name.toUpperCase()}`,
+                              margin: [0, 0, 0, 2],
+                              style: "label",
+                              fontSize: 9,
+                            },
+                            {
+                              canvas: [
+                                {
+                                  type: "line",
+                                  x1: 0,
+                                  y1: 0,
+                                  x2: 250,
+                                  y2: 0,
+                                  lineWidth: 0.5,
+                                  lineColor: "#000000",
+                                },
+                              ],
+                            },
+                            {
+                              text: `TEL: ${data.donor.donor_tel_1}`,
+                              style: "label",
+                              fontSize: 9,
+                              margin: [0, 0, 0, 2],
+                            },
+                            {
+                              columns: [
+                                {
+                                  width: 250,
+                                  noWrap: false, // garante que pode quebrar
+                                  margin: [0, 0, 0, 2],
+                                  text: `ENDEREÇO: ${String(
+                                    data.donor.donor_address || ""
+                                  ).toUpperCase()}`,
+                                  style: "title",
+                                },
+                              ],
+                            },
+                            {
+                              text: `BAIRRO: ${data.donor.donor_neighborhood.toUpperCase()}  CIDADE: ${data.donor.donor_city.toUpperCase()}`,
+                              style: "label",
+                              margin: [0, 0, 0, 2],
+                            },
+                            {
+                              canvas: [
+                                {
+                                  type: "line",
+                                  x1: 0,
+                                  y1: 0,
+                                  x2: 250,
+                                  y2: 0,
+                                  lineWidth: 0.5,
+                                  lineColor: "#000000",
+                                },
+                              ],
+                            },
+                            {
+                              text: `VALOR: ${data.donation_value.toLocaleString(
+                                "pt-BR",
+                                { style: "currency", currency: "BRL" }
+                              )} - TIPO: ${data.donor.donor_type.toUpperCase()}`,
+                              style: "title",
+                              margin: [0, 0, 0, 2],
+                            },
+                            {
+                              text: `RECIBO: ${
+                                data.receipt_donation_id
+                              } | DT.REC: ${new Date(
+                                data.donation_day_to_receive
+                              ).toLocaleDateString("pt-BR", {
+                                timeZone: "UTC",
+                              })}`,
+                              style: "label",
+                              margin: [0, 0, 0, 2],
+                            },
+                            {
+                              canvas: [
+                                {
+                                  type: "line",
+                                  x1: 0,
+                                  y1: 0,
+                                  x2: 250,
+                                  y2: 0,
+                                  lineWidth: 0.5,
+                                  lineColor: "#000000",
+                                },
+                              ],
+                            },
+                            {
+                              columns: [
+                                {
+                                  text: `U.COL: ${data.ucol}${` | R.COL: ${
+                                    data.collector_code_id
+                                  } - ${data.collector.collector_name.toUpperCase()}`} | OP: ${
+                                    data.operator_code_id
+                                  } - ${data.operator.operator_name.toUpperCase()} | U: ${
+                                    data.dataUltima
+                                  }`,
+                                  style: "label",
+                                  margin: [0, 0, 0, 2],
+                                  width: 250,
+                                  noWrap: false,
+                                },
+                              ],
+                            },
+                            {
+                              canvas: [
+                                {
+                                  type: "line",
+                                  x1: 0,
+                                  y1: 0,
+                                  x2: 250,
+                                  y2: 0,
+                                  lineWidth: 0.5,
+                                  lineColor: "#000000",
+                                },
+                              ],
+                            },
+                            data.donor.donor_observation.donor_observation && {
+                              columns: [
+                                {
+                                  text: `OBS: ${data.donor.donor_observation.donor_observation?.toUpperCase()}`,
+                                  style: "label",
+                                  width: 250,
+                                  noWrap: false,
+                                },
+                              ],
+                            },
+                            data.donor.donor_reference.donor_reference && {
+                              columns: [
+                                {
+                                  text: `Ref: ${data.donor.donor_reference.donor_reference?.toUpperCase()}`,
+                                  style: "label",
+                                  margin: [0, 4, 0, 2],
+                                  width: 250,
+                                  noWrap: false,
+                                },
+                              ],
+                            },
+                            data.donation_description && {
+                              columns: [
+                                {
+                                  text: `AVISO: ${data.donation_description?.toUpperCase()}`,
+                                  style: "title",
+                                  margin: [0, 0, 0, 0],
+                                  width: 250,
+                                  noWrap: false,
+                                },
+                              ],
+                            },
+                            "\n",
+                          ],
                         },
                       ],
-                    },
-                    {
-                      text: `TEL: ${data.donor.donor_tel_1}`,
-                      style: "label",
-                      margin: [0, 0, 0, 2],
-                    },
-                    {
-                      columns: [
-                        {
-                          width: 250,
-                          noWrap: false, // garante que pode quebrar
-                          margin: [0, 0, 0, 2],
-                          text: `ENDEREÇO: ${String(
-                            data.donor.donor_address || ""
-                          ).toUpperCase()}`,
-                          style: "title",
-                        },
-                      ],
-                    },
-                    {
-                      text: `BAIRRO: ${data.donor.donor_neighborhood.toUpperCase()}  CIDADE: ${data.donor.donor_city.toUpperCase()}`,
-                      style: "label",
-                      margin: [0, 0, 0, 2],
-                    },
-                    {
-                      canvas: [
-                        {
-                          type: "line",
-                          x1: 0,
-                          y1: 0,
-                          x2: 250,
-                          y2: 0,
-                          lineWidth: 0.5,
-                          lineColor: "#000000",
-                        },
-                      ],
-                    },
-                    {
-                      text: `VALOR: ${data.donation_value.toLocaleString(
-                        "pt-BR",
-                        { style: "currency", currency: "BRL" }
-                      )} - TIPO: ${data.donor.donor_type.toUpperCase()}`,
-                      style: "title",
-                      margin: [0, 0, 0, 2],
-                    },
-                    {
-                      text: `RECIBO: ${
-                        data.receipt_donation_id
-                      } | DT.REC: ${new Date(
-                        data.donation_day_to_receive
-                      ).toLocaleDateString("pt-BR", { timeZone: "UTC" })}`,
-                      style: "label",
-                      margin: [0, 0, 0, 2],
-                    },
-                    {
-                      canvas: [
-                        {
-                          type: "line",
-                          x1: 0,
-                          y1: 0,
-                          x2: 250,
-                          y2: 0,
-                          lineWidth: 0.5,
-                          lineColor: "#000000",
-                        },
-                      ],
-                    },
-                    {
-                      columns: [
-                        {
-                          text: `U.COL: ${data.ucol}${` | R.COL: ${
-                            data.collector_code_id
-                          } - ${data.collector.collector_name.toUpperCase()}`} | OP: ${
-                            data.operator_code_id
-                          } - ${data.operator.operator_name.toUpperCase()} | U: ${
-                            data.dataUltima
-                          }`,
-                          style: "label",
-                          margin: [0, 0, 0, 2],
-                          width: 250,
-                          noWrap: false,
-                        },
-                      ],
-                    },
-                    {
-                      canvas: [
-                        {
-                          type: "line",
-                          x1: 0,
-                          y1: 0,
-                          x2: 250,
-                          y2: 0,
-                          lineWidth: 0.5,
-                          lineColor: "#000000",
-                        },
-                      ],
-                    },
-                    data.donor.donor_observation.donor_observation && {
-                      columns: [
-                        {
-                          text: `OBS: ${data.donor.donor_observation.donor_observation?.toUpperCase()}`,
-                          style: "label",
-                          width: 250,
-                          noWrap: false,
-                        },
-                      ],
-                    },
-                    data.donor.donor_reference.donor_reference && {
-                      columns: [
-                        {
-                          text: `Ref: ${data.donor.donor_reference.donor_reference?.toUpperCase()}`,
-                          style: "label",
-                          margin: [0, 4, 0, 2],
-                          width: 250,
-                          noWrap: false,
-                        },
-                      ],
-                    },
-                    data.donation_description && {
-                      columns: [
-                        {
-                          text: `AVISO: ${data.donation_description?.toUpperCase()}`,
-                          style: "title",
-                          margin: [0, 10, 0, 2],
-                          width: 250,
-                          noWrap: false,
-                        },
-                      ],
-                    },
-                    "\n",
-                  ],
+                    ],
+                  },
+                  layout: "noBorders",
                 },
                 {
                   width: "*",
@@ -274,9 +296,6 @@ const GenerateReceiptPDF = ({ cards, receiptConfig }) => {
                         },
                       ],
                     },
-                    /*{ text: receiptConfig.instagram, fontSize: 9 },
-                    { text: receiptConfig.facebook, fontSize: 9 },
-                    { text: receiptConfig.email, fontSize: 9 },*/
                   ],
                 },
               ],
@@ -284,7 +303,7 @@ const GenerateReceiptPDF = ({ cards, receiptConfig }) => {
             },
             {
               text: "",
-              margin: [0, 34],
+              margin: [0, 10],
             },
             {
               columns: [
@@ -335,7 +354,7 @@ const GenerateReceiptPDF = ({ cards, receiptConfig }) => {
                 { width: 60, text: "" },
                 {
                   table: {
-                    widths: [90],
+                    widths: [84],
                     heights: [50],
                     body: [
                       [
@@ -391,7 +410,7 @@ const GenerateReceiptPDF = ({ cards, receiptConfig }) => {
                       width: 340,
                       alignment: "center",
                       noWrap: false,
-                      margin: [70, 0, 0, 0],
+                      margin: [50, 0, 0, 0],
                     },
                   ],
                 },
@@ -421,8 +440,8 @@ const GenerateReceiptPDF = ({ cards, receiptConfig }) => {
       pageMargins: [0, 0, 0, 0],
       content: paginas,
       styles: {
-        label: { fontSize: 9, bold: false, fonts: "Courier" },
-        title: { fontSize: 12, bold: true, margin: [0, 0, 0, 10] },
+        label: { fontSize: 8, bold: false, fonts: "Courier" },
+        title: { fontSize: 11, bold: true, margin: [0, 0, 0, 10] },
         rodape: { fontSize: 10, bold: true },
         tableReceipt: {
           fontSize: 9,
