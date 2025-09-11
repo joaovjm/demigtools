@@ -49,7 +49,6 @@ export const insertDonation = async (
     if(error) throw error
 
     if(!error){
-      toast.success("Doação criada com sucesso!")
       return data
     }
 

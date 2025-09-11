@@ -4,12 +4,14 @@ import { DataSelect } from "../../components/DataTime";
 import { monthHystoryChecker } from "../../helper/monthHistoryChecker";
 import { monthlyfeeGenerator } from "../../helper/monthlyfeeGenerator";
 import { GiConfirmed } from "react-icons/gi";
+import Loader from "../../components/Loader";
 
 const CreateMensalDonation = () => {
   const [mesrefGenerator, setMesrefGenerator] = useState("");
   const [isDisable, setIsDisable] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [contador, setContador] = useState(null);
+  const [isLoading, setIsLoading] = useState(false)
 
   const onMonthHystoryChecker = async (e) => {
     const value = e.target.value;
@@ -20,18 +22,17 @@ const CreateMensalDonation = () => {
 
   const handleGerar = async (e) => {
     e.preventDefault();
-    const count = await monthlyfeeGenerator(
-      mesrefGenerator,
-      DataSelect(mesrefGenerator, "mesrefnf"),
-      DataSelect(mesrefGenerator, "day"),
-      DataSelect(mesrefGenerator, "month"),
-      DataSelect(mesrefGenerator, "year")
-    );
+    setIsLoading(true)
+    const count = await monthlyfeeGenerator({
+      mesRefGenerator: mesrefGenerator,
+      
+    });
 
     if (count >= 0) {
       setContador(count);
       setConfirmed(true);
     }
+    setIsLoading(false)
   };
 
   return (
@@ -53,7 +54,7 @@ const CreateMensalDonation = () => {
             onClick={handleGerar}
             disabled={isDisable || confirmed}
           >
-            Gerar
+            {isLoading ? <Loader/> : "Gerar"}
           </button>
         </div>
         <div className="status_mensal">
