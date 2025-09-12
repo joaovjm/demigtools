@@ -57,7 +57,6 @@ const ReceiverDonations = () => {
         .eq("collector_code_id", 22)
         .eq("donation_received", "Sim")
       if (error) throw error;
-      console.log(data)
       if (!error) setDeposit(data);
     };
     fetchDeposit();

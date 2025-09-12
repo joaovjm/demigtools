@@ -12,7 +12,7 @@ export const useDonation = () => {
 
   const receiveDonation = async (date, collector, search, setTableReceipt) => {
     //Busca do Nome do Doador
-    console.log(typeof collector)
+  
     try {
       const { data, error } = await supabase
         .from("donation")
@@ -34,7 +34,7 @@ export const useDonation = () => {
         const received = donation_received;
         const collectorCode = collector_code_id;
 
-        console.log(typeof collectorCode)
+      
         if (received === "Não") {
           if (collectorCode !== collector) {
             return new Promise((resolve) => {

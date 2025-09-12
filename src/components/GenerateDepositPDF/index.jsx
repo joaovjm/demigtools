@@ -5,7 +5,7 @@ import { imagesInBase64 } from "../../assets/imagesInBase64";
 import extenso from "extenso";
 
 const GenerateDepositPDF = ({ data }) => {
-  console.log(data);
+ 
   const generatePDF = async () => {
     const barcode = await barCodeGenerator(data.receipt_donation_id);
     const depositReceipt = [

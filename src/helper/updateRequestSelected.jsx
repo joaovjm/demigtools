@@ -2,8 +2,7 @@ import supabase from './superBaseClient';
 import { toast } from 'react-toastify';
 
 const updateRequestSelected = async (status, id, setModalOpen, setActive) => {
-  console.log(status)
-  console.log(id)
+ 
   
     try {
       const { data, error } = await supabase
@@ -16,7 +15,7 @@ const updateRequestSelected = async (status, id, setModalOpen, setActive) => {
         toast.success("Processo concluído com sucesso");
         setModalOpen(false);
         if (setActive) setActive("");
-        console.log(data)
+
         return data;
       }
     } catch (error) {

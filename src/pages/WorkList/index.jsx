@@ -108,7 +108,7 @@ const WorkList = () => {
         .select();
 
       if (error) throw error;
-      console.log(dateAccessed);
+     
     } catch (error) {
       console.error(error);
     }

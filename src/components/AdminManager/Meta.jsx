@@ -40,7 +40,7 @@ const Meta = ({ operators, inputs, setInputs, read, setRead }) => {
       console.log("error: ", error.message);
     } else {
       toast.success("Atualizado com sucesso...")
-      console.log("updated: ", data);
+   
     }
   };
 

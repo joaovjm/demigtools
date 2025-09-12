@@ -5,7 +5,7 @@ export const sendEmail = async () => {
         subject: "Teste de envio de Email",
         text: "Estou testando o envio deste email via reactJS",
       });
-      console.log(response.data.message);
+      (response.data.message);
       toast.success("Email enviado com sucesso");
     } catch (error) {
       console.log(error);

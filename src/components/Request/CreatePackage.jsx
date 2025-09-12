@@ -54,7 +54,7 @@ const CreatePackage = ({
     }
 
     const response = await getPackage(requestPackage);
-    console.log(response)
+   
     if (response) {
       setDataForm(true);
       const cPackage = response.map((item) => ({

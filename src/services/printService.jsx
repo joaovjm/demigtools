@@ -14,7 +14,6 @@ export async function getDonationsPrint(setPrinters, startDate, endDate) {
         console.log(error.message)
       } else {
         setPrinters(data)
-        console.log(data)
         
       }
     }catch (error) {

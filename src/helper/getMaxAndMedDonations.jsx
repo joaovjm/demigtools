@@ -14,7 +14,6 @@ export const getMaxAndMedDonations = async (id) => {
     if(error){
         console.log(error.message)
     }
-    console.log(data)
     if (data.length > 0){
         for(let i = 0; i < data.length; i++){
             if(data[i].donation_value > max){

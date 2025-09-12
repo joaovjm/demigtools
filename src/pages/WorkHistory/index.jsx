@@ -6,7 +6,6 @@ const WorkHistory = () => {
 
   const handleTimeZone = async () => {
     const response = setActivityHistoric()
-    console.log(await response)
     setTimeZone(response)
   }
   return (

@@ -9,7 +9,7 @@ export async function setActivityHistoric({ dbID, dataBase, operatorID  }) {
         case "donor":
             dataBaseRef = "donor_id";
     }
-    console.log(dataBaseRef)
+  
     const newDate = new Date();
     const { error } = await supabase
       .from(dataBase)

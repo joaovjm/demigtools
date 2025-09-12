@@ -40,7 +40,6 @@ export function generatePixPayload({ pixKey, description, merchantName, merchant
   
     // Calcular CRC16
     payload += crc16(payload);
-    console.log(payload)
     return payload;
     
   }
