@@ -16,6 +16,7 @@
     "bwip-js": "^4.7.0",
     "cors": "^2.8.5",
     "date-fns": "^4.1.0",
+    "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "extenso": "^2.1.0",
     "nodemailer": "^7.0.5",
