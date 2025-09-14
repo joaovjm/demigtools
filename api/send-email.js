@@ -52,6 +52,6 @@ export default async function handler(req, res) {
     res.status(200).json({ message: "Email enviado com sucesso" });
   } catch (error) {
     console.error("Erro Nodemailer: ", error)
-    res.status(500).json({ message: "Erro ao enviar email" });
+    res.status(500).json({ message: "Erro ao enviar email", error: error.message });
   }
 }
