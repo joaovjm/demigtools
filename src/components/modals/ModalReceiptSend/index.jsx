@@ -1,33 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./index.css";
 import { FaDollarSign } from "react-icons/fa6";
 import GenerateDepositPDF from "../../GenerateDepositPDF";
+import supabase from "../../../helper/superBaseClient";
 const ModalReceiptSend = ({ setSendModalOpen, deposit, setDeposit }) => {
   const [whatsapp, setWhatsapp] = useState();
   const [inEdit, setInEdit] = useState("");
+  const [config, setConfig] = useState([])
 
-  const handleEdit = (item, index) => {
+  const handleEdit = (item) => {
     if (inEdit === item.receipt_donation_id) {
       setInEdit("");
     } else {
       setInEdit(item.receipt_donation_id);
     }
 
-    /*if (itemClicked) {
-      setDeposit(
-        deposit.map((dp) => {
-          if (dp.receipt_donation_id === item.receipt_donation_id) {
-            return { ...dp, donor: { ...dp.donor, donor_tel_1: whatsapp } };
-          }
-          return dp;
-        })
-      );
-      setItemClicked();
-    } else {
-      setWhatsapp(item.donor?.donor_tel_1);
-      setItemClicked(item.receipt_donation_id);
-    }*/
   };
+
+  const fetchReceiptConfig = async () => {
+    const { data, error } = await supabase.from("receipt_config").select();
+    if (error) throw error;
+    if (!error) {
+      setConfig(data[0]);
+    }
+  }
+
+  useEffect(() => {
+    fetchReceiptConfig()
+  }, [])
+  
   return (
     <div className="modal-area">
       <div className="modal-send-container">
@@ -76,7 +77,7 @@ const ModalReceiptSend = ({ setSendModalOpen, deposit, setDeposit }) => {
                   {inEdit === item.receipt_donation_id ? "Salvar" : "Editar"}
                 </button>
 
-                <GenerateDepositPDF data={item}/>
+                <GenerateDepositPDF data={item} config={config}/>
               </div>
             </div>
           ))}

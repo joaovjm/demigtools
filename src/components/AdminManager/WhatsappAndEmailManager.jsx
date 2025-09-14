@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { sendEmail } from "../../services/sendEmail";
+import { sendEmail } from "../../services/emailAndWhatsappSendService";
 
 const WhatsappAndEmailManager = () => {
   const [whatsappNumber, setWhatsappNumber] = useState();

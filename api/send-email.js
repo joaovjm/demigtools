@@ -17,9 +17,7 @@ export const config = {
 };
 
 export default async function handler(req, res) {
-  // =========================
-  // CORS seguro
-  // =========================
+
   const allowedOrigins = [
     "http://localhost:5173",
     "https://demigtools.vercel.app",
@@ -43,24 +41,12 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  // =========================
-  // Apenas POST permitido
-  // =========================
   if (req.method !== "POST") {
     return res
       .status(405)
       .json({ error: `Método ${req.method} não permitido` });
   }
 
-  // =========================
-  // Log para verificar variáveis de ambiente
-  // =========================
-  console.log("EMAIL_USER:", process.env.EMAIL_USER);
-  console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? "****" : "Não definido");
-
-  // =========================
-  // Envio de email
-  // =========================
   const { emailTo, subject, text } = req.body;
 
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {

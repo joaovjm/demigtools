@@ -1,11 +1,11 @@
 import React from "react";
 import { barCodeGenerator } from "../../services/barCodeGenerator";
 import pdfMake from "pdfmake/build/pdfmake";
-import { imagesInBase64 } from "../../assets/imagesInBase64";
 import extenso from "extenso";
+import { receiptInBase64 } from "../../assets/receiptInBase64";
 
-const GenerateDepositPDF = ({ data }) => {
- 
+const GenerateDepositPDF = ({ data, config }) => {
+  
   const generatePDF = async () => {
     const barcode = await barCodeGenerator(data.receipt_donation_id);
     const depositReceipt = [
@@ -13,11 +13,11 @@ const GenerateDepositPDF = ({ data }) => {
         columns: [
           {},
           {
-            width: 224,
+            width: 204,
             margin: [0, 13],
             table: {
-              widths: [58, 120],
-              heights: [42, 8, 42],
+              widths: [58, 116],
+              heights: [40, 8, 40],
               body: [
                 [
                   {
@@ -91,8 +91,8 @@ const GenerateDepositPDF = ({ data }) => {
           {
             width: 181,
             table: {
-              widths: [208],
-              heights: [146],
+              widths: [190],
+              heights: [136],
               body: [
                 [
                   {
@@ -127,7 +127,7 @@ const GenerateDepositPDF = ({ data }) => {
               {
                 text: data.donor?.donor_name.normalize("NFD").toUpperCase(),
                 fontSize: 20,
-                margin: [-120, -2, 0, 0],
+                margin: [-240, -2, 0, 0],
                 decoration: "underline",
               },
               /*{
@@ -171,11 +171,11 @@ const GenerateDepositPDF = ({ data }) => {
               }
             )}`,
             fontSize: 16,
-            margin: [0, 0, 0, 56],
+            margin: [0, 0, 0, 36],
           },
           "\n",
           {
-            text: "LAVEM AS MÃOS\nESTAMOS TODOS CONTRA O COVID-19",
+            text: config.backOfReceipt,
             alignment: "center",
             fontSize: 20,
           },
@@ -201,14 +201,20 @@ const GenerateDepositPDF = ({ data }) => {
       },
       background: function (currentPage, pageSize) {
         return {
-          image: imagesInBase64.receipt,
+          image: receiptInBase64.receipt,
           width: pageSize.width,
           height: pageSize.height,
         };
       },
     };
 
-    pdfMake.createPdf(docDefinition).download("deposito.pdf");
+    pdfMake.createPdf(docDefinition).getBase64(async (dt) => {
+      await fetch("/api/send-pdf", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ pdf: dt, filename: `${data.receipt_donation_id}`, phone: data.donor?.donor_tel_1})
+      })
+    });
   };
   return <button onClick={generatePDF}>Enviar</button>;
 };

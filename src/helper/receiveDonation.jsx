@@ -88,6 +88,7 @@ export const useDonation = () => {
           donation_received: "Sim",
           donation_day_received: date,
           collector_code_id: collector,
+          donation_deposit_receipt_send: "Não"
         })
         .eq("receipt_donation_id", search);
 
