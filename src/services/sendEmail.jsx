@@ -1,6 +1,9 @@
+import axios from "axios";
+import { toast } from "react-toastify";
+
 export const sendEmail = async () => {
     try{
-      const response = await axios.post("https://email-server-beige.vercel.app/api/send-email", {
+      const response = await axios.post("https://demigtools.vercel.app/api/send-email", {
         emailTo: "infocelljm23@gmail.com",
         subject: "Teste de envio de Email",
         text: "Estou testando o envio deste email via reactJS",
