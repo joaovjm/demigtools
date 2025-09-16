@@ -105,6 +105,13 @@ const Chat = () => {
           sent: true,
           time: '14:30',
           status: 'delivered'
+        },
+        {
+          id: 4,
+          text: 'Quero contribuir com R$ 400,00',
+          sent: true,
+          time: '14:31',
+          status: 'delivered'
         }
       ],
       2: [
@@ -318,12 +325,6 @@ const Chat = () => {
     <div className="chat-container">
       {/* Sidebar - Lista de conversas */}
       <div className="chat-sidebar">
-        <div className="chat-header">
-          <h2>
-            <FaWhatsapp className="whatsapp-icon" />
-            WhatsApp Business
-          </h2>
-        </div>
 
         {/* Status do Webhook */}
         <div className="webhook-status">
