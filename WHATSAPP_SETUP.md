@@ -45,13 +45,13 @@ Este documento explica como configurar a integração com o WhatsApp Business AP
 Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
 
 ```env
-# WhatsApp Business API Configuration
-REACT_APP_WHATSAPP_API_URL=https://graph.facebook.com/v18.0
-REACT_APP_WHATSAPP_PHONE_NUMBER_ID=seu_phone_number_id_aqui
-REACT_APP_WHATSAPP_ACCESS_TOKEN=seu_access_token_aqui
-REACT_APP_WEBHOOK_VERIFY_TOKEN=seu_webhook_verify_token_aqui
-REACT_APP_BACKEND_URL=http://localhost:3001
-REACT_APP_ENVIRONMENT=development
+# WhatsApp Business API Configuration (Vite usa prefixo VITE_)
+VITE_WHATSAPP_API_URL=https://graph.facebook.com/v18.0
+VITE_WHATSAPP_PHONE_NUMBER_ID=seu_phone_number_id_aqui
+VITE_WHATSAPP_ACCESS_TOKEN=seu_access_token_aqui
+VITE_WEBHOOK_VERIFY_TOKEN=seu_webhook_verify_token_aqui
+VITE_BACKEND_URL=http://localhost:3001
+VITE_ENVIRONMENT=development
 ```
 
 ### 4. Configurar o Webhook
