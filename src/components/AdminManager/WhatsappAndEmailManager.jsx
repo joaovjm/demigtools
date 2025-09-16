@@ -2,6 +2,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { sendEmail } from "../../services/emailAndWhatsappSendService";
+import Loader from "../Loader";
 
 const WhatsappAndEmailManager = () => {
   const [whatsappNumber, setWhatsappNumber] = useState();
@@ -12,6 +13,7 @@ const WhatsappAndEmailManager = () => {
   const [name, setName] = useState();
   const [value, setValue] = useState();
   const [campain, setCampain] = useState();
+  const [isLoading, setIsLoading] = useState(false);
 
   const text = "${****}";
 
@@ -93,7 +95,7 @@ const WhatsappAndEmailManager = () => {
       </div>
       <div className="whatsappmanager">
         <h4>E-Mail</h4>
-        <button onClick={sendEmail}>Teste Email</button>
+        <button onClick={sendEmail}>{isLoading ? <Loader/> : "Teste Email"}</button>
       </div>
     </div>
   );

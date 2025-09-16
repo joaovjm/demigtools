@@ -26,9 +26,6 @@ const Dashboard = () => {
   const [valueConfirmations, setValueConfirmations] = useState(null); //Total valor na confirmação
   const [openDonations, setOpenDonations] = useState(null); //Quantidades de fichas em aberto
   const [valueOpenDonations, setValueOpenDonations] = useState(null); //Total valor de fichas em aberto
-  const [monthReceived, setMonthReceived] = useState(null); //Total de fichas recebidas em determinado mês
-  const [valueMonthReceived, setValueMonthReceived] = useState(null); //Total valor dos recebidos do atual Mês
-  const [receivedPercent, setReceivedPercent] = useState(null);
   const [scheduling, setScheduling] = useState(0); //Total de leads agendadas
   const [active, setActive] = useState(false);
   const [nowScheduled, setNowScheduled] = useState(null);
