@@ -7,6 +7,9 @@ const WHATSAPP_PHONE_NUMBER_ID = import.meta.env.VITE_WHATSAPP_PHONE_NUMBER_ID;
 const WHATSAPP_ACCESS_TOKEN = import.meta.env.VITE_WHATSAPP_ACCESS_TOKEN;
 const WEBHOOK_VERIFY_TOKEN = import.meta.env.VITE_WEBHOOK_VERIFY_TOKEN;
 
+console.log(WHATSAPP_ACCESS_TOKEN);
+console.log(WEBHOOK_VERIFY_TOKEN)
+
 class WhatsAppWebhookService {
   constructor() {
     this.webhookEndpoint = '/api/webhook/whatsapp';
