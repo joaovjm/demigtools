@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 export const sendEmail = async () => {
     try{
       const response = await axios.post("/api/send-email", {
-        emailTo: "infocelljm23@gmail.com",
+        emailTo: "jozineivenancio@gmail.com",
         subject: "Teste de envio de Email",
         text: "Estou testando o envio deste email via reactJS",
       });

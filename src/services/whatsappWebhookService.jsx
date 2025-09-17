@@ -2,10 +2,10 @@
 // Este serviço gerencia a comunicação com a API do WhatsApp Business
 
 // Variáveis de ambiente do Vite (prefixo VITE_)
-const WHATSAPP_API_BASE_URL = process.env.VITE_WHATSAPP_API_URL || 'https://graph.facebook.com/v18.0';
-const WHATSAPP_PHONE_NUMBER_ID = process.env.VITE_WHATSAPP_PHONE_NUMBER_ID;
-const WHATSAPP_ACCESS_TOKEN = process.env.VITE_WHATSAPP_ACCESS_TOKEN;
-const WEBHOOK_VERIFY_TOKEN = process.env.VITE_WEBHOOK_VERIFY_TOKEN;
+const WHATSAPP_API_BASE_URL = process.env.WHATSAPP_API_URL || 'https://graph.facebook.com/v18.0';
+const WHATSAPP_PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
+const WHATSAPP_ACCESS_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN;
+const WEBHOOK_VERIFY_TOKEN = process.env.WEBHOOK_VERIFY_TOKEN;
 
 class WhatsAppWebhookService {
   constructor() {
