@@ -2,10 +2,10 @@
 // Este serviço gerencia a comunicação com a API do WhatsApp Business
 
 // Variáveis de ambiente do Vite (prefixo VITE_)
-const WHATSAPP_API_BASE_URL = import.meta.env.VITE_WHATSAPP_API_URL || 'https://graph.facebook.com/v18.0';
-const WHATSAPP_PHONE_NUMBER_ID = import.meta.env.VITE_WHATSAPP_PHONE_NUMBER_ID;
-const WHATSAPP_ACCESS_TOKEN = import.meta.env.VITE_WHATSAPP_ACCESS_TOKEN;
-const WEBHOOK_VERIFY_TOKEN = import.meta.env.VITE_WEBHOOK_VERIFY_TOKEN;
+const WHATSAPP_API_BASE_URL = process.env.VITE_WHATSAPP_API_URL || 'https://graph.facebook.com/v18.0';
+const WHATSAPP_PHONE_NUMBER_ID = process.env.VITE_WHATSAPP_PHONE_NUMBER_ID;
+const WHATSAPP_ACCESS_TOKEN = process.env.VITE_WHATSAPP_ACCESS_TOKEN;
+const WEBHOOK_VERIFY_TOKEN = process.env.VITE_WEBHOOK_VERIFY_TOKEN;
 
 class WhatsAppWebhookService {
   constructor() {
@@ -430,7 +430,9 @@ class WhatsAppWebhookService {
   // Validar configuração
   validateConfiguration() {
     const errors = [];
-
+    console.log(WHATSAPP_PHONE_NUMBER_ID);
+    console.log(WHATSAPP_ACCESS_TOKEN);
+    console.log(WEBHOOK_VERIFY_TOKEN);
     if (!WHATSAPP_PHONE_NUMBER_ID) {
       errors.push('REACT_APP_WHATSAPP_PHONE_NUMBER_ID não configurado');
     }
