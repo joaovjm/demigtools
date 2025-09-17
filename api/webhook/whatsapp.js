@@ -1,3 +1,12 @@
+import dotenv from "dotenv";
+import path from "path";
+
+// força carregar o .env.local na raiz
+dotenv.config({ path: path.resolve(process.cwd(), ".env.local") });
+
+// Carrega as variáveis do .env.local
+dotenv.config();
+
 export default function handler(req, res) {
   console.log("📩 Chegou requisição:", req.method, req.url);
   console.log("Headers:", JSON.stringify(req.headers, null, 2));
@@ -19,7 +28,7 @@ export default function handler(req, res) {
         }
       }
     }
-    console.log("Log teste")
+
     if (req.method === "POST") {
       const body = req.body;
 

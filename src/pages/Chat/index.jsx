@@ -32,7 +32,8 @@ const Chat = () => {
     clearError,
     getWebhookConfig,
     setConversations: setHookConversations,
-    setMessages: setHookMessages
+    setMessages: setHookMessages,
+    setConnectionStatus
   } = useWhatsAppWebhook();
 
   // Estados locais
