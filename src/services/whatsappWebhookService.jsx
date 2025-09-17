@@ -1,16 +1,42 @@
 // WhatsApp Business API Webhook Service
 // Este serviço gerencia a comunicação com a API do WhatsApp Business
 
-const WHATSAPP_API_BASE_URL = process.env.WHATSAPP_API_URL || 'https://graph.facebook.com/v18.0';
-const WHATSAPP_PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
-const WHATSAPP_ACCESS_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN;
-const WEBHOOK_VERIFY_TOKEN = process.env.WEBHOOK_VERIFY_TOKEN;
+// Não expor variáveis sensíveis no frontend
+// Estas variáveis serão obtidas via API do backend
+const WHATSAPP_API_BASE_URL = 'https://graph.facebook.com/v18.0';
+let WHATSAPP_PHONE_NUMBER_ID = null;
+let WHATSAPP_ACCESS_TOKEN = null;
+let WEBHOOK_VERIFY_TOKEN = null;
 
 class WhatsAppWebhookService {
   constructor() {
     this.webhookEndpoint = '/api/webhook/whatsapp';
     this.messageListeners = [];
     this.statusListeners = [];
+    this.isConfigured = false;
+    this.config = null;
+  }
+
+  // Inicializar configuração via API
+  async initializeConfig() {
+    try {
+      const response = await fetch('/api/whatsapp-config');
+      const data = await response.json();
+      
+      if (data.success) {
+        this.config = data.config;
+        this.isConfigured = data.config.isConfigured;
+        
+        if (this.isConfigured) {
+          WHATSAPP_PHONE_NUMBER_ID = data.config.phoneNumberId;
+        }
+      }
+      
+      return this.isConfigured;
+    } catch (error) {
+      console.error('Erro ao carregar configuração:', error);
+      return false;
+    }
   }
 
   // Configurar webhook (deve ser chamado no backend)
@@ -152,38 +178,40 @@ class WhatsAppWebhookService {
     this.notifyStatusListeners(statusUpdate);
   }
 
-  // Enviar mensagem de texto
+  // Enviar mensagem de texto via API do backend
   async sendTextMessage(to, text) {
     try {
-      const response = await fetch(
-        `${WHATSAPP_API_BASE_URL}/${WHATSAPP_PHONE_NUMBER_ID}/messages`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${WHATSAPP_ACCESS_TOKEN}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            messaging_product: 'whatsapp',
-            to: to,
-            type: 'text',
-            text: {
-              body: text
-            }
-          })
-        }
-      );
+      // Verificar se a configuração foi inicializada
+      if (!this.isConfigured) {
+        await this.initializeConfig();
+      }
+
+      if (!this.isConfigured) {
+        throw new Error('WhatsApp não configurado');
+      }
+
+      const response = await fetch('/api/send-whatsapp-message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          to: to,
+          message: text,
+          type: 'text'
+        })
+      });
 
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(`Erro na API: ${data.error?.message || 'Erro desconhecido'}`);
+        throw new Error(data.error || 'Erro ao enviar mensagem');
       }
 
       return {
         success: true,
-        messageId: data.messages?.[0]?.id,
-        data: data
+        messageId: data.messageId,
+        data: data.data
       };
     } catch (error) {
       console.error('Erro ao enviar mensagem:', error);
@@ -194,50 +222,41 @@ class WhatsAppWebhookService {
     }
   }
 
-  // Enviar mensagem com template
+  // Enviar mensagem com template via API do backend
   async sendTemplateMessage(to, templateName, templateParams = []) {
     try {
-      const response = await fetch(
-        `${WHATSAPP_API_BASE_URL}/${WHATSAPP_PHONE_NUMBER_ID}/messages`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${WHATSAPP_ACCESS_TOKEN}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            messaging_product: 'whatsapp',
-            to: to,
-            type: 'template',
-            template: {
-              name: templateName,
-              language: {
-                code: 'pt_BR'
-              },
-              components: templateParams.length > 0 ? [
-                {
-                  type: 'body',
-                  parameters: templateParams.map(param => ({
-                    type: 'text',
-                    text: param
-                  }))
-                }
-              ] : []
-            }
-          })
-        }
-      );
+      // Verificar se a configuração foi inicializada
+      if (!this.isConfigured) {
+        await this.initializeConfig();
+      }
+
+      if (!this.isConfigured) {
+        throw new Error('WhatsApp não configurado');
+      }
+
+      const response = await fetch('/api/send-whatsapp-message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          to: to,
+          message: templateName,
+          type: 'template',
+          templateParams: templateParams
+        })
+      });
 
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(`Erro na API: ${data.error?.message || 'Erro desconhecido'}`);
+        throw new Error(data.error || 'Erro ao enviar template');
       }
 
       return {
         success: true,
-        messageId: data.messages?.[0]?.id,
-        data: data
+        messageId: data.messageId,
+        data: data.data
       };
     } catch (error) {
       console.error('Erro ao enviar template:', error);
