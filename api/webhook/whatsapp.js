@@ -1,4 +1,7 @@
 export default function handler(req, res) {
+  console.log("📩 Chegou requisição:", req.method, req.url);
+  console.log("Headers:", JSON.stringify(req.headers, null, 2));
+  console.log("Body:", JSON.stringify(req.body, null, 2));
   try {
     const WEBHOOK_VERIFY_TOKEN = process.env.WEBHOOK_VERIFY_TOKEN;
 
