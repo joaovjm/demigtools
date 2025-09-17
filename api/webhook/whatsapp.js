@@ -1,47 +1,38 @@
-const express = require('express');
-const router = express.Router();
+export default function handler(req, res) {
+  const WEBHOOK_VERIFY_TOKEN = process.env.WEBHOOK_VERIFY_TOKEN;
 
-const WEBHOOK_VERIFY_TOKEN = process.env.VITE_WEBHOOK_VERIFY_TOKEN;
+  if (req.method === "GET") {
+    const mode = req.query["hub.mode"];
+    const token = req.query["hub.verify_token"];
+    const challenge = req.query["hub.challenge"];
 
-// Verificação do webhook (GET)
-router.get('/whatsapp', (req, res) => {
-  const mode = req.query['hub.mode'];
-  const token = req.query['hub.verify_token'];
-  const challenge = req.query['hub.challenge'];
+    if (mode && token) {
+      if (mode === "subscribe" && token === WEBHOOK_VERIFY_TOKEN) {
+        console.log("Webhook verificado com sucesso!");
+        return res.status(200).send(challenge);
+      } else {
+        return res.sendStatus(403);
+      }
+    }
+  }
 
-  if (mode && token) {
-    if (mode === 'subscribe' && token === WEBHOOK_VERIFY_TOKEN) {
-      console.log('Webhook verificado com sucesso!');
-      res.status(200).send(challenge);
+  if (req.method === "POST") {
+    const body = req.body;
+
+    if (body.object) {
+      const change = body.entry?.[0]?.changes?.[0];
+      const message = change?.value?.messages?.[0];
+
+      if (message) {
+        console.log("Mensagem recebida:", message);
+      }
+
+      return res.status(200).send("EVENT_RECEIVED");
     } else {
-      res.sendStatus(403);
+      return res.sendStatus(404);
     }
   }
-});
 
-// Receber mensagens (POST)
-router.post('/whatsapp', (req, res) => {
-  const body = req.body;
-
-  if (body.object) {
-    if (body.entry &&
-        body.entry[0].changes &&
-        body.entry[0].changes[0] &&
-        body.entry[0].changes[0].value.messages &&
-        body.entry[0].changes[0].value.messages[0]) {
-      
-      // Processar mensagem recebida
-      const message = body.entry[0].changes[0].value.messages[0];
-      console.log('Mensagem recebida:', message);
-      
-      // Aqui você pode processar a mensagem e notificar o frontend
-      // via WebSocket, Server-Sent Events, ou polling
-    }
-    
-    res.status(200).send('EVENT_RECEIVED');
-  } else {
-    res.sendStatus(404);
-  }
-});
-
-module.exports = router;
+  res.setHeader("Allow", ["GET", "POST"]);
+  return res.status(405).end(`Método ${req.method} não permitido`);
+}
