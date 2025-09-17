@@ -1,18 +1,13 @@
 const express = require('express');
 const router = express.Router();
 
-const WEBHOOK_VERIFY_TOKEN = import.meta.env.VITE_WEBHOOK_VERIFY_TOKEN;
+const WEBHOOK_VERIFY_TOKEN = process.env.VITE_WEBHOOK_VERIFY_TOKEN;
 
 // Verificação do webhook (GET)
 router.get('/whatsapp', (req, res) => {
   const mode = req.query['hub.mode'];
   const token = req.query['hub.verify_token'];
   const challenge = req.query['hub.challenge'];
-
-  console.log(WEBHOOK_VERIFY_TOKEN);
-  console.log(token);
-  console.log(mode);
-  console.log(challenge);
 
   if (mode && token) {
     if (mode === 'subscribe' && token === WEBHOOK_VERIFY_TOKEN) {
