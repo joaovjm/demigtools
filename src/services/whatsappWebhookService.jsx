@@ -374,6 +374,7 @@ class WhatsAppWebhookService {
           }
         }
       );
+      console.log(response)
 
       return {
         connected: response.ok,
