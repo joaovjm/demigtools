@@ -310,7 +310,8 @@ const useWhatsAppWebhook = () => {
     // Utilitários
     setConversations,
     setMessages,
-    setConnectionStatus
+    setConnectionStatus,
+    setWebhookStatus
   };
 };
 
