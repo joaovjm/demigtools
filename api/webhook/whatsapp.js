@@ -16,7 +16,7 @@ export default function handler(req, res) {
         }
       }
     }
-
+    console.log("Log teste")
     if (req.method === "POST") {
       const body = req.body;
 
