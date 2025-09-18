@@ -16,7 +16,7 @@ const useWhatsAppWebhook = () => {
       setIsLoading(true);
       
       // Validar configuração
-      const config = whatsappWebhookService.validateConfiguration();
+      const config = await whatsappWebhookService.validateConfiguration();
       if (!config.valid) {
         setError(`Configuração inválida: ${config.errors.join(', ')}`);
         setConnectionStatus('disconnected');
@@ -28,13 +28,28 @@ const useWhatsAppWebhook = () => {
       setConnectionStatus('connecting');
       
       try {
-        // Verificar saúde da API
+        // Verificar saúde da API do WhatsApp
         const healthCheck = await whatsappWebhookService.checkApiHealth();
         
         if (healthCheck.connected) {
           setConnectionStatus('connected');
-          setWebhookStatus('active');
           setError(null);
+          
+          // Verificar webhook separadamente
+          try {
+            const webhookResponse = await fetch('/api/test-webhook');
+            const webhookData = await webhookResponse.json();
+            
+            if (webhookData.webhookActive) {
+              setWebhookStatus('active');
+            } else {
+              setWebhookStatus('inactive');
+              setError(`Webhook inativo: ${webhookData.error || 'Verifique a configuração no Facebook Developer Console'}`);
+            }
+          } catch (webhookErr) {
+            setWebhookStatus('inactive');
+            setError(`Erro ao verificar webhook: ${webhookErr.message}`);
+          }
         } else {
           setConnectionStatus('disconnected');
           setWebhookStatus('inactive');

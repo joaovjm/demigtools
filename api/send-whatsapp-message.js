@@ -1,6 +1,12 @@
 // API endpoint para enviar mensagens do WhatsApp
 // Usa as variáveis de ambiente do backend para manter segurança
 
+import dotenv from 'dotenv';
+
+// Carregar variáveis de ambiente para desenvolvimento local
+dotenv.config({ path: '.env.local' });
+dotenv.config();
+
 export const config = {
   api: {
     bodyParser: {
@@ -41,6 +47,33 @@ export default async function handler(req, res) {
   }
 
   try {
+    // Forçar recarregamento das variáveis
+    console.log("🔄 Recarregando variáveis de ambiente no send-whatsapp-message...");
+    
+    // Limpar variáveis existentes
+    delete process.env.WHATSAPP_PHONE_NUMBER_ID;
+    delete process.env.WHATSAPP_ACCESS_TOKEN;
+
+    // Recarregar do arquivo .env.local
+    if (fs.existsSync('.env.local')) {
+      const envContent = fs.readFileSync('.env.local', 'utf8');
+      const envLines = envContent.split('\n');
+      
+      envLines.forEach(line => {
+        if (line.trim() && !line.startsWith('#')) {
+          const [key, ...valueParts] = line.split('=');
+          if (key && valueParts.length > 0) {
+            const value = valueParts.join('=').trim();
+            process.env[key.trim()] = value;
+          }
+        }
+      });
+    }
+
+    // Carregar via dotenv também
+    dotenv.config({ path: '.env.local', override: true });
+    dotenv.config({ override: true });
+
     // Verificar se as variáveis de ambiente estão configuradas
     if (!process.env.WHATSAPP_PHONE_NUMBER_ID || !process.env.WHATSAPP_ACCESS_TOKEN) {
       return res.status(500).json({
@@ -49,13 +82,23 @@ export default async function handler(req, res) {
       });
     }
 
-    const { to, message, type = 'text' } = req.body;
+    const { to, message, type = 'text', caption, messageId } = req.body;
 
-    if (!to || !message) {
-      return res.status(400).json({
-        success: false,
-        error: "Parâmetros 'to' e 'message' são obrigatórios"
-      });
+    // Verificar se é para marcar como lida
+    if (type === 'mark_read') {
+      if (!messageId) {
+        return res.status(400).json({
+          success: false,
+          error: "Parâmetro 'messageId' é obrigatório para marcar como lida"
+        });
+      }
+    } else {
+      if (!to || !message) {
+        return res.status(400).json({
+          success: false,
+          error: "Parâmetros 'to' e 'message' são obrigatórios"
+        });
+      }
     }
 
     const apiUrl = process.env.WHATSAPP_API_URL || 'https://graph.facebook.com/v18.0';
@@ -64,18 +107,31 @@ export default async function handler(req, res) {
 
     // Preparar payload baseado no tipo de mensagem
     let payload = {
-      messaging_product: 'whatsapp',
-      to: to,
-      type: type
+      messaging_product: 'whatsapp'
     };
 
-    if (type === 'text') {
-      payload.text = { body: message };
-    } else if (type === 'template') {
-      payload.template = {
-        name: message,
-        language: { code: 'pt_BR' }
-      };
+    if (type === 'mark_read') {
+      payload.status = 'read';
+      payload.message_id = messageId;
+    } else {
+      payload.to = to;
+      payload.type = type;
+
+      if (type === 'text') {
+        payload.text = { body: message };
+      } else if (type === 'template') {
+        payload.template = {
+          name: message,
+          language: { code: 'pt_BR' }
+        };
+      } else if (['image', 'video', 'document', 'audio'].includes(type)) {
+        payload[type] = {
+          id: message
+        };
+        if (caption && (type === 'image' || type === 'video')) {
+          payload[type].caption = caption;
+        }
+      }
     }
 
     // Enviar mensagem via API do WhatsApp

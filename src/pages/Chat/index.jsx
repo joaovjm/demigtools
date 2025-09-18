@@ -146,7 +146,7 @@ const Chat = () => {
   }, []);
 
   // Simular conexão do webhook
-  useEffect(() => {
+  /*useEffect(() => {
     const timer = setTimeout(() => {
       setConnectionStatus('connecting');
       setTimeout(() => {
@@ -156,7 +156,7 @@ const Chat = () => {
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, []);*/
 
   // Auto scroll para última mensagem
   useEffect(() => {

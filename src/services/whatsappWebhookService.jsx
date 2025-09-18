@@ -22,7 +22,7 @@ class WhatsAppWebhookService {
     try {
       const response = await fetch('/api/whatsapp-config');
       const data = await response.json();
-      
+      console.log(data)
       if (data.success) {
         this.config = data.config;
         this.isConfigured = data.config.isConfigured;
@@ -267,44 +267,41 @@ class WhatsAppWebhookService {
     }
   }
 
-  // Enviar mídia (imagem, documento, etc.)
+  // Enviar mídia (imagem, documento, etc.) via API do backend
   async sendMediaMessage(to, mediaType, mediaId, caption = '') {
     try {
-      const mediaObject = {
-        id: mediaId
-      };
-
-      if (caption && (mediaType === 'image' || mediaType === 'video')) {
-        mediaObject.caption = caption;
+      // Verificar se a configuração foi inicializada
+      if (!this.isConfigured) {
+        await this.initializeConfig();
       }
 
-      const response = await fetch(
-        `${WHATSAPP_API_BASE_URL}/${WHATSAPP_PHONE_NUMBER_ID}/messages`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${WHATSAPP_ACCESS_TOKEN}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            messaging_product: 'whatsapp',
-            to: to,
-            type: mediaType,
-            [mediaType]: mediaObject
-          })
-        }
-      );
+      if (!this.isConfigured) {
+        throw new Error('WhatsApp não configurado');
+      }
+
+      const response = await fetch('/api/send-whatsapp-message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          to: to,
+          message: mediaId,
+          type: mediaType,
+          caption: caption
+        })
+      });
 
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(`Erro na API: ${data.error?.message || 'Erro desconhecido'}`);
+        throw new Error(data.error || 'Erro ao enviar mídia');
       }
 
       return {
         success: true,
-        messageId: data.messages?.[0]?.id,
-        data: data
+        messageId: data.messageId,
+        data: data.data
       };
     } catch (error) {
       console.error('Erro ao enviar mídia:', error);
@@ -354,55 +351,72 @@ class WhatsAppWebhookService {
     }
   }
 
-  // Marcar mensagem como lida
+  // Marcar mensagem como lida via API do backend
   async markAsRead(messageId) {
     try {
-      const response = await fetch(
-        `${WHATSAPP_API_BASE_URL}/${WHATSAPP_PHONE_NUMBER_ID}/messages`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${WHATSAPP_ACCESS_TOKEN}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            messaging_product: 'whatsapp',
-            status: 'read',
-            message_id: messageId
-          })
-        }
-      );
+      // Verificar se a configuração foi inicializada
+      if (!this.isConfigured) {
+        await this.initializeConfig();
+      }
 
-      return response.ok;
+      if (!this.isConfigured) {
+        return false;
+      }
+
+      const response = await fetch('/api/send-whatsapp-message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          messageId: messageId,
+          type: 'mark_read'
+        })
+      });
+
+      const data = await response.json();
+      return data.success || false;
     } catch (error) {
       console.error('Erro ao marcar como lida:', error);
       return false;
     }
   }
 
-  // Verificar saúde da API
+  // Verificar saúde da API via backend com teste real
   async checkApiHealth() {
     try {
-      const response = await fetch(
-        `${WHATSAPP_API_BASE_URL}/${WHATSAPP_PHONE_NUMBER_ID}`,
-        {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${WHATSAPP_ACCESS_TOKEN}`
-          }
-        }
-      );
-      console.log(response)
+      // Verificar se a configuração foi inicializada
+      if (!this.isConfigured) {
+        await this.initializeConfig();
+      }
+
+      if (!this.isConfigured) {
+        return {
+          connected: false,
+          error: 'WhatsApp não configurado - verifique as variáveis de ambiente',
+          timestamp: new Date().toISOString()
+        };
+      }
+
+      // Fazer teste real da conexão com a API do WhatsApp
+      const response = await fetch('/api/test-whatsapp-connection');
+      const data = await response.json();
+      
+      console.log('Teste de conexão WhatsApp:', data);
 
       return {
-        connected: response.ok,
+        connected: data.connected,
         status: response.status,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        details: data.details,
+        error: data.error,
+        message: data.message
       };
     } catch (error) {
+      console.error('Erro ao verificar saúde da API:', error);
       return {
         connected: false,
-        error: error.message,
+        error: `Erro de conexão: ${error.message}`,
         timestamp: new Date().toISOString()
       };
     }
@@ -447,23 +461,34 @@ class WhatsAppWebhookService {
   }
 
   // Validar configuração
-  validateConfiguration() {
+  async validateConfiguration() {
+    // Inicializar configuração se necessário
+    if (!this.isConfigured) {
+      await this.initializeConfig();
+    }
+
     const errors = [];
-    if (!WHATSAPP_PHONE_NUMBER_ID) {
-      errors.push('REACT_APP_WHATSAPP_PHONE_NUMBER_ID não configurado');
+    
+    if (!this.isConfigured) {
+      errors.push('WhatsApp não configurado - verifique as variáveis de ambiente no backend');
     }
 
-    if (!WHATSAPP_ACCESS_TOKEN) {
-      errors.push('REACT_APP_WHATSAPP_ACCESS_TOKEN não configurado');
+    if (!this.config?.phoneNumberId) {
+      errors.push('WHATSAPP_PHONE_NUMBER_ID não configurado no backend');
     }
 
-    if (!WEBHOOK_VERIFY_TOKEN) {
-      errors.push('REACT_APP_WEBHOOK_VERIFY_TOKEN não configurado');
+    if (!this.config?.hasAccessToken) {
+      errors.push('WHATSAPP_ACCESS_TOKEN não configurado no backend');
+    }
+
+    if (!this.config?.hasWebhookToken) {
+      errors.push('WEBHOOK_VERIFY_TOKEN não configurado no backend');
     }
 
     return {
       valid: errors.length === 0,
-      errors: errors
+      errors: errors,
+      isConfigured: this.isConfigured
     };
   }
 }

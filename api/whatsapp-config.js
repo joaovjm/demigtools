@@ -2,6 +2,12 @@
 // Este endpoint retorna apenas as configurações necessárias para o frontend
 // sem expor tokens sensíveis
 
+import dotenv from 'dotenv';
+
+// Carregar variáveis de ambiente para desenvolvimento local
+dotenv.config({ path: '.env.local' });
+dotenv.config();
+
 export const config = {
   api: {
     bodyParser: {
@@ -46,14 +52,17 @@ export default async function handler(req, res) {
     const config = {
       apiUrl: process.env.WHATSAPP_API_URL || 'https://graph.facebook.com/v18.0',
       phoneNumberId: process.env.WHATSAPP_PHONE_NUMBER_ID,
+      pageId: process.env.WHATSAPP_PAGE_ID, // ID da página do WhatsApp
       hasAccessToken: !!process.env.WHATSAPP_ACCESS_TOKEN,
       hasWebhookToken: !!process.env.WEBHOOK_VERIFY_TOKEN,
+      hasPageId: !!process.env.WHATSAPP_PAGE_ID,
       isConfigured: !!(
         process.env.WHATSAPP_PHONE_NUMBER_ID &&
         process.env.WHATSAPP_ACCESS_TOKEN &&
         process.env.WEBHOOK_VERIFY_TOKEN
       )
     };
+    console.log(config)
 
     // Retornar apenas informações necessárias, sem expor tokens
     return res.status(200).json({
