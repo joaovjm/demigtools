@@ -73,7 +73,7 @@ const TableDonor = ({
                 ? dados.map((item) => (
                     <Fragment key={item.receipt_donation_id}>
                       <tr
-                        onClick={() => handleEditDonation(item)}
+                        onDoubleClick={() => handleEditDonation(item)}
                         className="trBody"
                       >
                         <td className="tableBody">
