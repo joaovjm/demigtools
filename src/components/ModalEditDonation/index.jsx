@@ -1,18 +1,22 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./index.css";
 import supabase from "../../helper/superBaseClient";
 import { toast } from "react-toastify";
 import { ICONS } from "../../constants/constants";
 import { getCampains } from "../../helper/getCampains";
 import { getOperators } from "../../helper/getOperators";
+import { UserContext } from "../../context/UserContext";
 
 const ModalEditDonation = ({ donation, setModalEdit }) => {
+  const { operatorData } = useContext(UserContext);
   const [value, setValue] = useState(donation.donation_value);
   const [date, setDate] = useState(donation.donation_day_to_receive);
   const [observation, setObservation] = useState(donation.donation_description);
   const [campaign, setCampaign] = useState(donation.campaign_id);
   const [campaigns, setCampaigns] = useState([]);
   const [operator, setOperator] = useState(donation.operator_code_id);
+  const [impresso, setImpresso] = useState(donation.donation_print === "Sim" ? true : false);
+  const [recebido, setRecebido] = useState(donation.donation_received === "Sim" ? true : false);
 
   const [operators, setOperators] = useState([]);
   useEffect(() => {
@@ -25,7 +29,10 @@ const ModalEditDonation = ({ donation, setModalEdit }) => {
 
   useEffect(() => {
     const fetchOperators = async () => {
-      const response = await getOperators({active: true, item: "operator_code_id, operator_name"});
+      const response = await getOperators({
+        active: true,
+        item: "operator_code_id, operator_name",
+      });
       setOperators(response);
     };
     fetchOperators();
@@ -40,6 +47,7 @@ const ModalEditDonation = ({ donation, setModalEdit }) => {
       toast.warning("Valor e data devem ser preenchidos!");
       return;
     }
+
     try {
       const { data, error } = await supabase
         .from("donation")
@@ -49,6 +57,8 @@ const ModalEditDonation = ({ donation, setModalEdit }) => {
             donation_day_to_receive: date,
             donation_description: observation,
             operator_code_id: operator,
+            donation_print: impresso ? "Sim" : "Não",
+            donation_received: recebido ? "Sim" : "Não",
           },
         ])
         .eq("receipt_donation_id", donation.receipt_donation_id)
@@ -67,7 +77,6 @@ const ModalEditDonation = ({ donation, setModalEdit }) => {
   };
 
   const handleDelete = async () => {
-    ;
     if (window.confirm("Deseja deletar a doação?")) {
       const { error } = await supabase
         .from("donation")
@@ -75,10 +84,9 @@ const ModalEditDonation = ({ donation, setModalEdit }) => {
         .eq("receipt_donation_id", donation.receipt_donation_id);
       if (error) throw error;
       if (!error) {
-        toast.success("Doação deletada com sucesso!")
-        setModalEdit(false)
-      } 
-      
+        toast.success("Doação deletada com sucesso!");
+        setModalEdit(false);
+      }
     }
   };
 
@@ -123,7 +131,7 @@ const ModalEditDonation = ({ donation, setModalEdit }) => {
                 </option>
                 {operators.map((op) => (
                   <option key={op.operator_code_id} value={op.operator_code_id}>
-                    {op.operator_code_id} - {op.operator_name}
+                    {op.operator_name}
                   </option>
                 ))}
               </select>
@@ -133,9 +141,10 @@ const ModalEditDonation = ({ donation, setModalEdit }) => {
               <select
                 value={campaign}
                 onChange={(e) => setCampaign(e.target.value)}
-                
               >
-                <option value="" disabled>Selecione uma campanha</option>
+                <option value="" disabled>
+                  Selecione uma campanha
+                </option>
                 {campaigns?.map((campaign) => (
                   <option key={campaign.id} value={campaign.campain_name}>
                     {campaign.campain_name}
@@ -151,12 +160,49 @@ const ModalEditDonation = ({ donation, setModalEdit }) => {
                 onChange={(e) => setObservation(e.target.value)}
               />
             </div>
+            {operatorData.operator_type === "Admin" && (
+              <div className="checkboxs">
+                <div>
+                  <label className="label_checkbox">
+                    {" "}
+                    Impresso:{" "}
+                    <input
+                      className="checkbox"
+                      type="checkbox"
+                      checked={impresso}
+                      onChange={(e) => setImpresso(e.target.checked)}
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label className="label_checkbox">
+                    {" "}
+                    Recebido:{" "}
+                    <input
+                      className="checkbox"
+                      checked={recebido}
+                      type="checkbox"
+                      onChange={(e) => setRecebido(e.target.checked)}
+                    />
+                  </label>
+                </div>
+              </div>
+            )}
           </div>
+
           <div className="form-modal-editDonation-footer">
-            <button onClick={handleConfirm} className="btn-confirm-editDonoation">
+            <button
+              onClick={handleConfirm}
+              className="btn-confirm-editDonoation"
+            >
               Confirmar
             </button>
-            <button onClick={handleDelete} className="btn-confirm-deleteDonoation">{ICONS.TRASH}</button>
+            <button
+              onClick={handleDelete}
+              className="btn-confirm-deleteDonoation"
+            >
+              {ICONS.TRASH}
+            </button>
           </div>
         </div>
       </div>

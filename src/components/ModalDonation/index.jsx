@@ -23,7 +23,14 @@ const ModalDonation = ({
   const [descricao, setDescricao] = useState("");
   const [impresso, setImpresso] = useState("");
   const [recebido, setRecebido] = useState("");
-  const [mesref, setMesref] = useState(DataNow("noformated"));
+  const [mesref, setMesref] = useState(() => {
+    if (tipo === "Mensal") {
+      return DataNow("noformated");
+    } else {
+      return "";
+    }
+  });
+ 
   const [operator, setOperator] = useState(operatorData.operator_code_id);
   const [campain, setCampain] = useState([]);
   const [campainSelected, setCampainSelect] = useState("");
@@ -105,13 +112,17 @@ const ModalDonation = ({
     const now = DataNow("noformated");
 
     setData_receber(value);
+    
     if (tipo === "Mensal") {
       const monthYear = `${DataSelect(value, "year")}-${DataSelect(
         value,
         "month"
       )}-01`;
       setMesref(monthYear);
+      
     }
+
+    console.log(mesref);
   };
 
   return (
@@ -229,6 +240,7 @@ const ModalDonation = ({
             />
           </div>
 
+          {operatorData.operator_type === "Admin" && (
           <div className="checkboxs">
             <div>
               <label className="label_checkbox">
@@ -252,9 +264,10 @@ const ModalDonation = ({
                   type="checkbox"
                   onChange={(e) => setRecebido(e.target.checked)}
                 />
-              </label>
+                </label>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Botão */}
           <button type="submit" className="modal-form-button">

@@ -45,6 +45,7 @@ const TableDonor = ({
 
     setModalEdit(true);
     setDonation(item);
+    console.log(item)
   };
 
   return (
