@@ -16,7 +16,7 @@ import { toast } from "react-toastify";
 
 const index = () => {
   const [nome, setNome] = useState("");
-  const [tipo, setTipo] = useState("");
+  const [tipo, setTipo] = useState("Avulso");
   const [cpf, setCpf] = useState("");
   const [email, setEmail] = useState("");
   const [endereco, setEndereco] = useState("");
@@ -29,6 +29,7 @@ const index = () => {
   const [mensalidade, setMensalidade] = useState(null);
   const [observacao, setObservacao] = useState("");
   const [referencia, setReferencia] = useState("");
+  const [empty, setEmpty] = useState(false);
 
   const navigate = useNavigate();
 
@@ -42,6 +43,11 @@ const index = () => {
       tipo === "Avulso" ||
       tipo === "Lista"
     ) {
+      if ([nome, endereco, cidade, bairro, telefone1].some((v) => v === "")) {
+        setEmpty(true);
+        toast.warning("Preencha todos os campos obrigatórios");
+        return;
+      }
       try {
         const data = await insertDonor(
           nome,
@@ -109,7 +115,7 @@ const index = () => {
 
       {/* Formulario com informações do doador */}
       <form className="formDonor">
-        <div className="input-field">
+        <div className={`input-field ${empty ? "empty" : ""}`}>
           <label className="label">Nome</label>
           <input
             type="text"
@@ -147,7 +153,7 @@ const index = () => {
           />
         </div>
 
-        <div className="input-field">
+        <div className={`input-field ${empty ? "empty" : ""}`}>
           <label className="label">Endereço</label>
           <input
             type="text"
@@ -156,7 +162,7 @@ const index = () => {
           />
         </div>
 
-        <div className="input-field">
+        <div className={`input-field ${empty ? "empty" : ""}`}>
           <label className="label">Cidade</label>
           <input
             type="text"
@@ -165,7 +171,7 @@ const index = () => {
           />
         </div>
 
-        <div className="input-field">
+        <div className={`input-field ${empty ? "empty" : ""}`}>
           <label className="label">bairro</label>
           <input
             type="text"
@@ -174,7 +180,7 @@ const index = () => {
           />
         </div>
 
-        <div className="input-field">
+        <div className={`input-field ${empty ? "empty" : ""}`}>
           <label className="label">Telefone 1</label>
           <input
             type="text"

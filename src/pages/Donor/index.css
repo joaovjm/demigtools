@@ -82,7 +82,6 @@
 .formDonor{
     display: flex;
     flex-direction: column;
-    border: none;
     border-radius: 6px;
     padding: 15px 20px;
     gap: 2px;
@@ -102,7 +101,6 @@
         background-color: #363A3D;
         color: #FAF5E9;
         font-size: 12px;
-        border: none;
         border-radius: 0px 6px 6px 0px;
         text-align: center;
         word-wrap: break-word;
