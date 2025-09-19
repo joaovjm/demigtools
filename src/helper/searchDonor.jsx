@@ -5,13 +5,13 @@ const searchDonor = async (params, donor_type) => {
     let query;
 
     if (params) {
-      if (/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(params)) {
+      if (/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(params) || /^\d{11}$/.test(params)) {
         query = supabase
           .from("donor")
           .select(
             `donor_id, donor_name, donor_address, donor_tel_1, donor_neighborhood, donor_type, donor_cpf!inner(donor_cpf)`
           )
-          .eq("donor_cpf.donor_cpf", params);
+          .eq("donor_cpf.donor_cpf", params.replace(/\D/g, ""));
       } else if (/^\d{1,9}$/.test(params)) {
         query = supabase
           .from("donor")

@@ -200,7 +200,7 @@ const Donor = () => {
         {operatorData?.operator_type === "Admin" && (
           <FormDonorInput
             label={FORM_LABELS.CPF}
-            value={donorData.cpf}
+            value={donorData.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")}
             onChange={(e) => handleInputChange("cpf", e.target.value)}
             readOnly={uiState.edit}
           />
