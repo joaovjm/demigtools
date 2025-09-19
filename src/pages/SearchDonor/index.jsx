@@ -38,7 +38,7 @@ const SearchDonor = () => {
         selectedValue={selectedValue}
         loading={loading}
         onSearchChange={(e) => setSearchTerm(e.target.value)}
-        onValueChange={(e) => setSelectValue(e.targer.value)}
+        setSelectedValue={setSelectValue}
         onSearchSubmit={handleSearchDonor}
       />
       <div className="Carddiv">

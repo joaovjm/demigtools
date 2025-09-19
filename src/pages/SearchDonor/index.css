@@ -11,7 +11,7 @@
 .formsearch{
     display: grid;
     grid-template-columns: auto auto;
-    max-width: 720px;
+    width: 720px;
     background-color: #1F1D1D;
     border: none;
     border-radius: 6px;

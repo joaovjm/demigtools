@@ -1,7 +1,7 @@
 import { PiMagnifyingGlassBold } from "react-icons/pi";
 import  Loader  from "../../components/Loader"
 
-export const SearchForm = ({searchTerm, selectedValue, loading, onSearchChange, onValueChange, onSearchSubmit}) => (
+export const SearchForm = ({searchTerm, selectedValue, loading, onSearchChange, setSelectedValue, onSearchSubmit}) => (
   <form onSubmit={onSearchSubmit} className="formsearch">
     <div className="input-field">
       <label >Buscar Doador</label>
@@ -16,7 +16,7 @@ export const SearchForm = ({searchTerm, selectedValue, loading, onSearchChange, 
       <label htmlFor="dropdown" >
         Tipo
       </label>
-      <select id="dropdown" value={selectedValue} onChange={onValueChange}>
+      <select id="dropdown" value={selectedValue} onChange={(e) => setSelectedValue(e.target.value)}>
         <option value="todos">Todos</option>
         <option value="avulso">Avulso</option>
         <option value="lista">Lista</option>
