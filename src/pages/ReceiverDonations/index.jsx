@@ -55,7 +55,7 @@ const ReceiverDonations = () => {
         )
         .eq("donation_deposit_receipt_send", "Não")
         .eq("collector_code_id", 22)
-        .eq("donation_received", "Sim")
+        .eq("donation_received", "Sim");
       if (error) throw error;
       if (!error) setDeposit(data);
     };
@@ -145,15 +145,23 @@ const ReceiverDonations = () => {
       </div>
 
       <form onSubmit={handleSubmit} className="receiver-donations-form">
-        <FormSelect
-          label="Coletador"
-          value={formData.collector}
-          onChange={(e) => handleInputChange("collector", e.target.value)}
-          disable={modalOpen}
-          options={collectors}
-          disableOption="Selecione o coletador..."
-          icon={ICONS.MOTORCYCLE}
-        />
+        <div className="input-field">
+          <label>{ICONS.MOTORCYCLE}Coletador</label>
+          <div style={{ display: "flex", alignItems: "center"}}>
+            <select value={formData.collector} onChange={(e) => handleInputChange("collector", e.target.value)}>
+              <option value="">Selecione o coletador</option>
+              {collectors.map((collector) => (
+                <option
+                  key={collector.collector_code_id}
+                  value={collector.collector_code_id}
+                >
+                  {collector.collector_name}
+                </option>
+              ))}
+            </select>
+            <input type="text" style={{ width: "50px" }} value={formData.collector} onChange={(e) => handleInputChange("collector", e.target.value)}/>
+          </div>
+        </div>
 
         <FormInput
           label="Data"
@@ -200,9 +208,11 @@ const ReceiverDonations = () => {
           <label>Total Fichas: {tableReceipt.length}</label>
           <label>
             Valor Total:{" "}
-            {tableReceipt.reduce((acc, item) => {
-              return (acc += item.value);
-            }, 0).toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}
+            {tableReceipt
+              .reduce((acc, item) => {
+                return (acc += item.value);
+              }, 0)
+              .toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
           </label>
         </div>
       )}
@@ -223,7 +233,12 @@ const ReceiverDonations = () => {
             <tr key={item.search}>
               <td>{item.search}</td>
               <td>{item.name}</td>
-              <td>{item.value.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}</td>
+              <td>
+                {item.value.toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                })}
+              </td>
             </tr>
           ))}
         </tbody>
