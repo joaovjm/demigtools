@@ -20,6 +20,7 @@ const getPackage = async ({ type, startDate, endDate }) => {
       acc[curr.donor_id] = (acc[curr.donor_id] || 0) + 1;
       return acc;
     }, {});
+    
     const duplicate = Object.keys(count).filter((f) => count[f] > 1);
     const filteredDp = duplicate.map((dp) => {
       const group = data.filter((item) => item.donor_id === Number(dp));
@@ -28,10 +29,13 @@ const getPackage = async ({ type, startDate, endDate }) => {
       );      
       return selected;
     });
+    
 
     const unit = data.filter((dt) => !duplicate.includes(String(dt.donor_id)));
+    
 
     const filteredPackage = [...unit, ...filteredDp];
+    console.log(filteredPackage)
 
     const { data: compareData, error: errorData } = await supabase
       .from("donation_with_donor_operator")
@@ -44,7 +48,10 @@ const getPackage = async ({ type, startDate, endDate }) => {
           createPackage.push(id);
         }
       });
+    } else {
+      return null;
     }
+    console.log(compareData)
   }
   return createPackage;
 };

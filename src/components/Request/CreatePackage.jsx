@@ -69,6 +69,10 @@ const CreatePackage = ({
           endDate: requestPackage.endDate,
         },
       ]);
+    } else {
+      toast.error("Não foi possível criar o pacote, altere a data final");
+      setLoading(false);
+      return;
     }
     setLoading(false);
   };
