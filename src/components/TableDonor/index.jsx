@@ -84,13 +84,16 @@ const TableDonor = ({
                           {item.operator?.operator_name}
                         </td>
                         <td className="tableBody">
-                          {item.donation_value.toLocaleString("pt-BR", {
+                          {item?.donation_value?.toLocaleString("pt-BR", {
                             style: "currency",
                             currency: "BRL",
                           })}
                         </td>
                         <td className="tableBody">
-                          {item?.donation_extra?.toLocaleString("pt-BR", {
+                          {item?.donation_extra ? item?.donation_extra.toLocaleString("pt-BR", {
+                            style: "currency",
+                            currency: "BRL",
+                          }) : 0.00.toLocaleString("pt-BR", {
                             style: "currency",
                             currency: "BRL",
                           })}
@@ -121,7 +124,7 @@ const TableDonor = ({
                             ? `${new Date(
                                 item?.donation_monthref
                               ).toLocaleDateString("pt-BR", {month: "numeric", year: "numeric", timeZone: "UTC"})}`
-                            : ""}
+                            : "----/--"}
                         </td>
                         <td className="tableBody">
                           {item.collector_code_id} -{" "}
