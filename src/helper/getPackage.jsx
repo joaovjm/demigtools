@@ -1,6 +1,8 @@
 import supabase from "./superBaseClient";
 
+let contador = 0;
 const getPackage = async ({ type, startDate, endDate }) => {
+  console.log({startDate, endDate})
   let createPackage = [];
   const { data, error } = await supabase
     .from("donation_with_donor_operator")
@@ -13,6 +15,8 @@ const getPackage = async ({ type, startDate, endDate }) => {
     .gte("donation_day_received", startDate)
     .lte("donation_day_received", endDate)
     .order("donation_value", { ascending: false });
+
+    console.log(data)
 
   if (error) console.log(error.message);
   if (data.length > 0) {
@@ -27,20 +31,22 @@ const getPackage = async ({ type, startDate, endDate }) => {
       const selected = group.reduce((bigger, now) =>
         now.donation_value > bigger.donation_value ? now : bigger
       );      
+      
       return selected;
     });
     
 
     const unit = data.filter((dt) => !duplicate.includes(String(dt.donor_id)));
+
     
 
     const filteredPackage = [...unit, ...filteredDp];
-    console.log(filteredPackage)
+
 
     const { data: compareData, error: errorData } = await supabase
       .from("donation_with_donor_operator")
       .select()
-      .gte("donation_day_received", endDate);
+      .gt("donation_day_received", endDate);
     if (errorData) console.log(errorData.message);
     if (compareData.length > 0) {
       filteredPackage.forEach((id) => {
@@ -49,9 +55,9 @@ const getPackage = async ({ type, startDate, endDate }) => {
         }
       });
     } else {
-      return null;
+      createPackage.push(...filteredPackage);
     }
-    console.log(compareData)
+ 
   }
   return createPackage;
 };
