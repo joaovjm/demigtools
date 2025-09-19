@@ -19,7 +19,7 @@ const ModalDonation = ({
   const [comissao, setComissao] = useState("");
   const [valor, setValor] = useState("");
   const [data_receber, setData_receber] = useState(DataNow("noformated"));
-  const {operatorData} = useContext(UserContext);
+  const { operatorData } = useContext(UserContext);
   const [descricao, setDescricao] = useState("");
   const [impresso, setImpresso] = useState("");
   const [recebido, setRecebido] = useState("");
@@ -37,8 +37,11 @@ const ModalDonation = ({
   };
 
   const fetchOperators = async () => {
-    const response = await getOperators({active: "true", item: "operator_code_id, operator_name"});
-    
+    const response = await getOperators({
+      active: "true",
+      item: "operator_code_id, operator_name",
+    });
+
     setOperators(response);
   };
 
@@ -46,8 +49,6 @@ const ModalDonation = ({
     fetchCampains();
     fetchOperators();
   }, []);
-
-
 
   useEffect(() => {
     if (mensalidade && comissao == "") {
@@ -59,9 +60,9 @@ const ModalDonation = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if(campainSelected === "") {
-      toast.warning("Selecione a campanha")
+
+    if (campainSelected === "") {
+      toast.warning("Selecione a campanha");
       return;
     }
 
@@ -102,19 +103,15 @@ const ModalDonation = ({
   const handleDate = (e) => {
     var value = e.target.value;
     const now = DataNow("noformated");
-    //if (now > value) {
-    //  if(operatorData.operator_type !== "Admin"){
-    //    value = now;
-    //  }
-      
-    //}
-    setData_receber(value);
 
-    const monthYear = `${DataSelect(value, "year")}-${DataSelect(
-      value,
-      "month"
-    )}-01`;
-    setMesref(value);
+    setData_receber(value);
+    if (tipo === "Mensal") {
+      const monthYear = `${DataSelect(value, "year")}-${DataSelect(
+        value,
+        "month"
+      )}-01`;
+      setMesref(monthYear);
+    }
   };
 
   return (
@@ -169,15 +166,21 @@ const ModalDonation = ({
           </div>
 
           {/* Mês Referente */}
+          {tipo === "Mensal" && (
           <div className="input-field">
             <label>Mês Referente</label>
             <input
               type="text"
               placeholder="Mês"
-              value={new Date(mesref).toLocaleDateString("pt-BR", {timeZone: "UTC", month: "numeric", year: "numeric"})}
-              onChange={(e) => setMesref(e.target.value)}
-            />
-          </div>
+              value={new Date(mesref).toLocaleDateString("pt-BR", {
+                timeZone: "UTC",
+                month: "numeric",
+                year: "numeric",
+              })}
+                onChange={(e) => setMesref(e.target.value)}
+              />
+            </div>
+          )}
 
           <div className="input-field">
             <label>Operador</label>
@@ -190,7 +193,7 @@ const ModalDonation = ({
               </option>
               {operators.map((op) => (
                 <option key={op.operator_code_id} value={op.operator_code_id}>
-                  {op.operator_code_id} - {op.operator_name}
+                  {op.operator_name}
                 </option>
               ))}
             </select>
