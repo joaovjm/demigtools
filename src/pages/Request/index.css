@@ -187,7 +187,7 @@
   background-color: #faa01c;
   padding: 1px;
   border-radius: 6px;
-  max-height: 470px;
+  height: 430px;
   overflow-y: auto;
   font-size: 12px;
   label {
@@ -224,6 +224,7 @@
 }
 
 .request-front-left-bottom-3-table-body {
+  min-height: 88%;
   display: flex;
   flex-direction: column;
   gap: 8px;
