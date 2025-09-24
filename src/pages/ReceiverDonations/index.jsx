@@ -77,7 +77,7 @@ const ReceiverDonations = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!formData.collector || !formData.date || !formData.search) {
       console.log("ATTENTION icon:", ICONS.ATTENTION);
 
@@ -147,8 +147,11 @@ const ReceiverDonations = () => {
       <form onSubmit={handleSubmit} className="receiver-donations-form">
         <div className="input-field">
           <label>{ICONS.MOTORCYCLE}Coletador</label>
-          <div style={{ display: "flex", alignItems: "center"}}>
-            <select value={formData.collector} onChange={(e) => handleInputChange("collector", e.target.value)}>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <select
+              value={formData.collector}
+              onChange={(e) => handleInputChange("collector", e.target.value)}
+            >
               <option value="">Selecione o coletador</option>
               {collectors.map((collector) => (
                 <option
@@ -159,7 +162,12 @@ const ReceiverDonations = () => {
                 </option>
               ))}
             </select>
-            <input type="text" style={{ width: "50px" }} value={formData.collector} onChange={(e) => handleInputChange("collector", e.target.value)}/>
+            <input
+              type="text"
+              style={{ width: "50px" }}
+              value={formData.collector}
+              onChange={(e) => handleInputChange("collector", e.target.value)}
+            />
           </div>
         </div>
 
@@ -174,16 +182,16 @@ const ReceiverDonations = () => {
           classinput="form-input"
         />
 
-        <FormInput
-          label="Busca"
-          className="label"
-          type="text"
-          value={formData.search}
-          onChange={(e) => handleInputChange("search", e.target.value)}
-          readOnly={modalOpen}
-          icon={ICONS.SEARCH}
-          classinput="form-input"
-        />
+        <div className="input-field">
+          <label>{ICONS.SEARCH} Buscar</label>
+          <input
+            type="text"
+            value={formData.search}
+            onChange={(e) => handleInputChange("search", e.target.value)}
+            readOnly={modalOpen}
+            onKeyDown={(e) => {if(e.key === "Enter") handleSubmit(e)}}
+          />
+        </div>
       </form>
       {/*MENSAGEM*/}
 
