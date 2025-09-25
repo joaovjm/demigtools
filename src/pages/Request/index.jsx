@@ -14,6 +14,7 @@ import insertRequest from "../../helper/insertRequest";
 import { toast } from "react-toastify";
 import PackagesRequest from "../../components/Request/PackagesRequest";
 import { DataNow } from "../../components/DataTime";
+import ExportToExcel from "../../components/XLSX";
 
 const Request = () => {
   const [dataForm, setDataForm] = useState(false);
@@ -24,14 +25,15 @@ const Request = () => {
   const [perOperator, setPerOperator] = useState({});
   const [unassigned, setUnassigned] = useState([]);
   const [operatorID, setOperatorID] = useState();
-  const [operatorIDState, setOperatorIDState] = useState()
+  const [operatorIDState, setOperatorIDState] = useState();
   const [operatorName, setOperatorName] = useState({});
   const [selected, setSelected] = useState(null);
   const [continueClick, setContinueClick] = useState(false);
-  const [cancelClick, setCancelClick] = useState(false)
+  const [cancelClick, setCancelClick] = useState(false);
   const [createPackageState, setCreatePackageState] = useState([]);
   const [selection, setSelection] = useState([]);
   const [endDateRequest, setEndDateRequest] = useState("");
+  const [buttonTest, setButtonTest] = useState(false);
 
   useEffect(() => {
     distributePackageService(
@@ -40,18 +42,16 @@ const Request = () => {
       setUnassigned,
       setOperatorName
     );
-
   }, [createPackage]);
   useEffect(() => {
     if (continueClick) {
       setCreatePackageState(createPackage);
     }
-
   }, [continueClick]);
 
   useEffect(() => {
-    fetchOperatorID(setOperatorID, setOperatorIDState)
-  }, [cancelClick])
+    fetchOperatorID(setOperatorID, setOperatorIDState);
+  }, [cancelClick]);
 
   const handleCancel = () => {
     setDataForm(false);
@@ -65,23 +65,23 @@ const Request = () => {
     setOperatorName({});
     setSelected(null);
     setContinueClick(false);
-    setCancelClick(c => !c)
+    setCancelClick((c) => !c);
     setCreatePackageState([]);
-    setOperatorIDState([])
+    setOperatorIDState([]);
   };
 
   const handleReset = () => {
     setCreatePackage(createPackageState);
-    setOperatorID(operatorIDState)
+    setOperatorID(operatorIDState);
   };
 
   const handleConclude = async () => {
     if (endDateRequest === "") {
-      toast.warning("Preencha a data final da requisição!")
+      toast.warning("Preencha a data final da requisição!");
       return;
     }
     if (endDateRequest < DataNow("noformated")) {
-      toast.warning("A data final não pode ser menor que a data atual!")
+      toast.warning("A data final não pode ser menor que a data atual!");
       return;
     }
     const updatePackage = await addEndDataInCreatePackage(
@@ -91,9 +91,9 @@ const Request = () => {
     );
     try {
       await toast.promise(insertRequest(updatePackage), {
-        loading: 'Criando o pacote da requisição...',
-        success: 'Pacote criado com sucesso!',
-        error: 'Não fio possível criar o pacote! Contacte o administrador!'
+        loading: "Criando o pacote da requisição...",
+        success: "Pacote criado com sucesso!",
+        error: "Não fio possível criar o pacote! Contacte o administrador!",
       });
 
       setDataForm(false);
@@ -107,7 +107,7 @@ const Request = () => {
       setOperatorName({});
       setSelected(null);
       setContinueClick(false);
-      setCancelClick(false)
+      setCancelClick(false);
       setCreatePackageState([]);
       setOperatorIDState([]);
       setEndDateRequest("");
@@ -116,7 +116,6 @@ const Request = () => {
     }
   };
 
-  
   return (
     <div className="request-main">
       <div className="request-front">
@@ -130,10 +129,8 @@ const Request = () => {
               date={date}
             />
           )}
-          
-          {!dataForm && !filterForm && !requestForm && (
-            <PackagesRequest />
-          )}
+
+          {!dataForm && !filterForm && !requestForm && <PackagesRequest />}
 
           {dataForm ? (
             <DateSelected
@@ -159,6 +156,8 @@ const Request = () => {
                 setCreatePackage={setCreatePackage}
                 operatorID={operatorID}
                 selection={selection}
+                buttonTest={buttonTest}
+                setButtonTest={setButtonTest}
               />
             )
           )}
@@ -207,12 +206,19 @@ const Request = () => {
               >
                 Resetar
               </button>
-              <button
-                onClick={handleConclude}
-                className="request-front-right-bottom-conclude"
-              >
-                Concluir
-              </button>
+              {buttonTest ? (
+                <ExportToExcel
+                  jsonData={createPackage}
+                  fileName="createPackage"
+                />
+              ) : (
+                <button
+                  onClick={handleConclude}
+                  className="request-front-right-bottom-conclude"
+                >
+                  Concluir
+                </button>
+              )}
             </div>
           </div>
         )}

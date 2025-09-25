@@ -9,7 +9,6 @@ const getPackage = async ({ type, startDate, endDate }) => {
     )
     .eq("donor_type", type)
     .eq("donation_received", "Sim")
-    .neq("operator_code_id", 521)
     .gte("donation_day_received", startDate)
     .lte("donation_day_received", endDate)
     .order("donation_value", { ascending: false });
