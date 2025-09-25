@@ -19,6 +19,7 @@
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "extenso": "^2.1.0",
+    "file-saver": "^2.0.5",
     "node-fetch": "^3.3.2",
     "nodemailer": "^7.0.5",
     "numeral": "^2.0.6",
