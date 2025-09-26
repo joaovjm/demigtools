@@ -32,30 +32,77 @@ export default async function handler(req, res) {
   if (req.method === "POST") {
     try {
       console.log("📩 Webhook body:", JSON.stringify(req.body, null, 2));
+      const data = req.body;
 
-      const entry = req.body.entry?.[0];
-      const changes = entry?.changes?.[0];
-      const value = changes?.value;
-      const msg = value?.messages?.[0];
+      const message = data.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
+      const contact = data.entry?.[0]?.changes?.[0]?.value?.contacts?.[0];
 
-      if (msg) {
-        const message = {
-          from: msg.from,
-          to: value.metadata?.display_phone_number,
-          timestamp: new Date(Number(msg.timestamp) * 1000),
-          type: msg.type,
-          text: msg.text?.body || null,
-        };
-
-        console.log("✅ Mensagem recebida:", message);
-
-        const { error } = await supabase.from("messages").insert([message]);
-        if (error) {
-          console.error("❌ Erro ao salvar no Supabase:", error);
-        }
-      } else {
-        console.log("⚠️ Nenhuma mensagem encontrada no payload");
+      if (!message || !contact) {
+        return res.status(200).send("Nenhuma mensagem encontrada");
       }
+
+      let { data: existingContact } = await supabase
+        .from("contacts")
+        .select("contact_id")
+        .eq("phone_number", contact.wa_id)
+        .single();
+
+      let contactId;
+
+      if (existingContact) {
+        contactId = existingContact.contact_id;
+      } else {
+        const { data: newContact, error: insertContactError } = await supabase
+          .from("contacts")
+          .insert({
+            phone_number: contact.wa_id,
+            name: contact.profile?.name || null,
+          })
+          .select()
+          .single();
+        if (insertContactError) throw insertContactError;
+        contactId = newContact.id;
+      }
+
+      let { data: existingConv } = await supabase
+        .from("conversations")
+        .select("conversation_id")
+        .eq("type", "individual")
+        .eq("title", contact.profile?.name || contact.wa_id)
+        .single();
+
+      let conversationId;
+      if (existingConv) {
+        conversationId = existingConv.conversation_id;
+      } else {
+        const { data: newConv, error: insertConvError } = await supabase
+          .from("conversations")
+          .insert({
+            type: "individual",
+            title: contact.profile?.name || contact.wa_id,
+          })
+          .select()
+          .single();
+        if (insertConvError) throw insertConvError;
+        conversationId = newConv.conversation_id;
+      }
+
+      // 🔹 Inserir mensagem
+      const { data: newMessage, error: insertMsgError } = await supabase
+        .from("messages")
+        .insert({
+          conversation_id: conversationId,
+          from_contact: contactId,
+          body: message.text?.body || null,
+          message_type: message.type,
+          media_url: message.image?.id
+            ? `https://graph.facebook.com/v18.0/${message.image.id}`
+            : null,
+          status: "received",
+        })
+        .select()
+        .single();
+      if (insertMsgError) throw insertMsgError;
 
       return res.status(200).send("EVENT_RECEIVED");
     } catch (err) {
