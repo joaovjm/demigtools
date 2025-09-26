@@ -15,7 +15,6 @@ export const distributePackageService = async (
   const opFilter = response
     .filter((op) => op.operator_type === "Operador" || op.operator_type === "Operador Casa")
     .map((op) => op.operator_code_id);
-    console.log(opFilter)
 
   const opName = response.reduce((acc, op) => {
     if (
@@ -38,7 +37,6 @@ export const distributePackageService = async (
       newPerOperator[donation.operator_code_id].push(donation);
     } else {
       unassigned.push(donation);
-      console.log(unassigned)
     }
   });
   setPerOperator(newPerOperator);

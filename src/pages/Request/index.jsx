@@ -68,6 +68,7 @@ const Request = () => {
     setCancelClick((c) => !c);
     setCreatePackageState([]);
     setOperatorIDState([]);
+    setButtonTest(false);
   };
 
   const handleReset = () => {
@@ -209,7 +210,7 @@ const Request = () => {
               {buttonTest ? (
                 <ExportToExcel
                   jsonData={createPackage}
-                  fileName="createPackage"
+                  fileName={createPackage[0].request_name}
                 />
               ) : (
                 <button

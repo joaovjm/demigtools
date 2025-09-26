@@ -41,7 +41,8 @@ export const DONOR_TYPES = {
   CASUAL: "Avulso",
   MONTHLY: "Mensal",
   LIST: "Lista",
-  EXCLUDE: "Excluso"
+  EXCLUDE: "Excluso",
+  OTHERS: "Outros"
 }
 
 export const FORM_LABELS = {
