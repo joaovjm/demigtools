@@ -48,10 +48,10 @@ export default async function handler(req, res) {
 
         console.log("✅ Mensagem recebida:", message);
 
-        const { error } = await supabase.from("messages").insert([message]);
+        /*const { error } = await supabase.from("messages").insert([message]);
         if (error) {
           console.error("❌ Erro ao salvar no Supabase:", error);
-        }
+        }*/
       } else {
         console.log("⚠️ Nenhuma mensagem encontrada no payload");
       }
