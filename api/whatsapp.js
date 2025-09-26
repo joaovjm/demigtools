@@ -96,7 +96,7 @@ export default async function handler(req, res) {
           body: message.text?.body || null,
           message_type: message.type,
           media_url: message.image?.id
-            ? `https://graph.facebook.com/v18.0/${message.image.id}`
+            ? `https://graph.facebook.com/v23.0/${message.image.id}`
             : null,
           status: "received",
         })
