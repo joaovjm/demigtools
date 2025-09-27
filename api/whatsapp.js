@@ -1,7 +1,7 @@
 // pages/api/whatsapp.js
 import dotenv from "dotenv";
-import supabase from "../src/helper/superBaseClient";
-//import supabase from "../src/helper/superBaseClient.js";
+//import supabase from "../src/helper/superBaseClient";
+import supabase from "../src/helper/supaBaseClient.js";
 
 dotenv.config();
 
