@@ -13,6 +13,7 @@ export const insertDonation = async (
   descricao,
   mesref,
   campain,
+  collector
 ) => {
   let print = "";
   let received = "";
@@ -43,6 +44,7 @@ export const insertDonation = async (
         donation_received: received,
         donation_monthref: mesref ? mesref : null,
         donation_campain: campain ? campain : null,
+        collector_code_id: collector ? collector : null,
       },
     ]).select();
     

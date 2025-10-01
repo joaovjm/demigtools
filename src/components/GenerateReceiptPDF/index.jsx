@@ -150,10 +150,10 @@ const GenerateReceiptPDF = ({ cards, receiptConfig }) => {
                               columns: [
                                 {
                                   text: `U.COL: ${data.ucol}${` | R.COL: ${
-                                    data.collector_code_id
-                                  } - ${data.collector.collector_name.toUpperCase()}`} | OP: ${
+                                    data?.collector_code_id
+                                  } - ${data?.collector?.collector_name.toUpperCase()}`} | OP: ${
                                     data.operator_code_id
-                                  } - ${data.operator.operator_name.toUpperCase()} | U: ${
+                                  } - ${data?.operator?.operator_name.toUpperCase()} | U: ${
                                     data.dataUltima
                                   }`,
                                   style: "label",
@@ -176,20 +176,20 @@ const GenerateReceiptPDF = ({ cards, receiptConfig }) => {
                                 },
                               ],
                             },
-                            data.donor.donor_observation.donor_observation && {
+                            data?.donor?.donor_observation?.donor_observation && {
                               columns: [
                                 {
-                                  text: `OBS: ${data.donor.donor_observation.donor_observation?.toUpperCase()}`,
+                                  text: `OBS: ${data?.donor?.donor_observation?.donor_observation?.toUpperCase()}`,
                                   style: "label",
                                   width: 250,
                                   noWrap: false,
                                 },
                               ],
                             },
-                            data.donor.donor_reference.donor_reference && {
+                            data?.donor?.donor_reference?.donor_reference && {
                               columns: [
                                 {
-                                  text: `Ref: ${data.donor.donor_reference.donor_reference?.toUpperCase()}`,
+                                  text: `Ref: ${data?.donor?.donor_reference?.donor_reference?.toUpperCase()}`,
                                   style: "label",
                                   margin: [0, 4, 0, 2],
                                   width: 250,
@@ -197,10 +197,10 @@ const GenerateReceiptPDF = ({ cards, receiptConfig }) => {
                                 },
                               ],
                             },
-                            data.donation_description && {
+                            data?.donation_description && {
                               columns: [
                                 {
-                                  text: `AVISO: ${data.donation_description?.toUpperCase()}`,
+                                  text: `AVISO: ${data?.donation_description?.toUpperCase()}`,
                                   style: "title",
                                   margin: [0, 0, 0, 0],
                                   width: 250,

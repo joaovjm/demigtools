@@ -30,8 +30,10 @@ export const monthlyfeeGenerator = async ({ mesRefGenerator }) => {
           )}-${item.donor_mensal_day}`,
           false,
           false,
-          `Auto Criado ${DataNow("noformated")}`,
-          mesRefGenerator
+          `Criado Automaticamente ${DataNow()}`,
+          mesRefGenerator,
+          "Leite",
+          22
         );
       });
     }
