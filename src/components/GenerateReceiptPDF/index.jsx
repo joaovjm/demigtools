@@ -391,7 +391,7 @@ const GenerateReceiptPDF = ({ cards, receiptConfig }) => {
                   margin: [0, 5],
                 },
                 {
-                  text: `que será destinada à campanha ${data.donation_campain.toUpperCase()}`,
+                  text: `que será destinada à campanha ${data.donation_campain?.toUpperCase()}`,
                   style: "label",
                   margin: [0, 5],
                 },
