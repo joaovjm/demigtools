@@ -11,7 +11,7 @@ export default async function handler(req, res) {
   try {
     // Envia para WhatsApp API
     const response = await fetch(
-      `https://graph.facebook.com/v21.0/${process.env.WHATSAPP_PHONE_NUMBER_ID}/messages`,
+      `https://graph.facebook.com/v23.0/${process.env.WHATSAPP_PHONE_NUMBER_ID}/messages`,
       {
         method: "POST",
         headers: {

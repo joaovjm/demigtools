@@ -1,6 +1,4 @@
-// pages/api/whatsapp.js
 import dotenv from "dotenv";
-//import supabase from "../src/helper/superBaseClient";
 import supabase from "../src/helper/supaBaseClient.js";
 
 dotenv.config();
@@ -30,24 +28,25 @@ export default async function handler(req, res) {
 
   // 🔹 Recebendo mensagens (POST)
   if (req.method === "POST") {
+    let conversationId;
+    let contactId;
     try {
-      console.log("📩 Webhook body:", JSON.stringify(req.body, null, 2));
+      //console.log("📩 Webhook body:", JSON.stringify(req.body, null, 2));
       const data = req.body;
-
+      console.log(data.entry[0].changes[0].value.contacts);
       const message = data.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
       const contact = data.entry?.[0]?.changes?.[0]?.value?.contacts?.[0];
+      const wa_id = contact.wa_id;
 
       if (!message || !contact) {
         return res.status(200).send("Nenhuma mensagem encontrada");
       }
 
-      let { data: existingContact } = await supabase
+      const { data: existingContact } = await supabase
         .from("contacts")
         .select("contact_id")
-        .eq("phone_number", contact.wa_id)
+        .eq("phone_number", wa_id)
         .single();
-
-      let contactId;
 
       if (existingContact) {
         contactId = existingContact.contact_id;
@@ -55,23 +54,22 @@ export default async function handler(req, res) {
         const { data: newContact, error: insertContactError } = await supabase
           .from("contacts")
           .insert({
-            phone_number: contact.wa_id,
+            phone_number: wa_id,
             name: contact.profile?.name || null,
           })
           .select()
           .single();
         if (insertContactError) throw insertContactError;
-        contactId = newContact.id;
+        contactId = newContact.contact_id;
       }
 
-      let { data: existingConv } = await supabase
+      const { data: existingConv } = await supabase
         .from("conversations")
         .select("conversation_id")
         .eq("type", "individual")
-        .eq("title", contact.profile?.name || contact.wa_id)
+        .eq("title", contact.profile?.name || wa_id)
         .single();
 
-      let conversationId;
       if (existingConv) {
         conversationId = existingConv.conversation_id;
       } else {
@@ -79,7 +77,7 @@ export default async function handler(req, res) {
           .from("conversations")
           .insert({
             type: "individual",
-            title: contact.profile?.name || contact.wa_id,
+            title: contact.profile?.name || wa_id,
           })
           .select()
           .single();

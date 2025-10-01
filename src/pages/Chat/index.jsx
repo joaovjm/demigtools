@@ -1,112 +1,45 @@
-import { useState } from 'react';
-import './index.css';
-import { FiSearch, FiMoreVertical, FiPaperclip, FiSend, FiSmile } from 'react-icons/fi';
-import { BsThreeDotsVertical } from 'react-icons/bs';
-import { IoMdCall, IoMdVideocam } from 'react-icons/io';
+import { useEffect, useState, Fragment, useRef } from "react";
+import "./index.css";
+import {
+  FiSearch,
+  FiMoreVertical,
+  FiPaperclip,
+  FiSend,
+  FiSmile,
+} from "react-icons/fi";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { IoMdCall, IoMdVideocam } from "react-icons/io";
+import { useConversations } from "../../hooks/useConversations";
+import Avatar from "../../components/forms/Avatar";
 
 const Chat = () => {
-  const [selectedContact, setSelectedContact] = useState(null);
-  const [message, setMessage] = useState('');
+  const [selectedConversation, setSelectedConversation] = useState(null);
+  const [message, setMessage] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const buttonRef = useRef(null);
+  const { conversations, messages } = useConversations();
 
-  // Mock data para demonstração
-  const contacts = [
-    {
-      id: 1,
-      name: 'João Silva',
-      lastMessage: 'Olá, como você está?',
-      time: '14:30',
-      unread: 2,
-      avatar: 'JS',
-      online: true
-    },
-    {
-      id: 2,
-      name: 'Maria Santos',
-      lastMessage: 'Vamos marcar aquela reunião...',
-      time: '13:45',
-      unread: 0,
-      avatar: 'MS',
-      online: false
-    },
-    {
-      id: 3,
-      name: 'Pedro Costa',
-      lastMessage: 'Obrigado pela ajuda!',
-      time: '12:20',
-      unread: 1,
-      avatar: 'PC',
-      online: true
-    },
-    {
-      id: 4,
-      name: 'Ana Oliveira',
-      lastMessage: 'Até mais tarde',
-      time: '11:15',
-      unread: 0,
-      avatar: 'AO',
-      online: false
-    },
-    {
-      id: 5,
-      name: 'Carlos Lima',
-      lastMessage: 'Perfeito, combinado!',
-      time: '10:30',
-      unread: 3,
-      avatar: 'CL',
-      online: true
-    }
-  ];
+  /*const contactList = async () => {
+    const { messages, conversations } = await fetchConversations();
+    setMessageList(messages);
+    setConversationList(conversations);
+    scrollToBottom();
+  };*/
 
-  const messages = selectedContact ? [
-    {
-      id: 1,
-      text: 'Olá! Como você está?',
-      time: '14:25',
-      sent: false
-    },
-    {
-      id: 2,
-      text: 'Oi! Estou bem, obrigado. E você?',
-      time: '14:26',
-      sent: true
-    },
-    {
-      id: 3,
-      text: 'Também estou bem! Preciso falar com você sobre o projeto.',
-      time: '14:27',
-      sent: false
-    },
-    {
-      id: 4,
-      text: 'Claro! Pode falar.',
-      time: '14:28',
-      sent: true
-    },
-    {
-      id: 5,
-      text: 'Podemos marcar uma reunião para amanhã?',
-      time: '14:29',
-      sent: false
-    },
-    {
-      id: 6,
-      text: 'Perfeito! Que horas seria bom para você?',
-      time: '14:30',
-      sent: true
-    }
-  ] : [];
+  useEffect(() => {
+    buttonRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [selectedConversation, messages]);
 
   const handleSendMessage = () => {
-    if (message.trim() && selectedContact) {
+    if (message.trim() && selectedConversation) {
       // Aqui seria a lógica para enviar a mensagem
-      console.log('Enviando mensagem:', message);
-      setMessage('');
+      console.log("Enviando mensagem:", message);
+      setMessage("");
     }
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
     }
@@ -115,7 +48,7 @@ const Chat = () => {
   return (
     <div className="chat-container">
       {/* Sidebar com lista de conversas */}
-      <div className={`chat-sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
+      <div className={`chat-sidebar ${isMobileMenuOpen ? "mobile-open" : ""}`}>
         {/* Header da sidebar */}
         <div className="sidebar-header">
           <h2>Conversas</h2>
@@ -140,30 +73,37 @@ const Chat = () => {
 
         {/* Lista de contatos */}
         <div className="contacts-list">
-          {contacts.map(contact => (
+          {conversations?.map((contact) => (
             <div
-              key={contact.id}
-              className={`contact-item ${selectedContact?.id === contact.id ? 'active' : ''}`}
+              key={contact.conversation_id}
+              className={`contact-item ${
+                selectedConversation === contact.conversation_id ? "active" : ""
+              }`}
               onClick={() => {
-                setSelectedContact(contact);
+                setSelectedConversation(contact);
                 setIsMobileMenuOpen(false);
               }}
             >
               <div className="contact-avatar">
-                <div className={`avatar ${contact.online ? 'online' : ''}`}>
-                  {contact.avatar}
+                <div className={`avatar ${contact.online ? "online" : ""}`}>
+                  <Avatar name={contact.title} />
                 </div>
               </div>
               <div className="contact-info">
                 <div className="contact-header">
-                  <h3 className="contact-name">{contact.name}</h3>
-                  <span className="contact-time">{contact.time}</span>
+                  <h3 className="contact-name">{contact.title}</h3>
+                  <span className="contact-time">
+                    {new Date(contact.last_message_time).toLocaleTimeString(
+                      "pt-BR",
+                      { hour: "2-digit", minute: "2-digit" }
+                    )}
+                  </span>
                 </div>
                 <div className="contact-footer">
-                  <p className="contact-message">{contact.lastMessage}</p>
-                  {contact.unread > 0 && (
-                    <span className="unread-badge">{contact.unread}</span>
-                  )}
+                  <p className="contact-message">{contact.last_message}</p>
+                  
+                    <span className="unread-badge">5</span>
+                  
                 </div>
               </div>
             </div>
@@ -173,24 +113,32 @@ const Chat = () => {
 
       {/* Área principal do chat */}
       <div className="chat-main">
-        {selectedContact ? (
-          <>
+        {selectedConversation ? (
+          <Fragment key={selectedConversation.conversation_id}>
             {/* Header do chat */}
             <div className="chat-header">
-              <button 
+              <button
                 className="mobile-menu-toggle"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               >
                 ☰
               </button>
               <div className="chat-contact-info">
-                <div className={`chat-avatar ${selectedContact.online ? 'online' : ''}`}>
-                  {selectedContact.avatar}
+                <div
+                  className={`chat-avatar ${
+                    selectedConversation.online ? "online" : ""
+                  }`}
+                >
+                  {selectedConversation.avatar}
                 </div>
                 <div className="chat-contact-details">
-                  <h3 className="chat-contact-name">{selectedContact.name}</h3>
+                  <h3 className="chat-contact-name">
+                    {selectedConversation.title}
+                  </h3>
                   <p className="chat-contact-status">
-                    {selectedContact.online ? 'Online' : 'Visto por último às 13:45'}
+                    {selectedConversation.online
+                      ? "Online"
+                      : "Visto por último às 13:45"}
                   </p>
                 </div>
               </div>
@@ -209,17 +157,29 @@ const Chat = () => {
 
             {/* Área de mensagens */}
             <div className="chat-messages">
-              {messages.map(msg => (
-                <div
-                  key={msg.id}
-                  className={`message ${msg.sent ? 'sent' : 'received'}`}
-                >
-                  <div className="message-content">
-                    <p className="message-text">{msg.text}</p>
-                    <span className="message-time">{msg.time}</span>
-                  </div>
-                </div>
-              ))}
+              {messages?.map(
+                (msg) =>
+                  msg.conversation_id ===
+                    selectedConversation.conversation_id && (
+                    <div
+                      key={msg.message_id}
+                      className={`message ${
+                        msg.status === "sent" ? "sent" : "received"
+                      }`}
+                    >
+                      <div className="message-content">
+                        <p className="message-text">{msg.body}</p>
+                        <span className="message-time">
+                          {new Date(msg.received_at).toLocaleTimeString(
+                            "pt-BR",
+                            { hour: "2-digit", minute: "2-digit" }
+                          )}
+                        </span>
+                      </div>
+                    </div>
+                  )
+              )}
+              <div ref={buttonRef} />
             </div>
 
             {/* Input de mensagem */}
@@ -240,7 +200,7 @@ const Chat = () => {
                   <FiSmile />
                 </button>
               </div>
-              <button 
+              <button
                 className="send-button"
                 onClick={handleSendMessage}
                 disabled={!message.trim()}
@@ -248,7 +208,7 @@ const Chat = () => {
                 <FiSend />
               </button>
             </div>
-          </>
+          </Fragment>
         ) : (
           <div className="no-chat-selected">
             <div className="no-chat-content">
@@ -261,7 +221,7 @@ const Chat = () => {
 
       {/* Overlay para mobile */}
       {isMobileMenuOpen && (
-        <div 
+        <div
           className="mobile-overlay"
           onClick={() => setIsMobileMenuOpen(false)}
         />
