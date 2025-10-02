@@ -68,6 +68,7 @@ const Donor = () => {
           bairro: donor.donor_neighborhood,
           telefone1: donor.donor_tel_1,
           cpf: donor.donor_cpf?.donor_cpf || null,
+          email: donor.donor_email?.donor_email || null,
           telefone2: donor.donor_tel_2?.donor_tel_2 || null,
           telefone3: donor.donor_tel_3?.donor_tel_3 || null,
           dia: donor.donor_mensal?.donor_mensal_day || null,

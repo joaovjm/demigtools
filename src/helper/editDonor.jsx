@@ -53,15 +53,18 @@ export const editDonor = async (
   }
   if (email !== undefined && email !== null){
     try {
-      await supabase.from("donor_email").upsert(
+      const { data: emailData, error: emailError } = await supabase.from("donor_email").upsert(
         [
           {
             donor_id: id,
-            donor_cpf: email,
+            donor_email: email,
           },
         ],
         { onConflict: ["donor_id"] }
       );
+      if (emailError) {
+        console.log("Email não foi salvo: ", emailError);
+      }
     } catch {
       console.log("Email não foi salvo");
     }

@@ -11,6 +11,7 @@ export const getInfoDonor = async (id) => {
         donor_neighborhood,
         donor_tel_1,
         donor_cpf (donor_cpf),
+        donor_email (donor_email),
         donor_tel_2 (donor_tel_2),
         donor_tel_3 (donor_tel_3),
         donor_mensal (donor_mensal_day, donor_mensal_monthly_fee),
