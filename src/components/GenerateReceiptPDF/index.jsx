@@ -471,7 +471,7 @@ const GenerateReceiptPDF = ({ cards, receiptConfig }) => {
         const { error } = await supabase.storage
           .from("receiptPdfToPrint")
           .upload(
-            `Print-${DataNow("noformated")}-(${cards?.length}).pdf`,
+            `Print Checked/${cards[0].donation_day_to_receive} - ${cards[0].collector?.collector_name}.pdf`,
             blob,
             {
               contentType: "application/pdf",
