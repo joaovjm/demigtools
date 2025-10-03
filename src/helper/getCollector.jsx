@@ -6,9 +6,6 @@ export const getCollector = async () => {
 
     if (error) throw error;
 
-    if (data) {
-      console.log("dados acessados com sucesso");
-    }
     if (error) {
       console.log("Erro ao buscar os coletadores: ", error.message);
     }

@@ -15,9 +15,8 @@ const getPackage = async ({ type, startDate, endDate }) => {
       .order("donation_value", { ascending: false });
 
     if (error) console.log(error.message);
-    console.log(data)
 
-    if (data.length > 0) {
+    if (data?.length > 0) {
       const newPackage = data.map((item) => {
         return {
           donor_id: item?.donor_id,
@@ -60,7 +59,7 @@ const getPackage = async ({ type, startDate, endDate }) => {
         .gt("donation_day_received", endDate);
       if (errorData) console.log(errorData.message);
 
-      if (compareData.length > 0) {
+      if (compareData?.length > 0) {
         filteredPackage.forEach((id) => {
           if (!compareData.some((cp) => cp.donor_id === id.donor_id)) {
             createPackage.push(id);

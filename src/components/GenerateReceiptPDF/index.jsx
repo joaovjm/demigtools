@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import pdfMake, { fonts } from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import { barCodeGenerator } from "../../services/barCodeGenerator";
@@ -7,19 +7,24 @@ import extenso from "extenso";
 import { generatePixPayload } from "../../services/generatePixPayload";
 import { receiptLogo } from "../../assets/receiptLogo";
 import { toast } from "react-toastify";
+import supabase from "../../helper/supaBaseClient.js";
 
 pdfMake.vfs = pdfFonts.vfs;
 
 // Função para gerar código de barras em base64 no navegador
 
 const GenerateReceiptPDF = ({ cards, receiptConfig }) => {
+  const [loading, setLoading] = useState(false);
+  let update = [];
   const gerarPDF = async () => {
+    setLoading(true);
     if (
       cards.some(
         (v) => v.collector_code_id === "" || v.collector_code_id === null
       )
     ) {
       toast.warning("Exitem recibos sem coletador!");
+      setLoading(false);
       return;
     }
     const recibos = await Promise.all(
@@ -32,6 +37,9 @@ const GenerateReceiptPDF = ({ cards, receiptConfig }) => {
           txid: data.receipt_donation_id.toString(),
         });
         const barcode = await barCodeGenerator(data.receipt_donation_id);
+        update.push({
+          receipt_donation_id: data.receipt_donation_id,
+        });
         return {
           stack: [
             {
@@ -176,7 +184,8 @@ const GenerateReceiptPDF = ({ cards, receiptConfig }) => {
                                 },
                               ],
                             },
-                            data?.donor?.donor_observation?.donor_observation && {
+                            data?.donor?.donor_observation
+                              ?.donor_observation && {
                               columns: [
                                 {
                                   text: `OBS: ${data?.donor?.donor_observation?.donor_observation?.toUpperCase()}`,
@@ -457,9 +466,38 @@ const GenerateReceiptPDF = ({ cards, receiptConfig }) => {
         },
       },
     };
-    pdfMake.createPdf(docDefinition).download(`Manancial - ${DataNow()}`);
+    pdfMake.createPdf(docDefinition).getBlob(async (blob) => {
+      try {
+        const { error } = await supabase.storage
+          .from("receiptPdfToPrint")
+          .upload(
+            `Print-${DataNow("noformated")}-(${cards?.length}).pdf`,
+            blob,
+            {
+              contentType: "application/pdf",
+              upsert: true,
+            }
+          );
+        if (error) throw error;
+        if (!error) {
+          const { error: updateError } = await supabase
+            .from("donation")
+            .update({donation_print: "Sim"})
+            .in("receipt_donation_id", update.map((card) => card.receipt_donation_id));
+          if (updateError) throw updateError;
+          if (!updateError) {
+            
+            toast.success("Recibo gerado com sucesso!");
+          }
+        }
+      } catch (error) {
+        console.log("Erro ao salvar o recibo: ", error.message);
+      } finally {
+        setLoading(false);
+      }
+    });
   };
-  return <button onClick={gerarPDF}>Imprimir</button>;
+  return <button onClick={gerarPDF} disabled={loading}>{loading ? "Gerando..." : "Gerar"}</button>;
 };
 
 export default GenerateReceiptPDF;

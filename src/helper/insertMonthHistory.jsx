@@ -13,7 +13,7 @@ export const insertMonthHistory = async (dataSelected) => {
       console.log("Histórico de geração do mensal salvo com sucesso!")
     }
     
-    return true
+    return data[0]
   } catch (error) {
     console.log("Error: ", error.message)
   }
