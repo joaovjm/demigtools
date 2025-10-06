@@ -38,7 +38,7 @@ export const editDonor = async (
   }
   if (cpf !== undefined && cpf !== null){
     try {
-      await supabase.from("donor_cpf").upsert(
+      const { data: cpfData, error: cpfError } = await supabase.from("donor_cpf").upsert(
         [
           {
             donor_id: id,
@@ -47,8 +47,9 @@ export const editDonor = async (
         ],
         { onConflict: ["donor_id"] }
       );
-    } catch {
-      console.log("CPF não foi salvo");
+      if (cpfError) throw cpfError;
+      } catch (error){
+      console.log("CPF não foi salvo: ", error.message);
     }
   }
   if (email !== undefined && email !== null){
@@ -62,16 +63,14 @@ export const editDonor = async (
         ],
         { onConflict: ["donor_id"] }
       );
-      if (emailError) {
-        console.log("Email não foi salvo: ", emailError);
-      }
-    } catch {
-      console.log("Email não foi salvo");
+      if (emailError) throw emailError;
+      } catch (error){
+      console.log("Email não foi salvo: ", error.message);
     }
   }
   if (telefone2 !== undefined && telefone2 !== null){
     try {
-      await supabase.from("donor_tel_2").upsert(
+      const { data: tel2Data, error: tel2Error } = await supabase.from("donor_tel_2").upsert(
         [
           {
             donor_id: id,
@@ -80,14 +79,15 @@ export const editDonor = async (
         ],
         { onConflict: ["donor_id"] }
       );
-    } catch {
-      console.log("Telefone 2 não foi salvo");
+      if (tel2Error) throw tel2Error;
+    } catch (error){
+      console.log("Telefone 2 não foi salvo: ", error.message);
     }
   }
 
   if (telefone3 !== undefined && telefone3 !== null){
     try {
-      await supabase.from("donor_tel_3").upsert(
+      const { data: tel3Data, error: tel3Error } = await supabase.from("donor_tel_3").upsert(
         [
           {
             donor_id: id,
@@ -96,14 +96,15 @@ export const editDonor = async (
         ],
         { onConflict: ["donor_id"] }
       );
-    } catch {
-      console.log("Telefone 3 não foi salvo");
+      if (tel3Error) throw tel3Error;
+    } catch (error){
+      console.log("Telefone 3 não foi salvo: ", error.message);
     }
   }
 
   if (observacao !== undefined && observacao !== null){
     try {
-      await supabase.from("donor_observation").upsert(
+      const { data: observationData, error: observationError } = await supabase.from("donor_observation").upsert(
         [
           {
             donor_id: id,
@@ -112,14 +113,15 @@ export const editDonor = async (
         ],
         { onConflict: ["donor_id"] }
       );
-    } catch {
-      console.log("Observação não foi salva ");
+      if (observationError) throw observationError;
+    } catch (error){
+      console.log("Observação não foi salva: ", error.message);
     }
   }
 
   if (referencia !== undefined && referencia !== null){
     try {
-      await supabase.from("donor_reference").upsert(
+      const { data: referenceData, error: referenceError } = await supabase.from("donor_reference").upsert(
         [
           {
             donor_id: id,
@@ -128,25 +130,27 @@ export const editDonor = async (
         ],
         { onConflict: ["donor_id"] }
       );
-    } catch {
-      console.log("Referência não foi salva ");
+      if (referenceError) throw referenceError;
+    } catch (error){
+      console.log("Referência não foi salva: ", error.message);
     }
   }
 
   if (mensalidade !== undefined && mensalidade !== null){
     try {
-      await supabase.from("donor_mensal").upsert(
+      const { data: mensalData, error: mensalError } = await supabase.from("donor_mensal").upsert(
         [
           {
             donor_id: id,
-            donor_mensal_day: dia,
-            donor_mensal_monthly_fee: mensalidade,
+            donor_mensal_day: dia !== "" ? dia : null,
+            donor_mensal_monthly_fee: mensalidade !== "" ? mensalidade : null,
           },
         ],
         { onConflict: ["donor_id"] }
       );
-    } catch {
-      console.log("Valores do mensal não foram salvos");
+      if (mensalError) throw mensalError;
+    } catch (error){
+      console.log("Valores do mensal não foram salvos: ", error.message);
     }
   }
   
