@@ -55,7 +55,14 @@ export async function getDonationsPrint(startDate, endDate) {
         }
       }
 
-      return newCollectorInDonation.sort((a, b) => a.collector_code_id - b.collector_code_id);
+      const ordered = newCollectorInDonation.sort((a, b) => {
+        if (a.collector_code_id === 22) return 1;
+        if (b.collector_code_id === 22) return -1;
+
+        return a.collector_code_id - b.collector_code_id;
+      });
+
+      return ordered;
     }
   } catch (error) {
     console.log(error);
@@ -63,12 +70,14 @@ export async function getDonationsPrint(startDate, endDate) {
 }
 
 export async function getDonationsPrinted() {
-  const {data, error} = await supabase.storage.from("receiptPdfToPrint").list("Print Checked", {
-    limit: 100,
-    offset: 0,
-    sortBy: {
-      column: "name",
-      order: "asc",
-    },
-  })
+  const { data, error } = await supabase.storage
+    .from("receiptPdfToPrint")
+    .list("Print Checked", {
+      limit: 100,
+      offset: 0,
+      sortBy: {
+        column: "name",
+        order: "asc",
+      },
+    });
 }
