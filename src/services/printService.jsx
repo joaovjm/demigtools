@@ -55,7 +55,7 @@ export async function getDonationsPrint(startDate, endDate) {
         }
       }
 
-      return newCollectorInDonation;
+      return newCollectorInDonation.sort((a, b) => a.collector_code_id - b.collector_code_id);
     }
   } catch (error) {
     console.log(error);
@@ -71,8 +71,4 @@ export async function getDonationsPrinted() {
       order: "asc",
     },
   })
-
-  if(error) throw error
-
-  return data
 }
