@@ -34,55 +34,67 @@ export default async function handler(req, res) {
       //console.log("📩 Webhook body:", JSON.stringify(req.body, null, 2));
       const data = req.body;
       console.log(data.entry[0].changes[0].value.contacts);
-      const message = data.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
-      const contact = data.entry?.[0]?.changes?.[0]?.value?.contacts?.[0];
-      const wa_id = contact.wa_id;
+      const value = data.entry?.[0]?.changes?.[0]?.value;
+      const message = value?.messages?.[0];
+      const contact = value?.contacts?.[0];
 
-      if (!message || !contact) {
-        return res.status(200).send("Nenhuma mensagem encontrada");
-      }
 
-      const { data: existingContact } = await supabase
-        .from("contacts")
-        .select("contact_id")
-        .eq("phone_number", wa_id)
-        .single();
+      {/* Verifica se é mensagem. E caso sim, verifica se o contato existe. E caso não, insere o contato. E caso sim, atualiza o contato. */}
+      if (message) {
+        const wa_id = contact?.wa_id;
 
-      if (existingContact) {
-        contactId = existingContact.contact_id;
-      } else {
-        const { data: newContact, error: insertContactError } = await supabase
+        if (!message || !contact) {
+          return res.status(200).send("Nenhuma mensagem encontrada");
+        }
+
+        const { data: existingContact } = await supabase
           .from("contacts")
-          .insert({
-            phone_number: wa_id,
-            name: contact.profile?.name || null,
-          })
-          .select()
+          .select("contact_id")
+          .eq("phone_number", wa_id)
           .single();
-        if (insertContactError) throw insertContactError;
-        contactId = newContact.contact_id;
+
+        if (existingContact) {
+          contactId = existingContact.contact_id;
+        } else {
+          const { data: newContact, error: insertContactError } = await supabase
+            .from("contacts")
+            .insert({
+              phone_number: wa_id,
+              name: contact.profile?.name || null,
+            })
+            .select()
+            .single();
+          if (insertContactError) throw insertContactError;
+          contactId = newContact.contact_id;
+        }
+
+        const { data: existingConv } = await supabase
+          .from("conversations")
+          .select("conversation_id")
+          .eq("type", "individual")
+          .eq("title", contact.profile?.name || wa_id)
+          .single();
+
+        if (existingConv) {
+          conversationId = existingConv.conversation_id;
+        } else {
+          const { data: newConv, error: insertConvError } = await supabase
+            .from("conversations")
+            .insert({
+              type: "individual",
+              title: contact.profile?.name || wa_id,
+            })
+            .select()
+            .single();
+          if (insertConvError) throw insertConvError;
+          conversationId = newConv.conversation_id;
+        }
       }
 
-      const { data: existingConv } = await supabase
-        .from("conversations")
-        .select("conversation_id")
-        .eq("type", "individual")
-        .eq("title", contact.profile?.name || wa_id)
-        .single();
-
-      if (existingConv) {
-        conversationId = existingConv.conversation_id;
-      } else {
-        const { data: newConv, error: insertConvError } = await supabase
-          .from("conversations")
-          .insert({
-            type: "individual",
-            title: contact.profile?.name || wa_id,
-          })
-          .select()
-          .single();
-        if (insertConvError) throw insertConvError;
-        conversationId = newConv.conversation_id;
+      {/* Verifica se é status. E caso sim, atualiza o status da mensagem. */}
+      if (value?.statuses) {
+        const status = value?.statuses?.[0];
+        console.log(status);
       }
 
       // 🔹 Inserir mensagem
