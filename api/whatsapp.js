@@ -31,15 +31,14 @@ export default async function handler(req, res) {
     let conversationId;
     let contactId;
     try {
-      //console.log("📩 Webhook body:", JSON.stringify(req.body, null, 2));
       const data = req.body;
-      console.log(data.entry[0].changes[0].value.contacts);
       const value = data.entry?.[0]?.changes?.[0]?.value;
       const message = value?.messages?.[0];
       const contact = value?.contacts?.[0];
 
-
-      {/* Verifica se é mensagem. E caso sim, verifica se o contato existe. E caso não, insere o contato. E caso sim, atualiza o contato. */}
+      {
+        /* Verifica se é mensagem. E caso sim, verifica se o contato existe. E caso não, insere o contato. E caso sim, atualiza o contato. */
+      }
       if (message) {
         const wa_id = contact?.wa_id;
 
@@ -89,30 +88,40 @@ export default async function handler(req, res) {
           if (insertConvError) throw insertConvError;
           conversationId = newConv.conversation_id;
         }
+        // 🔹 Inserir mensagem
+        const { data: newMessage, error: insertMsgError } = await supabase
+          .from("messages")
+          .insert({
+            conversation_id: conversationId,
+            from_contact: contactId,
+            body: message.text?.body || null,
+            message_type: message.type,
+            media_url: message.image?.id
+              ? `https://graph.facebook.com/v23.0/${message.image.id}`
+              : null,
+            status: message.status,
+            whatsapp_message_id: message.id,
+          })
+          .select()
+          .single();
+        if (insertMsgError) throw insertMsgError;
       }
 
-      {/* Verifica se é status. E caso sim, atualiza o status da mensagem. */}
+      {
+        /* Verifica se é status. E caso sim, atualiza o status da mensagem. */
+      }
       if (value?.statuses) {
         const status = value?.statuses?.[0];
-        console.log(status);
-      }
 
-      // 🔹 Inserir mensagem
-      const { data: newMessage, error: insertMsgError } = await supabase
-        .from("messages")
-        .insert({
-          conversation_id: conversationId,
-          from_contact: contactId,
-          body: message.text?.body || null,
-          message_type: message.type,
-          media_url: message.image?.id
-            ? `https://graph.facebook.com/v23.0/${message.image.id}`
-            : null,
-          status: "received",
-        })
-        .select()
-        .single();
-      if (insertMsgError) throw insertMsgError;
+        const { data: updateMsg, error: updateMsgError } = await supabase
+          .from("messages")
+          .update({ status: status.status })
+          .eq("whatsapp_message_id", status.id)
+          .select()
+          .single();
+        if (updateMsgError) throw updateMsgError;
+        
+      }
 
       return res.status(200).send("EVENT_RECEIVED");
     } catch (err) {

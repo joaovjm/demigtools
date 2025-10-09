@@ -7,7 +7,6 @@ export default async function handler(req, res) {
     }
 
     const { conversationId, from, to, message, type } = req.body;
-    console.log({conversationId, from, to, message, type});
     if (!to || !message || !type) {
       return res.status(400).json({ error: "Dados incompletos" });
     }
@@ -15,7 +14,7 @@ export default async function handler(req, res) {
     const phoneId = process.env.WHATSAPP_PHONE_NUMBER_ID;
     const accessToken = process.env.WHATSAPP_ACCESS_TOKEN;
     const fromNumber = process.env.WHATSAPP_PHONE_NUMBER;
-    console.log({phoneId, accessToken, fromNumber});
+
 
     if (!phoneId || !accessToken || !fromNumber) {
       console.error("❌ Variáveis de ambiente ausentes");
@@ -40,7 +39,6 @@ export default async function handler(req, res) {
         }),
       }
     );
-    console.log({ to, message, type });
     const result = await response.json();
 
     if (!response.ok) {
@@ -61,7 +59,8 @@ export default async function handler(req, res) {
           body: message,
           message_type: type,
           received_at: new Date().toISOString(),
-          status: "delivered",
+          status: "sent",
+          whatsapp_message_id: result.messages[0].id,
         },
       ])
       .select();

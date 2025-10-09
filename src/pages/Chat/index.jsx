@@ -1,4 +1,7 @@
-import { useEffect, useState, Fragment, useRef } from "react";
+import { useEffect, useState, Fragment, useRef, useMemo } from "react";
+import { IoCheckmarkDoneSharp, IoCheckmarkSharp } from "react-icons/io5";
+import { MdAccessTime } from "react-icons/md";
+
 import "./index.css";
 import {
   FiSearch,
@@ -16,25 +19,53 @@ const Chat = () => {
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [message, setMessage] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const buttonRef = useRef(null);
+  const messsageRef = useRef(null);
   const { conversations, messages } = useConversations();
 
-  /*const contactList = async () => {
-    const { messages, conversations } = await fetchConversations();
-    setMessageList(messages);
-    setConversationList(conversations);
-    scrollToBottom();
-  };*/
-
-  useEffect(() => {
-    buttonRef.current?.scrollIntoView({ behavior: "smooth" });
+  // Memoiza as mensagens filtradas para evitar re-renderizações desnecessárias
+  const filteredMessages = useMemo(() => {
+    if (!selectedConversation || !messages) return [];
+    return messages.filter(msg => msg.conversation_id === selectedConversation.conversation_id);
   }, [selectedConversation, messages]);
 
-  const handleSendMessage = () => {
+  useEffect(() => {
+    const el = messsageRef.current;
+    if (el) {
+      el.scrollTop = el.scrollHeight;
+    }
+  }, [selectedConversation]);
+
+  // Scroll para baixo quando novas mensagens chegam
+  useEffect(() => {
+    const el = messsageRef.current;
+    if (el) {
+      el.scrollTop = el.scrollHeight;
+    }
+  }, [filteredMessages.length]);
+
+  const handleSendMessage = async () => {
     if (message.trim() && selectedConversation) {
-      // Aqui seria a lógica para enviar a mensagem
-      console.log("Enviando mensagem:", message);
-      setMessage("");
+      const payload = {
+        conversationId: selectedConversation.conversation_id,
+        from: selectedConversation.from_contact,
+        to: selectedConversation.phone_number,
+        message: message,
+        type: "text",
+      };
+
+      try {
+        const response = await fetch("/api/send-message", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+        const data = await response.json();
+        setMessage("");
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -101,9 +132,8 @@ const Chat = () => {
                 </div>
                 <div className="contact-footer">
                   <p className="contact-message">{contact.last_message}</p>
-                  
-                    <span className="unread-badge">5</span>
-                  
+
+                  <span className="unread-badge">5</span>
                 </div>
               </div>
             </div>
@@ -156,19 +186,36 @@ const Chat = () => {
             </div>
 
             {/* Área de mensagens */}
-            <div className="chat-messages">
-              {messages?.map(
-                (msg) =>
-                  msg.conversation_id ===
-                    selectedConversation.conversation_id && (
+            <div className="chat-messages" ref={messsageRef}>
+              {filteredMessages?.map((msg) => (
                     <div
                       key={msg.message_id}
                       className={`message ${
-                        msg.status === "sent" ? "sent" : "received"
+                        msg.status !== "received" ? "delivered" : "received"
                       }`}
                     >
                       <div className="message-content">
-                        <p className="message-text">{msg.body}</p>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            gap: 16,
+                          }}
+                        >
+                          <p className="message-text">{msg.body}</p>
+                          <p>
+                            {msg.status === "sent" ? (
+                              <IoCheckmarkSharp />
+                              
+                            ) : msg.status === "delivered" || msg.status === "read" ? (
+                              <IoCheckmarkDoneSharp style={{color: msg.status === "read" ? "#faa01c" : ""}}/>
+                            ) : msg.status === "received" ?(
+                              null
+                              
+                            ) : !msg.status && <MdAccessTime /> }
+                          </p>
+                        </div>
+
                         <span className="message-time">
                           {new Date(msg.received_at).toLocaleTimeString(
                             "pt-BR",
@@ -177,9 +224,8 @@ const Chat = () => {
                         </span>
                       </div>
                     </div>
-                  )
-              )}
-              <div ref={buttonRef} />
+                  ))}
+              
             </div>
 
             {/* Input de mensagem */}

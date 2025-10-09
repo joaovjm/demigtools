@@ -317,7 +317,7 @@
   margin-bottom: 8px;
 }
 
-.message.sent {
+.message.delivered {
   align-self: flex-end;
 }
 
@@ -333,7 +333,7 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.message.sent .message-content {
+.message.delivered .message-content {
   background-color: #5933b1;
   border-bottom-right-radius: 4px;
 }
