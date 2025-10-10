@@ -1,6 +1,7 @@
 import { useEffect, useState, Fragment, useRef, useMemo } from "react";
 import { IoCheckmarkDoneSharp, IoCheckmarkSharp } from "react-icons/io5";
-import { MdAccessTime } from "react-icons/md";
+import { MdAccessTime, MdCampaign } from "react-icons/md";
+import { FaAngleRight } from "react-icons/fa";
 
 import "./index.css";
 import {
@@ -21,11 +22,18 @@ const Chat = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const messsageRef = useRef(null);
   const { conversations, messages } = useConversations();
+  const [isMenuMediaOpen, setIsMenuMediaOpen] = useState(false);
+  const [selectedMedia, setSelectedMedia] = useState();
+
+  const menuMediaRef = useRef(null);
+  const subMenuMediaRef = useRef(null);
 
   // Memoiza as mensagens filtradas para evitar re-renderizações desnecessárias
   const filteredMessages = useMemo(() => {
     if (!selectedConversation || !messages) return [];
-    return messages.filter(msg => msg.conversation_id === selectedConversation.conversation_id);
+    return messages.filter(
+      (msg) => msg.conversation_id === selectedConversation.conversation_id
+    );
   }, [selectedConversation, messages]);
 
   useEffect(() => {
@@ -75,6 +83,37 @@ const Chat = () => {
       handleSendMessage();
     }
   };
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      // Verifica se clicou fora do submenu
+      if (
+        selectedMedia &&
+        subMenuMediaRef.current &&
+        !subMenuMediaRef.current.contains(e.target)
+      ) {
+        setSelectedMedia(null);
+      }
+      
+      // Verifica se clicou fora do menu principal
+      if (
+        isMenuMediaOpen &&
+        menuMediaRef.current &&
+        !menuMediaRef.current.contains(e.target)
+      ) {
+        setIsMenuMediaOpen(false);
+        setSelectedMedia(null); // Fecha o submenu também
+      }
+    };
+
+    if (isMenuMediaOpen || selectedMedia) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isMenuMediaOpen, selectedMedia]);
 
   return (
     <div className="chat-container">
@@ -188,49 +227,80 @@ const Chat = () => {
             {/* Área de mensagens */}
             <div className="chat-messages" ref={messsageRef}>
               {filteredMessages?.map((msg) => (
+                <div
+                  key={msg.message_id}
+                  className={`message ${
+                    msg.status !== "received" ? "delivered" : "received"
+                  }`}
+                >
+                  <div className="message-content">
                     <div
-                      key={msg.message_id}
-                      className={`message ${
-                        msg.status !== "received" ? "delivered" : "received"
-                      }`}
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        gap: 16,
+                      }}
                     >
-                      <div className="message-content">
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            gap: 16,
-                          }}
-                        >
-                          <p className="message-text">{msg.body}</p>
-                          <p>
-                            {msg.status === "sent" ? (
-                              <IoCheckmarkSharp />
-                              
-                            ) : msg.status === "delivered" || msg.status === "read" ? (
-                              <IoCheckmarkDoneSharp style={{color: msg.status === "read" ? "#faa01c" : ""}}/>
-                            ) : msg.status === "received" ?(
-                              null
-                              
-                            ) : !msg.status && <MdAccessTime /> }
-                          </p>
-                        </div>
-
-                        <span className="message-time">
-                          {new Date(msg.received_at).toLocaleTimeString(
-                            "pt-BR",
-                            { hour: "2-digit", minute: "2-digit" }
-                          )}
-                        </span>
-                      </div>
+                      <p className="message-text">{msg.body}</p>
+                      <p>
+                        {msg.status === "sent" ? (
+                          <IoCheckmarkSharp />
+                        ) : msg.status === "delivered" ||
+                          msg.status === "read" ? (
+                          <IoCheckmarkDoneSharp
+                            style={{
+                              color: msg.status === "read" ? "#faa01c" : "",
+                            }}
+                          />
+                        ) : msg.status === "received" ? null : (
+                          !msg.status && <MdAccessTime />
+                        )}
+                      </p>
                     </div>
-                  ))}
-              
+
+                    <span className="message-time">
+                      {new Date(msg.received_at).toLocaleTimeString("pt-BR", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                  </div>
+                </div>
+              ))}
             </div>
 
             {/* Input de mensagem */}
             <div className="chat-input-container">
-              <button className="icon-button">
+              {/* Menu de Media */}
+              {isMenuMediaOpen && (
+                <div className="menu-media" ref={menuMediaRef}>
+                  <button
+                    onClick={() => {
+                      setSelectedMedia(selectedMedia === "campain" ? null : "campain");
+                    }}
+                    className={`menu-media-button ${
+                      selectedMedia === "campain" ? "active" : ""
+                    }`}
+                  >
+                    <MdCampaign /> Campanhas <FaAngleRight />
+                  </button>
+                </div>
+              )}
+              {selectedMedia === "campain" && (
+                <div className="sub-menu-media" ref={subMenuMediaRef}>
+                  <p>Campanhas</p>
+                </div>
+              )}
+
+              <button
+                onClick={() => {
+                  setIsMenuMediaOpen(!isMenuMediaOpen);
+                  if (isMenuMediaOpen) {
+                    setSelectedMedia(null); // Fecha o submenu quando o menu principal é fechado
+                  }
+                }}
+                className="icon-button"
+              >
                 <FiPaperclip />
               </button>
               <div className="message-input-wrapper">

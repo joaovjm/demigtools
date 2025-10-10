@@ -454,6 +454,46 @@
   text-transform: none;
 }
 
+.menu-media, .sub-menu-media {
+  position: absolute;
+  left: 26%;
+  bottom: 14%;
+  width: 12%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background-color: #1F1D1D;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 12px;
+  z-index: 1000;
+}
+
+.sub-menu-media {
+  bottom: 18%;
+  left: 38%;
+  p{
+    text-transform: none;
+  }
+  
+}
+
+
+.menu-media-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  text-transform: none;
+  gap: 6px;
+  &:hover {
+    background-color: #2b2b2b;
+  }
+  
+}
+
 /* Mobile Styles */
 @media (max-width: 768px) {
   .chat-sidebar {
