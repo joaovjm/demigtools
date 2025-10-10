@@ -28,7 +28,6 @@ import Home from "./pages/Home";
 import Request from "./pages/Request";
 import DashboardAdmin from "./pages/DashboardAdmin";
 import ProtectedRoute from "./components/ProtectedRoute";
-import SendCampain from "./pages/SendCampain";
 import Chat from "./pages/Chat";
 
 const AppRoutesContent = () => {
@@ -98,14 +97,6 @@ const AppRoutesContent = () => {
           }
         />
 
-        <Route
-          path="/sendcampain"
-          element={
-            <Wrapper>
-              <SendCampain />
-            </Wrapper>
-          }
-        />
         <Route
           path="/chat"
           element={

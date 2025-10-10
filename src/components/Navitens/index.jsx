@@ -108,12 +108,6 @@ export const OperadorMenu = [
         cName: "submenu-itens",
     },
     {
-        id: 4,
-        title: "Envio de Campanhas",
-        path: "./sendcampain",
-        cName: "submenu-itens"
-    },
-    {
         id: 5,
         title: "CHAT",
         path: "./chat",

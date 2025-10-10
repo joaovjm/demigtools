@@ -7,6 +7,7 @@ import supabase from "../../helper/superBaseClient";
 import { toast } from "react-toastify";
 import { getReceiptPrint } from "../../helper/getReceiptPrint";
 import GenerateReceiptPDF from "../../components/GenerateReceiptPDF";
+import ModalPrintedPackages from "../../components/modals/ModalPrintedPackages";
 
 const CheckPrint = () => {
   const [startDate, setStartDate] = useState("");
@@ -20,6 +21,7 @@ const CheckPrint = () => {
   const [loading, setLoading] = useState(false);
   const [ok, setOk] = useState(false);
   const [donationsPrinted, setDonationsPrinted] = useState([]);
+  const [printedPackagesModalOpen, setPrintedPackagesModalOpen] = useState(false);
   const fetchCollectors = async () => {
     const response = await getCollector();
     setCollectors(response);
@@ -140,7 +142,11 @@ const CheckPrint = () => {
           </button>
         </div>
         <div className="checkprint-container-header-printed">
-          <div className="input-field">
+          <div 
+            className="input-field printed-packages-button" 
+            onClick={() => setPrintedPackagesModalOpen(true)}
+            style={{ cursor: 'pointer' }}
+          >
             <label>Pacotes Impressos</label>
             <p style={{ fontWeight: 700 }}>{donationsPrinted?.length}</p>
           </div>
@@ -236,6 +242,11 @@ const CheckPrint = () => {
             </div>
           )}
         </div>
+      )}
+
+      {/* Modal de Pacotes Impressos */}
+      {printedPackagesModalOpen && (
+        <ModalPrintedPackages setModalOpen={setPrintedPackagesModalOpen} />
       )}
 
     </main>

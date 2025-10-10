@@ -35,6 +35,21 @@
     }
 }
 
+.printed-packages-button {
+    transition: all 0.2s ease;
+    border-radius: 6px;
+    padding: 12px;
+}
+
+.printed-packages-button:hover {
+    background-color: #2a2828;
+    transform: scale(1.02);
+}
+
+.printed-packages-button label {
+    cursor: pointer;
+}
+
 .checkprint-container-body, .checkprint-container-footer{
     display: flex;
     flex-direction: column;

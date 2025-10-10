@@ -70,6 +70,7 @@ export async function getDonationsPrint(startDate, endDate) {
 }
 
 export async function getDonationsPrinted() {
+  try {
   const { data, error } = await supabase.storage
     .from("receiptPdfToPrint")
     .list("Print Checked", {
@@ -80,4 +81,10 @@ export async function getDonationsPrinted() {
         order: "asc",
       },
     });
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
 }
