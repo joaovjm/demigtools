@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { getConversations } from "../helper/getConversations.jsx";
 import { getMessages } from "../helper/getMessages.jsx";
+import { markMessagesAsRead } from "../helper/unreadMessages.jsx";
 import supabase from "../helper/superBaseClient";
 
 // Singleton para evitar múltiplas instâncias do hook
@@ -154,5 +155,48 @@ export function useConversations() {
     };
   }, []);
 
-  return {conversations, messages};
+  // Função para marcar mensagens como lidas
+  const markAsRead = async (conversationId) => {
+    // Atualiza o estado local imediatamente para melhor UX
+    setMessages((prev) => {
+      const updatedMessages = markMessagesAsRead(prev, conversationId);
+      globalMessages = updatedMessages;
+      return updatedMessages;
+    });
+
+    // Persiste no banco de dados
+    try {
+      const response = await fetch("/api/mark-messages-read", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ conversationId }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        console.error("❌ Erro ao marcar mensagens como lidas no servidor:", result);
+        console.error("📋 Detalhes:", result.details);
+        if (result.suggestion) {
+          console.warn("💡 Sugestão:", result.suggestion);
+        }
+        // Em caso de erro, poderíamos reverter o estado local aqui
+      } else {
+        console.log("✅ Mensagens marcadas como lidas:", result.updatedCount, "mensagens");
+        if (result.method) {
+          console.log("🔧 Método usado:", result.method);
+        }
+        if (result.warning) {
+          console.warn("⚠️ Aviso:", result.warning);
+        }
+      }
+    } catch (error) {
+      console.error("❌ Erro de rede ao marcar mensagens como lidas:", error);
+      // Em caso de erro, poderíamos reverter o estado local aqui
+    }
+  };
+
+  return {conversations, messages, markAsRead};
 }

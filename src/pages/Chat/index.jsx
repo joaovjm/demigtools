@@ -14,6 +14,7 @@ import {
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { IoMdCall, IoMdVideocam } from "react-icons/io";
 import { useConversations } from "../../hooks/useConversations";
+import { getUnreadMessagesCount } from "../../helper/unreadMessages";
 import Avatar from "../../components/forms/Avatar";
 
 const Chat = () => {
@@ -21,7 +22,7 @@ const Chat = () => {
   const [message, setMessage] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const messsageRef = useRef(null);
-  const { conversations, messages } = useConversations();
+  const { conversations, messages, markAsRead } = useConversations();
   const [isMenuMediaOpen, setIsMenuMediaOpen] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState();
 
@@ -152,6 +153,8 @@ const Chat = () => {
               onClick={() => {
                 setSelectedConversation(contact);
                 setIsMobileMenuOpen(false);
+                // Marcar mensagens como lidas ao selecionar conversa
+                markAsRead(contact.conversation_id);
               }}
             >
               <div className="contact-avatar">
@@ -171,8 +174,12 @@ const Chat = () => {
                 </div>
                 <div className="contact-footer">
                   <p className="contact-message">{contact.last_message}</p>
-
-                  <span className="unread-badge">5</span>
+                  {(() => {
+                    const unreadCount = getUnreadMessagesCount(messages, contact.conversation_id);
+                    return unreadCount > 0 ? (
+                      <span className="unread-badge">{unreadCount}</span>
+                    ) : null;
+                  })()}
                 </div>
               </div>
             </div>
