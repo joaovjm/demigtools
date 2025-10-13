@@ -22,14 +22,22 @@ export function useConversations() {
     isGlobalInitialized = true;
 
     (async () => {
-      const data = await getConversations();
-      globalConversations = data;
-      setConversations(data);
+      try {
+        const data = await getConversations();
+        globalConversations = data;
+        setConversations(data);
+      } catch (error) {
+        console.error("❌ Erro ao carregar conversas:", error);
+      }
     })();
     (async () => {
-      const data = await getMessages();
-      globalMessages = data;
-      setMessages(data);
+      try {
+        const data = await getMessages();
+        globalMessages = data;
+        setMessages(data);
+      } catch (error) {
+        console.error("❌ Erro ao carregar mensagens:", error);
+      }
     })();
 
     const msgChannel = supabase
@@ -63,17 +71,34 @@ export function useConversations() {
             }
           });
           setMessages((prev) => {
-            // Verifica se a mensagem já existe para evitar duplicação
-            const messageExists = prev.some(existingMsg => 
-              existingMsg.message_id === msg.message_id || 
-              (existingMsg.body === msg.body && 
-               existingMsg.conversation_id === msg.conversation_id && 
-               Math.abs(new Date(existingMsg.received_at) - new Date(msg.received_at)) < 1000)
+            // Primeiro procura por mensagem otimística correspondente
+            const optimisticIndex = prev.findIndex(existingMsg => 
+              existingMsg.isOptimistic && 
+              existingMsg.body === msg.body && 
+              existingMsg.conversation_id === msg.conversation_id
             );
+
+            // Se encontrou mensagem otimística, substitui pela real
+            if (optimisticIndex >= 0) {
+              const optimisticMsg = prev[optimisticIndex];
+              const updated = [...prev];
+              updated[optimisticIndex] = msg;
+              globalMessages = updated;
+              return globalMessages;
+            }
+
+            // Verifica se a mensagem já existe (duplicação real)
+            const messageExists = prev.some(existingMsg => 
+              existingMsg.message_id === msg.message_id && !existingMsg.isOptimistic
+            );
+            
             if (messageExists) {
               return prev;
             }
-            globalMessages = [...prev, msg];
+
+            // Adiciona nova mensagem (mensagem de outro usuário ou primeira vez)
+            const updated = [...prev, msg];
+            globalMessages = updated;
             return globalMessages;
           });
         }
@@ -120,7 +145,12 @@ export function useConversations() {
           });
         }
       )
-      .subscribe();
+      .subscribe((status, error) => {
+        if (status === 'SUBSCRIBED') {
+        } else if (status === 'CHANNEL_ERROR') {
+          console.error("❌ Erro na conexão realtime (messages):", error);
+        }
+      });
 
     const convChannel = supabase
       .channel("conversations")
@@ -140,7 +170,12 @@ export function useConversations() {
           });
         }
       )
-      .subscribe();
+      .subscribe((status, error) => {
+        if (status === 'SUBSCRIBED') {
+        } else if (status === 'CHANNEL_ERROR') {
+          console.error("❌ Erro na conexão realtime (conversations):", error);
+        }
+      });
 
     globalSubscriptions = { msgChannel, convChannel };
 
@@ -184,9 +219,7 @@ export function useConversations() {
         }
         // Em caso de erro, poderíamos reverter o estado local aqui
       } else {
-        console.log("✅ Mensagens marcadas como lidas:", result.updatedCount, "mensagens");
         if (result.method) {
-          console.log("🔧 Método usado:", result.method);
         }
         if (result.warning) {
           console.warn("⚠️ Aviso:", result.warning);
@@ -198,5 +231,82 @@ export function useConversations() {
     }
   };
 
-  return {conversations, messages, markAsRead};
+  // Função para adicionar mensagem otimista (aparece imediatamente)
+  const addOptimisticMessage = (message) => {
+    const timestamp = Date.now();
+    const optimisticMessage = {
+      ...message,
+      message_id: `temp_${timestamp}_${Math.random().toString(36).substr(2, 9)}`, // ID temporário único
+      received_at: new Date().toISOString(),
+      status: "sending", // Status especial para mensagens sendo enviadas
+      isOptimistic: true, // Flag para identificar mensagens otimistas
+      optimisticTimestamp: timestamp // Para debug e identificação
+    };
+
+    setMessages((prev) => {
+      const updated = [...prev, optimisticMessage];
+      globalMessages = updated;
+      return updated;
+    });
+
+    // Atualiza também a conversa para mostrar a última mensagem
+    setConversations((prev) => {
+      const idx = prev.findIndex(
+        (c) => c.conversation_id === message.conversation_id
+      );
+      if (idx >= 0) {
+        const updated = {
+          ...prev[idx],
+          last_message: message.body,
+          last_message_time: optimisticMessage.received_at,
+          last_message_status: "sending",
+        };
+        const newList = [...prev];
+        newList[idx] = updated;
+        globalConversations = newList;
+        return globalConversations;
+      }
+      return prev;
+    });
+
+    return optimisticMessage.message_id; // Retorna o ID temporário
+  };
+
+  // Função para remover mensagem otimista em caso de erro
+  const removeOptimisticMessage = (tempId) => {
+    setMessages((prev) => {
+      const messageToRemove = prev.find(msg => msg.message_id === tempId);
+      const updated = prev.filter(msg => msg.message_id !== tempId);
+      if (messageToRemove) {
+      }
+      globalMessages = updated;
+      return updated;
+    });
+  };
+
+  // Função para substituir mensagem otimista pela real
+  const replaceOptimisticMessage = (tempId, realMessage) => {
+    setMessages((prev) => {
+      const updated = prev.map(msg => 
+        msg.message_id === tempId ? realMessage : msg
+      );
+      globalMessages = updated;
+      return updated;
+    });
+  };
+
+  // Função para recarregar conversas
+  const reloadConversations = async () => {
+    try {
+      const data = await getConversations();
+      globalConversations = data;
+      setConversations(data);
+      return data;
+    } catch (error) {
+      console.error("❌ Erro ao recarregar conversas:", error);
+      return [];
+    }
+  };
+
+  return {conversations, messages, markAsRead, addOptimisticMessage, removeOptimisticMessage, replaceOptimisticMessage, reloadConversations};
 }

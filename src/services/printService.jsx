@@ -15,7 +15,6 @@ export async function getDonationsPrint(startDate, endDate) {
       .lte("donation_day_to_receive", endDate);
 
     if (error) {
-      console.log(error.message);
     } else {
       newCollectorInDonation = dateDonations;
       const donor_id = dateDonations.map((item) => item?.donor?.donor_id);
@@ -34,7 +33,6 @@ export async function getDonationsPrint(startDate, endDate) {
               .limit(1);
 
           if (donationDataError) {
-            console.log(donationDataError.message);
           } else {
             if (donationData?.length > 0) {
               newCollectorInDonation = newCollectorInDonation.map((item) =>
@@ -65,7 +63,6 @@ export async function getDonationsPrint(startDate, endDate) {
       return ordered;
     }
   } catch (error) {
-    console.log(error);
   }
 }
 
@@ -85,6 +82,5 @@ export async function getDonationsPrinted() {
 
     return data;
   } catch (error) {
-    console.log(error);
   }
 }

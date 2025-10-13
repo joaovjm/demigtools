@@ -12,11 +12,9 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "conversation_id é obrigatório" });
     }
 
-    console.log('📱 Marcando mensagens como lidas para conversa:', conversationId);
 
     // Usar status "received" para identificar mensagens de clientes
     // (mesmo critério usado para posicionamento das mensagens)
-    console.log('🔧 Usando status "received" para identificar mensagens de clientes');
 
     // Primeira tentativa: usar campo is_read
     let { data: updatedMessages, error } = await supabase
@@ -31,7 +29,6 @@ export default async function handler(req, res) {
       
       // Se erro por campo não existir, tenta criar coluna
       if (error.message && error.message.includes('column "is_read" does not exist')) {
-        console.log('🔧 Campo is_read não existe - tentando criar...');
         
         // Tenta criar a coluna
         const { error: alterError } = await supabase.rpc('exec', {
@@ -75,7 +72,6 @@ export default async function handler(req, res) {
       }
     }
 
-    console.log('✅ Mensagens marcadas como lidas:', updatedMessages?.length || 0);
 
     return res.status(200).json({ 
       success: true, 

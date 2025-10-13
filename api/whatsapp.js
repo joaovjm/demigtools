@@ -19,7 +19,6 @@ export default async function handler(req, res) {
     const challenge = req.query["hub.challenge"];
 
     if (mode && token && mode === "subscribe" && token === verify_token) {
-      console.log("✅ WEBHOOK VERIFICADO");
       return res.status(200).send(challenge);
     } else {
       return res.status(403).send("Token inválido");
@@ -46,12 +45,16 @@ export default async function handler(req, res) {
           return res.status(200).send("Nenhuma mensagem encontrada");
         }
 
-        const { data: existingContact } = await supabase
+        const { data: existingContact, error: contactSelectError } = await supabase
           .from("contacts")
           .select("contact_id")
           .eq("phone_number", wa_id)
-          .single();
+          .maybeSingle(); // Usa maybeSingle para evitar erro quando não encontra
 
+        if (contactSelectError) {
+          console.error("❌ Erro ao buscar contato:", contactSelectError);
+        }
+        
         if (existingContact) {
           contactId = existingContact.contact_id;
         } else {
@@ -67,13 +70,17 @@ export default async function handler(req, res) {
           contactId = newContact.contact_id;
         }
 
-        const { data: existingConv } = await supabase
+        const { data: existingConv, error: convSelectError } = await supabase
           .from("conversations")
           .select("conversation_id")
           .eq("type", "individual")
           .eq("title", contact.profile?.name || wa_id)
-          .single();
+          .maybeSingle(); // Usa maybeSingle para evitar erro quando não encontra
 
+        if (convSelectError) {
+          console.error("❌ Erro ao buscar conversa:", convSelectError);
+        }
+        
         if (existingConv) {
           conversationId = existingConv.conversation_id;
         } else {
@@ -117,9 +124,12 @@ export default async function handler(req, res) {
           .from("messages")
           .update({ status: status.status })
           .eq("whatsapp_message_id", status.id)
-          .select()
-          .single();
-        if (updateMsgError) throw updateMsgError;
+          .select();
+        if (updateMsgError) {
+          console.error("❌ Erro ao atualizar status da mensagem:", updateMsgError);
+          // Não lança erro para não quebrar o webhook
+        } else {
+        }
         
       }
 

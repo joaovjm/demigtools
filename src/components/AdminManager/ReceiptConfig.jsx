@@ -45,118 +45,137 @@ const ReceiptConfig = () => {
           setInEdit(!inEdit);
         }
       } catch (error) {
-        console.log(error);
       }
     } else {
       setInEdit(!inEdit);
     }
   };
   return (
-    <>
-      <div>
-        <div className="receiptconfig-pix">
-          <h4>PIX</h4>
-          <div className="receiptconfig-pix-inputs">
-            <div className="input-field">
-              <label>Chave PIX</label>
-              <input
-                value={editReceipt.pixKey}
-                onChange={(e) => editReceiptChange("pixKey", e.target.value)}
-                type="text"
-                disabled={!inEdit}
-              />
+    <div className="receipt-config-container">
+      <div className="receipt-config-content">
+        <h3 className="receipt-config-title">Configuração de Recibo</h3>
+        <div className="receipt-config-form">
+          {/* Seção PIX */}
+          <div className="receipt-config-section">
+            <h4>Informações PIX</h4>
+            <div className="form-row">
+              <div className="form-group">
+                <label>Chave PIX</label>
+                <input
+                  value={editReceipt.pixKey}
+                  onChange={(e) => editReceiptChange("pixKey", e.target.value)}
+                  type="text"
+                  disabled={!inEdit}
+                  className="receipt-config-input"
+                />
+              </div>
+              <div className="form-group">
+                <label>Descrição</label>
+                <input
+                  value={editReceipt.description}
+                  onChange={(e) =>
+                    editReceiptChange("description", e.target.value)
+                  }
+                  type="text"
+                  disabled={!inEdit}
+                  className="receipt-config-input"
+                />
+              </div>
             </div>
-            <div className="input-field">
-              <label>Descrição</label>
-              <input
-                value={editReceipt.description}
-                onChange={(e) =>
-                  editReceiptChange("description", e.target.value)
-                }
-                type="text"
-                disabled={!inEdit}
-              />
-            </div>
-            <div className="input-field">
-              <label>Nome</label>
-              <input
-                value={editReceipt.pixName}
-                onChange={(e) => editReceiptChange("pixName", e.target.value)}
-                type="text"
-                disabled={!inEdit}
-              />
-            </div>
-            <div className="input-field">
-              <label>Cidade</label>
-              <input
-                value={editReceipt.pixCity}
-                onChange={(e) => editReceiptChange("pixCity", e.target.value)}
-                type="text"
-                disabled={!inEdit}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div>
-        <hr style={{ marginTop: 24, marginBottom: 20 }} />
-        <div className="receiptconfig-socialmedia">
-          <h4>Midias Sociais e Contatos</h4>
-          <div className="receiptconfig-pix-inputs">
-            <div className="input-field">
-              <label>Instagram</label>
-              <input
-                type="text"
-                value={editReceipt.instagram}
-                onChange={(e) => editReceiptChange("instagram", e.target.value)}
-                disabled={!inEdit}
-              />
-            </div>
-            <div className="input-field">
-              <label>Facebook</label>
-              <input
-                type="text"
-                value={editReceipt.facebook}
-                onChange={(e) => editReceiptChange("facebook", e.target.value)}
-                disabled={!inEdit}
-              />
-            </div>
-            <div className="input-field">
-              <label>Email</label>
-              <input
-                type="text"
-                value={editReceipt.email}
-                onChange={(e) => editReceiptChange("email", e.target.value)}
-                disabled={!inEdit}
-              />
+            
+            <div className="form-row">
+              <div className="form-group">
+                <label>Nome</label>
+                <input
+                  value={editReceipt.pixName}
+                  onChange={(e) => editReceiptChange("pixName", e.target.value)}
+                  type="text"
+                  disabled={!inEdit}
+                  className="receipt-config-input"
+                />
+              </div>
+              <div className="form-group">
+                <label>Cidade</label>
+                <input
+                  value={editReceipt.pixCity}
+                  onChange={(e) => editReceiptChange("pixCity", e.target.value)}
+                  type="text"
+                  disabled={!inEdit}
+                  className="receipt-config-input"
+                />
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div style={{height: 240}}>
-        <hr style={{ marginTop: 24, marginBottom: 20 }} />
-        <div className="receiptconfig-message">
-          <h4>Verso do Recibo</h4>
-          <div className="input-field">
-            <label>Mensagem do verso do recibo</label>
-            <input
-              value={editReceipt.backOfReceipt}
-              onChange={(e) =>
-                editReceiptChange("backOfReceipt", e.target.value)
-              }
-              type="text"
-              disabled={!inEdit}
-            />
-          </div>
-        </div>
-      </div>
 
-      <div style={{ display: "Flex", width: "100%", justifyContent: "center" }}>
-        <button style={{ width: "60%" }} onClick={handleEditReceipt}>
-          {inEdit ? "Salvar" : "Editar"}
-        </button>
+          {/* Seção Redes Sociais */}
+          <div className="receipt-config-section">
+            <h4>Midias Sociais e Contatos</h4>
+            <div className="form-row">
+              <div className="form-group">
+                <label>Instagram</label>
+                <input
+                  type="text"
+                  value={editReceipt.instagram}
+                  onChange={(e) => editReceiptChange("instagram", e.target.value)}
+                  disabled={!inEdit}
+                  className="receipt-config-input"
+                />
+              </div>
+              <div className="form-group">
+                <label>Facebook</label>
+                <input
+                  type="text"
+                  value={editReceipt.facebook}
+                  onChange={(e) => editReceiptChange("facebook", e.target.value)}
+                  disabled={!inEdit}
+                  className="receipt-config-input"
+                />
+              </div>
+            </div>
+            
+            <div className="form-row">
+              <div className="form-group">
+                <label>Email</label>
+                <input
+                  type="text"
+                  value={editReceipt.email}
+                  onChange={(e) => editReceiptChange("email", e.target.value)}
+                  disabled={!inEdit}
+                  className="receipt-config-input"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Seção Mensagem do Verso */}
+          <div className="receipt-config-section">
+            <h4>Verso do Recibo</h4>
+            <div className="form-group">
+              <label>Mensagem do verso do recibo</label>
+              <textarea
+                value={editReceipt.backOfReceipt}
+                onChange={(e) =>
+                  editReceiptChange("backOfReceipt", e.target.value)
+                }
+                disabled={!inEdit}
+                className="receipt-config-textarea"
+                placeholder="Digite a mensagem que aparecerá no verso do recibo..."
+              />
+            </div>
+          </div>
+
+          {/* Botão de Ação */}
+          <div className="receipt-config-actions">
+            <button 
+              onClick={handleEditReceipt}
+              className="receipt-config-btn primary"
+            >
+              {inEdit ? "Salvar Configurações" : "Editar Configurações"}
+            </button>
+          </div>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 
