@@ -1,4 +1,5 @@
 import supabase from "../src/helper/supaBaseClient.js";
+import { formatPhoneForWhatsApp, isValidPhoneNumber } from "../src/utils/phoneUtils.js";
 
 export default async function handler(req, res) {
   try {
@@ -10,6 +11,16 @@ export default async function handler(req, res) {
     if (!to || !message || !type) {
       return res.status(400).json({ error: "Dados incompletos" });
     }
+
+    // Valida e formata o número de telefone
+    if (!isValidPhoneNumber(to)) {
+      return res.status(400).json({ 
+        error: "Número de telefone inválido",
+        details: `Número recebido: ${to}. Use o formato: +5511999999999` 
+      });
+    }
+
+    const formattedPhone = formatPhoneForWhatsApp(to);
 
     const phoneId = process.env.WHATSAPP_PHONE_NUMBER_ID;
     const accessToken = process.env.WHATSAPP_ACCESS_TOKEN;
@@ -33,13 +44,14 @@ export default async function handler(req, res) {
         },
         body: JSON.stringify({
           messaging_product: "whatsapp",
-          to: to,
+          to: formattedPhone,
           type: type,
           text: { body: message },
         }),
       }
     );
     const result = await response.json();
+    console.log(result)
 
     if (!response.ok) {
       return res.status(response.status).json({

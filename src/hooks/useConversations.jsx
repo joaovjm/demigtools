@@ -302,6 +302,7 @@ export function useConversations() {
       globalConversations = data;
       setConversations(data);
       return data;
+      console.log(data)
     } catch (error) {
       console.error("❌ Erro ao recarregar conversas:", error);
       return [];

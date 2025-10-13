@@ -70,30 +70,58 @@ export default async function handler(req, res) {
           contactId = newContact.contact_id;
         }
 
-        const { data: existingConv, error: convSelectError } = await supabase
+        // Busca conversa existente de forma mais robusta
+        // 1º: Procura conversas que já tenham mensagens deste contato (via contact_id)
+        const { data: existingConvByContact, error: convByContactError } = await supabase
           .from("conversations")
-          .select("conversation_id")
+          .select(`
+            conversation_id,
+            messages!inner (
+              from_contact
+            )
+          `)
           .eq("type", "individual")
-          .eq("title", contact.profile?.name || wa_id)
-          .maybeSingle(); // Usa maybeSingle para evitar erro quando não encontra
+          .eq("messages.from_contact", contactId)
+          .limit(1)
+          .maybeSingle();
 
-        if (convSelectError) {
-          console.error("❌ Erro ao buscar conversa:", convSelectError);
+        if (convByContactError && convByContactError.code !== 'PGRST116') {
+          console.error("❌ Erro ao buscar conversa por contato:", convByContactError);
         }
-        
-        if (existingConv) {
-          conversationId = existingConv.conversation_id;
+
+        if (existingConvByContact) {
+          conversationId = existingConvByContact.conversation_id;
+          console.log("✅ Conversa encontrada via contato:", conversationId);
         } else {
-          const { data: newConv, error: insertConvError } = await supabase
+          // 2º: Se não encontrou via contato, procura por título (fallback)
+          const { data: existingConvByTitle, error: convByTitleError } = await supabase
             .from("conversations")
-            .insert({
-              type: "individual",
-              title: contact.profile?.name || wa_id,
-            })
-            .select()
-            .single();
-          if (insertConvError) throw insertConvError;
-          conversationId = newConv.conversation_id;
+            .select("conversation_id")
+            .eq("type", "individual")
+            .eq("title", contact.profile?.name || wa_id)
+            .maybeSingle();
+
+          if (convByTitleError) {
+            console.error("❌ Erro ao buscar conversa por título:", convByTitleError);
+          }
+
+          if (existingConvByTitle) {
+            conversationId = existingConvByTitle.conversation_id;
+            console.log("✅ Conversa encontrada via título:", conversationId);
+          } else {
+            // 3º: Se não encontrou nenhuma, cria nova conversa
+            const { data: newConv, error: insertConvError } = await supabase
+              .from("conversations")
+              .insert({
+                type: "individual",
+                title: contact.profile?.name || wa_id,
+              })
+              .select()
+              .single();
+            if (insertConvError) throw insertConvError;
+            conversationId = newConv.conversation_id;
+            console.log("✅ Nova conversa criada:", conversationId);
+          }
         }
         // 🔹 Inserir mensagem
         const { data: newMessage, error: insertMsgError } = await supabase
