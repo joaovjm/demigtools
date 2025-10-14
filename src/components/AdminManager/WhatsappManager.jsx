@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { getOperators } from "../../helper/getOperators";
+import supabase from "../../helper/supaBaseClient";
 
 const WhatsappManager = () => {
   const [activeTab, setActiveTab] = useState("templates");
@@ -26,6 +28,14 @@ const WhatsappManager = () => {
     variables: [], // Array de strings para os parâmetros
   });
   const [campaignLoading, setCampaignLoading] = useState(false);
+
+  // Estados para Gerenciar Contatos
+  const [contacts, setContacts] = useState([]);
+  const [contactsLoading, setContactsLoading] = useState(false);
+  const [editingContact, setEditingContact] = useState(null);
+  const [editOperatorCode, setEditOperatorCode] = useState("");
+  const [operators, setOperators] = useState([]);
+  const [operatorsLoading, setOperatorsLoading] = useState(false);
 
   // Função para consultar status de template
   const checkTemplateStatus = async (templateName) => {
@@ -431,13 +441,130 @@ const WhatsappManager = () => {
     setCampaignLoading(false);
   };
 
-  // Carregar dados quando a aba de campanhas for ativada
-  React.useEffect(() => {
+  // Função para carregar contatos
+  const loadContacts = async () => {
+    setContactsLoading(true);
+    try {
+      const response = await fetch("/api/contacts");
+      const data = await response.json();
+      
+      if (data.success) {
+        // Filtrar apenas os dados necessários: telefone, nome do operador, código do operador
+        const filteredContacts = (data.contacts || []).map(contact => ({
+          id: contact.id,
+          phone_number: contact.phone_number,
+          operator_name: contact.operator_name,
+          operator_code_id: contact.operator_code_id
+        }));
+        setContacts(filteredContacts);
+      } else {
+        alert("Erro ao carregar contatos");
+      }
+    } catch (error) {
+      console.error("Erro ao carregar contatos:", error);
+      alert("Erro ao carregar contatos");
+    }
+    setContactsLoading(false);
+  };
+
+  // Função para carregar operadores ativos
+  const loadOperators = async () => {
+    setOperatorsLoading(true);
+    try {
+      const data = await getOperators({ active: true });
+      
+      if (data && !data.error) {
+        setOperators(data || []);
+      } else {
+        console.error("Erro ao carregar operadores:", data?.error);
+        alert("Erro ao carregar operadores");
+      }
+    } catch (error) {
+      console.error("Erro ao carregar operadores:", error);
+      alert("Erro ao carregar operadores");
+    }
+    setOperatorsLoading(false);
+  };
+
+  // Função para iniciar edição de contato
+  const startEditContact = (contact) => {
+    setEditingContact(contact.id);
+    setEditOperatorCode(contact.operator_code_id || "");
+  };
+
+  // Função para cancelar edição
+  const cancelEditContact = () => {
+    setEditingContact(null);
+    setEditOperatorCode("");
+  };
+
+  // Função para salvar edição do código do operador
+  const saveOperatorCode = async (contactId) => {
+    setContactsLoading(true);
+    try {
+      console.log("🔄 Tentando atualizar contato:", contactId);
+      console.log("📝 Novo código do operador:", editOperatorCode);
+      
+      // Usar Supabase diretamente em vez da API
+      const { data: updatedContact, error } = await supabase
+        .from("contacts")
+        .update({ operator_code_id: editOperatorCode })
+        .eq("contact_id", contactId)
+        .select(`
+          contact_id,
+          phone_number,
+          operator_code_id,
+          operator!operator_code_id (
+            operator_name,
+            operator_code_id
+          )
+        `)
+        .single();
+
+      if (error) {
+        console.error("❌ Erro ao atualizar contato no Supabase:", error);
+        throw new Error(`Erro ao atualizar contato: ${error.message}`);
+      }
+
+      if (updatedContact) {
+        // Atualizar o contato na lista local
+        setContacts(prev => 
+          prev.map(contact => 
+            contact.id === contactId 
+              ? { 
+                  ...contact, 
+                  operator_code_id: editOperatorCode,
+                  operator_name: updatedContact.operator?.operator_name || contact.operator_name
+                }
+              : contact
+          )
+        );
+        setEditingContact(null);
+        setEditOperatorCode("");
+        alert("Código do operador atualizado com sucesso!");
+      } else {
+        throw new Error("Contato não foi atualizado");
+      }
+    } catch (error) {
+      console.error("❌ Erro ao atualizar código do operador:", error);
+      alert(`Erro ao atualizar código do operador: ${error.message}`);
+    }
+    setContactsLoading(false);
+  };
+
+
+  // Carregar dados quando as abas forem ativadas
+  useEffect(() => {
     if (activeTab === "campaigns") {
       loadAllTemplates();
       loadCampaigns();
+    } else if (activeTab === "contacts") {
+      loadContacts();
+      loadOperators();
     }
   }, [activeTab]);
+
+  console.log(contacts)
 
   return (
     <div className="whatsapp-manager-container">
@@ -466,6 +593,14 @@ const WhatsappManager = () => {
           onClick={() => setActiveTab("campaigns")}
         >
           Mensagens de Campanha
+        </div>
+        <div
+          className={`whatsapp-manager-tab ${
+            activeTab === "contacts" ? "active" : ""
+          }`}
+          onClick={() => setActiveTab("contacts")}
+        >
+          Gerenciar Contatos
         </div>
         <div
           className={`whatsapp-manager-tab ${
@@ -922,6 +1057,103 @@ const WhatsappManager = () => {
               ) : (
                 <div className="no-campaigns-message">
                   Nenhuma campanha criada ainda. Crie sua primeira campanha acima.
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {activeTab === "contacts" && (
+          <div className="whatsapp-manager-section">
+            <h3>Gerenciar Contatos</h3>
+
+            <div className="contacts-section">
+              <div className="contacts-header">
+                <h4>Lista de Contatos</h4>
+                <button
+                  onClick={loadContacts}
+                  disabled={contactsLoading}
+                  className="whatsapp-manager-btn secondary"
+                >
+                  {contactsLoading ? "Carregando..." : "Atualizar Lista"}
+                </button>
+              </div>
+
+              {contactsLoading ? (
+                <div className="loading-message">Carregando contatos...</div>
+              ) : contacts.length > 0 ? (
+                <div className="contacts-table">
+                  <div className="contacts-table-header">
+                    <div className="contact-cell">Telefone</div>
+                    <div className="contact-cell">Nome do Operador</div>
+                    <div className="contact-cell">Código do Operador</div>
+                    <div className="contact-cell">Ações</div>
+                  </div>
+                  {contacts.map((contact) => (
+                    <div key={contact.id} className="contacts-table-row">
+                      <div className="contact-cell" data-label="Telefone">
+                        <strong>{contact.phone_number || "Sem telefone"}</strong>
+                      </div>
+                      <div className="contact-cell" data-label="Nome do Operador">
+                        {contact.operator_name || "Sem operador"}
+                      </div>
+                      <div className="contact-cell" data-label="Código do Operador">
+                        {editingContact === contact.id ? (
+                          <select
+                            value={editOperatorCode}
+                            onChange={(e) => setEditOperatorCode(e.target.value)}
+                            className="whatsapp-manager-select small"
+                            style={{ width: "100%", fontSize: "12px" }}
+                          >
+                            <option value="">Selecione um operador</option>
+                            {operators.map((operator) => (
+                              <option key={operator.operator_code_id} value={operator.operator_code_id}>
+                                {operator.operator_name} ({operator.operator_code_id})
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          <span className="operator-code-display">
+                            {contact.operator_code_id || "Sem código"}
+                          </span>
+                        )}
+                      </div>
+                      <div className="contact-cell" data-label="Ações">
+                        {editingContact === contact.id ? (
+                          <div className="edit-actions">
+                            <button
+                              onClick={() => saveOperatorCode(contact.id)}
+                              disabled={contactsLoading}
+                              className="whatsapp-manager-btn primary small"
+                              style={{ fontSize: "11px", padding: "4px 8px" }}
+                            >
+                              Salvar
+                            </button>
+                            <button
+                              onClick={cancelEditContact}
+                              disabled={contactsLoading}
+                              className="whatsapp-manager-btn secondary small"
+                              style={{ fontSize: "11px", padding: "4px 8px" }}
+                            >
+                              Cancelar
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => startEditContact(contact)}
+                            className="whatsapp-manager-btn secondary small"
+                            style={{ fontSize: "11px", padding: "4px 8px" }}
+                          >
+                            Editar
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="no-contacts-message">
+                  Nenhum contato encontrado. Verifique se a tabela 'contacts' existe e possui dados.
                 </div>
               )}
             </div>

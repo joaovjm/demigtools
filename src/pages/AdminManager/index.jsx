@@ -45,6 +45,9 @@ const AdminManager = () => {
   return (
     <main className="admin-manager">
       <div className="admin-manager-menu">
+        <div className="admin-manager-menu-header">
+          <h3>Painel Admin</h3>
+        </div>
         <div
           className={`admin-manager-menu-item ${
             active === "meta" ? "active" : ""
@@ -58,9 +61,8 @@ const AdminManager = () => {
             active === "whatsapp" ? "active" : ""
           }`}
           onClick={() => setActive("whatsapp")}
-          style={{ fontSize: 12 }}
         >
-          Whatsapp
+          WhatsApp
         </div>
         <div
           className={`admin-manager-menu-item ${

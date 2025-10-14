@@ -1,6 +1,8 @@
 import supabase from "./superBaseClient";
 
 export async function getMessages() {
+
+    
     try {
         const { data, error } = await supabase
             .from("messages")
