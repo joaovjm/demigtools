@@ -1,10 +1,13 @@
 /* Variáveis globais */
 :root {
-  --primary-color: #5933b1;
-  --secondary-color: #4a2b9a;
-  --dark-color: #000000;
-  --light-color: #ffffff;
-  --gray-color: #f5f5f5;
+  --primary-color: #faa01c;
+  --secondary-color: #e8901a;
+  --dark-color: #1a1a1a;
+  --navbar-color: #2a2a2a;
+  --container-color: #1f1d1d;
+  --section-color: #363a3d;
+  --light-color: #faf5e9;
+  --gray-color: #2f2d2d;
   --transition: all 0.3s ease;
   --box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px;
   --border-radius: 6px;
@@ -25,13 +28,24 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: var(--dark-color);
+  background: linear-gradient(135deg, var(--navbar-color) 0%, var(--dark-color) 100%);
   width: 100%;
   height: 70px;
   padding: 0 2rem;
-  box-shadow: var(--box-shadow);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   z-index: 1000;
   position: relative;
+  border-bottom: 3px double var(--section-color);
+}
+
+.nav::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(250, 160, 28, 0.3), transparent);
 }
 .menu-and-logo{
   display: flex;
@@ -72,9 +86,11 @@
   justify-content: center;
   width: 200px;
   height: 50%;
-  border: 3px double #7C7C8C;
-  border-radius: 6px;
+  border: 3px double var(--section-color);
+  border-radius: var(--border-radius);
   font-weight: 700;
+  background-color: var(--container-color);
+  color: var(--primary-color);
 }
 
 .link_login {
@@ -131,6 +147,7 @@
 
 .nav-item-content:hover {
   background-color: var(--primary-color);
+  color: var(--container-color);
 }
 
 .submenu-itens{
@@ -154,7 +171,8 @@
   left: 0;
   list-style: none;
   border-radius: var(--border-radius);
-  background-color: var(--dark-color);
+  background-color: var(--container-color);
+  border: 3px double var(--section-color);
   box-shadow: var(--box-shadow);
   z-index: 100;
   overflow: hidden;
@@ -177,6 +195,7 @@
 
 .dropdown-admin li:hover {
   background-color: var(--primary-color);
+  color: var(--container-color);
 }
 
 /* User Profile */
@@ -196,6 +215,7 @@
 
 .icon-user:hover {
   color: var(--primary-color);
+  transform: scale(1.1);
 }
 
 .user-dropdown {
@@ -214,8 +234,9 @@
 
 .operator-type {
   font-size: 0.7rem;
-  color: #a8a8a8;
+  color: var(--primary-color);
   margin-top: 4px;
+  font-weight: 600;
 }
 
 /* Desktop Only Elements */
@@ -244,13 +265,15 @@
   top: 70px;
   left: 0;
   width: 100%;
-  background-color: var(--dark-color);
+  background: linear-gradient(135deg, var(--navbar-color) 0%, var(--dark-color) 100%);
+  border: 3px double var(--section-color);
+  border-top: none;
   z-index: 99;
   transition: var(--transition);
   transform: translateY(-150%);
   opacity: 0;
   visibility: hidden;
-  box-shadow: var(--box-shadow);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .mobile-menu.active {
@@ -284,8 +307,9 @@
 }
 
 .mobile-dropdown {
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: var(--section-color);
   list-style: none;
+  border-top: 2px solid var(--gray-color);
 }
 
 .mobile-dropdown-item {
@@ -299,6 +323,11 @@
   display: block;
   width: 100%;
   font-size: 0.9rem;
+  transition: var(--transition);
+}
+
+.mobile-dropdown-item a:hover {
+  color: var(--primary-color);
 }
 
 .mobile-operator-info {
@@ -319,6 +348,48 @@
   flex-direction: column;
   align-items: flex-start;
 }
+/* Efeitos adicionais para melhorar a experiência */
+.nav-item-content {
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-item-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(250, 160, 28, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.nav-item-content:hover::before {
+  left: 100%;
+}
+
+/* Melhorar o visual do botão de login */
+.link_login {
+  position: relative;
+  overflow: hidden;
+}
+
+.link_login::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.link_login:hover::before {
+  left: 100%;
+}
+
 /* Media Queries */
 @media screen and (max-width: 1100px) {
   .header-nav{

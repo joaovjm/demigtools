@@ -46,7 +46,5 @@ const DEFAULT_COMPANY_PHONE = "5511999999999"; // Formato: código país + DDD +
 export function initCompanyConfig() {
   if (typeof window !== 'undefined' && !localStorage.getItem('companyPhoneNumber')) {
     setCompanyPhoneNumber(DEFAULT_COMPANY_PHONE);
-    console.log('💬 Chat: Número da empresa configurado ->', DEFAULT_COMPANY_PHONE);
-    console.log('💡 Para alterar, edite DEFAULT_COMPANY_PHONE em src/helper/companyConfig.jsx');
   }
 }

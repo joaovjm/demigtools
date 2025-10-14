@@ -1,8 +1,9 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import { getConversations } from "../helper/getConversations.jsx";
 import { getMessages } from "../helper/getMessages.jsx";
 import { markMessagesAsRead } from "../helper/unreadMessages.jsx";
 import supabase from "../helper/superBaseClient";
+import { UserContext } from "../context/UserContext";
 
 // Singleton para evitar múltiplas instâncias do hook
 let globalConversations = [];
@@ -14,6 +15,7 @@ export function useConversations() {
   const [conversations, setConversations] = useState(globalConversations);
   const [messages, setMessages] = useState(globalMessages);
   const isInitialized = useRef(false);
+  const  {operatorData} = useContext(UserContext);
 
   useEffect(() => {
     // Evita múltiplas inicializações
@@ -23,7 +25,7 @@ export function useConversations() {
 
     (async () => {
       try {
-        const data = await getConversations();
+        const data = await getConversations(operatorData.operator_code_id);
         globalConversations = data;
         setConversations(data);
       } catch (error) {
@@ -32,6 +34,7 @@ export function useConversations() {
     })();
     (async () => {
       try {
+        
         const data = await getMessages();
         globalMessages = data;
         setMessages(data);
@@ -63,7 +66,7 @@ export function useConversations() {
               globalConversations = [updated, ...newList];
               return globalConversations;
             } else {
-              getConversations().then((data) => {
+              getConversations(operatorData.operator_code_id).then((data) => {
                 globalConversations = data;
                 setConversations(data);
               });
@@ -154,6 +157,23 @@ export function useConversations() {
 
     const convChannel = supabase
       .channel("conversations")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "conversations" },
+        async (payload) => {
+          const conv = payload.new;
+          // Garante que a conversa inserida pertence ao operador atual
+          if (conv.operator_code_id !== operatorData.operator_code_id) return;
+
+          try {
+            const data = await getConversations(operatorData.operator_code_id);
+            globalConversations = data;
+            setConversations(data);
+          } catch (e) {
+            console.error("❌ Erro ao atualizar conversas após INSERT:", e);
+          }
+        }
+      )
       .on(
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "conversations" },
@@ -298,7 +318,7 @@ export function useConversations() {
   // Função para recarregar conversas
   const reloadConversations = async () => {
     try {
-      const data = await getConversations();
+      const data = await getConversations(operatorData.operator_code_id);
       globalConversations = data;
       setConversations(data);
       return data;

@@ -347,33 +347,33 @@ const Navbar = () => {
             (operatorData?.operator_type === "Operador" ||
               operatorData?.operator_type === "Operador Casa") ? (
             <div className="menu-and-logo">
-              <div className="nav-item-content">
-                <ul className="nav-items">
-                  <li
-                    key={Navitens[2].id}
-                    className={Navitens[2].cName}
-                    onMouseEnter={() => setShowDropdown(Navitens[2].title)}
-                    onMouseLeave={() => setShowDropdown(null)}
-                  >
+              <ul className="nav-items">
+                <li
+                  key={Navitens[2].id}
+                  className={Navitens[2].cName}
+                  onMouseEnter={() => setShowDropdown(Navitens[2].title)}
+                  onMouseLeave={() => setShowDropdown(null)}
+                >
+                  <div className="nav-item-content">
                     <p>{Navitens[2].title}</p>
                     <FaAngleDown className="dropdown-icon" />
+                  </div>
 
-                    {Navitens[2].title === "Operador" &&
-                      showDropdown === "Operador" && (
-                        <ul
-                          className="dropdown-admin"
-                          onClick={() => setShowDropdown(null)}
-                        >
-                          {OperadorMenu.map((admin) => (
-                            <li key={admin.id} className={admin.cName}>
-                              <Link to={admin.path}>{admin.title}</Link>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                  </li>
-                </ul>
-              </div>
+                  {Navitens[2].title === "Operador" &&
+                    showDropdown === "Operador" && (
+                      <ul
+                        className="dropdown-admin"
+                        onClick={() => setShowDropdown(null)}
+                      >
+                        {OperadorMenu.map((admin) => (
+                          <li key={admin.id} className={admin.cName}>
+                            <Link to={admin.path}>{admin.title}</Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                </li>
+              </ul>
               <div
                 ref={dropdownRef}
                 className="user-profile desktop-only"

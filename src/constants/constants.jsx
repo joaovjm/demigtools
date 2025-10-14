@@ -52,7 +52,7 @@ export const FORM_LABELS = {
   ADDRESS: "Endereço",
   CITY: "Cidade",
   NEIGHBORHOOD:"Bairro",
-  PHONE1: "Telefone 1",
+  PHONE1: "Whatsapp",
   PHONE2: "Telefone 2",
   PHONE3: "Telefone 3",
   DAY: "Dia",

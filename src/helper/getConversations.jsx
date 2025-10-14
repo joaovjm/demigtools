@@ -1,6 +1,7 @@
 import supabase from "./superBaseClient";
 
-export async function getConversations() {
+export async function getConversations(id) {
+  
   try {
     // Busca conversas com informações das mensagens mais recentes e contatos
     // Usando left join para incluir conversas mesmo sem mensagens (caso excepcional)
@@ -21,6 +22,7 @@ export async function getConversations() {
           )
         )
       `)
+      .eq("operator_code_id", id)
       .order('created_at', { ascending: false });
     
     if (error) {
