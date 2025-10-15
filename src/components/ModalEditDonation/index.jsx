@@ -6,6 +6,7 @@ import { ICONS } from "../../constants/constants";
 import { getCampains } from "../../helper/getCampains";
 import { getOperators } from "../../helper/getOperators";
 import { UserContext } from "../../context/UserContext";
+import GenerateReceiptPDF from "../GenerateReceiptPDF";
 
 const ModalEditDonation = ({ donation, setModalEdit }) => {
   const { operatorData } = useContext(UserContext);
@@ -15,8 +16,12 @@ const ModalEditDonation = ({ donation, setModalEdit }) => {
   const [campaign, setCampaign] = useState(donation.campaign_id);
   const [campaigns, setCampaigns] = useState([]);
   const [operator, setOperator] = useState(donation.operator_code_id);
-  const [impresso, setImpresso] = useState(donation.donation_print === "Sim" ? true : false);
-  const [recebido, setRecebido] = useState(donation.donation_received === "Sim" ? true : false);
+  const [impresso, setImpresso] = useState(
+    donation.donation_print === "Sim" ? true : false
+  );
+  const [recebido, setRecebido] = useState(
+    donation.donation_received === "Sim" ? true : false
+  );
 
   const [operators, setOperators] = useState([]);
   useEffect(() => {
@@ -90,119 +95,181 @@ const ModalEditDonation = ({ donation, setModalEdit }) => {
     }
   };
 
+  const handleDownloadPDF = async () => {
+    try {
+      // Prepara os dados no formato esperado pelo GenerateReceiptPDF
+      const donationData = {
+        ...donation,
+        donor: {
+          donor_name: donation.donor?.donor_name || "Nome não encontrado",
+        },
+        donation_campain: donation.donation_campain || "Campanha Geral",
+      };
+
+      const receiptConfig = {
+        pixKey:
+          "00020126360014BR.GOV.BCB.PIX0114+5521987654321520400005303986540510.005802BR5913EXEMPLO LTDA6009SAO PAULO62070503***6304A1B2",
+        pixName: "MANANCIAL",
+        pixCity: "Rio de Janeiro",
+      };
+
+      // Chama o GenerateReceiptPDF com o nome do colaborador no arquivo
+      await GenerateReceiptPDF({
+        cards: [donationData],
+        receiptConfig,
+        setOk: () => {},
+        includeCollaboratorName: true,
+        collaboratorName:
+          operators.find(
+            (op) => op.operator_code_id === donation.operator_code_id
+          )?.operator_name ||
+          donation.operator?.operator_name ||
+          "Colaborador",
+      });
+
+      toast.success("PDF gerado com sucesso!");
+    } catch (error) {
+      console.error("Erro ao gerar PDF:", error);
+      toast.error("Erro ao gerar PDF");
+    }
+  };
+
   return (
     <main className="modal-editDonation-container">
       <div className="modal-editDonation">
-        <div onSubmit={handleConfirm} className="form-modal-editDonation">
-          <div className="form-modal-editDonation-header">
-            <h5>Recibo: </h5>
+        <div className="modal-editDonation-content">
+          <div className="modal-editDonation-header">
+            <div className="modal-title-section">
+              <h3 className="modal-title">Detalhes da Doação</h3>
+              <span className="receipt-number">
+                Recibo: #{donation.receipt_donation_id}
+              </span>
+            </div>
             <button
               onClick={() => setModalEdit(false)}
-              className="btn-exit-editDonation"
+              className="btn-close-modal"
+              title="Fechar"
             >
-              Fechar
+              ✕
             </button>
           </div>
-          <div className="form-modal-editDonation-body">
-            <div className="input-field">
-              <label>Valor</label>
-              <input
-                type="text"
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-              />
-            </div>
-            <div className="input-field">
-              <label>Data</label>
-              <input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-              />
-            </div>
-            <div className="input-field">
-              <label>Operador</label>
-              <select
-                value={operator}
-                onChange={(e) => setOperator(e.target.value)}
-              >
-                <option value="" disabled>
-                  Selecione...
-                </option>
-                {operators.map((op) => (
-                  <option key={op.operator_code_id} value={op.operator_code_id}>
-                    {op.operator_name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="input-field">
-              <label>Campanha</label>
-              <select
-                value={campaign}
-                onChange={(e) => setCampaign(e.target.value)}
-              >
-                <option value="" disabled>
-                  Selecione uma campanha
-                </option>
-                {campaigns?.map((campaign) => (
-                  <option key={campaign.id} value={campaign.campain_name}>
-                    {campaign.campain_name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="input-field">
-              <label>Observação</label>
-              <input
-                type="text"
-                value={observation}
-                onChange={(e) => setObservation(e.target.value)}
-              />
-            </div>
-            {operatorData.operator_type === "Admin" && (
-              <div className="checkboxs">
-                <div>
-                  <label className="label_checkbox">
-                    {" "}
-                    Impresso:{" "}
-                    <input
-                      className="checkbox"
-                      type="checkbox"
-                      checked={impresso}
-                      onChange={(e) => setImpresso(e.target.checked)}
-                    />
-                  </label>
+          <div className="modal-editDonation-body">
+            <div className="form-section">
+              <h3>Editar Doação</h3>
+              <div className="form-grid">
+                <div className="input-group">
+                  <label>Valor *</label>
+                  <input
+                    type="number"
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                    placeholder="0,00"
+                  />
                 </div>
-                <div>
-                  <label className="label_checkbox">
-                    {" "}
-                    Recebido:{" "}
-                    <input
-                      className="checkbox"
-                      checked={recebido}
-                      type="checkbox"
-                      onChange={(e) => setRecebido(e.target.checked)}
-                    />
-                  </label>
+                <div className="input-group">
+                  <label>Data para Receber *</label>
+                  <input
+                    type="date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                  />
+                </div>
+                <div className="input-group">
+                  <label>Operador *</label>
+                  <select
+                    value={operator}
+                    onChange={(e) => setOperator(e.target.value)}
+                  >
+                    <option value="" disabled>
+                      Selecione um operador...
+                    </option>
+                    {operators.map((op) => (
+                      <option
+                        key={op.operator_code_id}
+                        value={op.operator_code_id}
+                      >
+                        {op.operator_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="input-group">
+                  <label>Campanha</label>
+                  <select
+                    value={campaign}
+                    onChange={(e) => setCampaign(e.target.value)}
+                  >
+                    <option value="" disabled>
+                      Selecione uma campanha...
+                    </option>
+                    {campaigns?.map((campaign) => (
+                      <option key={campaign.id} value={campaign.campain_name}>
+                        {campaign.campain_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="input-group full-width">
+                  <label>Observação</label>
+                  <textarea
+                    value={observation}
+                    onChange={(e) => setObservation(e.target.value)}
+                    placeholder="Observações sobre a doação..."
+                    rows="3"
+                  />
                 </div>
               </div>
-            )}
+
+              {operatorData.operator_type === "Admin" && (
+                <div className="status-section">
+                  <h4>Status da Doação</h4>
+                  <div className="checkbox-group">
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={impresso}
+                        onChange={(e) => setImpresso(e.target.checked)}
+                      />
+                      <span className="checkmark"></span>
+                      Impresso
+                    </label>
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={recebido}
+                        onChange={(e) => setRecebido(e.target.checked)}
+                      />
+                      <span className="checkmark"></span>
+                      Recebido
+                    </label>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
-          <div className="form-modal-editDonation-footer">
-            <button
-              onClick={handleConfirm}
-              className="btn-confirm-editDonoation"
-            >
-              Confirmar
-            </button>
-            <button
-              onClick={handleDelete}
-              className="btn-confirm-deleteDonoation"
-            >
-              {ICONS.TRASH}
-            </button>
+          <div className="modal-editDonation-footer">
+            <div className="action-buttons">
+              <button
+                onClick={handleDownloadPDF}
+                className="btn-pdf"
+                title="Baixar PDF do Recibo"
+              >
+                📄 Baixar PDF
+              </button>
+              <button
+                onClick={handleDelete}
+                className="btn-delete"
+                title="Excluir Doação"
+              >
+                🗑️ Excluir
+              </button>
+            </div>
+            <div className="primary-buttons">
+              <button onClick={handleConfirm} className="btn-confirm">
+                Salvar Alterações
+              </button>
+            </div>
           </div>
         </div>
       </div>

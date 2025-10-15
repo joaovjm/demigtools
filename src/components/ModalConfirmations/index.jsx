@@ -4,6 +4,7 @@ import { ICONS } from "../../constants/constants";
 import cancelDonation from "../../helper/cancelDonation";
 import supabase from "../../helper/superBaseClient";
 import { DataNow, DataSelect } from "../DataTime";
+import { FaUser, FaMapMarkerAlt, FaPhone, FaDollarSign, FaExclamationTriangle, FaCalendarAlt, FaEdit, FaTimes, FaCheck, FaArrowLeft, FaClock } from "react-icons/fa";
 
 const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) => {
   const [isConfirmation, setIsConfirmation] = useState(false);
@@ -61,78 +62,169 @@ const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) =>
     }
   };
   return (
-    <div className="modal-confirmations">
-      <div className="modal-confirmations-content">
-        <div className="modal-confirmations-div">
-          <div className="modal-confirmations-title">
-            <h2>Recibo: {donationConfirmationOpen.id}</h2>
-            <button onClick={() => onClose()} className="btn-close">
-              Fechar
+    <main className="modal-confirmations-container">
+      <div className="modal-confirmations">
+        <div className="modal-confirmations-content">
+          <div className="modal-confirmations-header">
+            <div className="modal-title-section">
+              <h2 className="modal-title">
+                <FaClock />
+                Confirmação de Doação
+              </h2>
+              <span className="receipt-number">
+                Recibo: #{donationConfirmationOpen.id}
+              </span>
+            </div>
+            <button
+              onClick={() => onClose()}
+              className="btn-close-modal"
+              title="Fechar"
+            >
+              ✕
             </button>
           </div>
 
           <div className="modal-confirmations-body">
-            <label>Name: {donationConfirmationOpen.name}</label>
-            <label>Endereço: {donationConfirmationOpen.address}</label>
-            <label>Tel 1: {donationConfirmationOpen.phone}</label>
-            <label>
-              Tel 2: {donationConfirmationOpen.phone2 ? donationConfirmationOpen.phone2 : "*****-****"}
-            </label>
-            <label>
-              Tel 3: {donationConfirmationOpen.phone3 ? donationConfirmationOpen.phone3 : "*****-****"}
-            </label>
-            <label>Valor: R$ {donationConfirmationOpen.value},00</label>
-            <h4>Motivo: {donationConfirmationOpen.reason}</h4>
-          </div>
-          {!isConfirmation && (
-            <div className="modal-confirmations-footer">
-              <button
-                onClick={() => setIsConfirmation(true)}
-                className="btn-confirm"
-              >
-                Reagendar Ficha
-              </button>
-              <button onClick={handleCancel} className="btn-delete">
-                Cancelar Ficha
-              </button>
+            <div className="donation-info-section">
+              <h3>Informações da Doação</h3>
+              <div className="info-grid">
+                <div className="info-item">
+                  <div className="info-label">
+                    <FaDollarSign />
+                    Valor
+                  </div>
+                  <div className="info-value">
+                    R$ {donationConfirmationOpen.value},00
+                  </div>
+                </div>
+                <div className="info-item full-width">
+                  <div className="info-label">
+                    <FaExclamationTriangle />
+                    Motivo
+                  </div>
+                  <div className="info-value reason">
+                    {donationConfirmationOpen.reason}
+                  </div>
+                </div>
+              </div>
             </div>
-          )}
 
-          {isConfirmation && (
-            <div className="modal-confirmations-confirm">
-              <div className="modal-confirmations-confirm-1">
-                <div className="input-field">
-                  <label className="label">Data</label>
-                  <input
-                    value={dateConfirm}
-                    type="date"
-                    onChange={(e) => setDateConfirm(e.target.value)}
-                  />
+            <div className="donor-info-section">
+              <h3>Dados do Doador</h3>
+              <div className="info-grid">
+                <div className="info-item">
+                  <div className="info-label">
+                    <FaUser />
+                    Nome
+                  </div>
+                  <div className="info-value">
+                    {donationConfirmationOpen.name}
+                  </div>
                 </div>
-                <div className="input-field">
-                  <label className="label">Observação</label>
-                  <input
-                    value={observation}
-                    onChange={(e) => setObservation(e.target.value)}
-                  />
+                <div className="info-item">
+                  <div className="info-label">
+                    <FaPhone />
+                    Telefone 1
+                  </div>
+                  <div className="info-value">
+                    {donationConfirmationOpen.phone}
+                  </div>
                 </div>
-              </div>
-              <div className="modal-confirmations-confirm-2">
-                <button
-                  onClick={() => setIsConfirmation(false)}
-                  className="btn-back"
-                >
-                  {ICONS.BACK} Voltar
-                </button>
-                <button onClick={handleConfirm} className="btn-confirm">
-                  Confirmar
-                </button>
+                <div className="info-item">
+                  <div className="info-label">
+                    <FaPhone />
+                    Telefone 2
+                  </div>
+                  <div className="info-value">
+                    {donationConfirmationOpen.phone2 || "*****-****"}
+                  </div>
+                </div>
+                <div className="info-item">
+                  <div className="info-label">
+                    <FaPhone />
+                    Telefone 3
+                  </div>
+                  <div className="info-value">
+                    {donationConfirmationOpen.phone3 || "*****-****"}
+                  </div>
+                </div>
+                <div className="info-item full-width">
+                  <div className="info-label">
+                    <FaMapMarkerAlt />
+                    Endereço
+                  </div>
+                  <div className="info-value">
+                    {donationConfirmationOpen.address}
+                  </div>
+                </div>
               </div>
             </div>
-          )}
+
+            {!isConfirmation && (
+              <div className="modal-confirmations-footer">
+                <button
+                  onClick={() => setIsConfirmation(true)}
+                  className="btn-reschedule"
+                >
+                  <FaCalendarAlt />
+                  Reagendar Ficha
+                </button>
+                <button onClick={handleCancel} className="btn-cancel">
+                  <FaTimes />
+                  Cancelar Ficha
+                </button>
+              </div>
+            )}
+
+            {isConfirmation && (
+              <div className="reschedule-form-section">
+                <h3>Reagendar Doação</h3>
+                <div className="form-grid">
+                  <div className="input-group">
+                    <label>
+                      <FaCalendarAlt />
+                      Nova Data
+                    </label>
+                    <input
+                      value={dateConfirm}
+                      type="date"
+                      onChange={(e) => setDateConfirm(e.target.value)}
+                      placeholder="Selecione a nova data"
+                    />
+                  </div>
+                  <div className="input-group full-width">
+                    <label>
+                      <FaEdit />
+                      Observação
+                    </label>
+                    <textarea
+                      value={observation}
+                      onChange={(e) => setObservation(e.target.value)}
+                      placeholder="Observações sobre o reagendamento..."
+                      rows="3"
+                    />
+                  </div>
+                </div>
+
+                <div className="form-actions">
+                  <button
+                    onClick={() => setIsConfirmation(false)}
+                    className="btn-back"
+                  >
+                    <FaArrowLeft />
+                    Voltar
+                  </button>
+                  <button onClick={handleConfirm} className="btn-confirm">
+                    <FaCheck />
+                    Confirmar Reagendamento
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 

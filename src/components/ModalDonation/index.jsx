@@ -122,158 +122,164 @@ const ModalDonation = ({
       
     }
 
-    console.log(mesref);
   };
 
   return (
-    <main className="modal-container">
-      <div className="modal">
-        <form onSubmit={handleSubmit} className="modal-form">
-          <div className="modal-title">
-            <h2 className="modal-title-text">
-              <FaDollarSign />
-              Nova Doação
-            </h2>
+    <main className="modal-donation-container">
+      <div className="modal-donation">
+        <div className="modal-donation-content">
+          <div className="modal-donation-header">
+            <div className="modal-title-section">
+              <h2 className="modal-title">
+                <FaDollarSign />
+                Nova Doação
+              </h2>
+            </div>
             <button
               onClick={() => setModalShow(!modalShow)}
-              className="modal-close-button"
+              className="btn-close-modal"
+              title="Fechar"
             >
-              Fechar
+              ✕
             </button>
           </div>
 
-          {/* Valor */}
-          <div className="input-field">
-            <label>Valor</label>
-            <input
-              type="text"
-              value={valor}
-              onChange={(e) => setValor(e.target.value)}
-            />
-          </div>
+          <form onSubmit={handleSubmit} className="modal-donation-body">
 
-          {/* Comissão */}
-          {tipo === "Mensal" && (
-            <div className="input-field">
-              <label>Extra</label>
-              <input
-                type="text"
-                placeholder="R$ 0,00"
-                value={comissao}
-                onChange={(e) => setComissao(e.target.value)}
-              />
-            </div>
-          )}
+            <div className="form-section">
+              <h3>Dados da Doação</h3>
+              <div className="form-grid">
+                <div className="input-group">
+                  <label>Valor *</label>
+                  <input
+                    type="number"
+                    value={valor}
+                    onChange={(e) => setValor(e.target.value)}
+                    placeholder="0,00"
+                    required
+                  />
+                </div>
 
-          {/* Data */}
-          <div className="input-field">
-            <label>Data</label>
-            <input
-              type="date"
-              placeholder="dd/mm/yyyy"
-              value={data_receber}
-              onChange={handleDate}
-            />
-          </div>
+                {tipo === "Mensal" && (
+                  <div className="input-group">
+                    <label>Extra</label>
+                    <input
+                      type="number"
+                      placeholder="0,00"
+                      value={comissao}
+                      onChange={(e) => setComissao(e.target.value)}
+                    />
+                  </div>
+                )}
 
-          {/* Mês Referente */}
-          {tipo === "Mensal" && (
-          <div className="input-field">
-            <label>Mês Referente</label>
-            <input
-              type="text"
-              placeholder="Mês"
-              value={new Date(mesref).toLocaleDateString("pt-BR", {
-                timeZone: "UTC",
-                month: "numeric",
-                year: "numeric",
-              })}
-                onChange={(e) => setMesref(e.target.value)}
-              />
-            </div>
-          )}
+                <div className="input-group">
+                  <label>Data para Receber *</label>
+                  <input
+                    type="date"
+                    value={data_receber}
+                    onChange={handleDate}
+                    required
+                  />
+                </div>
 
-          <div className="input-field">
-            <label>Operador</label>
-            <select
-              value={operator}
-              onChange={(e) => setOperator(e.target.value)}
-            >
-              <option value="" disabled>
-                Selecione...
-              </option>
-              {operators.map((op) => (
-                <option key={op.operator_code_id} value={op.operator_code_id}>
-                  {op.operator_name}
-                </option>
-              ))}
-            </select>
-          </div>
+                {tipo === "Mensal" && (
+                  <div className="input-group">
+                    <label>Mês Referente</label>
+                    <input
+                      type="text"
+                      placeholder="Mês de referência"
+                      value={mesref ? new Date(mesref).toLocaleDateString("pt-BR", {
+                        timeZone: "UTC",
+                        month: "numeric",
+                        year: "numeric",
+                      }) : ""}
+                      onChange={(e) => setMesref(e.target.value)}
+                      readOnly
+                    />
+                  </div>
+                )}
 
-          <div className="input-field">
-            <label>Campanha</label>
-            <select
-              type="text"
-              value={campainSelected}
-              onChange={(e) => setCampainSelect(e.target.value)}
-            >
-              <option value="" disabled>
-                Selecione...
-              </option>
-              {campain.map((cp) => (
-                <option key={cp.id} value={cp.campain_name}>
-                  {cp.campain_name}
-                </option>
-              ))}
-            </select>
-          </div>
+                <div className="input-group">
+                  <label>Operador *</label>
+                  <select
+                    value={operator}
+                    onChange={(e) => setOperator(e.target.value)}
+                    required
+                  >
+                    <option value="" disabled>
+                      Selecione um operador...
+                    </option>
+                    {operators.map((op) => (
+                      <option key={op.operator_code_id} value={op.operator_code_id}>
+                        {op.operator_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-          {/* Descrição */}
-          <div className="input-field">
-            <label>Descrição</label>
-            <textarea
-              type="text"
-              placeholder="Observação"
-              value={descricao}
-              onChange={(e) => setDescricao(e.target.value)}
-              style={{ height: "40px" }}
-            />
-          </div>
+                <div className="input-group">
+                  <label>Campanha *</label>
+                  <select
+                    value={campainSelected}
+                    onChange={(e) => setCampainSelect(e.target.value)}
+                    required
+                  >
+                    <option value="" disabled>
+                      Selecione uma campanha...
+                    </option>
+                    {campain.map((cp) => (
+                      <option key={cp.id} value={cp.campain_name}>
+                        {cp.campain_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-          {operatorData.operator_type === "Admin" && (
-          <div className="checkboxs">
-            <div>
-              <label className="label_checkbox">
-                {" "}
-                Impresso:{" "}
-                <input
-                  className="checkbox"
-                  type="checkbox"
-                  checked={impresso}
-                  onChange={(e) => setImpresso(e.target.checked)}
-                />
-              </label>
-            </div>
-            <div>
-              <label className="label_checkbox">
-                {" "}
-                Recebido:{" "}
-                <input
-                  className="checkbox"
-                  checked={recebido}
-                  type="checkbox"
-                  onChange={(e) => setRecebido(e.target.checked)}
-                />
-                </label>
+                <div className="input-group full-width">
+                  <label>Descrição</label>
+                  <textarea
+                    placeholder="Observações sobre a doação..."
+                    value={descricao}
+                    onChange={(e) => setDescricao(e.target.value)}
+                    rows="3"
+                  />
+                </div>
               </div>
-            </div>
-          )}
 
-          {/* Botão */}
-          <button type="submit" className="modal-form-button">
-            Doar
-          </button>
-        </form>
+              {operatorData.operator_type === "Admin" && (
+                <div className="status-section">
+                  <h4>Status da Doação</h4>
+                  <div className="checkbox-group">
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={impresso}
+                        onChange={(e) => setImpresso(e.target.checked)}
+                      />
+                      <span className="checkmark"></span>
+                      Impresso
+                    </label>
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={recebido}
+                        onChange={(e) => setRecebido(e.target.checked)}
+                      />
+                      <span className="checkmark"></span>
+                      Recebido
+                    </label>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="modal-donation-footer">
+              <button type="submit" className="btn-create-donation">
+                💰 Criar Doação
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </main>
   );

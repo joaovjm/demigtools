@@ -1,3 +1,458 @@
+/* Modal Container */
+.modal-scheduled-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal Content */
+.modal-scheduled {
+  position: relative;
+  z-index: 1;
+  background-color: #1f1d1d;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: slideIn 0.3s ease-out;
+  max-width: 100vw;
+  max-height: 98vh;
+  overflow-y: auto;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-scheduled-content {
+  width: 800px;
+  max-height: 96vh;
+  border: 3px double #383838;
+  border-radius: 12px;
+  padding: 10px;
+  background: linear-gradient(145deg, #1f1d1d 0%, #2a2828 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.modal-scheduled-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #383838;
+  flex-shrink: 0;
+}
+
+.modal-title-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.modal-title {
+  color: #faf5e9;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.person-name {
+  color: #faa01c;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 4px 12px;
+  background-color: rgba(250, 160, 28, 0.1);
+  border-radius: 20px;
+  border: 1px solid rgba(250, 160, 28, 0.3);
+  align-self: flex-start;
+}
+
+.btn-close-modal {
+  background-color: #c70000;
+  color: #faf5e9;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(199, 0, 0, 0.3);
+  flex-shrink: 0;
+}
+
+.btn-close-modal:hover {
+  background-color: #a60000;
+  transform: scale(1.1);
+}
+
+/* Body */
+.modal-scheduled-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 12px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Info Sections */
+.person-info-section {
+  background-color: rgba(56, 91, 173, 0.05);
+  border: 1px solid rgba(56, 91, 173, 0.2);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.person-info-section h3 {
+  color: #faf5e9;
+  font-size: 16px;
+  margin: 0 0 12px 0;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.person-info-section h3::before {
+  content: "📋";
+  font-size: 18px;
+}
+
+/* Info Grid */
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-item.full-width {
+  grid-column: span 2;
+}
+
+.info-label {
+  color: #faa01c;
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-value {
+  color: #faf5e9;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 12px;
+  background-color: rgba(42, 40, 40, 0.8);
+  border: 1px solid #383838;
+  border-radius: 6px;
+  word-break: break-word;
+}
+
+/* Footer */
+.modal-scheduled-footer {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  padding-top: 12px;
+  border-top: 2px solid #383838;
+  flex-shrink: 0;
+}
+
+/* Form Section */
+.donation-form-section {
+  background-color: rgba(40, 167, 69, 0.05);
+  border: 1px solid rgba(40, 167, 69, 0.2);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.donation-form-section h3 {
+  color: #faf5e9;
+  font-size: 16px;
+  margin: 0 0 12px 0;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.donation-form-section h3::before {
+  content: "💰";
+  font-size: 18px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.input-group.full-width {
+  grid-column: span 2;
+}
+
+.input-group label {
+  color: #faf5e9;
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.input-group input,
+.input-group select,
+.input-group textarea {
+  background-color: #2a2828;
+  border: 2px solid #383838;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #faf5e9;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.input-group input:focus,
+.input-group select:focus,
+.input-group textarea:focus {
+  outline: none;
+  border-color: #385bad;
+  box-shadow: 0 0 0 3px rgba(56, 91, 173, 0.2);
+  background-color: #333131;
+}
+
+.input-group input::placeholder,
+.input-group textarea::placeholder {
+  color: rgba(250, 245, 233, 0.5);
+}
+
+.input-group textarea {
+  resize: vertical;
+  min-height: 45px;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #383838;
+}
+
+/* Buttons */
+.btn-create-donation,
+.btn-cancel,
+.btn-back,
+.btn-confirm {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  height: 44px;
+  min-width: 160px;
+}
+
+.btn-create-donation {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.btn-create-donation:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
+}
+
+.btn-cancel {
+  background-color: #c70000;
+  color: #faf5e9;
+}
+
+.btn-cancel:hover {
+  background-color: #a60000;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(199, 0, 0, 0.4);
+}
+
+.btn-back {
+  background-color: #6c757d;
+  color: #faf5e9;
+}
+
+.btn-back:hover {
+  background-color: #5a6268;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(108, 117, 125, 0.4);
+}
+
+.btn-confirm {
+  background-color: #385bad;
+  color: #faf5e9;
+}
+
+.btn-confirm:hover {
+  background-color: #284487;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(56, 91, 173, 0.4);
+}
+
+.btn-confirm:disabled {
+  background-color: #666;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .modal-scheduled-content {
+    width: 90vw;
+    max-height: 95vh;
+    padding: 12px;
+  }
+  
+  .modal-title {
+    font-size: 18px;
+  }
+  
+  .info-grid,
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .info-item.full-width,
+  .input-group.full-width {
+    grid-column: span 1;
+  }
+  
+  .person-info-section,
+  .donation-form-section {
+    padding: 12px;
+  }
+  
+  .modal-scheduled-footer,
+  .form-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .btn-create-donation,
+  .btn-cancel,
+  .btn-back,
+  .btn-confirm {
+    width: 100%;
+    min-width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-scheduled-content {
+    width: 95vw;
+    max-height: 95vh;
+    padding: 8px;
+  }
+  
+  .modal-title {
+    font-size: 16px;
+  }
+  
+  .person-name {
+    font-size: 12px;
+    padding: 3px 8px;
+  }
+  
+  .btn-create-donation,
+  .btn-cancel,
+  .btn-back,
+  .btn-confirm {
+    padding: 10px 16px;
+    font-size: 13px;
+    height: 40px;
+  }
+}
+
+/* Scrollbar Styling */
+.modal-scheduled::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-scheduled::-webkit-scrollbar-track {
+  background: #2a2828;
+  border-radius: 4px;
+}
+
+.modal-scheduled::-webkit-scrollbar-thumb {
+  background: #faa01c;
+  border-radius: 4px;
+}
+
+.modal-scheduled::-webkit-scrollbar-thumb:hover {
+  background: #e8901a;
+}
+
+/* Legacy support for existing classes (for backwards compatibility) */
 .modal-confirmations {
   position: fixed;
   top: 0;
@@ -38,6 +493,7 @@
   color: #faf5e9;
   cursor: pointer;
 }
+
 .btn-close:hover {
   background-color: #284487;
 }
@@ -51,9 +507,11 @@
   padding: 12px;
   gap: 4px;
 }
+
 .modal-confirmations-body label {
   font-size: 14px;
 }
+
 .modal-confirmations-body h4 {
   grid-column: span 2;
   margin-top: 4px;
@@ -66,30 +524,6 @@
   padding: 12px;
 }
 
-.btn-confirm,
-.btn-delete {
-  width: 180px;
-  height: 30px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  color: #faf5e9;
-}
-
-.btn-confirm {
-  background-color: #385bad;
-}
-.btn-confirm:hover {
-  background-color: #284487;
-}
-
-.btn-delete {
-  background-color: #c70000;
-}
-.btn-delete:hover {
-  background-color: #a60000;
-}
-
 .modal-confirmations-confirm {
   display: flex;
   flex-direction: column;
@@ -98,7 +532,6 @@
   border-radius: 6px;
   gap: 0;
 }
-
 
 .input-group {
   display: flex;
@@ -132,86 +565,9 @@
   box-sizing: border-box;
 }
 
-@media (max-width: 768px) {
-  .modal-confirmations-div {
-    width: 100%;
-    border-radius: 0;
-  }
-  .modal-confirmations-body,
-  .modal-confirmations-confirm {
-    flex-direction: column;
-  }
-
-  .modal-confirmations-title {
-    h2 {
-      font-size: 14px;
-    }
-  }
-
-  .modal-confirmations-footer {
-    button {
-      width: 120px;
-      height: 50px;
-    }
-  }
-}
-
-@media (min-width: 1200px) {
-  .modal-confirmations-title {
-    margin: 12px;
-    padding: 6px;
-  }
-  .modal-confirmations-div {
-    gap: 0;
-  }
-  .modal-confirmations-body {
-    margin: 12px;
-    padding: 6px;
-    gap: 2px;
-  }
-  .modal-confirmations-body label {
-    font-size: 12px;
-  }
-  .modal-confirmations-body h4 {
-    grid-column: span 2;
-    margin-top: 2px;
-  }
-
-  .modal-confirmations-confirm {
-    padding: 6px;
-  }
-
-  /* Novo layout de inputs responsivo */
-  .input-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 10px;
-    width: 100%;
-  }
-
-  .input-field {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 200px;
-    max-width: 100%;
-  }
-
-  .input-field label {
-    margin-bottom: 2px;
-    font-size: 12px;
-    color: #faf5e9;
-  }
-
-  .input-field input,
-  .input-field select {
-    padding: 4px;
-    border-radius: 6px;
-    border: 1px solid #888;
-    background-color: #2b2b2b;
-    color: #faf5e9;
-    width: 100%;
-    box-sizing: border-box;
-    font-size: 12px;
-  }
+.modal-confirmations-confirm-2 {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
 }

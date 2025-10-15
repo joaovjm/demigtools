@@ -8,6 +8,7 @@ import newDonorAndDonation from "../../helper/newDonorAndDonation";
 import { getCampains } from "../../helper/getCampains";
 import updateRequestSelected from "../../helper/updateRequestSelected";
 import { insertDonation } from "../../helper/insertDonation";
+import { FaUser, FaMapMarkerAlt, FaPhone, FaDollarSign, FaCalendarAlt, FaBullhorn, FaEdit, FaTimes, FaCheck, FaArrowLeft } from "react-icons/fa";
 
 const ModalScheduled = ({
   scheduledOpen,
@@ -159,194 +160,325 @@ const ModalScheduled = ({
   };
 
   return (
-    <div className="modal-confirmations">
-      <div className="modal-confirmations-div">
-        <div className="modal-confirmations-title">
-          <h2>Nome: {scheduledOpen.name}</h2>
-          <button onClick={onClose} className="btn-close">
-            Fechar
-          </button>
-        </div>
-
-        <div className="modal-confirmations-body">
-          <label>Endereço: {scheduledOpen.address}</label>
-          <label>Tel 1: {scheduledOpen.phone}</label>
-          <label>Tel 2: {scheduledOpen.phone2 || "*****-****"}</label>
-          <label>Tel 3: {scheduledOpen.phone3 || "*****-****"}</label>
-          <label>Tel 4: {scheduledOpen.phone4 || "*****-****"}</label>
-          <label>Tel 5: {scheduledOpen.phone5 || "*****-****"}</label>
-          <label>Tel 6: {scheduledOpen.phone6 || "*****-****"}</label>
-          <h4>Observação: {scheduledOpen.observation}</h4>
-        </div>
-
-        {!isScheduling && (
-          <div className="modal-confirmations-footer">
-            <button onClick={handleNewDonation} className="btn-confirm">
-              Criar Doação
-            </button>
-            <button onClick={handleCancel} className="btn-delete">
-              Não pode ajudar
+    <main className="modal-scheduled-container">
+      <div className="modal-scheduled">
+        <div className="modal-scheduled-content">
+          <div className="modal-scheduled-header">
+            <div className="modal-title-section">
+              <h2 className="modal-title">
+                <FaCalendarAlt />
+                Agendamento
+              </h2>
+              <span className="person-name">
+                {scheduledOpen.name}
+              </span>
+            </div>
+            <button
+              onClick={onClose}
+              className="btn-close-modal"
+              title="Fechar"
+            >
+              ✕
             </button>
           </div>
-        )}
 
-        {isScheduling && (
-          <div className="modal-confirmations-confirm">
-            <div className="input-group">
-              {scheduledOpen.typeScheduled === "lead" && (
-                <>
-                  <div className="input-field">
-                    <label>Nome</label>
+          <div className="modal-scheduled-body">
+            <div className="person-info-section">
+              <h3>Informações do Contato</h3>
+              <div className="info-grid">
+                <div className="info-item">
+                  <div className="info-label">
+                    <FaMapMarkerAlt />
+                    Endereço
+                  </div>
+                  <div className="info-value">
+                    {scheduledOpen.address}
+                  </div>
+                </div>
+                <div className="info-item">
+                  <div className="info-label">
+                    <FaPhone />
+                    Telefone 1
+                  </div>
+                  <div className="info-value">
+                    {scheduledOpen.phone}
+                  </div>
+                </div>
+                <div className="info-item">
+                  <div className="info-label">
+                    <FaPhone />
+                    Telefone 2
+                  </div>
+                  <div className="info-value">
+                    {scheduledOpen.phone2 || "*****-****"}
+                  </div>
+                </div>
+                <div className="info-item">
+                  <div className="info-label">
+                    <FaPhone />
+                    Telefone 3
+                  </div>
+                  <div className="info-value">
+                    {scheduledOpen.phone3 || "*****-****"}
+                  </div>
+                </div>
+                <div className="info-item">
+                  <div className="info-label">
+                    <FaPhone />
+                    Telefone 4
+                  </div>
+                  <div className="info-value">
+                    {scheduledOpen.phone4 || "*****-****"}
+                  </div>
+                </div>
+                <div className="info-item">
+                  <div className="info-label">
+                    <FaPhone />
+                    Telefone 5
+                  </div>
+                  <div className="info-value">
+                    {scheduledOpen.phone5 || "*****-****"}
+                  </div>
+                </div>
+                <div className="info-item">
+                  <div className="info-label">
+                    <FaPhone />
+                    Telefone 6
+                  </div>
+                  <div className="info-value">
+                    {scheduledOpen.phone6 || "*****-****"}
+                  </div>
+                </div>
+                <div className="info-item full-width">
+                  <div className="info-label">
+                    <FaEdit />
+                    Observação
+                  </div>
+                  <div className="info-value">
+                    {scheduledOpen.observation}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {!isScheduling && (
+              <div className="modal-scheduled-footer">
+                <button onClick={handleNewDonation} className="btn-create-donation">
+                  <FaCheck />
+                  Criar Doação
+                </button>
+                <button onClick={handleCancel} className="btn-cancel">
+                  <FaTimes />
+                  Não pode ajudar
+                </button>
+              </div>
+            )}
+
+            {isScheduling && (
+              <div className="donation-form-section">
+                <h3>Dados da Doação</h3>
+                <div className="form-grid">
+                  {scheduledOpen.typeScheduled === "lead" && (
+                    <>
+                      <div className="input-group">
+                        <label>
+                          <FaUser />
+                          Nome
+                        </label>
+                        <input
+                          type="text"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          placeholder="Nome completo"
+                        />
+                      </div>
+                      <div className="input-group">
+                        <label>
+                          <FaMapMarkerAlt />
+                          Endereço
+                        </label>
+                        <input
+                          type="text"
+                          value={address}
+                          onChange={(e) => setAddress(e.target.value)}
+                          placeholder="Endereço completo"
+                        />
+                      </div>
+                      <div className="input-group">
+                        <label>
+                          <FaMapMarkerAlt />
+                          Bairro
+                        </label>
+                        <input
+                          type="text"
+                          value={neighborhood}
+                          onChange={(e) => setNeighborhood(e.target.value)}
+                          placeholder="Bairro"
+                        />
+                      </div>
+                      <div className="input-group">
+                        <label>
+                          <FaMapMarkerAlt />
+                          Cidade
+                        </label>
+                        <input
+                          type="text"
+                          value={city}
+                          onChange={(e) => setCity(e.target.value)}
+                          placeholder="Cidade"
+                        />
+                      </div>
+                      <div className="input-group">
+                        <label>
+                          <FaPhone />
+                          Qual contactado?
+                        </label>
+                        <select
+                          value={telSuccess}
+                          onChange={(e) => setTelSuccess(e.target.value)}
+                        >
+                          <option value="" disabled>Selecione o telefone contactado</option>
+                          {scheduledOpen.phone && (
+                            <option value={scheduledOpen.phone}>
+                              {scheduledOpen.phone}
+                            </option>
+                          )}
+                          {scheduledOpen.phone2 && (
+                            <option value={scheduledOpen.phone2}>
+                              {scheduledOpen.phone2}
+                            </option>
+                          )}
+                          {scheduledOpen.phone3 && (
+                            <option value={scheduledOpen.phone3}>
+                              {scheduledOpen.phone3}
+                            </option>
+                          )}
+                          {scheduledOpen.phone4 && (
+                            <option value={scheduledOpen.phone4}>
+                              {scheduledOpen.phone4}
+                            </option>
+                          )}
+                          {scheduledOpen.phone5 && (
+                            <option value={scheduledOpen.phone5}>
+                              {scheduledOpen.phone5}
+                            </option>
+                          )}
+                          {scheduledOpen.phone6 && (
+                            <option value={scheduledOpen.phone6}>
+                              {scheduledOpen.phone6}
+                            </option>
+                          )}
+                        </select>
+                      </div>
+                      <div className="input-group">
+                        <label>
+                          <FaPhone />
+                          Tel. 2
+                        </label>
+                        <input
+                          type="text"
+                          value={tel2}
+                          onChange={(e) => setTel2(e.target.value)}
+                          placeholder="Telefone 2"
+                        />
+                      </div>
+                      <div className="input-group">
+                        <label>
+                          <FaPhone />
+                          Tel. 3
+                        </label>
+                        <input
+                          type="text"
+                          value={tel3}
+                          onChange={(e) => setTel3(e.target.value)}
+                          placeholder="Telefone 3"
+                        />
+                      </div>
+                    </>
+                  )}
+
+                  <div className="input-group">
+                    <label>
+                      <FaDollarSign />
+                      Valor
+                    </label>
                     <input
                       type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      value={valueDonation}
+                      onChange={(e) => setValueDonation(e.target.value)}
+                      placeholder="Valor da doação"
                     />
                   </div>
-                  <div className="input-field">
-                    <label>Endereço</label>
+                  <div className="input-group">
+                    <label>
+                      <FaCalendarAlt />
+                      Data
+                    </label>
                     <input
-                      type="text"
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
+                      type="date"
+                      value={dateScheduling}
+                      onChange={handleDateChange}
                     />
                   </div>
-                  <div className="input-field">
-                    <label>Bairro</label>
-                    <input
-                      type="text"
-                      value={neighborhood}
-                      onChange={(e) => setNeighborhood(e.target.value)}
-                    />
-                  </div>
-                  <div className="input-field">
-                    <label>Cidade</label>
-                    <input
-                      type="text"
-                      value={city}
-                      onChange={(e) => setCity(e.target.value)}
-                    />
-                  </div>
-                  <div className="input-field">
-                    <label>Qual contactado?</label>
+                  <div className="input-group">
+                    <label>
+                      <FaBullhorn />
+                      Campanha
+                    </label>
                     <select
-                      value={telSuccess}
-                      onChange={(e) => setTelSuccess(e.target.value)}
+                      value={campain}
+                      onChange={(e) => setCampain(e.target.value)}
                     >
-                      {scheduledOpen.phone && (
-                        <option value={scheduledOpen.phone}>
-                          {scheduledOpen.phone}
+                      <option value="" disabled>
+                        Selecione uma campanha...
+                      </option>
+                      {campains?.map((campain) => (
+                        <option key={campain.id} value={campain.campain_name}>
+                          {campain.campain_name}
                         </option>
-                      )}
-                      {scheduledOpen.phone2 && (
-                        <option value={scheduledOpen.phone2}>
-                          {scheduledOpen.phone2}
-                        </option>
-                      )}
-                      {scheduledOpen.phone3 && (
-                        <option value={scheduledOpen.phone3}>
-                          {scheduledOpen.phone3}
-                        </option>
-                      )}
-                      {scheduledOpen.phone4 && (
-                        <option value={scheduledOpen.phone4}>
-                          {scheduledOpen.phone4}
-                        </option>
-                      )}
-                      {scheduledOpen.phone5 && (
-                        <option value={scheduledOpen.phone5}>
-                          {scheduledOpen.phone5}
-                        </option>
-                      )}
-                      {scheduledOpen.phone6 && (
-                        <option value={scheduledOpen.phone6}>
-                          {scheduledOpen.phone6}
-                        </option>
-                      )}
+                      ))}
                     </select>
                   </div>
-                  <div className="input-field">
-                    <label>Tel. 2</label>
-                    <input
-                      type="text"
-                      value={tel2}
-                      onChange={(e) => setTel2(e.target.value)}
+                  <div className="input-group full-width">
+                    <label>
+                      <FaEdit />
+                      Observação
+                    </label>
+                    <textarea
+                      value={observation}
+                      onChange={(e) => setObservation(e.target.value)}
+                      placeholder="Observações sobre a doação..."
+                      rows="3"
                     />
                   </div>
-                  <div className="input-field">
-                    <label>Tel. 3</label>
-                    <input
-                      type="text"
-                      value={tel3}
-                      onChange={(e) => setTel3(e.target.value)}
-                    />
-                  </div>
-                </>
-              )}
+                </div>
 
-              <div className="input-field">
-                <label>Valor</label>
-                <input
-                  type="text"
-                  value={valueDonation}
-                  onChange={(e) => setValueDonation(e.target.value)}
-                />
+                <div className="form-actions">
+                  <button
+                    onClick={() => setIsScheduling(false)}
+                    className="btn-back"
+                  >
+                    <FaArrowLeft />
+                    Voltar
+                  </button>
+                  <button
+                    onClick={
+                      scheduledOpen.typeScheduled === "lead"
+                        ? handleNewDonorAndDonation
+                        : handleNewRequestDonation
+                    }
+                    className="btn-confirm"
+                  >
+                    <FaCheck />
+                    Concluir
+                  </button>
+                </div>
               </div>
-              <div className="input-field">
-                <label>Data</label>
-                <input
-                  type="date"
-                  value={dateScheduling}
-                  onChange={handleDateChange}
-                />
-              </div>
-              <div className="input-field">
-                <label>Campanha</label>
-                <select
-                  value={campain}
-                  onChange={(e) => setCampain(e.target.value)}
-                >
-                  <option value="" disabled>
-                    Selecione...
-                  </option>
-                  {campains?.map((campain) => (
-                    <option key={campain.id} value={campain.campain_name}>
-                      {campain.campain_name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="input-field">
-                <label>Observação</label>
-                <input
-                  value={observation}
-                  onChange={(e) => setObservation(e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div className="modal-confirmations-confirm-2">
-              <button
-                onClick={() => setIsScheduling(false)}
-                className="btn-back"
-              >
-                {ICONS.BACK} Voltar
-              </button>
-              <button
-                onClick={
-                  scheduledOpen.typeScheduled === "lead"
-                    ? handleNewDonorAndDonation
-                    : handleNewRequestDonation
-                }
-                className="btn-confirm"
-              >
-                Concluir
-              </button>
-            </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
-    </div>
+    </main>
   );
 };
 
