@@ -823,7 +823,7 @@ const Chat = () => {
               </div>
               <div className="modal-body">
                 <div className="form-group">
-                  <label htmlFor="search-contact">Buscar por nome ou telefone</label>
+                  
                   <input
                     id="search-contact"
                     type="text"
