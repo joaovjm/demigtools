@@ -33,29 +33,59 @@ const SearchDonor = () => {
 
   return (
     <main className="containersearch">
-      <SearchForm
-        searchTerm={searchTerm}
-        selectedValue={selectedValue}
-        loading={loading}
-        onSearchChange={(e) => setSearchTerm(e.target.value)}
-        setSelectedValue={setSelectValue}
-        onSearchSubmit={handleSearchDonor}
-      />
-      <div className="Carddiv">
-        {donor? (
-          donor.map((donors) => (
-            <DonorCard
-              key={donors.donor_id}
-              donor={donors}
-              onClick={handleDonorClick}
-            />
-          ))
-        ) : (
-          <p>"Nenhum doador encontrado"</p>
-        )}
+      {/* Search Section */}
+      <div className="search-section">
+        <SearchForm
+          searchTerm={searchTerm}
+          selectedValue={selectedValue}
+          loading={loading}
+          onSearchChange={(e) => setSearchTerm(e.target.value)}
+          setSelectedValue={setSelectValue}
+          onSearchSubmit={handleSearchDonor}
+        />
+      </div>
 
-        <NewDonorButton
-        onClick={handleAddDonorClick}/>
+      {/* Results Section */}
+      <div className="results-section">
+        <h3 className="results-section-title">
+          {donor && donor.length > 0 
+            ? `${donor.length} Doador${donor.length > 1 ? 'es' : ''} Encontrado${donor.length > 1 ? 's' : ''}`
+            : 'Resultados da Busca'
+          }
+        </h3>
+        
+        <div className="Carddiv">
+          {loading ? (
+            <div className="loading-container">
+              <div>Buscando doadores...</div>
+            </div>
+          ) : donor && donor.length > 0 ? (
+            donor.map((donors) => (
+              <div key={donors.donor_id} className="donor-card-container fade-in">
+                <DonorCard
+                  donor={donors}
+                  onClick={handleDonorClick}
+                />
+              </div>
+            ))
+          ) : (
+            <div className="no-results">
+              <div className="no-results-icon">🔍</div>
+              <div>Nenhum doador encontrado</div>
+              <div style={{ fontSize: '14px', marginTop: '8px' }}>
+                Tente ajustar os filtros de busca ou adicione um novo doador
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Add Donor Section */}
+        <div className="add-donor-section">
+          <button className="add-donor-button" onClick={handleAddDonorClick}>
+            <span className="add-donor-icon">➕</span>
+            Adicionar Novo Doador
+          </button>
+        </div>
       </div>
     </main>
   );

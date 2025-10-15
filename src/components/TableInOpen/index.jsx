@@ -1,4 +1,5 @@
 import React from "react";
+import "./index.css";
 import { DataSelect } from "../DataTime";
 
 const TableInOpen = ({
@@ -15,74 +16,88 @@ const TableInOpen = ({
   const filterFullNotReceiverDonations = fullNotReceivedDonations.filter(
     (filter) => filter.operator_code_id === donationFilterPerId  );
 
+  const dataToShow = donationFilterPerId ? filterFullNotReceiverDonations : fullNotReceivedDonations;
+
   return (
-    <>
-      {fullNotReceivedDonations.length !== 0 ? (
-        <table className="table-confirmation">
-          <thead className="table-head-confirmation">
-            <tr>
-              <th className="table-head-confirmation-text">A receber</th>
-              <th className="table-head-confirmation-text">Nome</th>
-              <th className="table-head-confirmation-text">Valor</th>
-              <th className="table-head-confirmation-text">Coletador</th>
-            </tr>
-          </thead>
-          <tbody className="table-body-confirmation">
-            {donationFilterPerId ? (
-              filterFullNotReceiverDonations.map((donation) => (
-              <tr
-                className="table-body-confirmation-tr"
-                key={donation.receipt_donation_id}
-                onClick={() => handleClick(donation)}
-              >
-                <td className="table-body-confirmation-text">
-                  {DataSelect(donation.donation_day_to_receive)}
-                </td>
-                <td className="table-body-confirmation-text">
-                  {donation.donor_name}
-                </td>
-                <td className="table-body-confirmation-text">
-                  {donation.donation_value}
-                </td>
-                <td className="table-body-confirmation-text">
-                  {donation.collector_code_id
-                    ? donation.collector_code_id
-                    : "-"}{" "}
-                  - {donation.collector_name ? donation.collector_name : "-"}
-                </td>
-              </tr>
-            ))) : (
-              fullNotReceivedDonations.map((donation) => (
-              <tr
-                className="table-body-confirmation-tr"
-                key={donation.receipt_donation_id}
-                onClick={() => handleClick(donation)}
-              >
-                <td className="table-body-confirmation-text">
-                  {DataSelect(donation.donation_day_to_receive)}
-                </td>
-                <td className="table-body-confirmation-text">
-                  {donation.donor_name}
-                </td>
-                <td className="table-body-confirmation-text">
-                  {donation.donation_value}
-                </td>
-                <td className="table-body-confirmation-text">
-                  {donation.collector_code_id
-                    ? donation.collector_code_id
-                    : "-"}{" "}
-                  - {donation.collector_name ? donation.collector_name : "-"}
-                </td>
-              </tr>
-            )))}
-            
-            
-          </tbody>
-        </table>
-      ) : (
-        "Nenhuma ficha em aberto"
-      )}
-    </>
+    <div className="table-inopen-container">
+      <div className="table-inopen-content">
+        <h3 className="table-inopen-title">📋 Fichas em Aberto</h3>
+        {dataToShow.length > 0 ? (
+          <div className="table-inopen-wrapper">
+            <div className="table-inopen-header">
+              <div className="table-inopen-stats">
+                <span className="stats-item">
+                  <strong>{dataToShow.length}</strong> {dataToShow.length === 1 ? 'ficha' : 'fichas'} em aberto
+                </span>
+                <span className="stats-item">
+                  Total: <strong>
+                    {dataToShow.reduce((acc, item) => acc + (parseFloat(item.donation_value) || 0), 0).toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    })}
+                  </strong>
+                </span>
+              </div>
+            </div>
+
+            <div className="table-inopen-scroll">
+              <table className="table-inopen">
+                <thead>
+                  <tr className="table-inopen-head-row">
+                    <th className="table-inopen-head">A receber</th>
+                    <th className="table-inopen-head">Nome</th>
+                    <th className="table-inopen-head">Valor</th>
+                    <th className="table-inopen-head">Coletador</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {dataToShow.map((donation) => (
+                    <tr
+                      className="table-inopen-row"
+                      key={donation.receipt_donation_id}
+                      onClick={() => handleClick(donation)}
+                    >
+                      <td className="table-inopen-cell">
+                        <span className="date-info">
+                          {DataSelect(donation.donation_day_to_receive)}
+                        </span>
+                      </td>
+                      <td className="table-inopen-cell">
+                        <span className="donor-name">
+                          {donation.donor_name}
+                        </span>
+                      </td>
+                      <td className="table-inopen-cell">
+                        <span className="value-amount">
+                          {parseFloat(donation.donation_value || 0).toLocaleString("pt-BR", {
+                            style: "currency",
+                            currency: "BRL",
+                          })}
+                        </span>
+                      </td>
+                      <td className="table-inopen-cell">
+                        <div className="collector-info">
+                          <span className="collector-id">{donation.collector_code_id || "—"}</span>
+                          {donation.collector_name && (
+                            <span className="collector-name">{donation.collector_name}</span>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ) : (
+          <div className="table-inopen-empty">
+            <div className="empty-icon">📋</div>
+            <h4>Nenhuma ficha em aberto</h4>
+            <p>Não há fichas pendentes para recebimento no momento.</p>
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 

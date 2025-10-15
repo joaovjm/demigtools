@@ -124,7 +124,11 @@ const Donor = () => {
         );
 
         if (success) {
-          setActivityHistoric({dbID: id, dataBase: "donor", operatorID: operatorData.operator_code_id})
+          setActivityHistoric({
+            dbID: id,
+            dataBase: "donor",
+            operatorID: operatorData.operator_code_id,
+          });
           setUiState({
             edit: true,
             btnEdit: BUTTON_TEXTS.EDIT,
@@ -150,166 +154,230 @@ const Donor = () => {
   const handleBack = () => window.history.back();
   return (
     <main className="containerDonor">
-      {/* Cabeçalho com botões */}
-      <header className="header-btns">
-        <h2>{ICONS.MONEY} Doador</h2>
-        <div className="header-actions">
-          <button onClick={handleBack} className="btn-back">
-            {ICONS.BACK} {BUTTON_TEXTS.BACK}
-          </button>
-          <div className="btns-donor">
+      <div className="donor-content">
+        {/* Cabeçalho com botões */}
+        <header className="donor-header">
+          <h2 className="donor-title">{ICONS.MONEY} Doador</h2>
+          <div className="donor-actions">
+            <button onClick={handleBack} className="donor-btn secondary">
+              {ICONS.BACK} {BUTTON_TEXTS.BACK}
+            </button>
             <button
               onClick={handleEditDonor}
-              className="btn-edit"
+              className="donor-btn primary"
               disabled={uiState.loading}
             >
               {uiState.loading ? <Loader /> : uiState.btnEdit}
             </button>
-
             {uiState.showBtn && (
               <button
                 onClick={() =>
                   setUiState((prev) => ({ ...prev, modalShow: true }))
                 }
                 type="submit"
-                className="btn-add"
+                className="donor-btn primary"
               >
                 {BUTTON_TEXTS.CREATE_MOVIMENT}
               </button>
             )}
           </div>
+        </header>
+
+        {/* Formulario com informações do doador */}
+        <div className="donor-form-container">
+          <form className="donor-form">
+            {/* Informações Básicas */}
+            <div className="donor-section">
+              <h4>Informações Básicas</h4>
+              <div className="form-row">
+                <FormDonorInput
+                  label={FORM_LABELS.NAME}
+                  value={donorData.nome}
+                  onChange={(e) => handleInputChange("nome", e.target.value)}
+                  readOnly={uiState.edit}
+                />
+
+                <FormListSelect
+                  label={FORM_LABELS.TYPE}
+                  value={donorData.tipo}
+                  onChange={(e) => handleInputChange("tipo", e.target.value)}
+                  disabled={uiState.edit}
+                  options={Object.values(DONOR_TYPES)}
+                />
+
+                <FormDonorInput
+                  label="Email"
+                  value={donorData.email}
+                  onChange={(e) => handleInputChange("email", e.target.value)}
+                  readOnly={uiState.edit}
+                />
+
+                {operatorData?.operator_type === "Admin" && (
+                  <FormDonorInput
+                    label={FORM_LABELS.CPF}
+                    value={donorData?.cpf?.replace(
+                      /(\d{3})(\d{3})(\d{3})(\d{2})/,
+                      "$1.$2.$3-$4"
+                    )}
+                    onChange={(e) => handleInputChange("cpf", e.target.value)}
+                    readOnly={uiState.edit}
+                  />
+                )}
+              </div>
+
+              {operatorData?.operator_type !== "Admin" && (
+                <div className="form-row">
+                  <FormDonorInput
+                    label="Email"
+                    value={donorData.email}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
+                    readOnly={uiState.edit}
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Informações de Endereço e contato*/}
+            <div className="donor-section">
+              <h4>Endereço e Contato</h4>
+              <div className="form-row">
+                <FormDonorInput
+                  label={FORM_LABELS.ADDRESS}
+                  value={donorData.endereco}
+                  onChange={(e) =>
+                    handleInputChange("endereco", e.target.value)
+                  }
+                  readOnly={uiState.edit}
+                />
+
+                <FormDonorInput
+                  label={FORM_LABELS.CITY}
+                  value={donorData.cidade}
+                  onChange={(e) => handleInputChange("cidade", e.target.value)}
+                  readOnly={uiState.edit}
+                />
+
+                <FormDonorInput
+                  label={FORM_LABELS.NEIGHBORHOOD}
+                  value={donorData.bairro}
+                  onChange={(e) => handleInputChange("bairro", e.target.value)}
+                  readOnly={uiState.edit}
+                />
+                <div className="input-field">
+                  <label>{FORM_LABELS.PHONE1}</label>
+                  <input
+                    type="text"
+                    value={donorData.telefone1}
+                    onChange={(e) =>
+                      handleInputChange("telefone1", e.target.value)
+                    }
+                    readOnly={uiState.edit}
+                  />
+                </div>
+
+                <div className="input-field">
+                  <label>{FORM_LABELS.PHONE2}</label>
+                  <input
+                    type="text"
+                    value={donorData.telefone2}
+                    onChange={(e) =>
+                      handleInputChange("telefone2", e.target.value)
+                    }
+                    readOnly={uiState.edit}
+                  />
+                </div>
+
+                <div className="input-field">
+                  <label>{FORM_LABELS.PHONE3}</label>
+                  <input
+                    type="text"
+                    value={donorData.telefone3}
+                    onChange={(e) =>
+                      handleInputChange("telefone3", e.target.value)
+                    }
+                    readOnly={uiState.edit}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Informações de Doação */}
+            {donorData.tipo === DONOR_TYPES.MONTHLY && (
+            <div className="donor-section">
+              <h4>Informações do Mensal</h4>
+              <div className="form-row">
+                <FormDonorInput
+                  label={FORM_LABELS.DAY}
+                  value={donorData.dia}
+                  onChange={(e) => handleInputChange("dia", e.target.value)}
+                  readOnly={uiState.edit}
+                  disabled={donorData.tipo !== DONOR_TYPES.MONTHLY}
+                  style={{ width: "100%", maxWidth: 100 }}
+                />
+
+                <FormDonorInput
+                  label={FORM_LABELS.FEE}
+                  value={donorData.mensalidade}
+                  onChange={(e) =>
+                    handleInputChange("mensalidade", e.target.value)
+                  }
+                  readOnly={uiState.edit}
+                  disabled={donorData.tipo != DONOR_TYPES.MONTHLY}
+                  style={{ width: "100%", maxWidth: 100 }}
+                />
+
+                <FormDonorInput
+                  label={FORM_LABELS.AVERAGE}
+                  value={donorData.media}
+                  onChange={(e) => handleInputChange("media", e.target.value)}
+                  readOnly={uiState.edit}
+                  disabled={donorData.tipo !== DONOR_TYPES.MONTHLY}
+                  style={{ width: "100%", maxWidth: 100 }}
+                />
+              </div>
+            </div>
+            )} 
+
+            {/* Observações */}
+            <div className="donor-section">
+              <h4>Observações e Referências</h4>
+              <div className="form-row">
+                <FormTextArea
+                  label={FORM_LABELS.OBSERVATION}
+                  value={donorData.observacao}
+                  onChange={(e) =>
+                    handleInputChange("observacao", e.target.value)
+                  }
+                  readOnly={uiState.edit}
+                  name="observacao"
+                />
+                <FormTextArea
+                label={FORM_LABELS.REFERENCE}
+                value={donorData.referencia}
+                onChange={(e) =>
+                  handleInputChange("referencia", e.target.value)
+                }
+                readOnly={uiState.edit}
+                name="referencia"
+              />
+              </div>
+
+              
+            </div>
+          </form>
         </div>
-      </header>
-
-      {/* Formulario com informações do doador */}
-      <form className="formDonor">
-        <FormDonorInput
-          label={FORM_LABELS.NAME}
-          value={donorData.nome}
-          onChange={(e) => handleInputChange("nome", e.target.value)}
-          readOnly={uiState.edit}
-        />
-
-        <FormListSelect
-          label={FORM_LABELS.TYPE}
-          value={donorData.tipo}
-          onChange={(e) => handleInputChange("tipo", e.target.value)}
-          disabled={uiState.edit}
-          options={Object.values(DONOR_TYPES)}
-        />
-
-        {operatorData?.operator_type === "Admin" && (
-          <FormDonorInput
-            label={FORM_LABELS.CPF}
-            value={donorData?.cpf?.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")}
-            onChange={(e) => handleInputChange("cpf", e.target.value)}
-            readOnly={uiState.edit}
+        {uiState.showBtn && (
+          <TableDonor
+            idDonor={id}
+            modalShow={uiState.modalShow}
+            setModalEdit={(showEdit) =>
+              setUiState((prev) => ({ ...prev, modalEdit: true }))
+            }
+            setDonation={setDonation}
+            modalEdit={uiState.modalEdit}
           />
         )}
-
-        <FormDonorInput
-          label="Email"
-          value={donorData.email}
-          onChange={(e) => handleInputChange("email", e.target.value)}
-          readOnly={uiState.edit}
-        />
-
-        <FormDonorInput
-          label={FORM_LABELS.ADDRESS}
-          value={donorData.endereco}
-          onChange={(e) => handleInputChange("endereco", e.target.value)}
-          readOnly={uiState.edit}
-        />
-
-        <FormDonorInput
-          label={FORM_LABELS.CITY}
-          value={donorData.cidade}
-          onChange={(e) => handleInputChange("cidade", e.target.value)}
-          readOnly={uiState.edit}
-        />
-
-        <FormDonorInput
-          label={FORM_LABELS.NEIGHBORHOOD}
-          value={donorData.bairro}
-          onChange={(e) => handleInputChange("bairro", e.target.value)}
-          readOnly={uiState.edit}
-        />
-
-        <FormDonorInput
-          label={FORM_LABELS.PHONE1}
-          value={donorData.telefone1}
-          onChange={(e) => handleInputChange("telefone1", e.target.value)}
-          readOnly={uiState.edit}
-        />
-
-        <FormDonorInput
-          label={FORM_LABELS.PHONE2}
-          value={donorData.telefone2}
-          onChange={(e) => handleInputChange("telefone2", e.target.value)}
-          readOnly={uiState.edit}
-        />
-
-        <FormDonorInput
-          label={FORM_LABELS.PHONE3}
-          value={donorData.telefone3}
-          onChange={(e) => handleInputChange("telefone3", e.target.value)}
-          readOnly={uiState.edit}
-        />
-
-        <FormDonorInput
-          label={FORM_LABELS.DAY}
-          value={donorData.dia}
-          onChange={(e) => handleInputChange("dia", e.target.value)}
-          readOnly={uiState.edit}
-          disabled={donorData.tipo !== DONOR_TYPES.MONTHLY}
-          style={{ width: "100%", maxWidth: 100 }}
-        />
-
-        <FormDonorInput
-          label={FORM_LABELS.FEE}
-          value={donorData.mensalidade}
-          onChange={(e) => handleInputChange("mensalidade", e.target.value)}
-          readOnly={uiState.edit}
-          disabled={donorData.tipo != DONOR_TYPES.MONTHLY}
-          style={{ width: "100%", maxWidth: 100 }}
-        />
-
-        <FormDonorInput
-          label={FORM_LABELS.AVERAGE}
-          value={donorData.media}
-          onChange={(e) => handleInputChange("media", e.target.value)}
-          readOnly={uiState.edit}
-          disabled={donorData.tipo !== DONOR_TYPES.MONTHLY}
-          style={{ width: "100%", maxWidth: 100 }}
-        />
-
-        <FormTextArea
-          label={FORM_LABELS.OBSERVATION}
-          value={donorData.observacao}
-          onChange={(e) => handleInputChange("observacao", e.target.value)}
-          readOnly={uiState.edit}
-          name="observacao"
-        />
-
-        <FormTextArea
-          label={FORM_LABELS.REFERENCE}
-          value={donorData.referencia}
-          onChange={(e) => handleInputChange("referencia", e.target.value)}
-          readOnly={uiState.edit}
-          name="referencia"
-        />
-      </form>
-      {uiState.showBtn && (
-        <TableDonor
-          idDonor={id}
-          modalShow={uiState.modalShow}
-          setModalEdit={(showEdit) =>
-            setUiState((prev) => ({ ...prev, modalEdit: true }))
-          }
-          setDonation={setDonation}
-          modalEdit={uiState.modalEdit}
-        />
-      )}
+      </div>
 
       {uiState.modalShow && (
         <ModalDonation

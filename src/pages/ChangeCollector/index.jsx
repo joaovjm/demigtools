@@ -91,74 +91,109 @@ const ChangeCollector = () => {
   };
 
   return (
-    <main className="collector-main">
-      <div className="collector-header">
-        <div className="collector-title">
-          <h2 className="collector-title-text">
-            {ICONS.EXCHANGE} Mudar Coletador
-          </h2>
-        </div>
+    <div className="change-collector-container">
+      <div className="change-collector-content">
+        <h3 className="change-collector-title">
+          {ICONS.EXCHANGE} Mudar Coletador
+        </h3>
+        
+        <form className="change-collector-form" onSubmit={handleChangeCollector}>
+          <div className="change-collector-section">
+            <h4>Informações da Alteração</h4>
+            
+            <div className="form-row">
+              <div className="form-group">
+                <FormSelect
+                  label="Coletador"
+                  icon={ICONS.MOTORCYCLE}
+                  name="collector"
+                  value={formData.collector}
+                  options={collectors}
+                  onChange={handleInputChange}
+                  disableOption="Selecione o coletador..."
+                />
+              </div>
+              
+              <div className="form-group">
+                <FormInput
+                  label="Data"
+                  icon={ICONS.CALENDAR}
+                  name="date"
+                  type="date"
+                  value={formData.date}
+                  onChange={handleInputChange}
+                  classinput="change-collector-input"
+                />
+              </div>
+              <div className="form-group">
+                <FormInput
+                  label="Buscar Recibo"
+                  icon={ICONS.SEARCH}
+                  type="text"
+                  name="search"
+                  value={formData.search}
+                  onChange={handleInputChange}
+                  classinput="change-collector-input"
+                  placeholder="Digite para buscar o recibo..."
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="change-collector-actions">
+            <button 
+              type="submit"
+              className="change-collector-btn primary"
+            >
+              {ICONS.EXCHANGE} Alterar Coletador
+            </button>
+          </div>
+        </form>
+
+        {alert && (
+          <div className="change-collector-alert">
+            <MessageStatus
+              message={alert.message}
+              type={alert.type}
+              icon={
+                alert.type === ALERT_TYPES.SUCCESS
+                  ? ICONS.CONFIRMED
+                  : alert.type === ALERT_TYPES.ERROR
+                  ? ICONS.ALERT
+                  : null
+              }
+            />
+          </div>
+        )}
+
+        {openReason && (
+          <div className="change-collector-reason">
+            <div className="reason-section">
+              <h4>Motivo da Alteração</h4>
+              <div className="form-group">
+                <label>Descreva o motivo da alteração</label>
+                <input 
+                  value={reason} 
+                  autoFocus={true} 
+                  type="text" 
+                  onChange={(e) => setReason(e.target.value)}
+                  className="change-collector-input"
+                  placeholder="Digite o motivo..."
+                />
+              </div>
+              <div className="reason-actions">
+                <button 
+                  onClick={() => handleReasonButtonPressed(reason)} 
+                  className="change-collector-btn primary"
+                >
+                  {ICONS.CONFIRMED} Confirmar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-      <form className="collector-form" onSubmit={handleChangeCollector}>
-        {/* Coletador */}
-        <FormSelect
-          label="Coletador"
-          icon={ICONS.MOTORCYCLE}
-          name="collector"
-          value={formData.collector}
-          options={collectors}
-          onChange={handleInputChange}
-          disableOption="Selecione o coletador..."
-        />
-        {/* Data */}
-        <FormInput
-          label="Data"
-          icon={ICONS.CALENDAR}
-          name="date"
-          type="date"
-          value={formData.date}
-          onChange={handleInputChange}
-          classinput="form-input"
-        />
-
-        {/* Buscar */}
-        <FormInput
-          label="Buscar"
-          icon={ICONS.SEARCH}
-          type="text"
-          name="search"
-          value={formData.search}
-          onChange={handleInputChange}
-          classinput="form-input"
-        />
-      </form>
-
-      {alert && (
-        <MessageStatus
-          message={alert.message}
-          type={alert.type}
-          icon={
-            alert.type === ALERT_TYPES.SUCCESS
-              ? ICONS.CONFIRMED
-              : alert.type === ALERT_TYPES.ERROR
-              ? ICONS.ALERT
-              : null
-          }
-        />
-      )}
-
-      {openReason && (
-        <div className="collector-reason">
-          <div className="input-field">
-            <label className="label">Motivo</label>
-            <input value={reason} autoFocus="true" type="text" onChange={(e) => setReason(e.target.value)}/>
-          </div>
-          <div>
-            <button onClick={() => handleReasonButtonPressed(reason)} className="btn-OK">OK</button>
-          </div>
-        </div>
-      )}
-    </main>
+    </div>
   );
 };
 

@@ -1,94 +1,142 @@
+/* Dashboard Admin Container */
 .mainDashboard {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  padding: 4px;
+  width: 100%;
+  min-height: calc(100vh - 11.4vh);
+  background-color: #383838;
+  color: #faf5e9;
+  padding: 20px;
+  box-sizing: border-box;
+  gap: 20px;
 }
 
+/* Header Section */
 .sectionHeader {
   display: flex;
-  overflow-y: auto;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
+
 .sectionHeader-item {
   display: flex;
   justify-content: center;
-  padding: 20px;
-  gap: 8px;
+  padding: 16px;
+  border: 3px double #363a3d;
+  border-radius: 6px;
+  background-color: #1f1d1d;
+  gap: 16px;
+  flex-wrap: wrap;
+  min-width: max-content;
 }
 
+/* Dashboard Cards */
 .divCard {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100px;
-  width: 220px;
-  background-color: #1f1d1d;
+  height: 80px;
+  width: 200px;
+  background-color: #363a3d;
+  border: 2px solid #2f2d2d;
   border-radius: 6px;
-  border: 3px double transparent;
-  padding: 20px;
+  padding: 12px;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition: border-color 0.3s, box-shadow 0.3s;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
 
-  &:hover {
-    background-color: #2f2d2d;
-    transition: 0.3s;
-  }
+.divCard:hover {
+  background-color: #4a4d50;
+  border-color: #faa01c;
+  box-shadow: 0 4px 12px rgba(250, 160, 28, 0.3);
+  transform: translateY(-2px);
 }
 
 .divCard.active {
-  border: 3px double #faa01c;
-  box-shadow: 0 4px 12px rgba(250, 160, 28, 0.4);
-  transform: scale(0.98);
-  transition: transform 0.1s;
+  border: 2px solid #faa01c;
+  background-color: #faa01c;
+  color: #1f1d1d;
+  box-shadow: 0 6px 20px rgba(250, 160, 28, 0.5);
+  transform: translateY(-1px);
+}
+
+.divCard.active .h3Header,
+.divCard.active p {
+  color: #1f1d1d;
 }
 
 .divHeader {
   display: flex;
+  align-items: center;
+  margin-bottom: 8px;
 }
 
 .h3Header {
-  font-size: 14px;
-  font-weight: 800;
+  font-size: 12px;
+  font-weight: 600;
   color: #faf5e9;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
 }
 
 .divBody {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
 }
 
-p {
+.divBody p {
   font-size: 14px;
   font-weight: 600;
   color: #faf5e9;
+  margin: 0;
+  line-height: 1.2;
 }
 
+/* Main Content Section */
 .section-grafic {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   width: 100%;
-  border: none;
+  max-width: 1200px;
+  background-color: #1f1d1d;
+  border: 3px double #363a3d;
+  border-radius: 6px;
+  padding: 20px;
+  gap: 16px;
+  min-height: 400px;
 }
 
 .section-table-and-info {
   width: 100%;
   display: flex;
   justify-content: center;
-  gap: 12px;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
+/* Operators Section */
 .section-operators {
   display: flex;
   flex-direction: column;
-  height: 380px;
-  padding: 6px;
-  gap: 6px;
-  border: 6px double #1f1d1d;
+  min-width: 250px;
+  max-width: 300px;
+  height: 400px;
+  padding: 16px;
+  gap: 8px;
+  border: 2px solid #2f2d2d;
   border-radius: 6px;
+  background-color: #363a3d;
   overflow-y: auto;
 }
 
@@ -97,26 +145,33 @@ p {
 }
 
 .section-operators::-webkit-scrollbar-track {
-  background: #2f2d2d;
+  background-color: #2f2d2d;
+  border-radius: 4px;
 }
 
 .section-operators::-webkit-scrollbar-thumb {
-  background-color: transparent;
+  background-color: #464a4d;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
 }
 
 .section-operators::-webkit-scrollbar-thumb:hover {
-  background-color: #1f1d1d;
+  background-color: #faa01c;
 }
 
+/* Table Section */
 .section-table {
   display: flex;
-  align-items: start;
+  align-items: flex-start;
   justify-content: center;
-  width: 70%;
-  height: 380px;
+  flex: 1;
+  min-width: 600px;
+  height: 400px;
   overflow-y: auto;
-  border: 6px double #1f1d1d;
+  border: 2px solid #2f2d2d;
   border-radius: 6px;
+  background-color: #363a3d;
+  padding: 16px;
 }
 
 .section-table::-webkit-scrollbar {
@@ -124,233 +179,254 @@ p {
 }
 
 .section-table::-webkit-scrollbar-track {
-  background: #2f2d2d;
+  background-color: #2f2d2d;
+  border-radius: 4px;
 }
 
 .section-table::-webkit-scrollbar-thumb {
-  background-color: transparent;
-  cursor: pointer;
-  transition: 0.3s;
+  background-color: #464a4d;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
 }
 
 .section-table::-webkit-scrollbar-thumb:hover {
-  background-color: #1f1d1d;
+  background-color: #faa01c;
 }
 
-.table-head-confirmation-text,
-.table-body-confirmation-tr,
-.section-operators-card {
-  font-size: 13px;
-}
-
+/* Operator Cards */
 .section-operators-card {
   display: flex;
   flex-direction: column;
-  background-color: #1f1d1d;
-  padding: 8px;
+  background-color: #2f2d2d;
+  border: 2px solid #464a4d;
+  padding: 12px;
   border-radius: 6px;
   cursor: pointer;
   gap: 8px;
-  transition: 0.3s;
-
-  label {
-    font-size: 14px;
-  }
-
-  &:hover {
-    background-color: #faa01c;
-  }
+  transition: all 0.3s ease;
+  font-size: 13px;
 }
 
-.section-operators-card.active{
+.section-operators-card:hover {
   background-color: #faa01c;
+  border-color: #e8901a;
+  color: #1f1d1d;
+  box-shadow: 0 4px 12px rgba(250, 160, 28, 0.3);
+}
+
+.section-operators-card.active {
+  background-color: #faa01c;
+  border-color: #e8901a;
+  color: #1f1d1d;
+  box-shadow: 0 4px 12px rgba(250, 160, 28, 0.4);
+}
+
+.section-operators-card label {
+  font-size: 12px;
+  font-weight: 500;
+  margin: 0;
 }
 
 .section-operators-card-value {
   width: 100%;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
 }
 
-@media (min-width: 379px) and (max-width: 599px) {
-  .sectionHeader {
-    max-width: 100%;
-    overflow-y: auto;
-    justify-content: start;
-    box-sizing: border-box;
-  }
-  .sectionHeader-item {
-    width: 490px;
-    display: flex;
-    padding: 10px;
-    gap: 6px;
-  }
-
-  .section-table-and-info {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .section-operators {
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-    width: 100%;
-    height: 100px;
-  }
-
-  .section-operators-card {
-    min-width: 120px;
-    max-height: 70px;
-  }
-
-  .section-table {
-    width: 100%;
-    height: 420px;
-  }
-
-  .table-body-confirmation-text {
-    padding: 12px 12px;
-    font-size: 10px;
-  }
-
-  .divCard {
-    width: 120px;
-    height: 70px;
-    padding: 10px;
-
-    .h3Header {
-      font-size: 9px;
-    }
-
-    p {
-      font-size: 12px;
-    }
-  }
-
-  .table-head-confirmation-text,
-  .table-body-confirmation-tr {
-    font-size: 9px;
-  }
+/* Leads Section */
+.div-leads {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  background-color: #1f1d1d;
+  border: 3px double #363a3d;
+  border-radius: 6px;
 }
 
-@media (min-width: 600px) and (max-width: 768px) {
+/* Mobile Responsiveness */
+@media (max-width: 479px) {
+  .mainDashboard {
+    padding: 12px;
+    gap: 12px;
+  }
+  
   .sectionHeader {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    padding: 10px;
-    gap: 6px;
     overflow-x: auto;
-    h3 {
-      font-size: 12px;
-    }
+    padding: 0;
+  }
+
+  .sectionHeader-item {
+    padding: 12px;
+    gap: 8px;
+    min-width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
   }
 
   .divCard {
     width: 140px;
     height: 70px;
     padding: 10px;
+    flex-shrink: 0;
+  }
+
+  .h3Header {
+    font-size: 9px;
+  }
+
+  .divBody p {
+    font-size: 11px;
+  }
+
+  .section-grafic {
+    padding: 12px;
+    min-height: 300px;
   }
 
   .section-table-and-info {
-    display: flex;
     flex-direction: column;
-  }
-
-  .table-body-confirmation-text {
-    padding: 12px 22px;
-    font-size: 12px;
+    gap: 12px;
   }
 
   .section-operators {
-    display: flex;
     flex-direction: row;
-    justify-content: start;
-    width: 100%;
-    height: 100px;
+    height: 120px;
+    min-width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
   }
 
   .section-operators-card {
-    min-width: 130px;
-    max-width: 130px;
+    min-width: 140px;
+    flex-shrink: 0;
   }
 
   .section-table {
-    width: 100%;
-    height: 420px;
+    min-width: 100%;
+    height: 300px;
+    padding: 12px;
+  }
+
+  .div-leads {
+    padding: 12px;
+  }
+}
+
+@media (min-width: 480px) and (max-width: 768px) {
+  .mainDashboard {
+    padding: 16px;
+    gap: 16px;
+  }
+  
+  .sectionHeader-item {
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .divCard {
+    width: 160px;
+    height: 75px;
+    padding: 12px;
+  }
+
+  .h3Header {
+    font-size: 10px;
+  }
+
+  .divBody p {
+    font-size: 12px;
+  }
+
+  .section-grafic {
+    padding: 16px;
+    min-height: 350px;
+  }
+
+  .section-table-and-info {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .section-operators {
+    flex-direction: row;
+    height: 140px;
+    min-width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .section-operators-card {
+    min-width: 160px;
+    max-width: 160px;
+    flex-shrink: 0;
+  }
+
+  .section-table {
+    min-width: 100%;
+    height: 350px;
+    padding: 16px;
+  }
+
+  .div-leads {
+    padding: 16px;
   }
 }
 
 @media (min-width: 769px) and (max-width: 1199px) {
-  .sectionHeader {
-    display: flex;
-    justify-content: center;
-    padding: 10px;
-    gap: 6px;
+  .mainDashboard {
+    padding: 18px;
+  }
+  
+  .sectionHeader-item {
+    gap: 14px;
   }
 
   .divCard {
     width: 180px;
     height: 80px;
-    padding: 10px;
   }
 
-  .section-table {
-    display: flex;
-    align-items: start;
-    justify-content: center;
-    width: 70%;
-    height: 240px;
+  .section-grafic {
+    min-height: 380px;
   }
 
   .section-operators {
-    width: 20%;
-    height: 240px;
+    min-width: 220px;
+    max-width: 250px;
+    height: 350px;
+  }
+
+  .section-table {
+    min-width: 500px;
+    height: 350px;
   }
 }
 
 @media (min-width: 1200px) {
-  .section-table {
-    height: 380px;
-    width: 800px;
+  .mainDashboard {
+    padding: 20px;
   }
-
-  .section-operators {
-    width: 186px;
-  }
-  .section-operators-card {
-    width: 154px;
-  }
-
-  .section-operators-card-value {
-    label {
-      font-size: 12px;
-    }
+  
+  .divCard {
+    width: 200px;
+    height: 80px;
   }
 
   .section-grafic {
-    width: 1100px;
-    border: none;
+    min-height: 400px;
   }
 
-  .divCard {
-    height: 70px;
-    width: 140px;
-    padding: 8px;
-
-    h3 {
-      font-size: 12px;
-    }
-
-    p {
-      font-size: 13px;
-    }
+  .section-operators {
+    min-width: 250px;
+    max-width: 300px;
+    height: 400px;
   }
 
-  .table-head-confirmation-text,
-  .table-body-confirmation-tr,
-  .section-operators-card {
-    font-size: 12px;
+  .section-table {
+    min-width: 600px;
+    height: 400px;
   }
 }

@@ -1,4 +1,5 @@
 import React from "react";
+import "./index.css";
 import { DataSelect } from "../DataTime";
 
 const TableScheduled = ({
@@ -39,89 +40,86 @@ const TableScheduled = ({
     (filter) => filter.operator_code_id === donationFilterPerId
   );
 
-  return (
-    <>
-      <div className="table-confirmation-container">
-        {donationFilterPerId ? (
-          filterScheduled?.length !== 0 ? (
-            <table className="table-confirmation">
-              <thead className="table-head-confirmation">
-                <tr>
-                  <th className="table-head-confirmation-text">Nome</th>
-                  <th className="table-head-confirmation-text">Observação</th>
-                  <th className="table-head-confirmation-text">
-                    Agendado para
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="table-body-confirmation">
-                {filterScheduled?.map((item) => (
-                  <tr
-                    key={item.leads_id}
-                    className="table-body-confirmation-tr"
-                    onClick={() => handleClick(item)}
-                  >
-                    <td className="table-body-confirmation-text">
-                      {item.leads_name}
-                    </td>
-                    <td className="table-body-confirmation-text">
-                      {item.leads_observation}
-                    </td>
-                    <td className="table-body-confirmation-text">
-                      {DataSelect(item.leads_scheduling_date)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : (
-            "Nenhuma ficha agendada"
-          )
-        ) : scheduled?.length !== 0 ? (
-          <table className="table-confirmation">
-            <thead className="table-head-confirmation">
-              <tr>
-                <th className="table-head-confirmation-text">Nome</th>
-                <th className="table-head-confirmation-text">Observação</th>
-                <th className="table-head-confirmation-text">Agendado para</th>
-                <th className="table-head-confirmation-text">Telefone Contactado</th>
-              </tr>
-            </thead>
-            <tbody className="table-body-confirmation">
-              {scheduled?.map((item) => (
-                <tr
-                  key={item.leads_id ? item.leads_id : item.id && item.id}
-                  className="table-body-confirmation-tr"
-                  onClick={() => handleClick(item)}
-                >
-                  <td className="table-body-confirmation-text">
-                    {item.leads_name
-                      ? item.leads_name
-                      : item.donor.donor_name
-                      ? item.donor.donor_name
-                      : ""}
-                  </td>
+  const dataToShow = donationFilterPerId ? filterScheduled : scheduled;
+  const showPhoneColumn = !donationFilterPerId;
 
-                  <td className="table-body-confirmation-text">
-                    {item.leads_observation
-                      ? item.leads_observation
-                      : item.request_observation
-                      ? item.request_observation
-                      : ""}
-                  </td>
-                  <td className="table-body-confirmation-text">
-                    {new Date(item.request_scheduled_date || item.leads_scheduling_date).toLocaleDateString("pt-BR", {timeZone: "UTC"})}
-                  </td>
-                  <td className="table-body-confirmation-text">{item.request_tel_success || item.leads_tel_success}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+  return (
+    <div className="table-scheduled-container">
+      <div className="table-scheduled-content">
+        <h3 className="table-scheduled-title">📅 Agendamentos</h3>
+        {dataToShow?.length > 0 ? (
+          <div className="table-scheduled-wrapper">
+            <div className="table-scheduled-header">
+              <div className="table-scheduled-stats">
+                <span className="stats-item">
+                  <strong>{dataToShow.length}</strong> {dataToShow.length === 1 ? 'agendamento' : 'agendamentos'}
+                </span>
+                <span className="stats-item">
+                  {showPhoneColumn ? 'Visualização completa' : 'Filtrado por operador'}
+                </span>
+              </div>
+            </div>
+
+            <div className="table-scheduled-scroll">
+              <table className="table-scheduled">
+                <thead>
+                  <tr className="table-scheduled-head-row">
+                    <th className="table-scheduled-head">Nome</th>
+                    <th className="table-scheduled-head">Observação</th>
+                    <th className="table-scheduled-head">Agendado para</th>
+                    {showPhoneColumn && (
+                      <th className="table-scheduled-head">Telefone Contactado</th>
+                    )}
+                  </tr>
+                </thead>
+                <tbody>
+                  {dataToShow.map((item) => (
+                    <tr
+                      key={item.leads_id ? item.leads_id : item.id && item.id}
+                      className="table-scheduled-row"
+                      onClick={() => handleClick(item)}
+                    >
+                      <td className="table-scheduled-cell">
+                        <span className="scheduled-name">
+                          {item.leads_name || item.donor?.donor_name || "—"}
+                        </span>
+                      </td>
+                      <td className="table-scheduled-cell">
+                        <span className="observation-text" title={item.leads_observation || item.request_observation || "Sem observação"}>
+                          {item.leads_observation || item.request_observation || "—"}
+                        </span>
+                      </td>
+                      <td className="table-scheduled-cell">
+                        <span className="date-info">
+                          {item.leads_scheduling_date 
+                            ? DataSelect(item.leads_scheduling_date)
+                            : item.request_scheduled_date
+                            ? new Date(item.request_scheduled_date).toLocaleDateString("pt-BR", {timeZone: "UTC"})
+                            : "—"}
+                        </span>
+                      </td>
+                      {showPhoneColumn && (
+                        <td className="table-scheduled-cell">
+                          <span className="phone-info">
+                            {item.request_tel_success || item.leads_tel_success || "—"}
+                          </span>
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         ) : (
-          "Nenhuma ficha agendada"
+          <div className="table-scheduled-empty">
+            <div className="empty-icon">📅</div>
+            <h4>Nenhum agendamento</h4>
+            <p>Não há fichas agendadas no momento.</p>
+          </div>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

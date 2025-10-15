@@ -81,62 +81,103 @@ const Login = () => {
         )
         
       ) : (
-        <main className="page_container">
-          <div className="login_container">
-            <div className="header_login">
-              <h1 className="login_name">Login</h1>
-            </div>
-
-            <form onSubmit={handleSubmit} className="form_container">
-              {/* Campo de usuário */}
-              <div className="input_div">
-                <label htmlFor="name">Usuário</label>
-                <div className="input_logo">
-                  <input
-                    type="text"
-                    placeholder="Leandro"
-                    className="input_design"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    autoComplete="username"
-                  />
-                  <FaRegUser color="#FAF5E9" />
-                </div>
+        <main className="login-page-container">
+          <div className="login-content">
+            {/* Header com título e logo */}
+            <header className="login-header">
+              <div className="login-logo">
+                <div className="logo-icon">🔐</div>
+                <h1 className="login-title">Acesso ao Sistema</h1>
               </div>
+              <p className="login-subtitle">Faça login para continuar</p>
+            </header>
 
-              {/* Campo de senha */}
-              <div className="input_div">
-                <label htmlFor="password">Senha</label>
-                <div className="input_logo">
-                  <input
-                    type={passwordVisible ? "text" : "password"}
-                    placeholder="*****"
-                    className="input_design"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    autoComplete="current-password"
-                  />
-                  <button
-                    onClick={togglePasswordVisibility}
-                    className="eye"
-                    type="button"
+            {/* Formulário de login */}
+            <div className="login-form-container">
+              <form onSubmit={handleSubmit} className="login-form">
+                {/* Campo de usuário */}
+                <div className="form-group">
+                  <label htmlFor="username" className="form-label">
+                    <FaRegUser className="label-icon" />
+                    Usuário
+                  </label>
+                  <div className="input-container">
+                    <input
+                      type="text"
+                      id="username"
+                      placeholder="Digite seu usuário"
+                      className="form-input"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      autoComplete="username"
+                      required
+                    />
+                    <div className="input-icon">
+                      <FaRegUser />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Campo de senha */}
+                <div className="form-group">
+                  <label htmlFor="password" className="form-label">
+                    <FaEye className="label-icon" />
+                    Senha
+                  </label>
+                  <div className="input-container">
+                    <input
+                      type={passwordVisible ? "text" : "password"}
+                      id="password"
+                      placeholder="Digite sua senha"
+                      className="form-input"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      autoComplete="current-password"
+                      required
+                    />
+                    <button
+                      onClick={togglePasswordVisibility}
+                      className="password-toggle"
+                      type="button"
+                      aria-label={passwordVisible ? "Ocultar senha" : "Mostrar senha"}
+                    >
+                      {passwordVisible ? (
+                        <FaEyeSlash size={18} />
+                      ) : (
+                        <FaEye size={18} />
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Botão de login */}
+                <div className="form-actions">
+                  <button 
+                    className="login-btn" 
+                    type="submit"
+                    disabled={loading}
                   >
-                    {passwordVisible ? (
-                      <FaEye size={18} />
+                    {loading ? (
+                      <>
+                        <span>Entrando...</span>
+                      </>
                     ) : (
-                      <FaEyeSlash size={18} />
+                      <>
+                        <span>Entrar</span>
+                        <div className="btn-arrow">→</div>
+                      </>
                     )}
                   </button>
                 </div>
-              </div>
+              </form>
 
-              {/* Botão para confirmar login */}
-              <div className="div_button">
-                <button className="btn_design" type="submit">
-                  {loading ? <Loader /> : "Entrar"}
-                </button>
+              {/* Informações adicionais */}
+              <div className="login-footer">
+                <div className="login-info">
+                  <p>💡 Dica: Use suas credenciais fornecidas pelo administrador</p>
+                </div>
               </div>
-            </form>
+            </div>
           </div>
         </main>
       )}

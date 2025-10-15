@@ -77,10 +77,8 @@ const ReceiverDonations = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    if (!formData.collector || !formData.date || !formData.search) {
-      console.log("ATTENTION icon:", ICONS.ATTENTION);
 
+    if (!formData.collector || !formData.date || !formData.search) {
       setAlert({
         message: "Preencha todos os campos",
         type: ALERT_TYPES.ATTENTION,
@@ -132,134 +130,190 @@ const ReceiverDonations = () => {
   };
 
   return (
-    <main className="receiver-donations-main">
-      <div className="receiver-donations-header">
-        <h2 className="receiver-donations-header-title-text">
-          {ICONS.MONEY} Receber Doações
-        </h2>
-        {deposit?.length > 0 && (
-          <button onClick={handleDeposit} className="deposit-btn">
-            Recibo Deposito ({deposit.length})
-          </button>
-        )}
-      </div>
-
-      <form onSubmit={handleSubmit} className="receiver-donations-form">
-        <div className="input-field">
-          <label>{ICONS.MOTORCYCLE}Coletador</label>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <select
-              value={formData.collector}
-              onChange={(e) => handleInputChange("collector", e.target.value)}
+    <div className="receiver-donations-container">
+      <div className="receiver-donations-content">
+        <div className="receiver-donations-header">
+          <h3 className="receiver-donations-title">
+            {ICONS.MONEY} Receber Doações
+          </h3>
+          {deposit?.length > 0 && (
+            <button
+              onClick={handleDeposit}
+              className="receiver-donations-btn secondary"
             >
-              <option value="">Selecione o coletador</option>
-              {collectors.map((collector) => (
-                <option
-                  key={collector.collector_code_id}
-                  value={collector.collector_code_id}
+              {ICONS.MONEY} Recibo Depósito ({deposit.length})
+            </button>
+          )}
+        </div>
+
+        <form onSubmit={handleSubmit} className="receiver-donations-form">
+          <div className="receiver-donations-section">
+            <h4>Informações do Recebimento</h4>
+
+            <div className="form-row">
+              <div className="form-group collector-group">
+                <label>{ICONS.MOTORCYCLE} Coletador</label>
+                <div className="collector-inputs">
+                  <select
+                    value={formData.collector}
+                    onChange={(e) =>
+                      handleInputChange("collector", e.target.value)
+                    }
+                    className="receiver-donations-select"
+                  >
+                    <option value="">Selecione o coletador...</option>
+                    {collectors.map((collector) => (
+                      <option
+                        key={collector.collector_code_id}
+                        value={collector.collector_code_id}
+                      >
+                        {collector.collector_name}
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    type="text"
+                    className="receiver-donations-input collector-code"
+                    value={formData.collector}
+                    onChange={(e) =>
+                      handleInputChange("collector", e.target.value)
+                    }
+                    placeholder="Código"
+                    readOnly={modalOpen}
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <FormInput
+                  label="Data"
+                  icon={ICONS.CALENDAR}
+                  name="date"
+                  type="date"
+                  value={formData.date}
+                  onChange={handleDataChange}
+                  readOnly={modalOpen}
+                  classinput="receiver-donations-input"
+                />
+              </div>
+              <div className="form-group">
+                <FormInput
+                  label="Buscar Recibo"
+                  icon={ICONS.SEARCH}
+                  type="text"
+                  name="search"
+                  value={formData.search}
+                  onChange={(e) => handleInputChange("search", e.target.value)}
+                  readOnly={modalOpen}
+                  classinput="receiver-donations-input"
+                  placeholder="Digite o código do recibo..."
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleSubmit(e);
+                  }}
+                />
+              </div>
+              <div className="form-group-btn">
+                <button
+                  type="submit"
+                  className="receiver-donations-btn primary"
+                  disabled={
+                    modalOpen ||
+                    !formData.collector ||
+                    !formData.date ||
+                    !formData.search
+                  }
                 >
-                  {collector.collector_name}
-                </option>
-              ))}
-            </select>
-            <input
-              type="text"
-              style={{ width: "50px" }}
-              value={formData.collector}
-              onChange={(e) => handleInputChange("collector", e.target.value)}
+                  {ICONS.SEARCH} Processar
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        {/*MENSAGEM*/}
+        {alert.message && (
+          <div className="receiver-donations-alert">
+            <MessageStatus
+              type={alert.type}
+              message={alert.message}
+              icon={alert.icon}
             />
           </div>
-        </div>
-
-        <FormInput
-          label="Data"
-          className="label"
-          type="date"
-          value={formData.date}
-          onChange={handleDataChange}
-          readOnly={modalOpen}
-          icon={ICONS.CALENDAR}
-          classinput="form-input"
-        />
-
-        <div className="input-field">
-          <label>{ICONS.SEARCH} Buscar</label>
-          <input
-            type="text"
-            value={formData.search}
-            onChange={(e) => handleInputChange("search", e.target.value)}
-            readOnly={modalOpen}
-            onKeyDown={(e) => {if(e.key === "Enter") handleSubmit(e)}}
-          />
-        </div>
-      </form>
-      {/*MENSAGEM*/}
-
-      {alert.message && (
-        <MessageStatus
-          type={alert.type}
-          message={alert.message}
-          icon={alert.icon}
-        />
-      )}
-
-      {/*MODAL CONFIRM*/}
-      <ModalConfirm
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        onConfirm={modalConfig.onConfirm}
-        title={modalConfig.title}
-        message={modalConfig.message}
-      />
-      {tableReceipt.length > 0 && (
-        <div className="receive-donations-count">
-          <label>Total Fichas: {tableReceipt.length}</label>
-          <label>
-            Valor Total:{" "}
-            {tableReceipt
-              .reduce((acc, item) => {
-                return (acc += item.value);
-              }, 0)
-              .toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
-          </label>
-        </div>
-      )}
-
-      <table className="receiver-donations-table">
-        {tableReceipt.length > 0 && (
-          <thead className="receiver-donations-table-header">
-            <tr>
-              <th style={{ width: "20%" }}>Recibo</th>
-              <th style={{ width: "60%" }}>Nome</th>
-              <th style={{ width: "20%" }}>Valor</th>
-            </tr>
-          </thead>
         )}
 
-        <tbody className="receiver-donations-table-body">
-          {tableReceipt.map((item) => (
-            <tr key={item.search}>
-              <td>{item.search}</td>
-              <td>{item.name}</td>
-              <td>
-                {item.value.toLocaleString("pt-BR", {
-                  style: "currency",
-                  currency: "BRL",
-                })}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+        {/* SUMÁRIO DOS RECIBOS */}
+        {tableReceipt.length > 0 && (
+          <div className="receiver-donations-summary">
+            <div className="summary-item">
+              <span className="summary-label">Total de Fichas:</span>
+              <span className="summary-value">{tableReceipt.length}</span>
+            </div>
+            <div className="summary-item">
+              <span className="summary-label">Valor Total:</span>
+              <span className="summary-value">
+                {tableReceipt
+                  .reduce((acc, item) => {
+                    return (acc += item.value);
+                  }, 0)
+                  .toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
+              </span>
+            </div>
+          </div>
+        )}
 
-      {sendModalOpen && (
-        <ModalReceiptSend
-          setSendModalOpen={setSendModalOpen}
-          deposit={deposit}
-          setDeposit={setDeposit}
+        {/* TABELA DE RECIBOS */}
+        {tableReceipt.length > 0 && (
+          <div className="receiver-donations-table-section">
+            <h4>Recibos Processados</h4>
+            <div className="table-container">
+              <table className="receiver-donations-table">
+                <thead>
+                  <tr>
+                    <th>Recibo</th>
+                    <th>Nome do Doador</th>
+                    <th>Valor</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tableReceipt.map((item) => (
+                    <tr key={item.search}>
+                      <td className="receipt-code">{item.search}</td>
+                      <td className="donor-name">{item.name}</td>
+                      <td className="donation-value">
+                        {item.value.toLocaleString("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                        })}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/*MODAL CONFIRM*/}
+        <ModalConfirm
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          onConfirm={modalConfig.onConfirm}
+          title={modalConfig.title}
+          message={modalConfig.message}
         />
-      )}
-    </main>
+
+        {sendModalOpen && (
+          <ModalReceiptSend
+            setSendModalOpen={setSendModalOpen}
+            deposit={deposit}
+            setDeposit={setDeposit}
+          />
+        )}
+      </div>
+    </div>
   );
 };
 

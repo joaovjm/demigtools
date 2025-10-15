@@ -36,66 +36,85 @@ const TableConfirmation = ({
     (dc) => dc.operator_code_id === donationFilterPerId
   );
 
+  const dataToShow = donationFilterPerId ? filterDonationConfirmation : donationConfirmation;
+
   return (
-    <>
-      {donationConfirmation.length !== 0 ? (
-        <table className="table-confirmation">
-          <thead className="table-head-confirmation">
-            <tr>
-              <th className="table-head-confirmation-text">Data</th>
-              <th className="table-head-confirmation-text">Nome</th>
-              <th className="table-head-confirmation-text">Valor</th>
-              <th className="table-head-confirmation-text">Motivo</th>
-            </tr>
-          </thead>
-          <tbody className="table-body-confirmation">
-            {donationFilterPerId
-              ? filterDonationConfirmation.map((donation) => (
-                  <tr
-                    className="table-body-confirmation-tr"
-                    key={donation.receipt_donation_id}
-                    onClick={() => handleClick(donation)}
-                  >
-                    <td className="table-body-confirmation-text">
-                      {DataSelect(donation.donation_day_to_receive)}
-                    </td>
-                    <td className="table-body-confirmation-text">
-                      {donation.donor_name}
-                    </td>
-                    <td className="table-body-confirmation-text">
-                      {donation.donation_value}
-                    </td>
-                    <td className="table-body-confirmation-text">
-                      {donation.donor_confirmation_reason}
-                    </td>
+    <div className="table-confirmation-container">
+      <div className="table-confirmation-content">
+        <h3 className="table-confirmation-title">✅ Confirmações Pendentes</h3>
+        {dataToShow.length > 0 ? (
+          <div className="table-confirmation-wrapper">
+            <div className="table-confirmation-header">
+              <div className="table-confirmation-stats">
+                <span className="stats-item">
+                  <strong>{dataToShow.length}</strong> {dataToShow.length === 1 ? 'confirmação' : 'confirmações'} pendente{dataToShow.length === 1 ? '' : 's'}
+                </span>
+                <span className="stats-item">
+                  Total: <strong>
+                    {dataToShow.reduce((acc, item) => acc + (parseFloat(item.donation_value) || 0), 0).toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    })}
+                  </strong>
+                </span>
+              </div>
+            </div>
+
+            <div className="table-confirmation-scroll">
+              <table className="table-confirmation">
+                <thead>
+                  <tr className="table-confirmation-head-row">
+                    <th className="table-confirmation-head">Data</th>
+                    <th className="table-confirmation-head">Nome</th>
+                    <th className="table-confirmation-head">Valor</th>
+                    <th className="table-confirmation-head">Motivo</th>
                   </tr>
-                ))
-              : donationConfirmation.map((donation) => (
-                  <tr
-                    className="table-body-confirmation-tr"
-                    key={donation.receipt_donation_id}
-                    onClick={() => handleClick(donation)}
-                  >
-                    <td className="table-body-confirmation-text">
-                      {DataSelect(donation.donation_day_to_receive)}
-                    </td>
-                    <td className="table-body-confirmation-text">
-                      {donation.donor_name}
-                    </td>
-                    <td className="table-body-confirmation-text">
-                      {donation.donation_value}
-                    </td>
-                    <td className="table-body-confirmation-text">
-                      {donation.donor_confirmation_reason}
-                    </td>
-                  </tr>
-                ))}
-          </tbody>
-        </table>
-      ) : (
-        "Não há fichas a serem confirmadads"
-      )}
-    </>
+                </thead>
+                <tbody>
+                  {dataToShow.map((donation) => (
+                    <tr
+                      className="table-confirmation-row"
+                      key={donation.receipt_donation_id}
+                      onClick={() => handleClick(donation)}
+                    >
+                      <td className="table-confirmation-cell">
+                        <span className="date-info">
+                          {DataSelect(donation.donation_day_to_receive)}
+                        </span>
+                      </td>
+                      <td className="table-confirmation-cell">
+                        <span className="donor-name">
+                          {donation.donor_name}
+                        </span>
+                      </td>
+                      <td className="table-confirmation-cell">
+                        <span className="value-amount">
+                          {parseFloat(donation.donation_value || 0).toLocaleString("pt-BR", {
+                            style: "currency",
+                            currency: "BRL",
+                          })}
+                        </span>
+                      </td>
+                      <td className="table-confirmation-cell">
+                        <span className="reason-text">
+                          {donation.donor_confirmation_reason}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ) : (
+          <div className="table-confirmation-empty">
+            <div className="empty-icon">✅</div>
+            <h4>Nenhuma confirmação pendente</h4>
+            <p>Não há fichas a serem confirmadas no momento.</p>
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 

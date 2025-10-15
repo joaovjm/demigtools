@@ -1,82 +1,131 @@
+/* Dashboard Container */
 .mainDashboard {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 48px;
-  padding: 4px;
-}
-
-.sectionHeader {
-  display: flex;
-  justify-content: center;
+  width: 100%;
+  min-height: calc(100vh - 11.4vh);
+  background-color: #383838;
+  color: #faf5e9;
   padding: 20px;
+  box-sizing: border-box;
   gap: 20px;
 }
 
+/* Header Section */
+.sectionHeader {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+  padding: 16px;
+  border: 3px double #363a3d;
+  border-radius: 6px;
+  background-color: #1f1d1d;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* Dashboard Cards */
 .divCard {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100px;
-  width: 220px;
-  background-color: #1f1d1d;
+  height: 80px;
+  width: 200px;
+  background-color: #363a3d;
+  border: 2px solid #2f2d2d;
   border-radius: 6px;
-  border: 3px double transparent;
-  padding: 20px;
+  padding: 12px;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition: border-color 0.3s, box-shadow 0.3s;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
 
-  &:hover {
-    background-color: #2f2d2d;
-    transition: 0.3s;
-  }
+.divCard:hover {
+  background-color: #4a4d50;
+  border-color: #faa01c;
+  box-shadow: 0 4px 12px rgba(250, 160, 28, 0.3);
+  transform: translateY(-2px);
 }
 
 .divCard.active {
-  border: 3px double #faa01c;
-  box-shadow: 0 4px 12px rgba(250, 160, 28, 0.4);
-  transform: scale(0.98);
-  transition: transform 0.1s;
+  border: 2px solid #faa01c;
+  background-color: #faa01c;
+  color: #1f1d1d;
+  box-shadow: 0 6px 20px rgba(250, 160, 28, 0.5);
+  transform: translateY(-1px);
+}
+
+.divCard.active .h3Header,
+.divCard.active p {
+  color: #1f1d1d;
 }
 
 .divHeader {
   display: flex;
+  align-items: center;
+  margin-bottom: 8px;
 }
 
 .h3Header {
-  font-size: 14px;
-  font-weight: 800;
+  font-size: 12px;
+  font-weight: 600;
   color: #faf5e9;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
 }
 
 .divBody {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
 }
 
-p {
+.divBody p {
   font-size: 14px;
   font-weight: 600;
   color: #faf5e9;
+  margin: 0;
+  line-height: 1.2;
 }
 
+/* Motivational Section */
 .motivational {
-  width: 80%;
+  width: 100%;
+  max-width: 1200px;
   display: flex;
   justify-content: center;
+  padding: 20px 0;
 }
 
 .motivational-card {
   display: flex;
-  align-items: self-start;
-  justify-content: end;
-  width: 600px;
-  height: 350px;
-  border: 3px double #1f1d1d;
-  box-shadow: 0 4px 12px rgba(250, 160, 28, 0.4);
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 800px;
+  height: 250px;
+  border: 3px double #363a3d;
+  border-radius: 6px;
+  background-color: #1f1d1d;
   background-image: url("/src/assets/motivacao-do-empreendedor.png");
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.motivational-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(31, 29, 29, 0.7);
   border-radius: 6px;
 }
 
@@ -84,72 +133,170 @@ p {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 400px;
-  height: 150px;
-
-  h1 {
-    color: #faa01c;
-    font-size: 22px;
-  }
+  padding: 20px;
+  position: relative;
+  z-index: 1;
 }
 
-.section-grafico {
+.phrase h1 {
+  color: #faa01c;
+  font-size: 24px;
+  text-align: center;
+  margin: 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Main Content Section */
+.sectionGrafico {
   display: flex;
-  width: 1100px;
-  align-items: center;
-  justify-content: center;
-  border: none;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  background-color: #1f1d1d;
+  border: 3px double #363a3d;
+  border-radius: 6px;
+  padding: 20px;
+  gap: 16px;
 }
 
-@media (min-width: 379px) and (max-width: 599px) {
+/* Scrollbar Styles */
+.sectionGrafico::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sectionGrafico::-webkit-scrollbar-track {
+  background-color: #2f2d2d;
+  border-radius: 4px;
+}
+
+.sectionGrafico::-webkit-scrollbar-thumb {
+  background-color: #464a4d;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.sectionGrafico::-webkit-scrollbar-thumb:hover {
+  background-color: #faa01c;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 479px) {
+  .mainDashboard {
+    padding: 12px;
+    gap: 12px;
+  }
+  
   .sectionHeader {
-    display: flex;
-    justify-content: center;
-    padding: 10px;
-    gap: 6px;
+    padding: 12px;
+    gap: 8px;
+    flex-direction: column;
+    align-items: center;
   }
 
   .divCard {
-    width: 120px;
+    width: 100%;
     height: 70px;
     padding: 10px;
-
-    .h3Header {
-      font-size: 9px;
-    }
-
-    p {
-      font-size: 12px;
-    }
   }
 
-  .table-head-confirmation-text,
-  .table-body-confirmation-tr {
-    font-size: 9px;
+  .h3Header {
+    font-size: 10px;
   }
 
-  .motivational {
-    width: 100%;
+  .divBody p {
+    font-size: 12px;
   }
 
   .motivational-card {
-    width: 100%;
-    height: 350px;
-    background-image: url("/src/assets/motivacao-do-empreendedor.png");
+    height: 200px;
+    margin: 0 12px;
+  }
+
+  .phrase h1 {
+    font-size: 18px;
+  }
+
+  .sectionGrafico {
+    padding: 12px;
   }
 }
 
-@media (min-width: 600px) {
+@media (min-width: 480px) and (max-width: 768px) {
+  .mainDashboard {
+    padding: 16px;
+    gap: 16px;
+  }
+  
   .sectionHeader {
-    display: flex;
-    justify-content: center;
-    padding: 10px;
-    gap: 6px;
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .divCard {
+    width: 160px;
+    height: 75px;
+    padding: 12px;
+  }
+
+  .h3Header {
+    font-size: 11px;
+  }
+
+  .divBody p {
+    font-size: 13px;
+  }
+
+  .motivational-card {
+    height: 220px;
+  }
+
+  .phrase h1 {
+    font-size: 20px;
+  }
+
+  .sectionGrafico {
+    padding: 16px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1199px) {
+  .mainDashboard {
+    padding: 18px;
+  }
+  
+  .sectionHeader {
+    gap: 14px;
   }
 
   .divCard {
     width: 180px;
     height: 80px;
-    padding: 10px;
+  }
+
+  .motivational-card {
+    height: 240px;
+  }
+
+  .phrase h1 {
+    font-size: 22px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .mainDashboard {
+    padding: 20px;
+  }
+  
+  .divCard {
+    width: 200px;
+    height: 80px;
+  }
+
+  .motivational-card {
+    height: 250px;
+  }
+
+  .phrase h1 {
+    font-size: 24px;
   }
 }

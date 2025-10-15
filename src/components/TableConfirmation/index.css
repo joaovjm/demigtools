@@ -1,35 +1,353 @@
-.table-confirmation-container{
-    max-width: 1120px;
-    table-layout: auto;
+@import url("../tables/base.css");
+
+/* Table Confirmation Container */
+.table-confirmation-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 20px;
 }
 
-.table-confirmation{
-    width: 100%;
+.table-confirmation-content {
+  flex: 1;
+  padding: 16px;
+  border: 3px double #363a3d;
+  border-radius: 6px;
+  background-color: #1f1d1d;
+  overflow: hidden;
 }
 
-.table-head-confirmation{
-    position: sticky;
+.table-confirmation-title {
+  color: #faa01c;
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.table-head-confirmation-text{
-    border-radius: 6px;
-    padding: 6px 12px;
-    background-color: black;
+/* Table Header with Stats */
+.table-confirmation-header {
+  background-color: #363a3d;
+  border: 2px solid #2f2d2d;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
 }
 
-.table-body-confirmation-tr{
-    cursor: pointer;
-    background-color: #1F1D1D;
-    transition: 0.3s;
-
-    &:hover{
-        background-color: #FAA01C;
-    }
-    
+.table-confirmation-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
 }
-.table-body-confirmation-text{
-    text-align: center;
-    border-radius: 6px;
-    padding: 6px 24px;
-    
+
+.stats-item {
+  color: #faf5e9;
+  font-size: 14px;
+}
+
+.stats-item strong {
+  color: #faa01c;
+  font-weight: 600;
+}
+
+/* Table Wrapper */
+.table-confirmation-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.table-confirmation-scroll {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 500px;
+  border: 2px solid #2f2d2d;
+  border-radius: 6px;
+  background-color: #363a3d;
+}
+
+/* Table Styles */
+.table-confirmation {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px;
+  background-color: transparent;
+}
+
+.table-confirmation-head-row {
+  background-color: #2f2d2d;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.table-confirmation-head {
+  padding: 12px 8px;
+  color: #faa01c;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-right: 1px solid #464a4d;
+  border-bottom: 2px solid #464a4d;
+  background-color: #2f2d2d;
+  white-space: nowrap;
+  text-align: left;
+  min-width: 100px;
+}
+
+.table-confirmation-head:last-child {
+  border-right: none;
+}
+
+.table-confirmation-row {
+  background-color: #363a3d;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border-bottom: 1px solid #2f2d2d;
+}
+
+.table-confirmation-row:hover {
+  background-color: #404548;
+  box-shadow: inset 0 0 0 1px #faa01c;
+}
+
+.table-confirmation-row:nth-child(even) {
+  background-color: #3a3e41;
+}
+
+.table-confirmation-row:nth-child(even):hover {
+  background-color: #464a4d;
+}
+
+.table-confirmation-cell {
+  padding: 10px 8px;
+  color: #faf5e9;
+  border-right: 1px solid #464a4d;
+  vertical-align: top;
+  font-size: 13px;
+  line-height: 1.4;
+  min-width: 100px;
+}
+
+.table-confirmation-cell:last-child {
+  border-right: none;
+}
+
+/* Cell Content Styles */
+.date-info {
+  color: #faf5e9;
+  font-size: 11px;
+}
+
+.donor-name {
+  color: #faf5e9;
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.value-amount {
+  color: #4caf50;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.reason-text {
+  color: #ff9800;
+  font-weight: 500;
+  font-size: 12px;
+  font-style: italic;
+}
+
+/* Empty State */
+.table-confirmation-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  color: #9e9e9e;
+  text-align: center;
+  background-color: #363a3d;
+  border: 2px solid #2f2d2d;
+  border-radius: 6px;
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.table-confirmation-empty h4 {
+  color: #faa01c;
+  margin: 0 0 8px 0;
+  font-size: 16px;
+}
+
+.table-confirmation-empty p {
+  color: #c0c0c0;
+  margin: 0;
+  font-size: 14px;
+}
+
+/* Scrollbar Styles */
+.table-confirmation-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.table-confirmation-scroll::-webkit-scrollbar-track {
+  background-color: #2f2d2d;
+  border-radius: 4px;
+}
+
+.table-confirmation-scroll::-webkit-scrollbar-thumb {
+  background-color: #464a4d;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.table-confirmation-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #faa01c;
+}
+
+.table-confirmation-scroll::-webkit-scrollbar-corner {
+  background-color: #2f2d2d;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .table-confirmation-content {
+    padding: 12px;
+  }
+  
+  .table-confirmation-title {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+  
+  .table-confirmation-header {
+    padding: 8px 12px;
+    margin-bottom: 12px;
+  }
+  
+  .table-confirmation-stats {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .stats-item {
+    font-size: 13px;
+  }
+  
+  .table-confirmation-scroll {
+    max-height: 400px;
+  }
+  
+  .table-confirmation-head,
+  .table-confirmation-cell {
+    padding: 8px 6px;
+    font-size: 11px;
+    min-width: 80px;
+  }
+  
+  .table-confirmation-head {
+    font-size: 10px;
+  }
+  
+  .table-confirmation-empty {
+    padding: 30px 15px;
+  }
+  
+  .empty-icon {
+    font-size: 36px;
+    margin-bottom: 12px;
+  }
+  
+  .table-confirmation-empty h4 {
+    font-size: 14px;
+  }
+  
+  .table-confirmation-empty p {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .table-confirmation-content {
+    padding: 8px;
+  }
+  
+  .table-confirmation-title {
+    font-size: 14px;
+  }
+  
+  .table-confirmation-scroll {
+    max-height: 300px;
+  }
+  
+  .table-confirmation-head,
+  .table-confirmation-cell {
+    padding: 6px 4px;
+    font-size: 10px;
+    min-width: 70px;
+  }
+  
+  .table-confirmation-head {
+    font-size: 9px;
+  }
+  
+  .value-amount {
+    font-size: 10px;
+  }
+  
+  .date-info {
+    font-size: 9px;
+  }
+  
+  .reason-text {
+    font-size: 10px;
+  }
+}
+
+/* High contrast mode for better accessibility */
+@media (prefers-contrast: high) {
+  .table-confirmation-row {
+    border-bottom: 2px solid #faa01c;
+  }
+  
+  .table-confirmation-cell {
+    border-right: 2px solid #faa01c;
+  }
+}
+
+/* Print styles */
+@media print {
+  .table-confirmation-content {
+    border: 1px solid #000;
+    background-color: #fff;
+  }
+  
+  .table-confirmation-title {
+    color: #000;
+  }
+  
+  .table-confirmation-row,
+  .table-confirmation-cell {
+    background-color: #fff !important;
+    color: #000 !important;
+  }
+  
+  .table-confirmation-head {
+    background-color: #f0f0f0 !important;
+    color: #000 !important;
+  }
 }

@@ -1,4 +1,4 @@
-.containerDonor{
+.containerDonor {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -6,197 +6,481 @@
     min-height: calc(100vh - 11.4vh);
     background-color: #383838;
     color: #FAF5E9;
-    gap: 18px;
-    padding: 10px;
+    padding: 20px;
     box-sizing: border-box;
 }
 
-.header-actions{
+.donor-content {
     display: flex;
-    gap: 10px;
-}
-.header-btns{
+    flex-direction: column;
     width: 100%;
-    max-width: 900px;
-    margin-top: 10px;
+    max-width: 1200px;
+    gap: 20px;
+}
+
+.donor-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
+    margin-bottom: 20px;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 16px;
 }
 
-.btns-donor{
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
+.donor-title {
+    color: #faa01c;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-.btn-back{
+.donor-actions {
     display: flex;
+    gap: 12px;
     align-items: center;
-    background-color: #000000;
+    flex-wrap: wrap;
+}
+
+.donor-btn {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
     font-size: 14px;
-    color: #FAF5E9;
-    border: none;
-    border-radius: 6px;
-    padding: 8px;
-    gap: 6px;
-    cursor: pointer;
-
-    &:hover{
-        opacity: 0.8;
-    }
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    height: 40px;
+    gap: 8px;
 }
 
-.btn-edit, .btn-add{
-    padding: 8px;
-    border: none;
-    border-radius: 6px;
-    color: #FAF5E9;
-    cursor: pointer;
-    min-width: 80px;
-
-    &:hover{
-        opacity: 0.8;
-    }
+.donor-btn.primary {
+    background-color: #faa01c;
+    color: #1f1d1d;
 }
 
-.btn-edit{
-    background-color: green;
+.donor-btn.primary:hover:not(:disabled) {
+    background-color: #e8901a;
+    box-shadow: 0 4px 12px rgba(250, 160, 28, 0.4);
+    transform: translateY(-1px);
 }
 
-.btn-add{
-    background-color: #385BAD;
+.donor-btn.secondary {
+    background-color: #363a3d;
+    color: #faf5e9;
+    border: 2px solid #2f2d2d;
 }
 
-.btn-delete{
-    background-color: #D60B0C;
-    border: none;
-    border-radius: 6px;
-    color: #FAF5E9;
-    width: 70px;
-    cursor: pointer;
+.donor-btn.secondary:hover:not(:disabled) {
+    background-color: #4a4d50;
+    border-color: #faa01c;
 }
 
-.formDonor{
+.donor-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.donor-form-container {
     display: flex;
     flex-direction: column;
-    border-radius: 6px;
-    padding: 15px 20px;
-    gap: 2px;
-    background-color: #1F1D1D;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    width: 100%;  
-    box-sizing: border-box;
-    
-    label{
-        font-size: 12px;
-    }
-    
-    input, textarea, select{
-        outline: none;
-        padding: 6px 15px;
-        border: none;
-        background-color: #363A3D;
-        color: #FAF5E9;
-        font-size: 12px;
-        border-radius: 0px 6px 6px 0px;
-        text-align: center;
-        word-wrap: break-word;
-        box-sizing: border-box;
-    }
+    width: 100%;
+    height: 100%;
+}
 
+.donor-form {
+    flex: 1;
+    padding: 16px;
+    border: 3px double #363a3d;
+    border-radius: 6px;
+    background-color: #1f1d1d;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+}
+
+.donor-section {
+    background-color: #363a3d;
+    border: 2px solid #2f2d2d;
+    border-radius: 6px;
+    padding: 12px;
+}
+
+.donor-section h4 {
+    color: #faa01c;
+    margin: 0 0 10px 0;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.form-row {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(120px, 1fr)) !important;
+    gap: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    align-items: start;
+    overflow: hidden;
+}
+
+.form-row:last-child {
+    margin-bottom: 0;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+/* Força os componentes a ocuparem o espaço disponível sem largura mínima */
+.donor-form .form-row > * {
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 1 !important;
+}
+
+/* Override completo para FormDonorInput e FormListSelect */
+.donor-form .form-row .input-field,
+.donor-form .form-row .form-group,
+.donor-form .form-row > div {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+}
+
+/* Override específico para componentes FormDonorInput e FormListSelect */
+.donor-form .form-row > .input-field {
+    min-width: 120px !important;
+    width: 100% !important;
+    max-width: none !important;
+    flex: 1 1 0 !important;
+}
+
+/* Override específico para sobrescrever o App.css */
+.donor-form .input-field {
+    flex: 1 1 0 !important;
+    min-width: 120px !important;
+    max-width: 100% !important;
+}
+
+/* Override para inputs internos dos componentes */
+.donor-form .form-row input,
+.donor-form .form-row select,
+.donor-form .form-row textarea {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Override para labels */
+.donor-form .form-row label {
+    min-width: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.input-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.donor-form label {
+    color: #faf5e9;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.donor-form input,
+.donor-form textarea,
+.donor-form select {
+    width: 100%;
+    min-width: 0;
+    padding: 6px 8px;
+    background-color: #2f2d2d;
+    border: 2px solid #464a4d;
+    border-radius: 4px;
+    color: #faf5e9;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+    height: 32px;
+}
+
+.input-field input {
+    width: 100%;
+    min-width: 0;
+    padding: 6px 8px;
+    background-color: #2f2d2d;
+    border: 2px solid #464a4d;
+    border-radius: 4px;
+    color: #faf5e9;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+    height: 32px;
+}
+
+.input-field input:focus:not(:disabled) {
+    border-color: #faa01c;
+}
+
+.input-field input:disabled {
+    opacity: 0.7;
+    background-color: #262626;
+    cursor: not-allowed;
+}
+
+.input-field label {
+    color: #faf5e9;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.donor-form input:focus:not(:disabled),
+.donor-form textarea:focus:not(:disabled),
+.donor-form select:focus:not(:disabled) {
+    border-color: #faa01c;
+}
+
+.donor-form input:disabled,
+.donor-form textarea:disabled,
+.donor-form select:disabled {
+    opacity: 0.7;
+    background-color: #262626;
+    cursor: not-allowed;
+}
+
+.donor-form input::placeholder,
+.donor-form textarea::placeholder {
+    color: #9e9e9e;
+}
+
+.donor-form textarea {
+    resize: vertical;
+    font-family: inherit;
+    min-height: 60px;
+    height: auto;
+    padding: 8px;
 }
 
 /* Mobile first approach - Estilos para dispositivos pequenos */
 @media (max-width: 479px) {
-    .header-btns {
+    .containerDonor {
+        padding: 8px;
+    }
+    
+    .donor-header {
         flex-direction: column;
         align-items: flex-start;
-        width: 99%;
+        gap: 8px;
     }
-
-    .header-actions{
-        display: flex;
+    
+    .donor-title {
+        font-size: 18px;
+    }
+    
+    .donor-actions {
         width: 100%;
         justify-content: space-between;
     }
     
-    .btns {
-        display: flex;
-        width: 100%;
-        justify-content: flex-end;
-       
-       
+    .donor-btn {
+        padding: 6px 10px;
+        font-size: 11px;
+        min-width: 80px;
+        height: 32px;
     }
     
-    .formDonor {
-        padding: 10px;
-
-        input, select, label, textarea{
-            font-size: 14px;
-        }
+    .donor-form {
+        padding: 8px;
+        gap: 8px;
     }
-
+    
+    .donor-section {
+        padding: 8px;
+    }
+    
+    .donor-section h4 {
+        font-size: 13px;
+        margin-bottom: 6px;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        margin-bottom: 6px;
+    }
+    
+    .form-group {
+        gap: 2px;
+    }
+    
+    .donor-form label {
+        font-size: 11px;
+    }
+    
+    .donor-form input,
+    .donor-form textarea,
+    .donor-form select {
+        font-size: 12px;
+        padding: 5px 6px;
+        height: 28px;
+    }
+    
+    .donor-form textarea {
+        min-height: 50px;
+        padding: 6px;
+    }
 }
 
 /* Tablets e dispositivos médios */
-@media (min-width: 480px) and (max-width: 699px) {
-    .formDonor {
-        display: grid;
-        grid-template-columns: auto auto;
-
+@media (min-width: 480px) and (max-width: 768px) {
+    .containerDonor {
+        padding: 12px;
     }
-    .input-field {
-        width: 100%;
-        max-height: 80px;
-
-        input, label, select, textarea{
-            font-size: 14px;
-        }
+    
+    .donor-title {
+        font-size: 20px;
+    }
+    
+    .donor-form {
+        padding: 12px;
+        gap: 10px;
+    }
+    
+    .donor-section {
+        padding: 10px;
+    }
+    
+    .donor-section h4 {
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+    
+    .form-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px;
+        margin-bottom: 8px;
+    }
+    
+    .donor-form input,
+    .donor-form textarea,
+    .donor-form select {
+        height: 30px;
+        padding: 5px 7px;
     }
 }
 
 /* Dispositivos médios para grandes */
-@media (min-width: 700px){
-    .formDonor{
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 15px;
-    }
-
-    .formDonor{
-        input{
-            font-size: 14px;
-        }
+@media (min-width: 769px) and (max-width: 1199px) {
+    .containerDonor {
+        padding: 14px;
     }
     
-    .formDonor textarea {
-        grid-column: span 2;
+    .donor-content {
+        max-width: 1000px;
+    }
+    
+    .donor-title {
+        font-size: 22px;
+    }
+    
+    .donor-form {
+        padding: 14px;
+        gap: 10px;
+    }
+    
+    .donor-section {
+        padding: 12px;
+    }
+    
+    .form-row {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 10px;
+        margin-bottom: 8px;
     }
 }
 
-@media (min-width: 800px) and (max-width: 1199px){
-    .formDonor{
-        grid-template-columns: repeat(2, 1fr);
+/* Dispositivos grandes */
+@media (min-width: 1200px) {
+    .containerDonor {
+        padding: 16px;
+    }
+    
+    .donor-content {
+        max-width: 1200px;
+    }
+    
+    .donor-title {
+        font-size: 24px;
+    }
+    
+    .donor-form {
+        padding: 16px;
+        gap: 12px;
+    }
+    
+    .donor-section {
+        padding: 12px;
+    }
+    
+    .form-row {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 12px;
+        margin-bottom: 10px;
     }
 }
 
-@media (min-width: 1200px){
-    .formDonor{
-        grid-template-columns: auto auto auto;
-        max-width: 900px;
-        gap: 8px;
+/* Ajustes especiais para campos que precisam ocupar mais espaço */
+@media (min-width: 769px) {
+    .donor-section:last-child .form-group.full-width {
+        grid-column: 1 / -1;
     }
+}
 
-    .formDonor textarea[name="observacao"] {
-        grid-column: span 2;
-    }
+/* Scrollbar personalizada para o form */
+.donor-form::-webkit-scrollbar {
+    width: 6px;
+}
 
-    .formDonor textarea[name="referencia"] {
-        grid-column: span 2;
-    }
+.donor-form::-webkit-scrollbar-track {
+    background-color: #2f2d2d;
+    border-radius: 3px;
+}
+
+.donor-form::-webkit-scrollbar-thumb {
+    background-color: #464a4d;
+    border-radius: 3px;
+    transition: background-color 0.3s ease;
+}
+
+.donor-form::-webkit-scrollbar-thumb:hover {
+    background-color: #faa01c;
 }
 
 

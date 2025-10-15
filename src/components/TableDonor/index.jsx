@@ -22,7 +22,6 @@ const TableDonor = ({
           setDados(data);
         })
         .catch((error) => {
-          console.log(error.message);
         });
     }
   }, [idDonor, modalShow, modalEdit]);
@@ -45,112 +44,162 @@ const TableDonor = ({
 
     setModalEdit(true);
     setDonation(item);
-    console.log(item)
   };
 
   return (
-    <div className="table-wrapper">
-      {dados.length > 0 ? (
-        <>
-          <table className="tabledonor">
-            <thead>
-              <tr className="trHead">
-                <th className="tableHead">Recibo</th>
-                <th className="tableHead">Operador</th>
-                <th className="tableHead">Valor</th>
-                <th className="tableHead">Extra</th>
-                <th className="tableHead">Contato</th>
-                <th className="tableHead">Receber</th>
-                <th className="tableHead">Recebida</th>
-                <th className="tableHead">Impresso</th>
-                <th className="tableHead">Recebido</th>
-                <th className="tableHead">MesRef</th>
-                <th className="tableHead">Coletador</th>
-              </tr>
-            </thead>
+    <div className="donor-table-container">
+      <div className="donor-table-content">
+        <h3 className="donor-table-title">💰 Histórico de Doações</h3>
+        {dados.length > 0 ? (
+          <div className="donor-table-wrapper">
+            <div className="donor-table-header">
+              <div className="donor-table-stats">
+                <span className="stats-item">
+                  <strong>{dados.length}</strong> {dados.length === 1 ? 'registro' : 'registros'}
+                </span>
+                <span className="stats-item">
+                  Total: <strong>
+                    {dados.reduce((acc, item) => acc + (item.donation_value || 0) + (item.donation_extra || 0), 0).toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    })}
+                  </strong>
+                </span>
+              </div>
+            </div>
 
-            <tbody>
-              {dados && dados.length > 0
-                ? dados.map((item) => (
+            <div className="donor-table-scroll">
+              <table className="donor-table">
+                <thead>
+                  <tr className="donor-table-head-row">
+                    <th className="donor-table-head">Recibo</th>
+                    <th className="donor-table-head">Operador</th>
+                    <th className="donor-table-head">Valor</th>
+                    <th className="donor-table-head">Extra</th>
+                    <th className="donor-table-head">Contato</th>
+                    <th className="donor-table-head">Receber</th>
+                    <th className="donor-table-head">Recebida</th>
+                    <th className="donor-table-head">Status</th>
+                    <th className="donor-table-head">MesRef</th>
+                    <th className="donor-table-head">Coletador</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {dados.map((item) => (
                     <Fragment key={item.receipt_donation_id}>
                       <tr
                         onDoubleClick={() => handleEditDonation(item)}
-                        className="trBody"
+                        className="donor-table-row"
                       >
-                        <td className="tableBody">
-                          {item.receipt_donation_id}
+                        <td className="donor-table-cell">
+                          <span className="receipt-number">{item.receipt_donation_id}</span>
                         </td>
-                        <td className="tableBody">
-                          {item.operator_code_id} -{" "}
-                          {item.operator?.operator_name}
+                        <td className="donor-table-cell">
+                          <div className="operator-info">
+                            <span className="operator-id">{item.operator_code_id}</span>
+                            <span className="operator-name">{item.operator?.operator_name}</span>
+                          </div>
                         </td>
-                        <td className="tableBody">
-                          {item?.donation_value?.toLocaleString("pt-BR", {
-                            style: "currency",
-                            currency: "BRL",
-                          })}
+                        <td className="donor-table-cell">
+                          <span className="value-amount">
+                            {item?.donation_value?.toLocaleString("pt-BR", {
+                              style: "currency",
+                              currency: "BRL",
+                            })}
+                          </span>
                         </td>
-                        <td className="tableBody">
-                          {item?.donation_extra ? item?.donation_extra.toLocaleString("pt-BR", {
-                            style: "currency",
-                            currency: "BRL",
-                          }) : 0.00.toLocaleString("pt-BR", {
-                            style: "currency",
-                            currency: "BRL",
-                          })}
+                        <td className="donor-table-cell">
+                          <span className="extra-amount">
+                            {item?.donation_extra ? item?.donation_extra.toLocaleString("pt-BR", {
+                              style: "currency",
+                              currency: "BRL",
+                            }) : "R$ 0,00"}
+                          </span>
                         </td>
-                        <td className="tableBody">
-                          {new Date(
-                            item.donation_day_contact
-                          ).toLocaleDateString("pt-BR", { timeZone: "UTC" })}
+                        <td className="donor-table-cell">
+                          <span className="date-info">
+                            {new Date(
+                              item.donation_day_contact
+                            ).toLocaleDateString("pt-BR", { timeZone: "UTC" })}
+                          </span>
                         </td>
-                        <td className="tableBody">
-                          {new Date(
-                            item.donation_day_to_receive
-                          ).toLocaleDateString("pt-BR", { timeZone: "UTC" })}
+                        <td className="donor-table-cell">
+                          <span className="date-info">
+                            {new Date(
+                              item.donation_day_to_receive
+                            ).toLocaleDateString("pt-BR", { timeZone: "UTC" })}
+                          </span>
                         </td>
-                        <td className="tableBody">
-                          {item.donation_day_received
-                            ? `${new Date(
-                                item?.donation_day_received
-                              ).toLocaleDateString("pt-BR", {
-                                timeZone: "UTC",
-                              })}`
-                            : ""}
+                        <td className="donor-table-cell">
+                          <span className="date-info">
+                            {item.donation_day_received
+                              ? new Date(
+                                  item?.donation_day_received
+                                ).toLocaleDateString("pt-BR", {
+                                  timeZone: "UTC",
+                                })
+                              : "—"}
+                          </span>
                         </td>
-                        <td className="tableBody">{item.donation_print}</td>
-                        <td className="tableBody">{item.donation_received}</td>
-                        <td className="tableBody">
-                          {item.donation_monthref
-                            ? `${new Date(
-                                item?.donation_monthref
-                              ).toLocaleDateString("pt-BR", {month: "numeric", year: "numeric", timeZone: "UTC"})}`
-                            : "----/--"}
+                        <td className="donor-table-cell">
+                          <div className="status-group">
+                            <span className={`status-badge ${item.donation_print === "Sim" ? "status-success" : "status-pending"}`}>
+                              {item.donation_print === "Sim" ? "✓ Impresso" : "○ Não impresso"}
+                            </span>
+                            <span className={`status-badge ${item.donation_received === "Sim" ? "status-success" : "status-pending"}`}>
+                              {item.donation_received === "Sim" ? "✓ Recebido" : "○ Pendente"}
+                            </span>
+                          </div>
                         </td>
-                        <td className="tableBody">
-                          {item.collector_code_id} -{" "}
-                          {item.collector?.collector_name || ""}
+                        <td className="donor-table-cell">
+                          <span className="month-ref">
+                            {item.donation_monthref
+                              ? new Date(
+                                  item?.donation_monthref
+                                ).toLocaleDateString("pt-BR", {month: "numeric", year: "numeric", timeZone: "UTC"})
+                              : "—"}
+                          </span>
+                        </td>
+                        <td className="donor-table-cell">
+                          <div className="collector-info">
+                            <span className="collector-id">{item.collector_code_id || "—"}</span>
+                            {item.collector?.collector_name && (
+                              <span className="collector-name">{item.collector.collector_name}</span>
+                            )}
+                          </div>
                         </td>
                       </tr>
-                      <tr className="trFoot">
-                        <td colSpan="5" className="obs">
-                          {item.donation_description
-                            ? item.donation_description
-                            : "..."}
+                      <tr className="donor-table-details-row">
+                        <td colSpan="5" className="donor-table-details">
+                          <div className="details-section">
+                            <span className="details-label">Descrição:</span>
+                            <span className="details-value">
+                              {item.donation_description || "Nenhuma descrição informada"}
+                            </span>
+                          </div>
                         </td>
-                        <td colSpan="6" className="obs">
-                          Campanha: {item.donation_campain}
+                        <td colSpan="5" className="donor-table-details">
+                          <div className="details-section">
+                            <span className="details-label">Campanha:</span>
+                            <span className="details-value">{item.donation_campain}</span>
+                          </div>
                         </td>
                       </tr>
                     </Fragment>
-                  ))
-                : null}
-            </tbody>
-          </table>
-        </>
-      ) : (
-        ""
-      )}
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ) : (
+          <div className="donor-table-empty">
+            <div className="empty-icon">📊</div>
+            <h4>Nenhuma doação encontrada</h4>
+            <p>Este doador ainda não possui registros de doação.</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
