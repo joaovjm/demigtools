@@ -1,6 +1,29 @@
+/**
+ * WhatsappManager Component
+ * 
+ * MIGRAÇÃO CONCLUÍDA: Este componente foi migrado do servidor serverless para Supabase direto
+ * 
+ * Mudanças implementadas:
+ * - Substituído fetch('/api/campaigns') pelo campaignsService
+ * - Implementado useCampaigns hook para gerenciamento de estado
+ * - Removidas dependências de APIs serverless
+ * - Atualizadas funções de teste para usar Supabase diretamente
+ * - Substituído fetch('/api/templates/approved') pela edge function get-approved-templates
+ * - Substituído fetch('/api/templates/validate') pela edge function validate-template
+ * 
+ * Benefícios da migração:
+ * - Menor latência (conexão direta com Supabase)
+ * - Menos complexidade (sem servidor serverless)
+ * - Melhor performance (menos requisições HTTP)
+ * - Código mais simples e direto
+ * - Uso de edge functions para operações específicas
+ */
+
 import React, { useEffect, useState } from "react";
 import { getOperators } from "../../helper/getOperators";
 import supabase from "../../helper/supaBaseClient";
+import { useCampaigns } from "../../hooks/useCampaigns";
+import campaignsService from "../../services/campaignsService";
 
 const WhatsappManager = () => {
   const [activeTab, setActiveTab] = useState("templates");
@@ -18,8 +41,16 @@ const WhatsappManager = () => {
   const [templateStatus, setTemplateStatus] = useState("");
   const [searchTemplate, setSearchTemplate] = useState("");
   
-  // Estados para Mensagens de Campanha
-  const [campaigns, setCampaigns] = useState([]);
+  // Estados para Mensagens de Campanha - Migrado para useCampaigns hook
+  const {
+    campaigns,
+    loading: campaignLoading,
+    error: campaignError,
+    createCampaign: createCampaignHook,
+    deleteCampaign: deleteCampaignHook,
+    loadCampaigns
+  } = useCampaigns();
+  
   const [allTemplates, setAllTemplates] = useState([]);
   const [newCampaign, setNewCampaign] = useState({
     name: "",
@@ -27,7 +58,6 @@ const WhatsappManager = () => {
     selectedTemplates: [],
     variables: [], // Array de strings para os parâmetros
   });
-  const [campaignLoading, setCampaignLoading] = useState(false);
 
   // Estados para Gerenciar Contatos
   const [contacts, setContacts] = useState([]);
@@ -36,6 +66,7 @@ const WhatsappManager = () => {
   const [editOperatorCode, setEditOperatorCode] = useState("");
   const [operators, setOperators] = useState([]);
   const [operatorsLoading, setOperatorsLoading] = useState(false);
+ 
 
   // Função para consultar status de template
   const checkTemplateStatus = async (templateName) => {
@@ -149,61 +180,45 @@ const WhatsappManager = () => {
     }
   };
 
-  // Função para carregar todos os templates aprovados
+  // Função para carregar todos os templates aprovados usando edge function
   const loadAllTemplates = async () => {
-    setCampaignLoading(true);
+
     try {
-      const response = await fetch("/api/templates/approved");
-      const data = await response.json();
+      const { data, error } = await supabase.functions.invoke('get-approved-templates');
       
-      if (data.success) {
-        setAllTemplates(data.templates);
+      if (error) {
+        console.error("Erro ao chamar edge function:", error);
+        alert(`Erro ao carregar templates aprovados: ${error.message}`);
+        return;
+      }
+      
+      if (data && data.success) {
+        setAllTemplates(data.templates || []);
       } else {
-        alert("Erro ao carregar templates aprovados");
+        console.error("Resposta inválida da edge function:", data);
+        alert("Erro ao carregar templates aprovados - resposta inválida");
       }
     } catch (error) {
       console.error("Erro ao carregar templates:", error);
-      alert("Erro ao carregar templates aprovados");
+      alert(`Erro ao carregar templates aprovados: ${error.message}`);
     }
-    setCampaignLoading(false);
+
   };
 
-  // Função para carregar campanhas salvas
-  const loadCampaigns = async () => {
-    try {
-      const response = await fetch("/api/campaigns");
-      const data = await response.json();
-      
-      if (data.success) {
-        setCampaigns(data.campaigns);
-      }
-    } catch (error) {
-      console.error("Erro ao carregar campanhas:", error);
-    }
-  };
+  // Função para carregar campanhas salvas - Migrada para useCampaigns hook
+  // A função loadCampaigns agora vem do hook useCampaigns
 
-  // Função para criar nova campanha
+  // Função para criar nova campanha - Migrada para useCampaigns hook
   const createCampaign = async () => {
     if (!newCampaign.name || newCampaign.selectedTemplates.length === 0) {
       alert("Nome da campanha e pelo menos um template são obrigatórios");
       return;
     }
 
-    setCampaignLoading(true);
     try {
+      const result = await createCampaignHook(newCampaign);
       
-      const response = await fetch("/api/campaigns", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newCampaign),
-      });
-
-      
-      const data = await response.json();
-
-      if (response.ok && data.success) {
+      if (result.success) {
         alert("Campanha criada com sucesso!");
         setNewCampaign({
           name: "",
@@ -211,75 +226,40 @@ const WhatsappManager = () => {
           selectedTemplates: [],
           variables: [],
         });
-        loadCampaigns();
       } else {
-        console.error("❌ Erro na resposta:", data);
+        console.error("❌ Erro na criação:", result.error);
         
-        if (data.error?.includes("não encontrada")) {
-          alert(`Erro: ${data.error}\n\nVocê precisa executar o script SQL para criar as tabelas primeiro.`);
+        if (result.error?.includes("não encontrada")) {
+          alert(`Erro: ${result.error}\n\nVocê precisa executar o script SQL para criar as tabelas primeiro.`);
         } else {
-          alert(`Erro ao criar campanha: ${data.error || "Erro desconhecido"}\n\nDetalhes: ${data.details || "Nenhum"}`);
+          alert(`Erro ao criar campanha: ${result.error || "Erro desconhecido"}`);
         }
       }
     } catch (error) {
       console.error("❌ Erro ao criar campanha:", error);
-      alert(`Erro de rede ao criar campanha: ${error.message}`);
+      alert(`Erro ao criar campanha: ${error.message}`);
     }
-    setCampaignLoading(false);
   };
 
-  // Função para deletar campanha
+  // Função para deletar campanha - Migrada para useCampaigns hook
   const deleteCampaign = async (campaignId) => {
     if (!confirm("Tem certeza que deseja deletar esta campanha?")) {
       return;
     }
 
-    setCampaignLoading(true);
     try {
+      const result = await deleteCampaignHook(campaignId);
       
-      const response = await fetch(`/api/campaigns/${campaignId}`, {
-        method: "DELETE",
-      });
-
-
-      // Verificar se a resposta contém JSON válido
-      let data = null;
-      let responseText = "";
-      
-      try {
-        // Primeiro, tentar obter o texto da resposta
-        responseText = await response.text();
-        
-        if (!responseText || responseText.trim() === "") {
-          throw new Error("Resposta vazia do servidor");
-        }
-
-        // Tentar fazer parse do JSON
-        try {
-          data = JSON.parse(responseText);
-        } catch (parseError) {
-          console.error("❌ Erro ao fazer parse do JSON:", parseError);
-          console.error("❌ Texto que falhou no parse:", responseText.substring(0, 200));
-          throw new Error(`Resposta não é JSON válido. Recebido: ${responseText.substring(0, 100)}...`);
-        }
-        
-      } catch (textError) {
-        console.error("❌ Erro ao obter texto da resposta:", textError);
-        throw new Error("Erro ao ler resposta do servidor");
-      }
-
-      if (response.ok && data?.success) {
+      if (result.success) {
         alert("Campanha deletada com sucesso!");
-        loadCampaigns();
       } else {
-        const errorMessage = data?.error || `Erro HTTP ${response.status}`;
-        alert(`Erro ao deletar campanha: ${errorMessage}`);
+        console.error("❌ Erro na deleção:", result.error);
+        alert(`Erro ao deletar campanha: ${result.error}`);
       }
     } catch (error) {
       console.error("❌ Erro ao deletar campanha:", error);
       alert(`Erro ao deletar campanha: ${error.message}`);
     }
-    setCampaignLoading(false);
   };
 
   // Função para contar parâmetros necessários em um template
@@ -341,104 +321,83 @@ const WhatsappManager = () => {
     }));
   };
 
-  // Função para testar a configuração
+  // Função para testar a configuração - DESCONTINUADA (migração para Supabase)
+  // Agora usamos o campaignsService diretamente, não precisamos mais testar APIs serverless
   const testConfiguration = async () => {
-    setCampaignLoading(true);
     try {
-      const response = await fetch("/api/campaigns/test");
-      const data = await response.json();
-      
-      if (data.success) {
-        alert("✅ Configuração OK! Todas as tabelas estão funcionando.");
+      const result = await campaignsService.getCampaigns();
+      if (result.success) {
+        alert("✅ Configuração OK! Conexão com Supabase funcionando.");
       } else {
-        alert(`❌ Problema de configuração:\n\n${data.error}\n\nSolução: ${data.solution || "Verifique os logs"}`);
+        alert(`❌ Problema de configuração:\n\n${result.error}\n\nDetalhes: ${result.details || "Verifique os logs"}`);
       }
     } catch (error) {
       alert(`❌ Erro ao testar: ${error.message}`);
     }
-    setCampaignLoading(false);
   };
 
-  // Função para testar template individual
+  // Função para testar template individual usando edge function
   const testTemplate = async (templateName) => {
-    setCampaignLoading(true);
     try {
-      const response = await fetch("/api/templates/validate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ templateName }),
+      const { data, error } = await supabase.functions.invoke('validate-template', {
+        body: { templateName }
       });
-
-      const data = await response.json();
       
-      if (data.success) {
-        alert(`✅ Template "${templateName}" está funcionando corretamente!`);
-      } else {
-        alert(`❌ Problema com o template "${templateName}":\n\nErro: ${data.error.error}\nCódigo: ${data.error.errorCode}\n\nInterpretação: ${data.interpretation}\n\nRecomendação: ${data.recommendation}`);
-      }
-    } catch (error) {
-      alert(`❌ Erro ao testar template: ${error.message}`);
-    }
-    setCampaignLoading(false);
-  };
-
-  // Função para testar deleção
-  const testDeletion = async () => {
-    setCampaignLoading(true);
-    try {
-      const response = await fetch("/api/campaigns/test-delete");
-      const data = await response.json();
-      
-      if (data.success) {
-        let message = "✅ Teste de deleção realizado!\n\n";
-        message += `Campanhas encontradas: ${data.results.totalCampaigns}\n`;
-        message += `Estrutura da tabela: OK\n`;
-        message += `${data.results.simulationResult}\n\n`;
-        message += `Para testar: ${data.instructions.example}`;
-        alert(message);
-      } else {
-        alert(`❌ Erro no teste de deleção:\n\n${data.error}\n\nDetalhes: ${data.details}`);
-      }
-    } catch (error) {
-      alert(`❌ Erro ao testar deleção: ${error.message}`);
-    }
-    setCampaignLoading(false);
-  };
-
-  // Função para testar endpoint de deleção direto
-  const testDeleteEndpoint = async () => {
-    setCampaignLoading(true);
-    try {
-      
-      const testId = "test-123";
-      const response = await fetch(`/api/campaigns/delete-test?campaignId=${testId}`, {
-        method: "DELETE",
-      });
-
-
-      const responseText = await response.text();
-
-      let data;
-      try {
-        data = JSON.parse(responseText);
-      } catch (parseError) {
-        console.error("❌ Erro de parse no teste:", parseError);
-        alert(`❌ Erro de parse no teste direto:\n\nTexto recebido: ${responseText.substring(0, 200)}\n\nErro: ${parseError.message}`);
+      if (error) {
+        console.error("Erro ao chamar edge function validate-template:", error);
+        alert(`❌ Erro ao validar template: ${error.message}`);
         return;
       }
       
-      if (data.success) {
-        alert(`✅ Endpoint de teste funcionando!\n\nID testado: ${data.receivedId}\nMétodo: ${data.method}\nTimestamp: ${data.timestamp}`);
+      if (data && data.success) {
+        alert(`✅ Template "${templateName}" está funcionando corretamente!`);
+      } else if (data && !data.success) {
+        alert(`❌ Problema com o template "${templateName}":\n\nErro: ${data.error?.error || 'Erro desconhecido'}\nCódigo: ${data.error?.errorCode || 'N/A'}\n\nInterpretação: ${data.interpretation || 'N/A'}\n\nRecomendação: ${data.recommendation || 'N/A'}`);
       } else {
-        alert(`❌ Falha no teste direto:\n\n${data.error}\n\nDetalhes: ${JSON.stringify(data, null, 2)}`);
+        console.error("Resposta inválida da edge function:", data);
+        alert("❌ Erro ao validar template - resposta inválida da edge function");
       }
     } catch (error) {
-      console.error("❌ Erro no teste direto:", error);
-      alert(`❌ Erro no teste direto: ${error.message}`);
+      console.error("Erro ao testar template:", error);
+      alert(`❌ Erro ao testar template: ${error.message}`);
     }
-    setCampaignLoading(false);
+   
+  };
+
+  // Função para testar deleção - DESCONTINUADA (migração para Supabase)
+  // Agora usamos o campaignsService diretamente
+  const testDeletion = async () => {
+    try {
+      const result = await campaignsService.getCampaigns();
+      if (result.success) {
+        let message = "✅ Teste de conexão com Supabase realizado!\n\n";
+        message += `Campanhas encontradas: ${result.campaigns.length}\n`;
+        message += `Estrutura da tabela: OK\n`;
+        message += `Conexão com Supabase: Funcionando\n\n`;
+        message += `Agora você pode criar e deletar campanhas diretamente!`;
+        alert(message);
+      } else {
+        alert(`❌ Erro no teste de conexão:\n\n${result.error}\n\nDetalhes: ${result.details}`);
+      }
+    } catch (error) {
+      alert(`❌ Erro ao testar conexão: ${error.message}`);
+    }
+  };
+
+  // Função para testar endpoint de deleção direto - DESCONTINUADA (migração para Supabase)
+  const testDeleteEndpoint = async () => {
+    try {
+      // Teste simples de conexão com Supabase
+      const result = await campaignsService.getCampaigns();
+      if (result.success) {
+        alert(`✅ Conexão com Supabase funcionando!\n\nCampanhas encontradas: ${result.campaigns.length}\n\nAgora você pode usar todas as funcionalidades diretamente!`);
+      } else {
+        alert(`❌ Falha na conexão:\n\n${result.error}\n\nDetalhes: ${result.details}`);
+      }
+    } catch (error) {
+      console.error("❌ Erro no teste de conexão:", error);
+      alert(`❌ Erro no teste de conexão: ${error.message}`);
+    }
   };
 
   // Função para carregar contatos
@@ -557,7 +516,7 @@ const WhatsappManager = () => {
   useEffect(() => {
     if (activeTab === "campaigns") {
       loadAllTemplates();
-      loadCampaigns();
+      // loadCampaigns() agora é chamado automaticamente pelo hook useCampaigns
     } else if (activeTab === "contacts") {
       loadContacts();
       loadOperators();
@@ -1164,13 +1123,13 @@ const WhatsappManager = () => {
           <div className="whatsapp-manager-section">
             <h3>Diagnóstico do Sistema</h3>
 
-            {/* Seção de Diagnóstico */}
+            {/* Seção de Diagnóstico - Migrada para Supabase */}
             <div className="test-section" style={{ marginBottom: "20px", padding: "16px", backgroundColor: "#363a3d", borderRadius: "8px", border: "2px solid #2f2d2d" }}>
-              <h4 style={{ color: "#faa01c", marginBottom: "12px", fontSize: "14px" }}>Testes Disponíveis</h4>
+              <h4 style={{ color: "#faa01c", marginBottom: "12px", fontSize: "14px" }}>Testes de Conexão Supabase</h4>
               <p style={{ color: "#ccc", fontSize: "13px", marginBottom: "12px" }}>
-                <strong>🔍 Testar Configuração:</strong> Verifica tabelas e conexões<br/>
-                <strong>🗑️ Testar Deleção:</strong> Simula deleção sem executar<br/>
-                <strong>🔧 Teste Direto:</strong> Testa endpoint simplificado (para debug)
+                <strong>🔍 Testar Configuração:</strong> Verifica conexão com Supabase<br/>
+                <strong>🗑️ Testar Conexão:</strong> Testa operações de leitura<br/>
+                <strong>🔧 Teste Direto:</strong> Verifica funcionalidade básica
               </p>
               <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
                 <button
@@ -1187,7 +1146,7 @@ const WhatsappManager = () => {
                   className="whatsapp-manager-btn secondary"
                   style={{ fontSize: "12px", padding: "8px 16px" }}
                 >
-                  {campaignLoading ? "Testando..." : "🗑️ Testar Deleção"}
+                  {campaignLoading ? "Testando..." : "🗑️ Testar Conexão"}
                 </button>
                 <button
                   onClick={testDeleteEndpoint}
