@@ -22,6 +22,47 @@ import supabase from "../../helper/superBaseClient";
 import { UserContext } from "../../context/UserContext";
 import deleteConversation from "../../helper/deleteConversation";
 
+// Função para validar se um valor é um UUID válido
+function isValidUUID(uuid) {
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  return uuidRegex.test(uuid);
+}
+
+// Função para gerar UUID temporário
+function generateTempUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+// Função simplificada para criar/buscar conversa
+async function getConversationIdForMessage(phoneNumber, providedConversationId = null) {
+  // Se temos um conversationId válido, usá-lo
+  if (providedConversationId && isValidUUID(providedConversationId)) {
+    return providedConversationId;
+  }
+  
+  try {
+    // Tentar buscar uma conversa existente pelo telefone
+    const { data: existingConversations, error: searchError } = await supabase
+      .from("conversations")
+      .select("conversation_id")
+      .eq("phone_number", phoneNumber)
+      .limit(1);
+    
+    if (!searchError && existingConversations && existingConversations.length > 0) {
+      return existingConversations[0].conversation_id;
+    }
+  } catch (error) {
+    console.error("Erro ao buscar conversa:", error);
+  }
+  
+  // Se não conseguiu encontrar, gerar um UUID temporário
+  return generateTempUUID();
+}
+
 const Chat = () => {
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [message, setMessage] = useState("");
@@ -160,25 +201,29 @@ const Chat = () => {
     }
   };
 
-  // Função para carregar campanhas
+  // Função para carregar campanhas diretamente do Supabase
   const loadCampaigns = async () => {
     setCampaignsLoading(true);
     try {
-      const response = await fetch("/api/campaigns");
-      const data = await response.json();
-      
-      if (data.success) {
-        setCampaigns(data.campaigns);
+      const { data: campaigns, error } = await supabase
+        .from("whatsapp_campaigns")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Erro ao carregar campanhas:", error);
+        alert("Erro ao carregar campanhas: " + error.message);
       } else {
-        console.error("Erro ao carregar campanhas:", data.error);
+        setCampaigns(campaigns || []);
       }
     } catch (error) {
       console.error("Erro ao carregar campanhas:", error);
+      alert("Erro ao carregar campanhas: " + error.message);
     }
     setCampaignsLoading(false);
   };
 
-  // Função para enviar campanha
+  // Função para enviar campanha diretamente via Supabase
   const handleSendCampaign = async (campaignId, event) => {
     // Prevenir que o clique feche o menu
     if (event) {
@@ -198,36 +243,227 @@ const Chat = () => {
     setSendingCampaignId(campaignId);
     
     try {
-      const response = await fetch("/api/send-campaign", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          conversationId: selectedConversation.conversation_id,
-          from: selectedConversation.from_contact,
-          to: selectedConversation.phone_number,
-          campaignId: campaignId,
-          selectedConversation: {
-            title: selectedConversation.title,
-            phone_number: selectedConversation.phone_number,
-            conversation_id: selectedConversation.conversation_id
-          }
-        }),
-      });
+      // Buscar a campanha no banco de dados
+      const { data: campaign, error: campaignError } = await supabase
+        .from("whatsapp_campaigns")
+        .select("*")
+        .eq("id", campaignId)
+        .single();
 
-      
+      if (campaignError || !campaign) {
+        alert("Campanha não encontrada");
+        return;
+      }
 
-      const data = await response.json();
+      const phoneId = import.meta.env.VITE_WHATSAPP_PHONE_NUMBER_ID;
+      const accessToken = import.meta.env.VITE_WHATSAPP_ACCESS_TOKEN;
 
-      if (data.success || data.summary?.sent > 0) {
-        let message = `Resultado do envio da campanha "${data.campaign?.name}":\n\n`;
-        message += `✅ Enviados: ${data.summary.sent} de ${data.summary.totalTemplates} templates\n`;
+      if (!phoneId || !accessToken) {
+        alert("Configurações do WhatsApp não encontradas. Verifique as variáveis de ambiente.");
+        return;
+      }
+
+      const results = [];
+      const errors = [];
+      const to = selectedConversation.phone_number;
+      const from = selectedConversation.from_contact;
+      const conversationId = selectedConversation.conversation_id;
+
+      // Enviar cada template da campanha em sequência
+      for (let i = 0; i < campaign.selected_templates.length; i++) {
+        const template = campaign.selected_templates[i];
         
-        if (data.summary.errors > 0) {
-          message += `❌ Erros: ${data.summary.errors}\n\n`;
+        try {
+          // Delay progressivo entre os envios (2s, 3s, 4s, etc.)
+          if (i > 0) {
+            const delay = 2000 + (i * 1000); // 2s, 3s, 4s...
+            await new Promise(resolve => setTimeout(resolve, delay));
+          }
+
+          // Detectar quantos parâmetros o template precisa
+          let requiredParams = 0;
+          const bodyComponent = template.components?.find(c => c.type === 'BODY');
+          if (bodyComponent && bodyComponent.text) {
+            // Contar placeholders {{1}}, {{2}}, etc.
+            const matches = bodyComponent.text.match(/\{\{\d+\}\}/g);
+            requiredParams = matches ? matches.length : 0;
+          }
+
+          // Preparar componentes do template
+          let templateComponents = null;
+          if (requiredParams > 0) {
+            // Usar variáveis da campanha ou valores padrão
+            let paramValues = [];
+            
+            const campaignVariables = campaign.variables || [];
+            
+            // Função para processar variáveis dinâmicas
+            const processDynamicVariable = (variable) => {
+              if (typeof variable !== 'string' || !variable.startsWith('{{')) {
+                return variable; // Valor estático
+              }
+              
+              // Processar variáveis dinâmicas
+              switch (variable) {
+                case '{{selectedConversation.title}}':
+                  return selectedConversation?.title || 'Nome não disponível';
+                case '{{selectedConversation.phone_number}}':
+                  return selectedConversation?.phone_number || 'Telefone não disponível';
+                case '{{currentDate}}':
+                  return new Date().toLocaleDateString('pt-BR');
+                case '{{currentTime}}':
+                  return new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                default:
+                  return variable; // Retorna o próprio valor se não encontrar correspondência
+              }
+            };
+            
+            if (campaignVariables.length > 0) {
+              // Processar variáveis da campanha (podem ser dinâmicas ou estáticas)
+              paramValues = campaignVariables.slice(0, requiredParams).map(variable => 
+                processDynamicVariable(variable)
+              );
+            } else {
+              // Valores padrão se não foram fornecidas
+              paramValues = Array.from({ length: requiredParams }, (_, i) => `Valor ${i + 1}`);
+            }
+
+            // Completar com valores padrão se necessário
+            while (paramValues.length < requiredParams) {
+              paramValues.push(`Valor ${paramValues.length + 1}`);
+            }
+
+            templateComponents = [
+              {
+                type: "body",
+                parameters: paramValues.map((text) => ({ 
+                  type: "text", 
+                  text: String(text) 
+                })),
+              },
+            ];
+          }
+
+          const payload = {
+            messaging_product: "whatsapp",
+            to,
+            type: "template",
+            template: {
+              name: template.name,
+              language: { code: template.language || "pt_BR" },
+              ...(templateComponents ? { components: templateComponents } : {}),
+            },
+          };
+
+          const response = await fetch(
+            `https://graph.facebook.com/v23.0/${phoneId}/messages`,
+            {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(payload),
+            }
+          );
+
+          const result = await response.json();
+
+          if (!response.ok) {
+            console.error(`❌ Falha no template ${template.name}: ${result.error?.message}`);
+            errors.push({
+              template: template.name,
+              templateIndex: i,
+              error: result.error?.message || "Erro desconhecido",
+              errorCode: result.error?.code,
+              httpStatus: response.status,
+              details: result,
+            });
+
+            // Se for erro de rate limit, aguardar mais tempo
+            if (result.error?.code === 80007 || result.error?.code === 131026) {
+              await new Promise(resolve => setTimeout(resolve, 30000));
+            }
+          } else {
+            results.push({
+              template: template.name,
+              templateIndex: i,
+              messageId: result.messages[0]?.id,
+              success: true,
+              timestamp: new Date().toISOString(),
+            });
+
+            // Salvar a mensagem no Supabase
+            try {
+              // Obter um conversation_id válido
+              const validConversationId = await getConversationIdForMessage(to, conversationId);
+              
+              // Montar o corpo da mensagem
+              let messageBody = `📧 Template: ${template.name}`;
+              
+              // Se o template tem parâmetros, incluir na mensagem
+              if (templateComponents && templateComponents[0]?.parameters) {
+                const params = templateComponents[0].parameters.map(p => p.text).join(', ');
+                messageBody += `\n📝 Parâmetros: ${params}`;
+              }
+              
+              // Se temos o texto original do template, usar ele
+              const bodyComponent = template.components?.find(c => c.type === 'BODY');
+              if (bodyComponent && bodyComponent.text) {
+                let templateText = bodyComponent.text;
+                
+                // Substituir placeholders se temos parâmetros
+                if (templateComponents && templateComponents[0]?.parameters) {
+                  templateComponents[0].parameters.forEach((param, index) => {
+                    templateText = templateText.replace(`{{${index + 1}}}`, param.text);
+                  });
+                }
+                
+                messageBody = templateText;
+              }
+
+              const messageData = {
+                conversation_id: validConversationId,
+                from_contact: from,
+                body: messageBody,
+                message_type: "template",
+                received_at: new Date().toISOString(),
+                status: "sent",
+                whatsapp_message_id: result.messages[0].id,
+                template_name: template.name,
+                template_language: template.language || "pt_BR"
+              };
+
+              const { error: insertError } = await supabase.from("messages").insert([messageData]);
+              
+              if (insertError) {
+                console.error(`❌ Erro ao salvar mensagem no banco (${template.name}):`, insertError);
+              }
+            } catch (dbError) {
+              console.error(`❌ Erro ao salvar mensagem no banco (${template.name}):`, dbError);
+            }
+          }
+        } catch (error) {
+          console.error(`❌ Erro de conexão no template ${template.name}:`, error);
+          errors.push({
+            template: template.name,
+            templateIndex: i,
+            error: error.message,
+            type: "connection_error",
+          });
+        }
+      }
+
+
+      // Mostrar resultado para o usuário
+      if (results.length > 0) {
+        let message = `Resultado do envio da campanha "${campaign.name}":\n\n`;
+        message += `✅ Enviados: ${results.length} de ${campaign.selected_templates.length} templates\n`;
+        
+        if (errors.length > 0) {
+          message += `❌ Erros: ${errors.length}\n\n`;
           message += "Templates que falharam:\n";
-          data.errors?.forEach((error, index) => {
+          errors.forEach((error, index) => {
             message += `${index + 1}. ${error.template}: ${error.error}\n`;
           });
           message += "\nVerifique os templates no WhatsApp Manager ou tente novamente.";
@@ -237,11 +473,11 @@ const Chat = () => {
         
         alert(message);
       } else {
-        let errorMessage = `Erro ao enviar campanha: ${data.error}\n\n`;
+        let errorMessage = "Erro ao enviar campanha: Todos os templates falharam\n\n";
         
-        if (data.errors && data.errors.length > 0) {
+        if (errors.length > 0) {
           errorMessage += "Detalhes dos erros:\n";
-          data.errors.forEach((error, index) => {
+          errors.forEach((error, index) => {
             errorMessage += `${index + 1}. ${error.template}: ${error.error}\n`;
           });
         }
@@ -250,7 +486,7 @@ const Chat = () => {
       }
     } catch (error) {
       console.error("Erro ao enviar campanha:", error);
-      alert("Erro ao enviar campanha");
+      alert("Erro ao enviar campanha: " + error.message);
     } finally {
       // Sempre fechar os menus após a tentativa de envio (sucesso ou erro)
       setSendingCampaignId(null);

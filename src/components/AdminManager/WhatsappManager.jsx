@@ -1,23 +1,3 @@
-/**
- * WhatsappManager Component
- * 
- * MIGRAÇÃO CONCLUÍDA: Este componente foi migrado do servidor serverless para Supabase direto
- * 
- * Mudanças implementadas:
- * - Substituído fetch('/api/campaigns') pelo campaignsService
- * - Implementado useCampaigns hook para gerenciamento de estado
- * - Removidas dependências de APIs serverless
- * - Atualizadas funções de teste para usar Supabase diretamente
- * - Substituído fetch('/api/templates/approved') pela edge function get-approved-templates
- * - Substituído fetch('/api/templates/validate') pela edge function validate-template
- * 
- * Benefícios da migração:
- * - Menor latência (conexão direta com Supabase)
- * - Menos complexidade (sem servidor serverless)
- * - Melhor performance (menos requisições HTTP)
- * - Código mais simples e direto
- * - Uso de edge functions para operações específicas
- */
 
 import React, { useEffect, useState } from "react";
 import { getOperators } from "../../helper/getOperators";
@@ -400,28 +380,44 @@ const WhatsappManager = () => {
     }
   };
 
-  // Função para carregar contatos
+  // Função para carregar contatos - Migrada para Supabase direto
   const loadContacts = async () => {
     setContactsLoading(true);
     try {
-      const response = await fetch("/api/contacts");
-      const data = await response.json();
-      
-      if (data.success) {
-        // Filtrar apenas os dados necessários: telefone, nome do operador, código do operador
-        const filteredContacts = (data.contacts || []).map(contact => ({
-          id: contact.id,
-          phone_number: contact.phone_number,
-          operator_name: contact.operator_name,
-          operator_code_id: contact.operator_code_id
-        }));
-        setContacts(filteredContacts);
-      } else {
-        alert("Erro ao carregar contatos");
+      // Buscar contatos diretamente do Supabase com informações do operador
+      const { data: contacts, error } = await supabase
+        .from("contacts")
+        .select(`
+          contact_id,
+          phone_number,
+          created_at,
+          operator_code_id,
+          operator!operator_code_id (
+            operator_name,
+            operator_code_id
+          )
+        `)
+        .order("created_at", { ascending: true });
+
+      if (error) {
+        console.error("❌ Erro ao buscar contatos:", error);
+        alert(`Erro ao carregar contatos: ${error.message}`);
+        return;
       }
+
+      // Processar os dados para incluir o nome do operador
+      const processedContacts = (contacts || []).map(contact => ({
+        id: contact.contact_id,
+        phone_number: contact.phone_number,
+        operator_name: contact.operator?.operator_name || "Sem operador",
+        operator_code_id: contact.operator_code_id,
+        created_at: contact.created_at
+      }));
+
+      setContacts(processedContacts);
     } catch (error) {
-      console.error("Erro ao carregar contatos:", error);
-      alert("Erro ao carregar contatos");
+      console.error("❌ Erro ao carregar contatos:", error);
+      alert(`Erro ao carregar contatos: ${error.message}`);
     }
     setContactsLoading(false);
   };
