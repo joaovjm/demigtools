@@ -17,10 +17,11 @@ export const SearchForm = ({searchTerm, selectedValue, loading, onSearchChange, 
         Tipo
       </label>
       <select id="dropdown" value={selectedValue} onChange={(e) => setSelectedValue(e.target.value)}>
-        <option value="todos">Todos</option>
+        <option value="todos">Todos Ativos</option>
         <option value="avulso">Avulso</option>
         <option value="lista">Lista</option>
         <option value="mensal">Mensal</option>
+        <option value="excluso">Excluso</option>
       </select>
     </div>
 

@@ -31,6 +31,8 @@ const searchDonor = async (params, donor_type) => {
 
     if (query && donor_type !== "") {
       query = query.ilike("donor_type", donor_type);
+    } else {
+      query = query.neq("donor_type", "Excluso");
     }
 
     const { data, error } = await query;
