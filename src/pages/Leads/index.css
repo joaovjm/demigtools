@@ -18,7 +18,9 @@
   width: 100%;
   max-width: 1200px;
   gap: 12px;
-  height: 100%;
+  min-height: 100%;
+  min-height: 0; /* allow child to scroll inside flex container */
+  overflow-y: auto; /* enable vertical scroll when content exceeds viewport */
 }
 
 /* Header */
@@ -65,7 +67,8 @@
   gap: 12px;
   width: 100%;
   flex: 1;
-  overflow: hidden;
+  min-height: 0; /* required for nested flex scrolling */
+  overflow-y: auto; /* scroll main content instead of clipping */
 }
 
 /* Loading State */
@@ -399,6 +402,19 @@
 @media (max-width: 768px) {
   .leads-container {
     padding: 8px;
+    height: auto; /* allow full content height */
+    min-height: calc(100vh - 11.4vh);
+    overflow: visible;
+  }
+  .leads-content {
+    height: auto;
+    min-height: auto;
+    overflow: visible; /* no inner scroll; page scrolls */
+  }
+  .leads-main-content {
+    flex: initial;
+    min-height: auto;
+    overflow: visible; /* no inner scroll */
   }
   
   .leads-header {
@@ -449,6 +465,19 @@
 @media (max-width: 480px) {
   .leads-container {
     padding: 6px;
+    height: auto;
+    min-height: calc(100vh - 11.4vh);
+    overflow: visible;
+  }
+  .leads-content {
+    height: auto;
+    min-height: auto;
+    overflow: visible;
+  }
+  .leads-main-content {
+    flex: initial;
+    min-height: auto;
+    overflow: visible;
   }
   
   .leads-title {
