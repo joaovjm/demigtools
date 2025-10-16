@@ -1,86 +1,408 @@
-.CreateMensalDonation {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
+/* Create Mensal Donation Container */
+.create-mensal-donation-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: calc(100vh - 11.4vh);
+  padding: 8px;
+  box-sizing: border-box;
 }
 
-.MonthlyfeeGeneratorComponent_div {
+.create-mensal-donation-content {
   display: flex;
   flex-direction: column;
-  width: 600px;
-  height: 400px;
-  margin-top: 40px;
-  gap: 18px;
+  width: 100%;
+  max-width: 900px;
+  height: 100%;
+  border: 3px double #363a3d;
   border-radius: 6px;
-  padding: 32px;
-  background-color: #1F1D1D;
+  background-color: #1f1d1d;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-.form_inputs {
+/* Header Section */
+.create-mensal-donation-header {
+  background: linear-gradient(135deg, #363a3d 0%, #2f2d2d 100%);
+  padding: 12px 20px;
+  border-bottom: 2px solid #464a4d;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.create-mensal-donation-title {
+  color: #faa01c;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 2px 0;
   display: flex;
-  gap: 16px;
-  align-items: end;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.btn_gerar {
+.title-icon {
+  font-size: 20px;
+  color: #faa01c;
+}
+
+.create-mensal-donation-subtitle {
+  color: #faf5e9;
+  font-size: 11px;
+  margin: 0;
+  opacity: 0.9;
+  text-transform: none;
+  font-weight: 400;
+}
+
+/* Form Section */
+.create-mensal-donation-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.create-mensal-donation-section {
+  background-color: #363a3d;
+  border: 2px solid #2f2d2d;
+  border-radius: 6px;
+  padding: 16px;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.create-mensal-donation-section:hover {
+  border-color: #464a4d;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.section-title {
+  color: #faa01c;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.section-icon {
+  font-size: 16px;
+  color: #faa01c;
+}
+
+/* Form Elements */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  color: #faf5e9;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.create-mensal-donation-input,
+.create-mensal-donation-select {
+  width: 100%;
+  padding: 10px 12px;
+  background-color: #2f2d2d;
+  border: 2px solid #464a4d;
+  border-radius: 6px;
+  color: #faf5e9;
+  font-size: 13px;
+  outline: none;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  text-transform: none;
+  height: 40px;
+}
+
+.create-mensal-donation-input:focus,
+.create-mensal-donation-select:focus {
+  border-color: #faa01c;
+  box-shadow: 0 0 0 3px rgba(250, 160, 28, 0.1);
+}
+
+.create-mensal-donation-input::placeholder {
+  color: #9e9e9e;
+  text-transform: none;
+}
+
+.create-mensal-donation-select option {
+  background-color: #2f2d2d;
+  color: #faf5e9;
+  padding: 8px;
+}
+
+/* Button */
+.form-actions {
+  display: flex;
+  justify-content: center;
+  padding-top: 12px;
+  border-top: 2px solid #2f2d2d;
+  margin-top: 4px;
+}
+
+.create-mensal-donation-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
   border: none;
   border-radius: 6px;
-  width: 150px;
-  height: 40px;
-  background-color: #385bad;
-  color: #faf5e9;
   cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  min-width: 180px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+  height: 44px;
+}
 
-  &:hover {
-    opacity: 0.8;
+.create-mensal-donation-btn.primary {
+  background: linear-gradient(135deg, #faa01c 0%, #e8901a 100%);
+  color: #1f1d1d;
+  box-shadow: 0 4px 16px rgba(250, 160, 28, 0.3);
+}
+
+.create-mensal-donation-btn.primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #e8901a 0%, #d17e18 100%);
+  box-shadow: 0 6px 24px rgba(250, 160, 28, 0.4);
+  transform: translateY(-2px);
+}
+
+.create-mensal-donation-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-icon {
+  font-size: 18px;
+}
+
+/* Status Container */
+.status-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.status-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 6px;
+  border: 2px solid;
+  transition: all 0.3s ease;
+  animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-.status_mensal {
-    display: flex;
-    justify-content: center;
-    width: 300px;
-    border-radius: 6px;
-    background-color: green;
+.status-message.info {
+  background-color: rgba(33, 150, 243, 0.1);
+  border-color: #2196f3;
+  color: #faf5e9;
 }
 
-.label_status_mensal {
-    display: flex;
-    align-items: center;
+.status-message.warning {
+  background-color: rgba(255, 152, 0, 0.1);
+  border-color: #ff9800;
+  color: #faf5e9;
+}
+
+.status-message.success {
+  background-color: rgba(76, 175, 80, 0.1);
+  border-color: #4caf50;
+  color: #faf5e9;
+}
+
+.status-message.loading {
+  background-color: rgba(156, 39, 176, 0.1);
+  border-color: #9c27b0;
+  color: #faf5e9;
+}
+
+.status-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.status-message.info .status-icon {
+  background-color: #2196f3;
+  color: white;
+}
+
+.status-message.warning .status-icon {
+  background-color: #ff9800;
+  color: white;
+}
+
+.status-message.success .status-icon {
+  background-color: #4caf50;
+  color: white;
+}
+
+.status-message.loading .status-icon {
+  background-color: #9c27b0;
+  color: white;
+}
+
+.status-content {
+  flex: 1;
+}
+
+.status-content h5 {
+  margin: 0 0 6px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: inherit;
+}
+
+.status-content p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+
+.status-content strong {
+  color: #faa01c;
+  font-weight: 700;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .create-mensal-donation-container {
+    padding: 8px;
+  }
+
+  .create-mensal-donation-content {
+    max-width: 100%;
+  }
+
+  .create-mensal-donation-header {
+    padding: 12px 16px;
+  }
+
+  .create-mensal-donation-title {
+    font-size: 18px;
     flex-direction: column;
-    font-size: 48px;
+    gap: 6px;
+  }
+
+  .create-mensal-donation-form {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .create-mensal-donation-section {
+    padding: 12px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .create-mensal-donation-btn {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .status-message {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .status-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .create-mensal-donation-header {
+    padding: 10px 12px;
+  }
+
+  .create-mensal-donation-title {
+    font-size: 16px;
+  }
+
+  .create-mensal-donation-subtitle {
+    font-size: 11px;
+  }
+
+  .create-mensal-donation-form {
+    padding: 12px;
     gap: 10px;
-}
+  }
 
-@media (max-width: 479px){
-  .MonthlyfeeGeneratorComponent_div{
-    width: 98%;
-    height: 500px;
+  .create-mensal-donation-section {
+    padding: 10px;
   }
-  .form_inputs{
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-  }
-}
 
-@media (min-width: 480px) and (max-width: 799px){
-  .MonthlyfeeGeneratorComponent_div{
-    width: 90%;
-    height: 500px;
+  .section-title {
+    font-size: 14px;
   }
-  .form_inputs{
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-  }
-}
 
-@media(min-width: 1200px){
-  .MonthlyfeeGeneratorComponent_div{
-    & .form_inputs{
-      width: 400px;
-    }
+  .create-mensal-donation-input,
+  .create-mensal-donation-select {
+    padding: 8px 10px;
+    font-size: 12px;
+    height: 36px;
+  }
+
+  .create-mensal-donation-btn {
+    padding: 10px 20px;
+    font-size: 13px;
+    height: 40px;
   }
 }

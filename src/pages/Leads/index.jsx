@@ -17,31 +17,17 @@ import {
 import getSession from "../../auth/getSession";
 import Loader from "../../components/Loader";
 import updateLeads from "../../helper/updateLeads";
+import ModalNewDonation from "../../components/ModalNewDonation";
+import ModalScheduling from "../../components/ModalScheduling";
 
 const Leads = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [items, setItems] = useState(0);
   const [currentItem, setCurrentItem] = useState(1);
   const [currentLead, setCurrentLead] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
-  const [isSchedulingOpen, setIsSchedulingOpen] = useState(false);
+  const [isModalNewDonationOpen, setIsModalNewDonationOpen] = useState(false);
+  const [isModalSchedulingOpen, setIsModalSchedulingOpen] = useState(false);
   const [idSession, setIdSession] = useState("");
-  const [formatedDate, setFormatedDate] = useState("");
-  const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [neighborhood, setNeighborhood] = useState("");
-  const [newTel2, setNewTel2] = useState("");
-  const [newTel3, setNewTel3] = useState("");
-  const [telSuccess, setTelSuccess] = useState("");
-  const [campain, setCampain] = useState("");
-  const [observation, setObservation] = useState("");
-  const [reference, setReference] = useState("");
-  const [dateDonation, setDateDonation] = useState("");
-  const [dateScheduling, setDateScheduling] = useState("");
-  const [telScheduling, setTelScheduling] = useState("");
-  const [observationScheduling, setObservationScheduling] = useState("");
-  const [valueDonation, setValueDonation] = useState("");
-  const [nowLead, setNowLead] = useState("");
   const [operatorID, setOperatorID] = useState(null);
   const [operatorType, setOperatorType] = useState(null);
 
@@ -152,31 +138,21 @@ const Leads = () => {
   };
 
   const handleScheduling = (e) => {
-    setIsOpen(false);
-    setIsSchedulingOpen(true);
+    setIsModalNewDonationOpen(false);
+    setIsModalSchedulingOpen(true);
   };
 
-  const handleSchedulingDateChange = (e) => {
-    var value = e.target.value;
-    const now = DataNow("noformated");
-    if (value < now) {
-      value = now;
-    }
-    setDateScheduling(value);
-  };
 
   const handleAction = (e) => {
-    setIsSchedulingOpen(false);
-    setIsOpen(true);
-    setAddress(currentLead.leads_address);
-    setCity(currentLead.leads_city ? currentLead.leads_city : "RIO DE JANEIRO");
-    setNeighborhood(currentLead.leads_neighborhood);
+    setIsModalSchedulingOpen(false);
+    setIsModalNewDonationOpen(true);
   };
 
-  const handleSchedulingClick = async () => {
+  const handleSchedulingSave = async (formData) => {
     let typeOperator;
-    if(!dateScheduling || !telScheduling) {
+    if(!formData.dateScheduling || !formData.telScheduling) {
       toast.warning("Preencha data e telefone usado para contato...")
+      return;
     }
     if (operatorType === "Operador Casa") {
       typeOperator = "leads_casa";
@@ -189,10 +165,10 @@ const Leads = () => {
         .update([
           {
             leads_date_accessed: DataNow("noformated"),
-            leads_scheduling_date: dateScheduling,
+            leads_scheduling_date: formData.dateScheduling,
             leads_status: "agendado",
-            leads_observation: observationScheduling,
-            leads_tel_success: telScheduling
+            leads_observation: formData.observationScheduling,
+            leads_tel_success: formData.telScheduling
           },
         ])
         .eq("leads_id", currentLead.leads_id)
@@ -202,9 +178,7 @@ const Leads = () => {
 
       if (!error) {
         toast.success("Agendado com sucesso!");
-        setDateScheduling("");
-        setObservationScheduling("");
-        setIsSchedulingOpen(false);
+        setIsModalSchedulingOpen(false);
         const next = currentItem + 1;
         setCurrentItem(next);
       }
@@ -213,7 +187,7 @@ const Leads = () => {
     }
   };
 
-  const handleNewDonorAndDonation = async () => {
+  const handleNewDonationSave = async (formData) => {
     let type;
     if (operatorType === "Operador Casa") {
       type = "leads_casa";
@@ -221,13 +195,13 @@ const Leads = () => {
       type = "leads";
     }
     if (
-      address === "" ||
-      city === "" ||
-      neighborhood === "" ||
-      telSuccess === "" ||
-      valueDonation === "" ||
-      dateDonation === "" ||
-      campain === ""
+      formData.address === "" ||
+      formData.city === "" ||
+      formData.neighborhood === "" ||
+      formData.telSuccess === "" ||
+      formData.valueDonation === "" ||
+      formData.dateDonation === "" ||
+      formData.campain === ""
     ) {
       toast.warning("Preencha todos os campos obrigatórios!");
     } else {
@@ -237,10 +211,10 @@ const Leads = () => {
             const data = await insertDonor(
               currentLead.leads_name,
               "Lista",
-              address,
-              city,
-              neighborhood,
-              telSuccess
+              formData.address,
+              formData.city,
+              formData.neighborhood,
+              formData.telSuccess
             );
 
             if (data.length > 0) {
@@ -252,32 +226,32 @@ const Leads = () => {
               currentLead.leads_icpf
             );
 
-            if (newTel2 !== "") {
-              await insertDonor_tel_2(data[0].donor_id, newTel2);
+            if (formData.newTel2 !== "") {
+              await insertDonor_tel_2(data[0].donor_id, formData.newTel2);
             }
-            if (newTel3 !== "") {
-              await insertDonor_tel_3(data[0].donor_id, newTel3);
+            if (formData.newTel3 !== "") {
+              await insertDonor_tel_3(data[0].donor_id, formData.newTel3);
             }
-            if (reference !== "") {
-              await insertDonor_reference(data[0].donor_id, reference);
+            if (formData.reference !== "") {
+              await insertDonor_reference(data[0].donor_id, formData.reference);
             }
 
             let successMessage = "Operação concluída com sucesso!";
 
-            if (valueDonation !== "" && dateDonation !== "") {
+            if (formData.valueDonation !== "" && formData.dateDonation !== "") {
               const { data: donation, error: donationError } = await supabase
                 .from("donation")
                 .insert([
                   {
                     donor_id: data[0].donor_id,
                     operator_code_id: operatorID,
-                    donation_value: valueDonation,
+                    donation_value: formData.valueDonation,
                     donation_day_contact: DataNow("noformated"),
-                    donation_day_to_receive: dateDonation,
+                    donation_day_to_receive: formData.dateDonation,
                     donation_print: "Não",
                     donation_received: "Não",
-                    donation_description: observation,
-                    donation_campain: campain,
+                    donation_description: formData.observation,
+                    donation_campain: formData.campain,
                   },
                 ])
                 .select();
@@ -293,19 +267,7 @@ const Leads = () => {
 
             const next = currentItem + 1;
             setCurrentItem(next);
-            setIsOpen(false);
-
-            setAddress("");
-            setCity("");
-            setNeighborhood("");
-            setNewTel2("");
-            setNewTel3("");
-            setTelSuccess("");
-            setCampain("");
-            setObservation("");
-            setReference("");
-            setDateDonation("");
-            setValueDonation("");
+            setIsModalNewDonationOpen(false);
 
             return "Processo concluido com sucesso!";
           } catch (error) {
@@ -323,286 +285,143 @@ const Leads = () => {
   };
 
   return (
-    <main className="main-leads">
-      <div className="section-info-leads">
-        {isLoading ? (
-          <div className="info-possible-donor-loading">
-            <Loader />
+    <main className="leads-container">
+      <div className="leads-content">
+        {/* Header */}
+        <header className="leads-header">
+          <h2 className="leads-title">{ICONS.CIRCLEOUTLINE} Gerenciar Leads</h2>
+          <div className="leads-stats">
+            <span className="leads-counter">Lead {currentItem} de {items}</span>
           </div>
-        ) : (
-          <div className="info-possible-donor">
-            <h3>{currentLead.leads_name}</h3>
-            <div className="info-lead">
-              <div className="tel-lead">
-                <p className="paragraph">
-                  Telefone 1: {currentLead.leads_tel_1}
-                </p>
-                <p className="paragraph">
-                  Telefone 2: {currentLead.leads_tel_2}
-                </p>
-                <p className="paragraph">
-                  Telefone 3: {currentLead.leads_tel_3}
-                </p>
-                <p className="paragraph">
-                  Telefone 4: {currentLead.leads_tel_4}
-                </p>
-                <p className="paragraph">
-                  Telefone 5: {currentLead.leads_tel_5}
-                </p>
-                <p className="paragraph">
-                  Telefone 6: {currentLead.leads_tel_6}
-                </p>
+        </header>
+
+        {/* Main Content */}
+        <div className="leads-main-content">
+          {isLoading ? (
+            <div className="leads-loading">
+              <Loader />
+              <p>Carregando lead...</p>
+            </div>
+          ) : (
+            <>
+              {/* Lead Information Section */}
+              <div className="leads-section">
+                <h3 className="leads-section-title">Informações do Lead</h3>
+                <div className="leads-info-card">
+                  <div className="lead-name">
+                    <h4>{currentLead.leads_name}</h4>
+                  </div>
+                  
+                  <div className="lead-details">
+                    <div className="lead-section">
+                      <h5>Contatos</h5>
+                      <div className="contact-grid">
+                        {currentLead.leads_tel_1 && (
+                          <div className="contact-item">
+                            <span className="contact-label">Telefone 1:</span>
+                            <span className="contact-value">{currentLead.leads_tel_1}</span>
+                          </div>
+                        )}
+                        {currentLead.leads_tel_2 && (
+                          <div className="contact-item">
+                            <span className="contact-label">Telefone 2:</span>
+                            <span className="contact-value">{currentLead.leads_tel_2}</span>
+                          </div>
+                        )}
+                        {currentLead.leads_tel_3 && (
+                          <div className="contact-item">
+                            <span className="contact-label">Telefone 3:</span>
+                            <span className="contact-value">{currentLead.leads_tel_3}</span>
+                          </div>
+                        )}
+                        {currentLead.leads_tel_4 && (
+                          <div className="contact-item">
+                            <span className="contact-label">Telefone 4:</span>
+                            <span className="contact-value">{currentLead.leads_tel_4}</span>
+                          </div>
+                        )}
+                        {currentLead.leads_tel_5 && (
+                          <div className="contact-item">
+                            <span className="contact-label">Telefone 5:</span>
+                            <span className="contact-value">{currentLead.leads_tel_5}</span>
+                          </div>
+                        )}
+                        {currentLead.leads_tel_6 && (
+                          <div className="contact-item">
+                            <span className="contact-label">Telefone 6:</span>
+                            <span className="contact-value">{currentLead.leads_tel_6}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="lead-section">
+                      <h5>Localização</h5>
+                      <div className="location-info">
+                        <div className="location-item">
+                          <span className="location-label">Bairro:</span>
+                          <span className="location-value">{currentLead.leads_neighborhood}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="neighborhood">
-                <p className="paragraph">
-                  Bairro: {currentLead.leads_neighborhood}{" "}
-                </p>
-              </div>
-              {!isOpen && !isSchedulingOpen && (
-                <div className="btn-lead">
-                  <button
-                    onClick={handleNoDonation}
-                    className="info-lead-button-a"
-                  >
-                    Não pode ajudar
-                  </button>
-                  <button
-                    onClick={handleScheduling}
-                    className="info-lead-button-b"
-                  >
-                    Agendar
-                  </button>
-                  <button onClick={handleAction} className="info-lead-button-c">
-                    {ICONS.CIRCLEOUTLINE} Nova doação
-                  </button>
+
+              {/* Action Buttons */}
+              {!isModalNewDonationOpen && !isModalSchedulingOpen && (
+                <div className="leads-actions">
+                  <div className="action-buttons">
+                    <button
+                      onClick={handleNoDonation}
+                      className="leads-btn danger"
+                    >
+                      Não pode ajudar
+                    </button>
+                    <button
+                      onClick={handleScheduling}
+                      className="leads-btn warning"
+                    >
+                      Agendar
+                    </button>
+                    <button 
+                      onClick={handleAction} 
+                      className="leads-btn primary"
+                    >
+                      {ICONS.CIRCLEOUTLINE} Nova doação
+                    </button>
+                    <button 
+                      className="leads-btn secondary" 
+                      onClick={handleNext}
+                    >
+                      Não Atendeu
+                    </button>
+                  </div>
                 </div>
               )}
-            </div>
-            {!isOpen && !isSchedulingOpen && (
-              <>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    marginTop: "10px",
-                  }}
-                >
-                  <button className="btn-next" onClick={handleNext}>
-                    Não Atendeu
-                  </button>
-                </div>
-                <div>
-                  <p>{items}</p>
-                </div>
-              </>
-            )}
-          </div>
-        )}
+            </>
+          )}
 
-        {isOpen && (
-          <form className="menu-action-lead">
-            <div className="input-group">
-              <FormInput
-                label="Endereço"
-                value={address}
-                type="text"
-                name="address"
-                onChange={(e) => setAddress(e.target.value)}
-              />
-              <FormInput
-                label="Cidade"
-                value={city}
-                type="text"
-                name="city"
-                onChange={(e) => setCity(e.target.value)}
-              />
-              <FormInput
-                label="Bairro"
-                value={neighborhood}
-                type="text"
-                name="neighborhood"
-                onChange={(e) => setNeighborhood(e.target.value)}
-              />
-            </div>
-            <div className="input-group">
-              <div className="input-field">
-                <label htmlFor="telSuccess">
-                  Qual telefone conseguiu contato?{" "}
-                </label>
-                <select
-                  name=""
-                  id="telSuccess"
-                  defaultValue=""
-                  onChange={(e) => setTelSuccess(e.target.value)}
-                >
-                  <option value={telSuccess} disabled>
-                    Selecione...
-                  </option>
-                  {currentLead.leads_tel_1 && (
-                    <option value={currentLead.leads_tel_1}>
-                      {currentLead.leads_tel_1}
-                    </option>
-                  )}
-                  {currentLead.leads_tel_2 && (
-                    <option value={currentLead.leads_tel_2}>
-                      {currentLead.leads_tel_2}
-                    </option>
-                  )}
-                  {currentLead.leads_tel_3 && (
-                    <option value={currentLead.leads_tel_3}>
-                      {currentLead.leads_tel_3}
-                    </option>
-                  )}
-                  {currentLead.leads_tel_4 && (
-                    <option value={currentLead.leads_tel_4}>
-                      {currentLead.leads_tel_4}
-                    </option>
-                  )}
-                  {currentLead.leads_tel_5 && (
-                    <option value={currentLead.leads_tel_5}>
-                      {currentLead.leads_tel_5}
-                    </option>
-                  )}
-                  {currentLead.leads_tel_6 && (
-                    <option value={currentLead.leads_tel_6}>
-                      {currentLead.leads_tel_6}
-                    </option>
-                  )}
-                </select>
-              </div>
-              <FormInput
-                label="Tel. 2"
-                value={newTel2}
-                type="text"
-                name="newtel2"
-                onChange={(e) => setNewTel2(e.target.value)}
-              />
-              <FormInput
-                label="Tel. 3"
-                value={newTel3}
-                type="text"
-                name="newtel3"
-                onChange={(e) => setNewTel3(e.target.value)}
-              />
-            </div>
-
-            <div className="input-group">
-              <FormInput
-                label="Valor"
-                value={valueDonation}
-                onChange={(e) => setValueDonation(e.target.value)}
-              />
-              <FormInput
-                label="Data"
-                value={dateDonation}
-                type="date"
-                onChange={(e) => setDateDonation(e.target.value)}
-              />
-              <div className="input-field">
-                <label>Campanha</label>
-                <select
-                  value={campain}
-                  onChange={(e) => setCampain(e.target.value)}
-                >
-                  <option value="" disabled>
-                    Selecione...
-                  </option>
-                  <option value="fralda">Fralda</option>
-                  <option value="manutenção">Manutenção</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="input-group">
-              <div className="input-field">
-                <label>Observação da Ficha</label>
-                <textarea
-                  className="text-area"
-                  value={observation}
-                  onChange={(e) => {
-                    setObservation(e.target.value);
-                  }}
-                />
-              </div>
-              <div className="input-field">
-                <label>Referência do Doador</label>
-                <textarea
-                  className="text-area"
-                  value={reference}
-                  onChange={(e) => {
-                    setReference(e.target.value);
-                  }}
-                />
-              </div>
-            </div>
-
-            <div className="menu-action-button">
-              <button
-                onClick={() => setIsOpen(false)}
-                className="info-lead-button-a"
-              >
-                {ICONS.BACK}Voltar
-              </button>
-              <button
-                type="button"
-                onClick={handleNewDonorAndDonation}
-                className="info-lead-button-c"
-                style={{ padding: 12 }}
-              >
-                Criar Nova doação
-              </button>
-            </div>
-          </form>
-        )}
-
-        {isSchedulingOpen && (
-          <form className="schedulingLead">
-            <h3>Agendamento</h3>
-
-            <FormInput
-              label="Data"
-              value={dateScheduling}
-              onChange={handleSchedulingDateChange}
-              type="date"
-            />
-            <div className="input-field">
-              <label>Observação</label>
-              <select
-                value={telScheduling}
-                onChange={(e) => {
-                  setTelScheduling(e.target.value);
-                }}
-              >
-                <option value="" disabled>Selecione...</option>
-                {currentLead.leads_tel_1 && <option value={currentLead.leads_tel_1}>{currentLead.leads_tel_1}</option>}
-                {currentLead.leads_tel_2 && <option value={currentLead.leads_tel_2}>{currentLead.leads_tel_2}</option>}
-                {currentLead.leads_tel_3 && <option value={currentLead.leads_tel_3}>{currentLead.leads_tel_3}</option>}
-                {currentLead.leads_tel_4 && <option value={currentLead.leads_tel_4}>{currentLead.leads_tel_4}</option>}
-                {currentLead.leads_tel_5 && <option value={currentLead.leads_tel_5}>{currentLead.leads_tel_5}</option>}
-                {currentLead.leads_tel_6 && <option value={currentLead.leads_tel_6}>{currentLead.leads_tel_6}</option>}
-              </select>
-            </div>
-            <div className="input-field">
-              <label>Observação</label>
-              <textarea
-                value={observationScheduling}
-                onChange={(e) => {
-                  setObservationScheduling(e.target.value);
-                }}
-              />
-            </div>
-            <button
-              type="button"
-              className="btn-scheduling"
-              onClick={handleSchedulingClick}
-            >
-              Concluir
-            </button>
-          </form>
-        )}
 
         <ToastContainer closeOnClick="true" />
+        </div>
       </div>
+
+      {/* Modals */}
+      <ModalNewDonation
+        isOpen={isModalNewDonationOpen}
+        onClose={() => setIsModalNewDonationOpen(false)}
+        currentLead={currentLead}
+        onSave={handleNewDonationSave}
+        operatorID={operatorID}
+      />
+
+      <ModalScheduling
+        isOpen={isModalSchedulingOpen}
+        onClose={() => setIsModalSchedulingOpen(false)}
+        currentLead={currentLead}
+        onSave={handleSchedulingSave}
+      />
     </main>
   );
 };
