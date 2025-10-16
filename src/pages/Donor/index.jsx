@@ -396,6 +396,7 @@ const Donor = () => {
             setUiState((prev) => ({ ...prev, modalEdit: showEdit }))
           }
           donation={donation}
+          donorData={donorData}
         />
       )}
     </main>

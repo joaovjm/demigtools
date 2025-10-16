@@ -7,8 +7,9 @@ import { getCampains } from "../../helper/getCampains";
 import { getOperators } from "../../helper/getOperators";
 import { UserContext } from "../../context/UserContext";
 import GenerateReceiptPDF from "../GenerateReceiptPDF";
+import { getEditReceipt } from "../../helper/getEditReceipt";
 
-const ModalEditDonation = ({ donation, setModalEdit }) => {
+const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
   const { operatorData } = useContext(UserContext);
   const [value, setValue] = useState(donation.donation_value);
   const [date, setDate] = useState(donation.donation_day_to_receive);
@@ -24,12 +25,21 @@ const ModalEditDonation = ({ donation, setModalEdit }) => {
   );
 
   const [operators, setOperators] = useState([]);
+  const [receiptConfig, setReceiptConfig] = useState([]);
   useEffect(() => {
     const fetchCampaigns = async () => {
       const response = await getCampains();
       setCampaigns(response);
     };
     fetchCampaigns();
+  }, []);
+
+  useEffect(() => {
+  const fetchReceiptConfig = async () => {
+    const response = await getEditReceipt();
+    setReceiptConfig(response[0]);
+  };
+  fetchReceiptConfig();
   }, []);
 
   useEffect(() => {
@@ -96,21 +106,24 @@ const ModalEditDonation = ({ donation, setModalEdit }) => {
   };
 
   const handleDownloadPDF = async () => {
+    console.log(donation)
     try {
       // Prepara os dados no formato esperado pelo GenerateReceiptPDF
       const donationData = {
         ...donation,
         donor: {
-          donor_name: donation.donor?.donor_name || "Nome não encontrado",
+          donor_name: donorData.nome,
+          donor_tel_1: donorData.telefone1,
+          donor_tel_2: donorData.telefone2,
+          donor_tel_3: donorData.telefone3,
+          donor_address: donorData.endereco,
+          donor_city: donorData.cidade,
+          donor_neighborhood: donorData.bairro,
+          donor_type: donorData.tipo,
+          donor_reference: donorData.referencia,
+          donor_observation: donorData.observacao,
         },
         donation_campain: donation.donation_campain || "Campanha Geral",
-      };
-
-      const receiptConfig = {
-        pixKey:
-          "00020126360014BR.GOV.BCB.PIX0114+5521987654321520400005303986540510.005802BR5913EXEMPLO LTDA6009SAO PAULO62070503***6304A1B2",
-        pixName: "MANANCIAL",
-        pixCity: "Rio de Janeiro",
       };
 
       // Chama o GenerateReceiptPDF com o nome do colaborador no arquivo
@@ -118,13 +131,6 @@ const ModalEditDonation = ({ donation, setModalEdit }) => {
         cards: [donationData],
         receiptConfig,
         setOk: () => {},
-        includeCollaboratorName: true,
-        collaboratorName:
-          operators.find(
-            (op) => op.operator_code_id === donation.operator_code_id
-          )?.operator_name ||
-          donation.operator?.operator_name ||
-          "Colaborador",
       });
 
       toast.success("PDF gerado com sucesso!");

@@ -460,12 +460,21 @@ const GenerateReceiptPDF = async ({ cards, receiptConfig, setOk }) => {
   };
   pdfMake.createPdf(docDefinition).getBlob(async (blob) => {
     try {
+      console.log(cards);
       const { data: uploadData, error } = await supabase.storage
         .from("receiptPdfToPrint")
-        .upload(`Print Checked/${cards[0].donation_day_to_receive}.pdf`, blob, {
-          contentType: "application/pdf",
-          upsert: true,
-        });
+        .upload(
+          `Print Checked/${
+            cards.length === 1
+              ? cards[0].donor?.donor_name.replace(/[^a-zA-Z0-9]/g) + "-"
+              : cards[0].receipt_donation_id + cards[-1].receipt_donation_id
+          } ${cards[0].donation_day_to_receive}.pdf`,
+          blob,
+          {
+            contentType: "application/pdf",
+            upsert: true,
+          }
+        );
 
       if (error) throw error;
 
@@ -484,7 +493,11 @@ const GenerateReceiptPDF = async ({ cards, receiptConfig, setOk }) => {
           const url = URL.createObjectURL(blob);
           const link = document.createElement("a");
           link.href = url;
-          link.download = `${cards[0].donation_day_to_receive}.pdf`;
+          link.download = `${
+            cards[0].donor?.donor_name
+              ? cards[0].donor?.donor_name + "-"
+              : cards[0].receipt_donation_id + cards[-1].receipt_donation_id
+          } ${cards[0].donation_day_to_receive}.pdf`;
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);

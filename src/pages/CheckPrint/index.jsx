@@ -95,14 +95,14 @@ const CheckPrint = () => {
     }
     setIsOpen(true);
   };
-
+  
   const handleGenerateReceiptPDF = async () => {
-    const response = await GenerateReceiptPDF({
+    await GenerateReceiptPDF({
       cards: printers,
       receiptConfig: config,
       setOk: setOk,
     });
-    console.log(response);
+    
   };
 
   return (
