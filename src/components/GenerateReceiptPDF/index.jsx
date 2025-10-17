@@ -460,14 +460,14 @@ const GenerateReceiptPDF = async ({ cards, receiptConfig, setOk }) => {
   };
   pdfMake.createPdf(docDefinition).getBlob(async (blob) => {
     try {
-      console.log(cards);
+      console.log(cards[0]?.receipt_donation_id);
       const { data: uploadData, error } = await supabase.storage
         .from("receiptPdfToPrint")
         .upload(
           `Print Checked/${
             cards.length === 1
               ? cards[0].donor?.donor_name.replace(/[^a-zA-Z0-9]/g) + "-"
-              : cards[0].receipt_donation_id + cards[-1].receipt_donation_id
+              : cards[0].receipt_donation_id
           } ${cards[0].donation_day_to_receive}.pdf`,
           blob,
           {
@@ -496,7 +496,7 @@ const GenerateReceiptPDF = async ({ cards, receiptConfig, setOk }) => {
           link.download = `${
             cards[0].donor?.donor_name
               ? cards[0].donor?.donor_name + "-"
-              : cards[0].receipt_donation_id + cards[-1].receipt_donation_id
+              : cards[0]?.receipt_donation_id
           } ${cards[0].donation_day_to_receive}.pdf`;
           document.body.appendChild(link);
           link.click();
