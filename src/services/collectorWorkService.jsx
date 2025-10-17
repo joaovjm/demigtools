@@ -40,7 +40,7 @@ const filterValueNotReceived = async (collectorWork, method) => {
   return filterValueNotReceived;
 };
 
-export const collectorWorkService = async (startDate, endDate) => {
+export const collectorWorkService = async ({startDate, endDate}) => {
   const collectorWork = await getCollectorPerReceived(startDate, endDate);
   const names = await filterName(collectorWork);
   const countReceived = await filterValueReceived(collectorWork, "count");
