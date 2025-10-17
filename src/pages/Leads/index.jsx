@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./index.css";
 import GetLeadsWithPagination from "../../helper/getLeadsWithPagination";
 
@@ -19,6 +19,8 @@ import Loader from "../../components/Loader";
 import updateLeads from "../../helper/updateLeads";
 import ModalNewDonation from "../../components/ModalNewDonation";
 import ModalScheduling from "../../components/ModalScheduling";
+import ModalHistory from "../../components/ModalHistory";
+import { UserContext } from "../../context/UserContext";
 
 const Leads = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -28,14 +30,8 @@ const Leads = () => {
   const [isModalNewDonationOpen, setIsModalNewDonationOpen] = useState(false);
   const [isModalSchedulingOpen, setIsModalSchedulingOpen] = useState(false);
   const [idSession, setIdSession] = useState("");
-  const [operatorID, setOperatorID] = useState(null);
-  const [operatorType, setOperatorType] = useState(null);
-
-  useEffect(() => {
-    const operatorData = JSON.parse(localStorage.getItem("operatorData"));
-    setOperatorID(operatorData?.operator_code_id);
-    setOperatorType(operatorData?.operator_type);
-  }, []);
+  const [isModalHistoryOpen, setIsModalHistoryOpen] = useState(false);
+  const { operatorData } = useContext(UserContext);
 
   useEffect(() => {
     const GetSession = async () => {
@@ -47,9 +43,6 @@ const Leads = () => {
   }, []);
 
   const fetchLeads = async () => {
-    const operatorData = JSON.parse(localStorage.getItem("operatorData"));
-    const currentOperatorID = operatorData?.operator_code_id;
-
     setIsLoading(true);
     const start = currentItem - 1;
     const end = currentItem - 1;
@@ -59,14 +52,14 @@ const Leads = () => {
       end,
       setItems,
       setCurrentLead,
-      currentOperatorID,
+      Number(operatorData.operator_code_id),
       operatorData.operator_type
     );
 
     if (lead[0].leads_id) {
       await updateLeads(
         "Aberto",
-        Number(currentOperatorID),
+        Number(operatorData.operator_code_id),
         lead[0].leads_id,
         operatorData.operator_type
       );
@@ -81,11 +74,11 @@ const Leads = () => {
 
   const handleNext = async () => {
     if (window.confirm("Deseja passar para o proximo?")) {
-      if (operatorType === "Operador Casa") {
+      if (operatorData.operator_type === "Operador Casa") {
         if (currentItem < items && currentLead?.leads_id) {
           const data = await updateLeads(
             "Não Atendeu",
-            operatorID,
+            Number(operatorData.operator_code_id),
             currentLead.leads_id,
             "Operador Casa"
           );
@@ -98,7 +91,7 @@ const Leads = () => {
         if (currentItem < items && currentLead?.leads_id) {
           const data = await updateLeads(
             "Não Atendeu",
-            operatorID,
+            Number(operatorData.operator_code_id),
             currentLead.leads_id
           );
           if (data[0].leads_status === "Não Atendeu") {
@@ -112,10 +105,10 @@ const Leads = () => {
 
   const handleNoDonation = async () => {
     if (window.confirm("Confirma que o colaborador não poderá ajudar?")) {
-      if (operatorType === "Operador Casa") {
+      if (operatorData.operator_type === "Operador Casa") {
         const response = await updateLeads(
           "Não pode ajudar",
-          Number(operatorID),
+          Number(operatorData.operator_code_id),
           currentLead.leads_id,
           "Operador Casa"
         );
@@ -126,7 +119,7 @@ const Leads = () => {
       } else {
         const response = await updateLeads(
           "Não pode ajudar",
-          Number(operatorID),
+          Number(operatorData.operator_code_id),
           currentLead.leads_id
         );
         if (response.length > 0) {
@@ -154,7 +147,7 @@ const Leads = () => {
       toast.warning("Preencha data e telefone usado para contato...")
       return;
     }
-    if (operatorType === "Operador Casa") {
+    if (operatorData.operator_type === "Operador Casa") {
       typeOperator = "leads_casa";
     } else {
       typeOperator = "leads";
@@ -189,7 +182,7 @@ const Leads = () => {
 
   const handleNewDonationSave = async (formData) => {
     let type;
-    if (operatorType === "Operador Casa") {
+    if (operatorData.operator_type === "Operador Casa") {
       type = "leads_casa";
     } else {
       type = "leads";
@@ -244,7 +237,7 @@ const Leads = () => {
                 .insert([
                   {
                     donor_id: data[0].donor_id,
-                    operator_code_id: operatorID,
+                    operator_code_id: operatorData.operator_code_id,
                     donation_value: formData.valueDonation,
                     donation_day_contact: DataNow("noformated"),
                     donation_day_to_receive: formData.dateDonation,
@@ -290,6 +283,7 @@ const Leads = () => {
         {/* Header */}
         <header className="leads-header">
           <h2 className="leads-title">{ICONS.CIRCLEOUTLINE} Gerenciar Leads</h2>
+          <button className="leads-btn secondary" onClick={() => setIsModalHistoryOpen(true)}>Histórico de Leads</button>
           <div className="leads-stats">
             <span className="leads-counter">Lead {currentItem} de {items}</span>
           </div>
@@ -413,7 +407,7 @@ const Leads = () => {
         onClose={() => setIsModalNewDonationOpen(false)}
         currentLead={currentLead}
         onSave={handleNewDonationSave}
-        operatorID={operatorID}
+        operatorID={operatorData.operator_code_id}
       />
 
       <ModalScheduling
@@ -422,6 +416,13 @@ const Leads = () => {
         currentLead={currentLead}
         onSave={handleSchedulingSave}
       />
+
+      {isModalHistoryOpen && (
+        <ModalHistory
+          onClose={() => setIsModalHistoryOpen(false)}
+          operatorData={operatorData}
+        />
+      )}
     </main>
   );
 };

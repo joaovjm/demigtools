@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ICONS } from "../../constants/constants";
 import FormInput from "../forms/FormInput";
 import "./index.css";
@@ -7,8 +7,7 @@ const ModalNewDonation = ({
   isOpen, 
   onClose, 
   currentLead, 
-  onSave,
-  operatorID 
+  onSave
 }) => {
   const [formData, setFormData] = useState({
     address: "",
@@ -25,7 +24,7 @@ const ModalNewDonation = ({
   });
 
   // Preencher campos com dados do lead quando o modal abrir
-  React.useEffect(() => {
+  useEffect(() => {
     if (isOpen && currentLead) {
       setFormData(prev => ({
         ...prev,
