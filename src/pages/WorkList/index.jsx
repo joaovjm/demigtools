@@ -122,82 +122,136 @@ const WorkList = () => {
   };
 
   return (
-    <div className="worklist-container">
-      <div className="input-field">
-        <label>Lista de trabalho</label>
-        <select value={workSelect} onChange={handleChange}>
-          <option value="" disabled>
-            Selecione...
-          </option>
-          {worklist &&
-            worklist?.map((list, index) => (
-              <option value={list.name} key={index}>
-                {list.name}
-              </option>
-            ))}
-        </select>
-      </div>
-      {loading ? (
-        <p>CARREGANDO...</p>
-      ) : worklistRequest?.length > 0 ? (
-        <div className="worklist-list">
-          <table>
-            <thead className="worklist-list-head">
-              <tr className="worklist-list-head-tr">
-                <th>Nome</th>
-                <th>Valor</th>
-                <th>Data Recebida</th>
-                <th>Status</th>
-                <th>Data Abertura</th>
-              </tr>
-            </thead>
-            <tbody className="worklist-list-body">
-              {worklistRequest?.map((list) => (
-                <tr
-                  className={`worklist-list-body-tr ${
-                    active === list.receipt_donation_id
-                      ? "active"
-                      : list.request_status === "NP"
-                      ? "NP"
-                      : list.request_status === "Sucesso"
-                      ? "Sucesso"
-                      : list.request_status === "NA"
-                      ? "NA"
-                      : list.request_status === "Agendado"
-                      ? "Agendado"
-                      : ""
-                  }`}
-                  key={list.receipt_donation_id}
-                  onClick={() => handleRequest(list)}
-                >
-                  <td>{list.donor.donor_name}</td>
-                  <td>
-                    {list.donation.donation_value.toLocaleString("pt-BR", {
-                      style: "currency",
-                      currency: "BRL",
-                    })}
-                  </td>
-                  <td>{DataSelect(list.donation.donation_day_received)}</td>
-                  <td>{list.request_status}</td>
-                  <td>
-                    {list?.request_date_accessed
-                      ? `${
-                          new Date(
-                            list?.request_date_accessed
-                          ).toLocaleDateString("pt-BR") || ""
-                        } - ${new Date(
-                          list?.request_date_accessed
-                        ).toLocaleTimeString("pt-BR")}`
-                      : ""}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+    <main className="worklist-container">
+      <div className="worklist-content">
+        {/* Header Section */}
+        <header className="worklist-header">
+          <h2 className="worklist-title">📋 Lista de Trabalho</h2>
+          <div className="worklist-actions">
+            <div className="worklist-select-container">
+              <label className="worklist-select-label">Selecionar Lista</label>
+              <select 
+                value={workSelect} 
+                onChange={handleChange}
+                className="worklist-select"
+                disabled={loading}
+              >
+                <option value="" disabled>
+                  Selecione uma lista...
+                </option>
+                {worklist &&
+                  worklist?.map((list, index) => (
+                    <option value={list.name} key={index}>
+                      {list.name}
+                    </option>
+                  ))}
+              </select>
+            </div>
+          </div>
+        </header>
+
+        {/* Content Section */}
+        <div className="worklist-main-content">
+          {loading ? (
+            <div className="worklist-loading">
+              <div className="loading-spinner"></div>
+              <p>Carregando lista de trabalho...</p>
+            </div>
+          ) : worklistRequest?.length > 0 ? (
+            <div className="worklist-table-container">
+              <div className="worklist-table-header">
+                <div className="worklist-table-stats">
+                  <span className="stats-item">
+                    <strong>{worklistRequest.length}</strong> {worklistRequest.length === 1 ? 'item' : 'itens'}
+                  </span>
+                  <span className="stats-item">
+                    Lista: <strong>{workSelect}</strong>
+                  </span>
+                </div>
+              </div>
+
+              <div className="worklist-table-scroll">
+                <table className="worklist-table">
+                  <thead>
+                    <tr className="worklist-table-head-row">
+                      <th className="worklist-table-head">Doador</th>
+                      <th className="worklist-table-head">Valor</th>
+                      <th className="worklist-table-head">Data Recebida</th>
+                      <th className="worklist-table-head">Status</th>
+                      <th className="worklist-table-head">Data Abertura</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {worklistRequest?.map((list) => (
+                      <tr
+                        className={`worklist-table-row ${
+                          active === list.receipt_donation_id
+                            ? "active"
+                            : list.request_status === "NP"
+                            ? "status-np"
+                            : list.request_status === "Sucesso"
+                            ? "status-success"
+                            : list.request_status === "NA"
+                            ? "status-na"
+                            : list.request_status === "Agendado"
+                            ? "status-scheduled"
+                            : ""
+                        }`}
+                        key={list.receipt_donation_id}
+                        onClick={() => handleRequest(list)}
+                      >
+                        <td className="worklist-table-cell">
+                          <div className="donor-info">
+                            <span className="donor-name">{list.donor.donor_name}</span>
+                          </div>
+                        </td>
+                        <td className="worklist-table-cell">
+                          <span className="value-amount">
+                            {list.donation.donation_value.toLocaleString("pt-BR", {
+                              style: "currency",
+                              currency: "BRL",
+                            })}
+                          </span>
+                        </td>
+                        <td className="worklist-table-cell">
+                          <span className="date-info">
+                            {DataSelect(list.donation.donation_day_received)}
+                          </span>
+                        </td>
+                        <td className="worklist-table-cell">
+                          <span className={`status-badge status-${list?.request_status?.toLowerCase()}`}>
+                            {list.request_status}
+                          </span>
+                        </td>
+                        <td className="worklist-table-cell">
+                          <span className="date-info">
+                            {list?.request_date_accessed
+                              ? `${new Date(list?.request_date_accessed).toLocaleDateString("pt-BR")} - ${new Date(list?.request_date_accessed).toLocaleTimeString("pt-BR")}`
+                              : "—"}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ) : workSelect ? (
+            <div className="worklist-empty">
+              <div className="empty-icon">📋</div>
+              <h4>Nenhum item encontrado</h4>
+              <p>A lista "{workSelect}" não possui itens disponíveis.</p>
+            </div>
+          ) : (
+            <div className="worklist-empty">
+              <div className="empty-icon">📋</div>
+              <h4>Selecione uma lista</h4>
+              <p>Escolha uma lista de trabalho para visualizar os itens.</p>
+            </div>
+          )}
         </div>
-      ) : (
-        <></>
-      )}
+      </div>
+
       {modalOpen && (
         <ModalWorklist
           setModalOpen={setModalOpen}
@@ -206,7 +260,7 @@ const WorkList = () => {
           workSelect={workSelect}
         />
       )}
-    </div>
+    </main>
   );
 };
 

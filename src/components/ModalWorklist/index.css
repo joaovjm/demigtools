@@ -1,165 +1,703 @@
+/* Modal Worklist Container */
 .modal-worklist {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
   overflow-y: auto;
-  padding: 1rem;
+  padding: 20px;
+  backdrop-filter: blur(4px);
 }
 
 .modal-worklist-main {
-  width: 768px;
-  max-height: 86vh;
-  overflow-y: auto;
-  border: 3px double #383838;
-  border-radius: 6px;
-  background-color: #1f1d1d;
-}
-
-.modal-worklist-main-header {
-  display: flex;
-  justify-content: space-between;
-  margin: 6px;
-  padding: 6px;
-  border-radius: 6px;
-}
-
-.modal-worklist-main-header h3 {
-  text-decoration: underline 2px;
-  text-underline-offset: 6px;
-}
-
-.modal-worklist-main-header button {
-  padding: 4px 8px;
-  cursor: pointer;
-  border: none;
-  border-radius: 6px;
-  background-color: #c70000;
-  color: #faf5e9;
-
-  &:hover {
-    opacity: 0.8;
-  }
-}
-
-.modal-worklist-main-body {
-  display: flex;
-  justify-content: space-between;
-  gap: 6px;
-  margin: 6px;
-  padding: 6px;
-  border-radius: 6px;
-}
-
-.modal-worklist-main-body-tel {
-  display: flex;
-  flex-direction: column;
-}
-
-.modal-worklist-main-body-values {
-  display: flex;
-  flex-direction: column;
-}
-
-.modal-worklist-main-buttons {
-  display: flex;
-  justify-content: space-evenly;
-  margin: 6px;
-  padding: 6px;
-
-  border-radius: 6px;
-}
-
-button {
-  padding: 8px 12px;
-  border: none;
-  border-radius: 6px;
-  color: #faf5e9;
-  cursor: pointer;
-
-  &:hover {
-    opacity: 0.8;
-  }
-}
-
-.modal-worklist-main-buttons button:nth-child(1) {
-  background-color: #c70000;
-}
-
-.modal-worklist-main-buttons button:nth-child(2) {
-  background-color: #faa01c;
-}
-
-.modal-worklist-main-buttons button:nth-child(3) {
-  background-color: #385bad;
-}
-.modal-worklist-main-buttons button:nth-child(4) {
-  background-color: green;
-}
-
-.modal-worklist-main-newdonation-header {
-  display: flex;
-  justify-content: space-between;
-  margin: 6px;
-  padding: 6px;
-}
-
-.modal-worklist-main-newdonation-body {
-  input-group {
-    & .input-field {
-      width: 100%;
-    }
-  }
-}
-
-.modal-worklist-main-newdonation-footer {
-  display: flex;
-  justify-content: center;
-  gap: 32px;
-  padding: 12px;
-}
-
-.modal-worklist-main-newdonation-footer button:nth-child(1) {
-  background-color: #c70000;
-}
-
-.modal-worklist-main-newdonation-footer button:nth-child(2) {
-  background-color: #385bad;
-}
-
-.schedulingWorkList {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 100%;
-  height: 100%;
-  padding: 12px;
-}
-
-.schedulingWorkList-form {
+  max-width: 800px;
+  max-height: 85vh;
+  overflow-y: auto;
+  border: 3px double #363a3d;
+  border-radius: 8px;
+  background-color: #1f1d1d;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 60%;
-  max-height: 30%;
-
-  .input-field{
-    width: 70%;
-    max-height: 80px;
-  }
 }
 
-.schedulingWorkList-foot{
+/* Header Styles */
+.modal-worklist-header {
   display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #363a3d 0%, #2f2d2d 100%);
+  border-bottom: 2px solid #464a4d;
+  border-radius: 8px 8px 0 0;
+}
+
+.modal-worklist-header-content {
+  flex: 1;
+}
+
+.modal-worklist-title {
+  color: #faa01c;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.donor-icon {
+  font-size: 20px;
+  filter: drop-shadow(0 2px 4px rgba(250, 160, 28, 0.3));
+}
+
+.modal-worklist-request-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.request-label {
+  color: #9e9e9e;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.request-name {
+  color: #faf5e9;
+  font-size: 12px;
+  font-weight: 600;
+  background-color: #363a3d;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid #464a4d;
+}
+
+.modal-worklist-close-btn {
+  background-color: #f44336;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(244, 67, 54, 0.3);
+}
+
+.modal-worklist-close-btn:hover {
+  background-color: #d32f2f;
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(244, 67, 54, 0.4);
+}
+
+/* Body Styles */
+.modal-worklist-body {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
   gap: 16px;
 }
 
-.btn-cencel{
-  background-color: #c70000;
+.modal-worklist-section {
+  background-color: #363a3d;
+  border: 2px solid #2f2d2d;
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.section-title {
+  color: #faa01c;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 10px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #464a4d;
+  padding-bottom: 6px;
+}
+
+/* Contact Info Grid */
+.contact-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.contact-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px;
+  background-color: #2f2d2d;
+  border-radius: 4px;
+  border: 1px solid #464a4d;
+}
+
+.contact-label {
+  color: #9e9e9e;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.contact-value {
+  color: #faf5e9;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.contact-value.primary {
+  color: #faa01c;
+}
+
+/* Donation Stats Grid */
+.donation-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  background-color: #2f2d2d;
+  border-radius: 6px;
+  border: 1px solid #464a4d;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  border-color: #faa01c;
+  box-shadow: 0 4px 12px rgba(250, 160, 28, 0.2);
+}
+
+.stat-card.highlight {
+  border-color: #faa01c;
+  background: linear-gradient(135deg, #2f2d2d 0%, #3a2f1a 100%);
+  box-shadow: 0 4px 12px rgba(250, 160, 28, 0.3);
+}
+
+.stat-icon {
+  font-size: 16px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #363a3d;
+  border-radius: 6px;
+  border: 1px solid #464a4d;
+}
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+}
+
+.stat-label {
+  color: #9e9e9e;
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  color: #faf5e9;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.stat-card.highlight .stat-value {
+  color: #faa01c;
+}
+
+.stat-date {
+  color: #9e9e9e;
+  font-size: 9px;
+  font-style: italic;
+}
+
+/* Action Buttons */
+.modal-worklist-actions {
+  padding: 16px;
+  background-color: #363a3d;
+  border-top: 2px solid #464a4d;
+  border-radius: 0 0 8px 8px;
+}
+
+.action-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.action-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.action-btn:hover::before {
+  left: 100%;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.action-btn.danger {
+  background-color: #f44336;
+  color: #fff;
+}
+
+.action-btn.danger:hover {
+  background-color: #d32f2f;
+  box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
+}
+
+.action-btn.warning {
+  background-color: #ff9800;
+  color: #fff;
+}
+
+.action-btn.warning:hover {
+  background-color: #f57c00;
+  box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+}
+
+.action-btn.info {
+  background-color: #2196f3;
+  color: #fff;
+}
+
+.action-btn.info:hover {
+  background-color: #1976d2;
+  box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+}
+
+.action-btn.success {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+.action-btn.success:hover {
+  background-color: #388e3c;
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+.action-btn.primary {
+  background-color: #faa01c;
+  color: #1f1d1d;
+}
+
+.action-btn.primary:hover {
+  background-color: #e8901a;
+  box-shadow: 0 6px 20px rgba(250, 160, 28, 0.4);
+}
+
+.btn-icon {
+  font-size: 12px;
+}
+
+.btn-text {
+  font-size: 11px;
+}
+
+/* Form Section Styles */
+.modal-worklist-form-section {
+  padding: 16px;
+  background-color: #363a3d;
+  border: 2px solid #2f2d2d;
+  border-radius: 6px;
+  margin: 16px;
+}
+
+.form-section-header {
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.form-title {
+  color: #faa01c;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 6px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-icon {
+  font-size: 18px;
+}
+
+.form-description {
+  color: #9e9e9e;
+  font-size: 12px;
+  margin: 0;
+  font-style: italic;
+}
+
+.form-section-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-label {
+  color: #faf5e9;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  padding: 8px 12px;
+  background-color: #2f2d2d;
+  border: 1px solid #464a4d;
+  border-radius: 4px;
+  color: #faf5e9;
+  font-size: 12px;
+  outline: none;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: #faa01c;
+  box-shadow: 0 0 0 3px rgba(250, 160, 28, 0.1);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: #9e9e9e;
+}
+
+.form-select {
+  cursor: pointer;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px solid #464a4d;
+}
+
+.form-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  min-width: 120px;
+  justify-content: center;
+}
+
+.form-btn.primary {
+  background-color: #faa01c;
+  color: #1f1d1d;
+  box-shadow: 0 4px 12px rgba(250, 160, 28, 0.3);
+}
+
+.form-btn.primary:hover {
+  background-color: #e8901a;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(250, 160, 28, 0.4);
+}
+
+.form-btn.secondary {
+  background-color: #363a3d;
+  color: #faf5e9;
+  border: 2px solid #464a4d;
+}
+
+.form-btn.secondary:hover {
+  background-color: #464a4d;
+  border-color: #faa01c;
+  transform: translateY(-2px);
+}
+
+/* Scrollbar Styles */
+.modal-worklist-main::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-worklist-main::-webkit-scrollbar-track {
+  background-color: #2f2d2d;
+  border-radius: 4px;
+}
+
+.modal-worklist-main::-webkit-scrollbar-thumb {
+  background-color: #464a4d;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.modal-worklist-main::-webkit-scrollbar-thumb:hover {
+  background-color: #faa01c;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .modal-worklist {
+    padding: 8px;
+  }
+  
+  .modal-worklist-main {
+    max-width: 100%;
+    max-height: 95vh;
+  }
+  
+  .modal-worklist-header {
+    padding: 10px 12px;
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+  }
+  
+  .modal-worklist-title {
+    font-size: 16px;
+    justify-content: center;
+  }
+  
+  .modal-worklist-close-btn {
+    align-self: center;
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+  
+  .modal-worklist-body {
+    padding: 12px;
+    gap: 12px;
+  }
+  
+  .modal-worklist-section {
+    padding: 10px;
+  }
+  
+  .section-title {
+    font-size: 13px;
+  }
+  
+  .contact-info-grid,
+  .donation-stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .action-buttons-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .action-btn {
+    padding: 8px 10px;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .form-btn {
+    width: 100%;
+  }
+  
+  .modal-worklist-form-section {
+    margin: 12px;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-worklist {
+    padding: 4px;
+  }
+  
+  .modal-worklist-header {
+    padding: 8px 10px;
+  }
+  
+  .modal-worklist-title {
+    font-size: 14px;
+  }
+  
+  .modal-worklist-body {
+    padding: 8px;
+  }
+  
+  .modal-worklist-section {
+    padding: 8px;
+  }
+  
+  .stat-card {
+    padding: 8px;
+  }
+  
+  .stat-icon {
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+  }
+  
+  .action-btn {
+    padding: 6px 8px;
+    font-size: 10px;
+  }
+  
+  .btn-text {
+    font-size: 10px;
+  }
+  
+  .modal-worklist-form-section {
+    margin: 8px;
+    padding: 8px;
+  }
+  
+  .form-title {
+    font-size: 14px;
+  }
+}
+
+/* High contrast mode for better accessibility */
+@media (prefers-contrast: high) {
+  .modal-worklist-main {
+    border: 3px solid #faa01c;
+  }
+  
+  .section-title {
+    border-bottom: 3px solid #faa01c;
+  }
+  
+  .action-btn {
+    border: 2px solid currentColor;
+  }
+  
+  .form-input:focus,
+  .form-select:focus,
+  .form-textarea:focus {
+    border-width: 3px;
+  }
+}
+
+/* Print styles */
+@media print {
+  .modal-worklist {
+    position: static;
+    background-color: transparent;
+    padding: 0;
+  }
+  
+  .modal-worklist-main {
+    border: 1px solid #000;
+    background-color: #fff;
+    color: #000;
+    box-shadow: none;
+  }
+  
+  .modal-worklist-title {
+    color: #000;
+  }
+  
+  .section-title {
+    color: #000;
+    border-bottom: 1px solid #000;
+  }
+  
+  .action-btn,
+  .form-btn {
+    border: 1px solid #000;
+    background-color: #f0f0f0;
+    color: #000;
+  }
 }

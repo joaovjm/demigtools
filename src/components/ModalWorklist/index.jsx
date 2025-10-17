@@ -145,94 +145,169 @@ const ModalWorklist = ({
   return (
     <div className="modal-worklist">
       <div className="modal-worklist-main">
-        <div className="modal-worklist-main-header">
-          <h3>{donor_name}</h3>
-          <button onClick={handleClose}>Fechar</button>
+        <div className="modal-worklist-header">
+          <div className="modal-worklist-header-content">
+            <h3 className="modal-worklist-title">
+              <span className="donor-icon">👤</span>
+              {donor_name}
+            </h3>
+            <div className="modal-worklist-request-info">
+              <span className="request-label">Solicitação:</span>
+              <span className="request-name">{request_name}</span>
+            </div>
+          </div>
+          <button className="modal-worklist-close-btn" onClick={handleClose}>
+            ✕
+          </button>
         </div>
-        <div className="modal-worklist-main-body">
-          <div className="modal-worklist-main-body-tel">
-            <label>telefone 1: {donor_tel_1}</label>
-            <label>telefone 2:{donor_tel_2 ? donor_tel_2 : "*****-****"}</label>
-            <label>
-              telefone 3: {donor_tel_3 ? donor_tel_3 : "*****-****"}
-            </label>
+        
+        <div className="modal-worklist-body">
+          <div className="modal-worklist-section">
+            <h4 className="section-title">📞 Informações de Contato</h4>
+            <div className="contact-info-grid">
+              <div className="contact-item">
+                <span className="contact-label">Telefone Principal:</span>
+                <span className="contact-value primary">{donor_tel_1}</span>
+              </div>
+              <div className="contact-item">
+                <span className="contact-label">Telefone 2:</span>
+                <span className="contact-value">{donor_tel_2 ? donor_tel_2 : "Não informado"}</span>
+              </div>
+              <div className="contact-item">
+                <span className="contact-label">Telefone 3:</span>
+                <span className="contact-value">{donor_tel_3 ? donor_tel_3 : "Não informado"}</span>
+              </div>
+            </div>
           </div>
 
-          <div className="modal-worklist-main-body-values">
-            <label>
-              Doação anterior:{" "}
-              {penultimate?.[0]?.toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL",
-              })}{" "}
-              |{" "}
-              {new Date(penultimate?.[1])?.toLocaleDateString("pt-BR", {
-                timeZone: "UTC",
-              }) || "**/**/***"}
-            </label>
-            <label>
-              Maior Doação:{" "}
-              {maxDonation?.toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL",
-              })}{" "}
-              | DT:{" "}
-              {new Date(day)?.toLocaleDateString("pt-BR", {
-                timeZone: "UTC",
-              }) || "**/**/***"}
-            </label>
-            <label>
-              Média:{" "}
-              {medDonation?.toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL",
-              })}
-            </label>
+          <div className="modal-worklist-section">
+            <h4 className="section-title">💰 Histórico de Doações</h4>
+            <div className="donation-stats-grid">
+              <div className="stat-card">
+                <div className="stat-icon">📊</div>
+                <div className="stat-content">
+                  <span className="stat-label">Doação Anterior</span>
+                  <span className="stat-value">
+                    {penultimate?.[0]?.toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    }) || "N/A"}
+                  </span>
+                  <span className="stat-date">
+                    {penultimate?.[1] 
+                      ? new Date(penultimate[1]).toLocaleDateString("pt-BR", { timeZone: "UTC" })
+                      : "N/A"
+                    }
+                  </span>
+                </div>
+              </div>
+              
+              <div className="stat-card highlight">
+                <div className="stat-icon">🏆</div>
+                <div className="stat-content">
+                  <span className="stat-label">Maior Doação</span>
+                  <span className="stat-value">
+                    {maxDonation?.toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    }) || "N/A"}
+                  </span>
+                  <span className="stat-date">
+                    {day 
+                      ? new Date(day).toLocaleDateString("pt-BR", { timeZone: "UTC" })
+                      : "N/A"
+                    }
+                  </span>
+                </div>
+              </div>
+              
+              <div className="stat-card">
+                <div className="stat-icon">📈</div>
+                <div className="stat-content">
+                  <span className="stat-label">Média de Doações</span>
+                  <span className="stat-value">
+                    {medDonation?.toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    }) || "N/A"}
+                  </span>
+                  <span className="stat-date">Período analisado</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
         {!newDonationOpen && !newSchedulingOpen ? (
-          <div className="modal-worklist-main-buttons">
-            <button onClick={handleNP}>Não pode ajudar</button>
-            <button onClick={handleNA}>Não atendeu</button>
-            <button onClick={handleSchedulingOpen}>Agendar</button>
-            <button onClick={handleNewDonation}>Nova doação</button>
-            <button onClick={handleOpenDonator}>Abrir Doação</button>
+          <div className="modal-worklist-actions">
+            <div className="action-buttons-grid">
+              <button className="action-btn danger" onClick={handleNP}>
+                <span className="btn-icon">❌</span>
+                <span className="btn-text">Não pode ajudar</span>
+              </button>
+              <button className="action-btn warning" onClick={handleNA}>
+                <span className="btn-icon">📵</span>
+                <span className="btn-text">Não atendeu</span>
+              </button>
+              <button className="action-btn info" onClick={handleSchedulingOpen}>
+                <span className="btn-icon">📅</span>
+                <span className="btn-text">Agendar</span>
+              </button>
+              <button className="action-btn success" onClick={handleNewDonation}>
+                <span className="btn-icon">💰</span>
+                <span className="btn-text">Nova doação</span>
+              </button>
+              <button className="action-btn primary" onClick={handleOpenDonator}>
+                <span className="btn-icon">👤</span>
+                <span className="btn-text">Abrir Doador</span>
+              </button>
+            </div>
           </div>
         ) : (
           <>
             <hr />
             {newDonationOpen ? (
-              <div className="modal-worklist-main-newdonation">
-                <div className="modal-worklist-main-newdonation-header">
-                  <h4> Nova Doação</h4>
+              <div className="modal-worklist-form-section">
+                <div className="form-section-header">
+                  <h4 className="form-title">
+                    <span className="form-icon">💰</span>
+                    Nova Doação
+                  </h4>
+                  <p className="form-description">Preencha os dados da nova doação para este doador</p>
                 </div>
-                <div className="modal-worklist-main-newdonation-body">
-                  <div className="input-group">
-                    <div className="input-field">
-                      <label>Valor</label>
+                
+                <div className="form-section-body">
+                  <div className="form-grid">
+                    <div className="form-group">
+                      <label className="form-label">Valor da Doação *</label>
                       <input
+                        className="form-input"
                         value={value}
                         onChange={(e) => setValue(e.target.value)}
                         type="text"
+                        placeholder="Ex: 50,00"
                       />
                     </div>
-                    <div className="input-field">
-                      <label>Dt. Receber</label>
+                    
+                    <div className="form-group">
+                      <label className="form-label">Data para Receber *</label>
                       <input
+                        className="form-input"
                         value={date}
                         onChange={(e) => setDate(e.target.value)}
                         type="date"
                       />
                     </div>
-                    <div className="input-field">
-                      <label>Campanha</label>
+                    
+                    <div className="form-group">
+                      <label className="form-label">Campanha *</label>
                       <select
+                        className="form-select"
                         value={campainSelected}
                         onChange={(e) => setCampainSelected(e.target.value)}
                       >
                         <option value="" disabled>
-                          Selecione...
+                          Selecione uma campanha...
                         </option>
                         {campains.map((cp) => (
                           <option key={cp.id} value={cp.campain_name}>
@@ -241,79 +316,103 @@ const ModalWorklist = ({
                         ))}
                       </select>
                     </div>
-                    <div
-                      className="input-field"
-                      style={{ gridColumn: "span 2" }}
-                    >
-                      <label>Observação</label>
-                      <input
+                    
+                    <div className="form-group full-width">
+                      <label className="form-label">Observações</label>
+                      <textarea
+                        className="form-textarea"
                         value={observation}
                         onChange={(e) => setObservation(e.target.value)}
-                        type="text"
+                        placeholder="Observações adicionais sobre a doação..."
+                        rows="3"
                       />
                     </div>
                   </div>
-                  <div className="modal-worklist-main-newdonation-footer">
-                    <button onClick={handleCancel}>Cancelar</button>
-                    <button onClick={handleSaveNewDonation}>Salvar</button>
+                  
+                  <div className="form-actions">
+                    <button className="form-btn secondary" onClick={handleCancel}>
+                      <span className="btn-icon">↩️</span>
+                      Cancelar
+                    </button>
+                    <button className="form-btn primary" onClick={handleSaveNewDonation}>
+                      <span className="btn-icon">💾</span>
+                      Salvar Doação
+                    </button>
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="schedulingWorkList">
-                <form className="schedulingWorkList-form">
-                  <h3>Agendamento</h3>
-                  <div className="input-field">
-                    <label>Data</label>
-                    <input
-                      type="date"
-                      value={dateScheduling}
-                      onChange={(e) => setDateScheduling(e.target.value)}
-                    />
+              <div className="modal-worklist-form-section">
+                <div className="form-section-header">
+                  <h4 className="form-title">
+                    <span className="form-icon">📅</span>
+                    Agendamento de Contato
+                  </h4>
+                  <p className="form-description">Agende um novo contato com este doador</p>
+                </div>
+                
+                <div className="form-section-body">
+                  <div className="form-grid">
+                    <div className="form-group">
+                      <label className="form-label">Data do Agendamento *</label>
+                      <input
+                        className="form-input"
+                        type="date"
+                        value={dateScheduling}
+                        onChange={(e) => setDateScheduling(e.target.value)}
+                      />
+                    </div>
+                    
+                    <div className="form-group">
+                      <label className="form-label">Telefone para Contato *</label>
+                      <select
+                        className="form-select"
+                        value={telScheduling}
+                        onChange={(e) => setTelScheduling(e.target.value)}
+                      >
+                        <option value="" disabled>
+                          Selecione o telefone...
+                        </option>
+                        <option value={donor_tel_1}>Principal: {donor_tel_1}</option>
+                        {donor_tel_2 && (
+                          <option value={donor_tel_2}>Secundário: {donor_tel_2}</option>
+                        )}
+                        {donor_tel_3 && (
+                          <option value={donor_tel_3}>Terciário: {donor_tel_3}</option>
+                        )}
+                      </select>
+                    </div>
+                    
+                    <div className="form-group full-width">
+                      <label className="form-label">Observações do Agendamento</label>
+                      <textarea
+                        className="form-textarea"
+                        value={observationScheduling}
+                        onChange={(e) => setObservationScheduling(e.target.value)}
+                        placeholder="Observações sobre o agendamento..."
+                        rows="3"
+                      />
+                    </div>
                   </div>
-                  <div className="input-field">
-                    <label>Telefone contactado</label>
-                    <select
-                      value={telScheduling}
-                      onChange={(e) => setTelScheduling(e.target.value)}
-                    >
-                      <option value="" disabled>
-                        Selecione...
-                      </option>
-                      <option value={donor_tel_1}>{donor_tel_1}</option>
-                      {donor_tel_2 && (
-                        <option value={donor_tel_2}>{donor_tel_2}</option>
-                      )}
-                      {donor_tel_3 && (
-                        <option value={donor_tel_3}>{donor_tel_3}</option>
-                      )}
-                    </select>
-                  </div>
-                  <div className="input-field">
-                    <label>Observação</label>
-                    <textarea
-                      value={observationScheduling}
-                      onChange={(e) => {
-                        setObservationScheduling(e.target.value);
-                      }}
-                    />
-                  </div>
-                  <div className="schedulingWorkList-foot">
+                  
+                  <div className="form-actions">
                     <button
-                      className="btn-cencel"
+                      className="form-btn secondary"
                       onClick={() => setNewSchedulingOpen(false)}
                     >
+                      <span className="btn-icon">↩️</span>
                       Cancelar
                     </button>
                     <button
                       type="button"
-                      className="btn-scheduling"
+                      className="form-btn primary"
                       onClick={handleSchedulingClick}
                     >
-                      Concluir
+                      <span className="btn-icon">✅</span>
+                      Confirmar Agendamento
                     </button>
                   </div>
-                </form>
+                </div>
               </div>
             )}
           </>
