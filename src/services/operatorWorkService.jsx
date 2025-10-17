@@ -1,21 +1,25 @@
 import getReceiveDonationPerOperator from "../helper/getReceiveDonationPerOperator";
 
 const filterName = async (operatorWork) => {
+
   const operator = [
     ...new Map(
       operatorWork?.map((op) => [
-        op.operator_name.operator_name,
-        { name: op.operator_name.operator_name, id: op.operator_code_id },
+        op.operator_name?.operator_name,
+        { name: op.operator_name?.operator_name, id: op.operator_code_id },
       ])
     ).values(),
   ];
+  console.log(operator)
   return operator;
 };
+
+
 
 //Retorna a quantidade de fichas recebidas e o valor total
 const filterValueReceived = (operatorWork, metode) => {
   const countDonation = operatorWork.reduce((acc, item) => {
-    const name = item.operator_name.operator_name;
+    const name = item.operator_name?.operator_name;
     if (item.donation_received === "Sim") {
       acc[name] =
         (acc[name] || 0) + (metode === "count" ? 1 : item.donation_value);
@@ -30,7 +34,7 @@ const filterValueReceived = (operatorWork, metode) => {
 //Retorna a quantidade de fichas não recebidas e o valor total
 const filterValueNotReceived = (operatorWork, metode) => {
   const countDonation = operatorWork.reduce((acc, item) => {
-    const name = item.operator_name.operator_name;
+    const name = item.operator_name?.operator_name;
     if (item.donation_received !== "Sim") {
       acc[name] =
         (acc[name] || 0) + (metode === "count" ? 1 : item.donation_value);
@@ -41,7 +45,7 @@ const filterValueNotReceived = (operatorWork, metode) => {
   return countDonation;
 };
 
-export const operatorWorkService = async (startDate, endDate) => {
+export const operatorWorkService = async ({startDate, endDate, operatorSelected}) => {
 
   const operatorWork = await getReceiveDonationPerOperator(startDate, endDate);
   const names = await filterName(operatorWork);

@@ -35,6 +35,7 @@ const ModalWorklist = ({
   const {
     id,
     donor_id,
+    request_name,
     donor: { donor_name, donor_tel_1 },
   } = workListSelected;
   const donor_tel_2 = workListSelected?.donor_tel_2b?.donor_tel_2?.donor_tel_2;
@@ -127,7 +128,9 @@ const ModalWorklist = ({
       false,
       observation,
       null,
-      campainSelected
+      campainSelected,
+      null,
+      request_name
     );
 
     if (response.length > 0) {

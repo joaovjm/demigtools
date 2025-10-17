@@ -22,7 +22,7 @@
   width: 100%;
   gap: 8px;
   background-color: #1f1d1d;
-  border: none;
+  border: 3px double #363a3d;
   border-radius: 6px;
   padding: 16px;
 }
@@ -31,7 +31,7 @@
   width: 100%;
   max-height: 360px;
   background-color: #1f1d1d;
-  border: none;
+  border: 3px double #363a3d;
   border-radius: 6px;
   overflow-y: auto;
 }
@@ -68,13 +68,15 @@
     height: 40px;
     border: none;
     border-radius: 6px;
-    background-color: #385bad;
-    color: #faf5e9;
+    background-color: #faa01c;
+    color: #1f1d1d;
     padding: 2px;
     cursor: pointer;
 
     &:hover {
-      opacity: 0.8;
+      background-color: #e8901a;
+      box-shadow: 0 4px 12px rgba(250, 160, 28, 0.4);
+      transform: translateY(-1px);
     }
   }
 }
@@ -84,6 +86,7 @@
   flex-direction: column;
   border-radius: 6px;
   background-color: #1f1d1d;
+  border: 3px double #363a3d;
   padding: 12px;
   gap: 12px;
 }
@@ -94,18 +97,19 @@
   width: 100%;
   label {
     min-width: 20%;
-    border-bottom: 1px solid #385bad;
+    border-bottom: 1px solid #faa01c;
   }
   button {
     padding: 0 6px;
     border: none;
     border-radius: 6px;
-    background-color: #385bad;
-    color: #faf5e9;
+    background-color: #faa01c;
+    color: #1f1d1d;
     cursor: pointer;
 
     &:hover {
-      opacity: 0.8;
+      background-color: #e8901a;
+      box-shadow: 0 2px 8px rgba(250, 160, 28, 0.3);
     }
   }
 }
@@ -126,8 +130,35 @@
   grid-template-columns: 1fr 1fr 2fr;
   background-color: #1f1d1d;
   padding: 16px;
+  border: 3px double #363a3d;
   border-radius: 6px;
   gap: 12px;
+  
+  /* Unified input/select style following AdminManager */
+  .input-field label {
+    color: #faf5e9;
+    font-size: 11px;
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+  .input-field input,
+  .input-field select {
+    width: 100%;
+    padding: 6px 8px;
+    background-color: #2f2d2d;
+    border: 2px solid #464a4d;
+    border-radius: 6px;
+    color: #faf5e9;
+    font-size: 12px;
+    outline: none;
+    transition: border-color 0.3s ease;
+    height: 28px;
+    box-sizing: border-box;
+  }
+  .input-field input:focus,
+  .input-field select:focus {
+    border-color: #faa01c;
+  }
 
   & .request-front-left-bottom-2-btn {
     display: flex;
@@ -136,20 +167,36 @@
 
     & .btn-cancel,
     .btn-search {
-      padding: 4px 6px;
-      background-color: #d60b0c;
+      padding: 6px 12px;
       border: none;
       border-radius: 6px;
-      color: #faf5e9;
       cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      min-width: 120px;
+      height: 32px;
+    }
 
-      &:hover {
-        opacity: 0.8;
-      }
+    & .btn-cancel {
+      background-color: #d60b0c;
+      color: #faf5e9;
+    }
+
+    & .btn-cancel:hover {
+      opacity: 0.85;
+      transform: translateY(-1px);
     }
 
     & .btn-search {
-      background-color: #385bad;
+      background-color: #faa01c;
+      color: #1f1d1d;
+    }
+
+    & .btn-search:hover {
+      background-color: #e8901a;
+      box-shadow: 0 4px 12px rgba(250, 160, 28, 0.4);
+      transform: translateY(-1px);
     }
   }
 }
@@ -241,13 +288,13 @@
   }
 
   &:hover {
-    background-color: #faa01c;
+    background-color: rgba(250, 160, 28, 0.2);
   }
 }
 
 .table-row.selected {
   background-color: #faa01c;
-  color: #faf5e9;
+  color: #1f1d1d;
 }
 
 .request-front-left-bottom-3-table-btn {
@@ -293,6 +340,7 @@
   max-height: 520px;
   padding: 16px;
   background-color: #1f1d1d;
+  border: 3px double #363a3d;
   border-radius: 6px;
   
 }
@@ -325,24 +373,25 @@
 .request-front-right-bottom-cancel,
 .request-front-right-bottom-reset,
 .request-front-right-bottom-conclude {
-  padding: 4px 12px;
-  background-color: #d60b0c;
+  padding: 8px 16px;
   border: none;
   border-radius: 6px;
-  color: #faf5e9;
   cursor: pointer;
-
-  &:hover {
-    opacity: 0.8;
-  }
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  min-width: 120px;
+  height: 32px;
 }
 
 .request-front-right-bottom-conclude {
-  background-color: #385bad;
+  background-color: #faa01c;
+  color: #1f1d1d;
 }
 
 .request-front-right-bottom-reset {
-  background-color: #faa01c;
+  background-color: #363a3d;
+  color: #faf5e9;
 }
 
 .request-front-right-card {
@@ -351,7 +400,7 @@
   padding: 4px;
   font-size: 11px;
   font-weight: bold;
-  border: 3px double #383838;
+  border: 3px double #363a3d;
   border-radius: 6px;
 
   h4 {
@@ -406,14 +455,14 @@
     font-size: 16px;
   }
   .btn-add-card {
-    background-color: green;
+    background-color: #2d7a2d;
     border: none;
     border-radius: 6px;
     color: #faf5e9;
     cursor: pointer;
 
     &:hover {
-      opacity: 0.8;
+      opacity: 0.9;
     }
   }
 }

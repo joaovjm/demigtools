@@ -13,8 +13,8 @@ const getPackage = async ({ type, startDate, endDate }) => {
       .gte("donation_day_received", startDate)
       .lte("donation_day_received", endDate)
       .order("donation_value", { ascending: false });
-
-
+    
+    //Aqui tem
     if (data?.length > 0) {
       const newPackage = data.map((item) => {
         return {
@@ -29,6 +29,7 @@ const getPackage = async ({ type, startDate, endDate }) => {
           donor_type: item?.donor?.donor_type,
         };
       });
+      console.log(newPackage)
       const count = newPackage.reduce((acc, curr) => {
         acc[curr.donor_id] = (acc[curr.donor_id] || 0) + 1;
         return acc;
@@ -45,12 +46,17 @@ const getPackage = async ({ type, startDate, endDate }) => {
 
         return selected;
       });
+      console.log(filteredDp)
 
       const unit = newPackage.filter(
         (dt) => !duplicate.includes(String(dt.donor_id))
       );
 
+      //Chegou aqui
+
       const filteredPackage = [...unit, ...filteredDp];
+
+      //Chegou aqui
 
       const { data: compareData, error: errorData } = await supabase
         .from("donation")

@@ -1,4 +1,3 @@
-import { toast } from "react-toastify";
 import supabase from "./superBaseClient";
 
 export const insertDonation = async (
@@ -14,7 +13,8 @@ export const insertDonation = async (
   mesref,
   campain,
   collector,
-  monthly_fee_history_id
+  monthly_fee_history_id,
+  request_name
 ) => {
   let print = "";
   let received = "";
@@ -47,6 +47,7 @@ export const insertDonation = async (
         donation_campain: campain ? campain : null,
         collector_code_id: collector ? collector : null,
         monthly_fee_history_id: monthly_fee_history_id ? monthly_fee_history_id : null,
+        donation_worklist: request_name ? request_name : null,
       },
     ]).select();
     
