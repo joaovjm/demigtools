@@ -90,8 +90,8 @@ const getDonationNotReceived = (
       }
       // Em aberto
       if (
-        (operatorType === "Operador" && operatorID === item.operator_code_id) && item.collector_code_id !== 11||
-        operatorType === "Admin" && item.collector_code_id !== 11
+        (operatorType === "Operador" && operatorID === item.operator_code_id) && item.collector_code_id !== 10 ||
+        operatorType === "Admin" && item.collector_code_id !== 10
       ) {
         
         fillFullNotReceivedDonations(item);
