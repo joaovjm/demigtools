@@ -88,6 +88,7 @@ const getDonationNotReceived = (
           fillDonationConfirmation(item);
         }
       }
+      
       // Em aberto
       if (
         (operatorType === "Operador" && operatorID === item.operator_code_id) && item.collector_code_id !== 10 ||
