@@ -15,6 +15,7 @@ export const getOperators = async ({ active, item, from, to }) => {
   
   const { data, error } = await query
   if (data) {
+    console.log(data)
     return data;
   }
   if (error) {

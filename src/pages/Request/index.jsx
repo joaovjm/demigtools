@@ -5,6 +5,7 @@ import DonationValues from "../../components/Request/DonationValues";
 import CreatePackage from "../../components/Request/CreatePackage";
 import DonationTable from "../../components/Request/DonationTable";
 import RequestCard from "../../components/Request/RequestCard";
+import RequestsTable from "../../components/Request/RequestsTable";
 import {
   addEndDataInCreatePackage,
   distributePackageService,
@@ -34,12 +35,13 @@ const Request = () => {
   const [selection, setSelection] = useState([]);
   const [endDateRequest, setEndDateRequest] = useState("");
   const [buttonTest, setButtonTest] = useState(false);
+  const [showCreatePackage, setShowCreatePackage] = useState(false);
 
   const divRef = useRef();
 
   useEffect(() => {
     if (createPackage.length > 0) {
-      // Scroll automático para o final da tela quando a Etapa 2 aparecer
+      // Scroll automático para o final da tela quando a Etapa 1 aparecer
       setTimeout(() => {
         window.scrollTo({
           top: document.documentElement.scrollHeight,
@@ -64,7 +66,7 @@ const Request = () => {
 
   useEffect(() => {
     fetchOperatorID(setOperatorID, setOperatorIDState);
-  }, [cancelClick]);
+  }, [showCreatePackage]);
 
   const handleCancel = () => {
     setCurrentStep(1);
@@ -77,6 +79,24 @@ const Request = () => {
     setSelected(null);
     setContinueClick(false);
     setCancelClick((c) => !c);
+    setCreatePackageState([]);
+    setOperatorIDState([]);
+    setButtonTest(false);
+    setEndDateRequest("");
+    setShowCreatePackage(false);
+  };
+
+  const handleStartNewPackage = () => {
+    setShowCreatePackage(true);
+    setCurrentStep(1);
+    setCreatePackage([]);
+    setDate([]);
+    setPerOperator({});
+    setUnassigned([]);
+    setOperatorID([]);
+    setOperatorName({});
+    setSelected(null);
+    setContinueClick(false);
     setCreatePackageState([]);
     setOperatorIDState([]);
     setButtonTest(false);
@@ -135,6 +155,8 @@ const Request = () => {
     setCurrentStep(3);
   };
 
+  console.log(operatorID);
+
   const renderStepContent = () => {
     switch (currentStep) {
       case 1:
@@ -145,6 +167,7 @@ const Request = () => {
               setCreatePackage={setCreatePackage}
               setDate={setDate}
               date={date}
+              setShowCreatePackage={setShowCreatePackage}
             />
 
             {createPackage.length > 0 && (
@@ -245,38 +268,58 @@ const Request = () => {
   return (
     <div className="request-main">
       <div className="request-container">
-        {/* Header com navegação das etapas */}
-        <div className="request-header">
-          <h2 className="request-title">
-            {ICONS.MONEY} Gerenciamento de Requisições
-          </h2>
-          <div className="request-steps">
-            <div
-              className={`step ${currentStep >= 1 ? "active" : ""} ${
-                currentStep > 1 ? "completed" : ""
-              }`}
-            >
-              <span className="step-number">1</span>
-              <span className="step-label">Criar Pacote</span>
-            </div>
-            <div
-              className={`step ${currentStep >= 2 ? "active" : ""} ${
-                currentStep > 2 ? "completed" : ""
-              }`}
-            >
-              <span className="step-number">2</span>
-              <span className="step-label">Valores</span>
-            </div>
-
-            <div className={`step ${currentStep >= 3 ? "active" : ""}`}>
-              <span className="step-number">3</span>
-              <span className="step-label">Distribuir</span>
+        {/* Header compacto com navegação das etapas - só aparece quando showCreatePackage é true */}
+        {showCreatePackage && (
+          <div className="request-header-compact">
+            <h2 className="request-title-compact">
+              {ICONS.MONEY} Gerenciamento de Requisições
+            </h2>
+            <div className="request-steps-compact">
+              <div
+                className={`step-compact ${currentStep >= 1 ? "active" : ""} ${
+                  currentStep > 1 ? "completed" : ""
+                }`}
+              >
+                <span className="step-number-compact">1</span>
+                <span className="step-label-compact">Criar Pacote</span>
+              </div>
+              <div
+                className={`step-compact ${currentStep >= 2 ? "active" : ""} ${
+                  currentStep > 2 ? "completed" : ""
+                }`}
+              >
+                <span className="step-number-compact">2</span>
+                <span className="step-label-compact">Valores</span>
+              </div>
+              <div className={`step-compact ${currentStep >= 3 ? "active" : ""}`}>
+                <span className="step-number-compact">3</span>
+                <span className="step-label-compact">Distribuir</span>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Conteúdo da etapa atual */}
-        <div className="request-content">{renderStepContent()}</div>
+        {/* Tabela de Requisições Criadas */}
+        {!showCreatePackage && (
+          <RequestsTable />
+        )}
+
+        {/* Botão para iniciar criação de novo pacote */}
+        {!showCreatePackage && (
+          <div className="new-package-button-container">
+            <button 
+              onClick={handleStartNewPackage}
+              className="request-btn primary new-package-btn"
+            >
+              {ICONS.PLUS} Criar Novo Pacote
+            </button>
+          </div>
+        )}
+
+        {/* Conteúdo da etapa atual - só aparece quando showCreatePackage é true */}
+        {showCreatePackage && (
+          <div className="request-content">{renderStepContent()}</div>
+        )}
       </div>
     </div>
   );

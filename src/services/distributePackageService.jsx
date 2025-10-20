@@ -49,10 +49,10 @@ export async function fetchOperatorID (setOperatorID, setOperatorIDState) {
     active: true,
     item: "operator_name, operator_code_id, operator_type"}
   );
+ 
   const opFilter = response
     .filter((op) => op.operator_type === "Operador" || op.operator_type === "Operador Casa")
     .map((op) => op.operator_code_id);
-
 
   setOperatorID(opFilter);
   setOperatorIDState(opFilter);

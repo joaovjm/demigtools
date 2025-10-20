@@ -2,12 +2,14 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import Loader from "../Loader";
 import getPackage from "../../helper/getPackage";
+import { FaTimes } from "react-icons/fa";
 
 const CreatePackage = ({
   createPackage,
   setCreatePackage,
   setDate,
   date,
+  setShowCreatePackage,
 }) => {
   const [requestPackage, setRequestPackage] = useState({
     name: "",
@@ -154,6 +156,9 @@ const CreatePackage = ({
           </div>
 
           <div className="form-actions">
+            <button onClick={() => setShowCreatePackage(false)} className="request-btn secondary">
+              <FaTimes /> Cancelar
+            </button>
             <button 
               onClick={handleAddData}
               disabled={loading}
@@ -161,6 +166,7 @@ const CreatePackage = ({
             >
               {loading ? <Loader /> : "Criar Pacote"}
             </button>
+            
           </div>
         </div>
       </div>
