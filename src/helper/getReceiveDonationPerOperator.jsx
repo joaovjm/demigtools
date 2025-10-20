@@ -6,7 +6,7 @@ const getReceiveDonationPerOperator = async (startDate, endDate) => {
         const { data, error } = await supabase
     .from("donation")
     .select(
-      "operator_name:operator_code_id(operator_name), operator_code_id, donation_value, donation_received"
+      "operator_name:operator_code_id(operator_name), operator_code_id, donation_extra,donation_value, donation_received"
     )
     .gte("donation_day_received", startDate)
     .lte("donation_day_received", endDate)

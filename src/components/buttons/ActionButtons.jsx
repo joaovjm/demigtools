@@ -1,8 +1,12 @@
 import { ICONS } from "../../constants/constants";
 
-export const BtnEdit = ({ onClick, type, label }) => (
-  <button onClick={onClick} type={type} className="btn-edit">
-    {ICONS.EDIT} {label}
+export const BtnEdit = ({ onClick, type, label, className }) => (
+  <button 
+    onClick={onClick} 
+    type={type} 
+    className={`btn-edit ${label === "Salvar" ? 'saving' : ''} ${className || ''}`}
+  >
+    {label === "Salvar" ? ICONS.SAVE : ICONS.EDIT} {label}
   </button>
 );
 

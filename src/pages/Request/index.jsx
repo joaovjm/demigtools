@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./index.css";
 import DateSelected from "../../components/Request/DateSelected";
 import DonationValues from "../../components/Request/DonationValues";
@@ -15,11 +15,11 @@ import { toast } from "react-toastify";
 import PackagesRequest from "../../components/Request/PackagesRequest";
 import { DataNow } from "../../components/DataTime";
 import ExportToExcel from "../../components/XLSX";
+import { ICONS } from "../../constants/constants";
 
 const Request = () => {
-  const [dataForm, setDataForm] = useState(false);
-  const [filterForm, setFilterForm] = useState(false);
-  const [requestForm, setRequestForm] = useState(false);
+  // Sistema de etapas
+  const [currentStep, setCurrentStep] = useState(1);
   const [createPackage, setCreatePackage] = useState([]);
   const [date, setDate] = useState([]);
   const [perOperator, setPerOperator] = useState({});
@@ -35,6 +35,20 @@ const Request = () => {
   const [endDateRequest, setEndDateRequest] = useState("");
   const [buttonTest, setButtonTest] = useState(false);
 
+  const divRef = useRef();
+
+  useEffect(() => {
+    if (createPackage.length > 0) {
+      // Scroll automático para o final da tela quando a Etapa 2 aparecer
+      setTimeout(() => {
+        window.scrollTo({
+          top: document.documentElement.scrollHeight,
+          behavior: "smooth",
+        });
+      }, 400); // Pequeno delay para garantir que o conteúdo foi renderizado
+    }
+  }, [createPackage.length]);
+
   useEffect(() => {
     distributePackageService(
       createPackage,
@@ -43,20 +57,17 @@ const Request = () => {
       setOperatorName
     );
   }, [createPackage]);
+
   useEffect(() => {
-    if (continueClick) {
-      setCreatePackageState(createPackage);
-    }
-  }, [continueClick]);
+    setCreatePackageState(createPackage);
+  }, [currentStep === 2]);
 
   useEffect(() => {
     fetchOperatorID(setOperatorID, setOperatorIDState);
   }, [cancelClick]);
 
   const handleCancel = () => {
-    setDataForm(false);
-    setFilterForm(false);
-    setRequestForm(false);
+    setCurrentStep(1);
     setCreatePackage([]);
     setDate([]);
     setPerOperator({});
@@ -69,6 +80,7 @@ const Request = () => {
     setCreatePackageState([]);
     setOperatorIDState([]);
     setButtonTest(false);
+    setEndDateRequest("");
   };
 
   const handleReset = () => {
@@ -97,58 +109,68 @@ const Request = () => {
         error: "Não fio possível criar o pacote! Contacte o administrador!",
       });
 
-      setDataForm(false);
-      setFilterForm(false);
-      setRequestForm(false);
-      setCreatePackage([]);
-      setDate([]);
-      setPerOperator({});
-      setUnassigned([]);
-      setOperatorID([]);
-      setOperatorName({});
-      setSelected(null);
-      setContinueClick(false);
-      setCancelClick(false);
-      setCreatePackageState([]);
-      setOperatorIDState([]);
-      setEndDateRequest("");
+      handleCancel();
     } catch (error) {
       console.error(error.message);
     }
   };
 
-  return (
-    <div className="request-main">
-      <div className="request-front">
-        <div className="request-front-left">
-          {!filterForm && !requestForm && (
+  /*const handleNextStep = () => {
+    if (currentStep < 4) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const handlePrevStep = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };*/
+
+  const handleStep1Complete = () => {
+    setCurrentStep(2);
+  };
+
+  const handleStep2Complete = () => {
+    setCurrentStep(3);
+  };
+
+  const renderStepContent = () => {
+    switch (currentStep) {
+      case 1:
+        return (
+          <>
             <CreatePackage
-              setDataForm={setDataForm}
               createPackage={createPackage}
               setCreatePackage={setCreatePackage}
               setDate={setDate}
               date={date}
             />
-          )}
 
-          {!dataForm && !filterForm && !requestForm && <PackagesRequest />}
+            {createPackage.length > 0 && (
+              <DateSelected
+                date={date}
+                onComplete={handleStep1Complete}
+                onCancel={handleCancel}
+                divRef={divRef}
+              />
+            )}
+          </>
+        );
+      case 2:
+        return (
+          <DonationValues
+            createPackage={createPackage}
+            onComplete={handleStep2Complete}
+            onCancel={handleCancel}
+            divRef={divRef}
+          />
+        );
 
-          {dataForm ? (
-            <DateSelected
-              date={date}
-              setDataForm={setDataForm}
-              setFilterForm={setFilterForm}
-              setContinueClick={setContinueClick}
-            />
-          ) : filterForm ? (
-            <DonationValues
-              createPackage={createPackage}
-              setFilterForm={setFilterForm}
-              setRequestForm={setRequestForm}
-              handleCancel={handleCancel}
-            />
-          ) : (
-            requestForm && (
+      case 3:
+        return (
+          <div className="request-step-4">
+            <div className="request-step-4-left">
               <DonationTable
                 unassigned={unassigned}
                 selected={selected}
@@ -160,69 +182,101 @@ const Request = () => {
                 buttonTest={buttonTest}
                 setButtonTest={setButtonTest}
               />
-            )
-          )}
-        </div>
-        {requestForm && (
-          <div className="request-front-right">
-            <div className="request-front-right-body">
-              {operatorID?.map((cp) => (
-                <RequestCard
-                  perOperator={perOperator[cp]}
-                  setPerOperator={setPerOperator}
-                  key={cp}
-                  operatorName={operatorName[cp]}
-                  operatorID={cp}
-                  selected={selected}
-                  setSelected={setSelected}
-                  createPackage={createPackage}
-                  setCreatePackage={setCreatePackage}
-                  unassigned={unassigned}
-                  setUnassigned={setUnassigned}
-                  allOperator={operatorID}
-                  setAllOperator={setOperatorID}
-                  selection={selection}
-                  setSelection={setSelection}
-                />
-              ))}
             </div>
-            <div className="request-front-right-bottom">
-              <div className="input-field">
-                <label>Data fim da requisição</label>
-                <input
-                  type="date"
-                  value={endDateRequest}
-                  onChange={(e) => setEndDateRequest(e.target.value)}
-                />
+            <div className="request-step-4-right">
+              <div className="request-step-4-right-body">
+                {operatorID?.map((cp) => (
+                  <RequestCard
+                    perOperator={perOperator[cp]}
+                    setPerOperator={setPerOperator}
+                    key={cp}
+                    operatorName={operatorName[cp]}
+                    operatorID={cp}
+                    selected={selected}
+                    setSelected={setSelected}
+                    createPackage={createPackage}
+                    setCreatePackage={setCreatePackage}
+                    unassigned={unassigned}
+                    setUnassigned={setUnassigned}
+                    allOperator={operatorID}
+                    setAllOperator={setOperatorID}
+                    selection={selection}
+                    setSelection={setSelection}
+                  />
+                ))}
               </div>
-              <button
-                onClick={handleCancel}
-                className="request-front-right-bottom-cancel"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={handleReset}
-                className="request-front-right-bottom-reset"
-              >
-                Resetar
-              </button>
-              {buttonTest ? (
-                <ExportToExcel
-                  jsonData={createPackage}
-                  fileName={createPackage[0].request_name}
-                />
-              ) : (
-                <button
-                  onClick={handleConclude}
-                  className="request-front-right-bottom-conclude"
-                >
-                  Concluir
+              <div className="request-step-4-right-bottom">
+                <div className="input-field">
+                  <label>Data fim da requisição</label>
+                  <input
+                    type="date"
+                    value={endDateRequest}
+                    onChange={(e) => setEndDateRequest(e.target.value)}
+                  />
+                </div>
+                <button onClick={handleCancel} className="request-btn cancel">
+                  Cancelar
                 </button>
-              )}
+                <button onClick={handleReset} className="request-btn reset">
+                  Resetar
+                </button>
+                {buttonTest ? (
+                  <ExportToExcel
+                    jsonData={createPackage}
+                    fileName={createPackage[0].request_name}
+                  />
+                ) : (
+                  <button
+                    onClick={handleConclude}
+                    className="request-btn conclude"
+                  >
+                    Concluir
+                  </button>
+                )}
+              </div>
             </div>
           </div>
-        )}
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="request-main">
+      <div className="request-container">
+        {/* Header com navegação das etapas */}
+        <div className="request-header">
+          <h2 className="request-title">
+            {ICONS.MONEY} Gerenciamento de Requisições
+          </h2>
+          <div className="request-steps">
+            <div
+              className={`step ${currentStep >= 1 ? "active" : ""} ${
+                currentStep > 1 ? "completed" : ""
+              }`}
+            >
+              <span className="step-number">1</span>
+              <span className="step-label">Criar Pacote</span>
+            </div>
+            <div
+              className={`step ${currentStep >= 2 ? "active" : ""} ${
+                currentStep > 2 ? "completed" : ""
+              }`}
+            >
+              <span className="step-number">2</span>
+              <span className="step-label">Valores</span>
+            </div>
+
+            <div className={`step ${currentStep >= 3 ? "active" : ""}`}>
+              <span className="step-number">3</span>
+              <span className="step-label">Distribuir</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Conteúdo da etapa atual */}
+        <div className="request-content">{renderStepContent()}</div>
       </div>
     </div>
   );

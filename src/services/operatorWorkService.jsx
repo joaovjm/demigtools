@@ -10,7 +10,6 @@ const filterName = async (operatorWork) => {
       ])
     ).values(),
   ];
-  console.log(operator)
   return operator;
 };
 
@@ -23,6 +22,21 @@ const filterValueReceived = (operatorWork, metode) => {
     if (item.donation_received === "Sim") {
       acc[name] =
         (acc[name] || 0) + (metode === "count" ? 1 : item.donation_value);
+      return acc;
+    }
+    return acc;
+  }, {});
+
+  return countDonation;
+};
+
+//Retorna o valor extra recebido
+const filterValueExtraReceived = (operatorWork, metode) => {
+  const countDonation = operatorWork.reduce((acc, item) => {
+    const name = item.operator_name?.operator_name;
+    if (item.donation_received === "Sim") {
+      acc[name] =
+        (acc[name] || 0) + (metode === "count" ? 1 : item.donation_extra);
       return acc;
     }
     return acc;
@@ -53,13 +67,13 @@ export const operatorWorkService = async ({startDate, endDate, operatorSelected}
   const addValueReceived = await filterValueReceived(operatorWork);
   const countNotReceived = await filterValueNotReceived(operatorWork, "count");
   const addValueNotReceived = await filterValueNotReceived(operatorWork);
-
+  const addValueExtraReceived = await filterValueExtraReceived(operatorWork);
   return {
     names,
     countReceived,
     addValueReceived,
     countNotReceived,
     addValueNotReceived,
-    operatorWork
+    addValueExtraReceived,
   };
 };

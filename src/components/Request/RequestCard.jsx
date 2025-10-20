@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { IoPersonRemoveSharp } from "react-icons/io5";
+import { 
+  IoPersonRemoveSharp, 
+  IoAddCircleOutline, 
+  IoRemoveCircleOutline,
+  IoCheckmarkCircleOutline,
+  IoCloseCircleOutline
+} from "react-icons/io5";
 import {
   assignAllPackage,
   assignPackage,
@@ -8,6 +14,7 @@ import {
   removePackage,
 } from "../../services/distributePackageService";
 import { toast } from "react-toastify";
+import "./RequestCard.css";
 
 const RequestCard = ({
   perOperator,
@@ -26,6 +33,7 @@ const RequestCard = ({
   const [countValue, setCountValue] = useState(0);
   const [countQuant, setCountQuant] = useState(0);
   const [maxValue, setMaxValue] = useState(0);
+  const [isSelected, setIsSelected] = useState(false);
 
   const calculateValues = () => {
     if (perOperator && perOperator.length > 0) {
@@ -51,6 +59,7 @@ const RequestCard = ({
       }
     });
   };
+
   useEffect(() => {
     setSelection(prev => [...prev, operatorID])
   }, [])
@@ -59,6 +68,10 @@ const RequestCard = ({
     calculateValues();
     relatory();
   }, [perOperator]);
+
+  useEffect(() => {
+    setIsSelected(selection.includes(operatorID));
+  }, [selection, operatorID]);
 
   const addSingle = () => {
     if (!selected) {
@@ -87,7 +100,8 @@ const RequestCard = ({
     );
   };
 
-  const removeOperatorInList = () => {
+  const removeOperatorInList = (e) => {
+    e.stopPropagation();
     deleteOperatorInList(allOperator, setAllOperator, operatorID, createPackage, setCreatePackage);
     setSelection(selection.filter(f => f !== operatorID))
   }
@@ -100,43 +114,111 @@ const RequestCard = ({
     removePackage(createPackage, setCreatePackage, operatorID);
   };
 
+  const handleCardClick = () => {
+    setSelection(prev => 
+      prev.includes(operatorID) 
+        ? prev.filter(id => id !== operatorID) 
+        : [...prev, operatorID]
+    );
+  };
+
   return (
-    <div className="request-front-right-card">
-      <div className="request-front-right-card-head">
-        <h4>
-          {operatorID} - {operatorName}
-        </h4>
-        <p onClick={removeOperatorInList}><IoPersonRemoveSharp /></p>
+    <div className={`request-card ${isSelected ? "selected" : ""}`}>
+      {/* Card Header */}
+      <div className="request-card-header">
+        <div className="operator-info">
+          <div className="operator-id">{operatorID}</div>
+          <div className="operator-name">{operatorName}</div>
+        </div>
+        <button 
+          className="remove-operator-btn"
+          onClick={removeOperatorInList}
+          title="Remover operador"
+        >
+          <IoPersonRemoveSharp />
+        </button>
       </div>
 
-      <div className={`request-front-right-card-body ${selection.includes(operatorID) ? "active" : ""}`} onClick={() => setSelection(prev => prev.includes(operatorID) ? prev.filter(id => id !== operatorID) : [...prev, operatorID])}>
-        <label>
-          Valor:{" "}
-          {countValue?.toLocaleString("pt-BR", {
-            style: "currency",
-            currency: "BRL",
-          }) || 0}
-        </label>
-        <label>Doações: {countQuant || 0}</label>
-        <div className="input-field">
-          <label>Max</label>
-          <input type="text" onChange={(e) => setMaxValue(e.target.value)} />
+      {/* Card Body */}
+      <div 
+        className={`request-card-body ${isSelected ? "active" : ""}`} 
+        onClick={handleCardClick}
+      >
+        <div className="card-stats">
+          <div className="stat-item">
+            <span className="stat-label">Valor</span>
+            <span className="stat-value value-amount">
+              {countValue?.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              }) || "R$ 0,00"}
+            </span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-label">Qtd</span>
+            <span className="stat-value quantity-amount">
+              {countQuant || 0}
+            </span>
+          </div>
+        </div>
+
+        <div className="max-value-section">
+          <label className="max-value-label">Max</label>
+          <input 
+            type="number" 
+            value={maxValue}
+            onChange={(e) => setMaxValue(e.target.value)} 
+            placeholder="0.00"
+            className="max-value-input"
+            onClick={(e) => e.stopPropagation()}
+          />
         </div>
       </div>
-      <div className="request-front-right-card-btn">
-        <button className="btn-delete" onClick={removeAll}>
-          All
-        </button>
-        <button className="btn-delete" onClick={removeSingle}>
-          -1
-        </button>
-        <label>|</label>
-        <button className="btn-add-card" onClick={addAll}>
-          All
-        </button>
-        <button className="btn-add-card" onClick={addSingle}>
-          +1
-        </button>
+
+      {/* Card Actions */}
+      <div className="request-card-actions">
+        <div className="action-group remove-group">
+          <button 
+            className="action-btn remove-btn"
+            onClick={removeAll}
+            title="Remover todas"
+          >
+            <IoCloseCircleOutline />
+            <span>All</span>
+          </button>
+          <button 
+            className="action-btn remove-btn"
+            onClick={removeSingle}
+            title="Remover uma"
+          >
+            <IoRemoveCircleOutline />
+            <span>-1</span>
+          </button>
+        </div>
+
+        <div className="action-separator">
+          <div className="separator-line"></div>
+        </div>
+
+        <div className="action-group add-group">
+          <button 
+            className="action-btn add-btn"
+            onClick={addAll}
+            title="Adicionar todas"
+          >
+            <IoAddCircleOutline />
+            <span>All</span>
+          </button>
+          <button 
+            className="action-btn add-btn"
+            onClick={addSingle}
+            title="Adicionar uma"
+            disabled={!selected}
+          >
+            <IoAddCircleOutline />
+            <span>+1</span>
+          </button>
+        </div>
       </div>
     </div>
   );

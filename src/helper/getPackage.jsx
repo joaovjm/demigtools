@@ -1,6 +1,6 @@
 import supabase from "./superBaseClient";
 
-const getPackage = async ({ type, startDate, endDate }) => {
+const getPackage = async ({ type, startDate, endDate, filterPackage }) => {
   let createPackage = [];
   try {
     const { data, error } = await supabase
@@ -13,8 +13,7 @@ const getPackage = async ({ type, startDate, endDate }) => {
       .gte("donation_day_received", startDate)
       .lte("donation_day_received", endDate)
       .order("donation_value", { ascending: false });
-    
-    //Aqui tem
+
     if (data?.length > 0) {
       const newPackage = data.map((item) => {
         return {
@@ -29,7 +28,7 @@ const getPackage = async ({ type, startDate, endDate }) => {
           donor_type: item?.donor?.donor_type,
         };
       });
-      console.log(newPackage)
+
       const count = newPackage.reduce((acc, curr) => {
         acc[curr.donor_id] = (acc[curr.donor_id] || 0) + 1;
         return acc;
@@ -37,26 +36,24 @@ const getPackage = async ({ type, startDate, endDate }) => {
 
       const duplicate = Object.keys(count).filter((f) => count[f] > 1);
 
-
       const filteredDp = duplicate.map((dp) => {
         const group = newPackage.filter((item) => item.donor_id === Number(dp));
-        const selected = group.reduce((bigger, now) =>
-          now.donation_value > bigger.donation_value ? now : bigger
-        );
+        const selected = group.reduce((bigger, now) => {
+          if (filterPackage === "max") {
+            return now.donation_value > bigger.donation_value ? now : bigger;
+          } else {
+            return now.donation_value < bigger.donation_value ? now : bigger;
+          }
+        });
 
         return selected;
       });
-      console.log(filteredDp)
 
       const unit = newPackage.filter(
         (dt) => !duplicate.includes(String(dt.donor_id))
       );
 
-      //Chegou aqui
-
       const filteredPackage = [...unit, ...filteredDp];
-
-      //Chegou aqui
 
       const { data: compareData, error: errorData } = await supabase
         .from("donation")

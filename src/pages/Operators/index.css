@@ -196,33 +196,33 @@
 .operator-form {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 /* Seções do Operador */
 .operator-section {
   background-color: #2f2d2d;
-  border: 2px solid #464a4d;
-  border-radius: 6px;
-  padding: 12px;
+  border: 1px solid #464a4d;
+  border-radius: 4px;
+  padding: 8px;
 
   & .form-row {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 10px;
-    margin-bottom: 8px;
-    height: 90px;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 8px;
+    margin-bottom: 6px;
+    height: 70px;
   }
 }
 
 .operator-section h4 {
   color: #faa01c;
-  margin: 0 0 8px 0;
-  font-size: 14px;
+  margin: 0 0 6px 0;
+  font-size: 12px;
   font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 /* Layout do Formulário */
@@ -235,7 +235,7 @@
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
 }
 
 /* Labels */
@@ -244,21 +244,21 @@
   color: #faf5e9;
   font-size: 12px;
   font-weight: 500;
-  margin-bottom: 2px;
+  margin-bottom: 1px;
 }
 
 /* Inputs */
 .form-group input,
 .form-group select {
-  padding: 6px 8px;
+  padding: 4px 6px;
   background-color: #1f1d1d;
   border: 2px solid #464a4d;
   border-radius: 4px;
   color: #faf5e9;
-  font-size: 13px;
+  font-size: 11px;
   outline: none;
   transition: border-color 0.3s ease;
-  height: 32px;
+  height: 28px;
   box-sizing: border-box;
 }
 
@@ -301,7 +301,7 @@
 
 .checkbox-text {
   color: #faf5e9;
-  font-size: 14px;
+  font-size: 11px;
   font-weight: 500;
 }
 
@@ -313,6 +313,111 @@
   padding-top: 6px;
   border-top: 2px solid #464a4d;
   margin-top: auto;
+}
+
+/* Botão Editar/Salvar Melhorado */
+.btn-edit {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  height: 40px;
+  gap: 8px;
+  background: linear-gradient(135deg, #faa01c 0%, #e8901a 100%);
+  color: #1f1d1d;
+  box-shadow: 0 2px 8px rgba(250, 160, 28, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-edit::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-edit:hover::before {
+  left: 100%;
+}
+
+.btn-edit:hover:not(:disabled) {
+  background: linear-gradient(135deg, #e8901a 0%, #d17e0f 100%);
+  box-shadow: 0 4px 16px rgba(250, 160, 28, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-edit:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(250, 160, 28, 0.3);
+}
+
+.btn-edit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Estado de loading para o botão */
+.btn-edit.loading {
+  position: relative;
+  color: transparent;
+}
+
+.btn-edit.loading::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  left: 50%;
+  margin-left: -8px;
+  margin-top: -8px;
+  border: 2px solid #1f1d1d;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Estado especial para o botão Salvar */
+.btn-edit.saving {
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+  animation: pulse 2s infinite;
+}
+
+.btn-edit.saving:hover:not(:disabled) {
+  background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+  box-shadow: 0 4px 16px rgba(76, 175, 80, 0.4);
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 16px rgba(76, 175, 80, 0.5);
+  }
+  100% {
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+  }
 }
 
 /* Responsividade */
@@ -373,6 +478,11 @@
   
   .operators-btn {
     width: 100%;
+  }
+  
+  .btn-edit {
+    width: 100%;
+    min-width: auto;
   }
 }
 

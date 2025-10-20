@@ -107,142 +107,168 @@ const CheckPrint = () => {
 
   return (
     <main className="checkprint-container">
-      <div className="checkprint-container-header">
-        <div className="checkprint-container-header-search">
-          <div className="input-field">
-            <label>Data Inicio</label>
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => handleDate("startDate", e.target.value)}
-            />
-          </div>
-          <div className="input-field">
-            <label>Data Fim</label>
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => handleDate("endDate", e.target.value)}
-            />
-          </div>
-          <div className="input-field">
-            <label>Tipo</label>
-            <select
-              value={selectType}
-              onChange={(e) => setSelectType(e.target.value)}
+      <div className="checkprint-content">
+        {/* Header Section */}
+        <header className="checkprint-header">
+          <h2 className="checkprint-title">🖨️ Verificação de Impressão</h2>
+          <div className="checkprint-actions">
+            <div 
+              className="checkprint-stats-card" 
+              onClick={() => setPrintedPackagesModalOpen(true)}
             >
-              <option value="Todos">Todos</option>
-              <option value="Avulso">Avulso</option>
-              <option value="Mensal">Mensal</option>
-            </select>
-          </div>
-
-          <button onClick={fetchDonationsNoPrint} disabled={loading}>
-            {loading === "search" ? "Buscando..." : "Buscar"}
-          </button>
-        </div>
-        <div className="checkprint-container-header-printed">
-          <div 
-            className="input-field printed-packages-button" 
-            onClick={() => setPrintedPackagesModalOpen(true)}
-            style={{ cursor: 'pointer' }}
-          >
-            <label>Pacotes Impressos</label>
-            <p style={{ fontWeight: 700 }}>{donationsPrinted?.length}</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Area de Impressão onde as fichas são exibidas e o botão de imprimir */}
-      {printers?.length > 0 && (
-        <div className="checkprint-container-body">
-          <div className="checkprint-container-body-header">
-            <div className="input-field">
-              <label>Fichas </label>
-              <p style={{ fontWeight: 700 }}>{printers?.length}</p>
+              <div className="stats-icon">📦</div>
+              <div className="stats-content">
+                <span className="stats-label">Pacotes Impressos</span>
+                <span className="stats-value">{donationsPrinted?.length || 0}</span>
+              </div>
             </div>
-            <button
-              style={{ backgroundColor: ok ? "green" : "" }}
-              onClick={handleGenerateReceiptPDF}
-              disabled={ok}
-            >
-              {ok ? "Impresso" : "Gerar e Imprimir"}
-            </button>
-
-            <button
-              onClick={handlePrint}
-              className={`chechprint-container-body-exibitionBtn ${
-                isOpen ? "open" : ""
-              }`}
-            >
-              {<FaAngleRight />}
-            </button>
           </div>
-          {isOpen && (
-            <div className="checkprint-container-body-body">
-              {printers?.map((print) => (
-                <div
-                  key={print.receipt_donation_id}
-                  className="checkprint-container-body-body-item"
+        </header>
+
+        {/* Search Section */}
+        <div className="checkprint-search-section">
+          <div className="checkprint-search-form">
+            <div className="form-row">
+              <div className="form-group">
+                <label>Data Início</label>
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => handleDate("startDate", e.target.value)}
+                  className="checkprint-input"
+                />
+              </div>
+              <div className="form-group">
+                <label>Data Fim</label>
+                <input
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => handleDate("endDate", e.target.value)}
+                  className="checkprint-input"
+                />
+              </div>
+              <div className="form-group">
+                <label>Tipo</label>
+                <select
+                  value={selectType}
+                  onChange={(e) => setSelectType(e.target.value)}
+                  className="checkprint-select"
                 >
-                  <div className="input-field" style={{ maxWidth: 80 }}>
-                    <label>Recibo</label>
-                    <p>{print.receipt_donation_id}</p>
-                  </div>
-                  <div className="input-field">
-                    <label>Nome</label>
-                    <p>{print.donor.donor_name}</p>
-                  </div>
-                  <div className="input-field">
-                    <label>Endereço</label>
-                    <p>{print.donor.donor_address}</p>
-                  </div>
-                  <div className="input-field">
-                    <label>Bairro</label>
-                    <p>{print.donor.donor_neighborhood}</p>
-                  </div>
-                  <div className="input-field" style={{ maxWidth: 60 }}>
-                    <label>Valor</label>
-                    <p>
-                      {print.donation_value.toLocaleString("pt-BR", {
-                        style: "currency",
-                        currency: "BRL",
-                      })}
-                    </p>
-                  </div>
-                  <div className="input-field">
-                    <label>Observação</label>
-                    <p>{print.donation_description}</p>
-                  </div>
-
-                  <div className="input-field">
-                    <label>Coletador</label>
-                    <select
-                      value={print.collector_code_id || ""}
-                      onChange={(e) =>
-                        selected(print.receipt_donation_id, e.target.value)
-                      }
-                      disabled={ok}
-                    >
-                      <option value="" disabled>
-                        Selecione...
-                      </option>
-                      {collectors?.map((collector) => (
-                        <option
-                          key={collector.collector_code_id}
-                          value={collector.collector_code_id || ""}
-                        >
-                          {collector.collector_name || ""}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-              ))}
+                  <option value="Todos">Todos</option>
+                  <option value="Avulso">Avulso</option>
+                  <option value="Mensal">Mensal</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <button 
+                  onClick={fetchDonationsNoPrint} 
+                  disabled={loading}
+                  className="checkprint-btn primary"
+                >
+                  {loading === "search" ? "Buscando..." : "🔍 Buscar"}
+                </button>
+              </div>
             </div>
-          )}
+          </div>
         </div>
-      )}
+
+        {/* Results Section */}
+        {printers?.length > 0 && (
+          <div className="checkprint-results-section">
+            <div className="checkprint-results-header">
+              <div className="results-stats">
+                <div className="stats-item">
+                  <span className="stats-label">Fichas Encontradas</span>
+                  <span className="stats-value">{printers?.length}</span>
+                </div>
+              </div>
+              <div className="results-actions">
+                <button
+                  className={`checkprint-btn ${ok ? "success" : "primary"}`}
+                  onClick={handleGenerateReceiptPDF}
+                  disabled={ok}
+                >
+                  {ok ? "✅ Impresso" : "🖨️ Gerar e Imprimir"}
+                </button>
+                <button
+                  onClick={handlePrint}
+                  className={`checkprint-toggle-btn ${isOpen ? "open" : ""}`}
+                  title={isOpen ? "Ocultar detalhes" : "Mostrar detalhes"}
+                >
+                  <FaAngleRight />
+                </button>
+              </div>
+            </div>
+
+            {isOpen && (
+              <div className="checkprint-results-content">
+                <div className="checkprint-cards-grid">
+                  {printers?.map((print) => (
+                    <div
+                      key={print.receipt_donation_id}
+                      className="checkprint-card"
+                    >
+                      <div className="card-header">
+                        <div className="receipt-badge">
+                          #{print.receipt_donation_id}
+                        </div>
+                        <div className="value-amount">
+                          {print.donation_value.toLocaleString("pt-BR", {
+                            style: "currency",
+                            currency: "BRL",
+                          })}
+                        </div>
+                      </div>
+                      
+                      <div className="card-content">
+                        <div className="card-section">
+                          <h4>Doador</h4>
+                          <div className="donor-info">
+                            <span className="donor-name">{print.donor.donor_name}</span>
+                            <span className="donor-address">{print.donor.donor_address}</span>
+                            <span className="donor-neighborhood">{print.donor.donor_neighborhood}</span>
+                          </div>
+                        </div>
+
+                        {print.donation_description && (
+                          <div className="card-section">
+                            <h4>Observação</h4>
+                            <p className="donation-description">{print.donation_description}</p>
+                          </div>
+                        )}
+
+                        <div className="card-section">
+                          <h4>Coletador</h4>
+                          <select
+                            value={print.collector_code_id || ""}
+                            onChange={(e) =>
+                              selected(print.receipt_donation_id, e.target.value)
+                            }
+                            disabled={ok}
+                            className="checkprint-select"
+                          >
+                            <option value="" disabled>
+                              Selecione um coletador...
+                            </option>
+                            {collectors?.map((collector) => (
+                              <option
+                                key={collector.collector_code_id}
+                                value={collector.collector_code_id || ""}
+                              >
+                                {collector.collector_name || ""}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
 
       {/* Modal de Pacotes Impressos */}
       {printedPackagesModalOpen && (

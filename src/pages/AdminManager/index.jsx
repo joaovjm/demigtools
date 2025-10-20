@@ -6,6 +6,7 @@ import Meta from "../../components/AdminManager/Meta";
 import WhatsappManager from "../../components/AdminManager/WhatsappManager";
 import Campain from "../../components/AdminManager/Campain";
 import ReceiptConfig from "../../components/AdminManager/ReceiptConfig";
+import LeadsManager from "../../components/AdminManager/LeadsManager";
 
 const AdminManager = () => {
   const [active, setActive] = useState();
@@ -80,6 +81,14 @@ const AdminManager = () => {
         >
           Config. Recibo
         </div>
+        <div
+          className={`admin-manager-menu-item ${
+            active === "leads" ? "active" : ""
+          }`}
+          onClick={() => setActive("leads")}
+        >
+          Ger. Leads
+        </div>
       </div>
       <div className="admin-manager-content">
         {active === "meta" ? (
@@ -96,6 +105,8 @@ const AdminManager = () => {
           <Campain />
         ) : active === "receipt" ? (
           <ReceiptConfig />
+        ) : active === "leads" ? (
+          <LeadsManager />
         ) : (
           <></>
         )}

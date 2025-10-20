@@ -35,19 +35,19 @@ const Operators = () => {
   const [modalConfirmOpen, setModalConfirmOpen] = useState(false);
   const [status, setStatus] = useState("");
   const [active, setActive] = useState("Ativos");
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const operators = async () => {
-      setIsLoading(true)
+      setIsLoading(true);
       try {
         let status;
-        if (active === "Ativos"){
-          status = "true"
+        if (active === "Ativos") {
+          status = "true";
         } else {
-          status = "false"
+          status = "false";
         }
-        const data = await getOperators({active: status});
+        const data = await getOperators({ active: status });
         setTableOperators(data);
 
         if (data.length > 0) {
@@ -65,7 +65,7 @@ const Operators = () => {
       }
     };
     operators();
-    setIsLoading(false)
+    setIsLoading(false);
   }, [modalShow === false, modalConfirmOpen === false, active]);
 
   const handleInputChange = (e, operator) => {
@@ -157,13 +157,17 @@ const Operators = () => {
           <div className="operators-actions">
             <div className="operators-filter-tabs">
               <button
-                className={`operators-tab ${active === "Ativos" ? "active" : ""}`}
+                className={`operators-tab ${
+                  active === "Ativos" ? "active" : ""
+                }`}
                 onClick={() => setActive("Ativos")}
               >
                 Ativos
               </button>
               <button
-                className={`operators-tab ${active === "Desativados" ? "active" : ""}`}
+                className={`operators-tab ${
+                  active === "Desativados" ? "active" : ""
+                }`}
                 onClick={() => setActive("Desativados")}
               >
                 Desativados
@@ -177,13 +181,13 @@ const Operators = () => {
           </div>
         </header>
 
-      <ModalConfirm
-        isOpen={modalConfirmOpen}
-        onClose={() => setModalConfirmOpen(false)}
-        onConfirm={modalConfig.onConfirm}
-        title={modalConfig.title}
-        message={modalConfig.message}
-      />
+        <ModalConfirm
+          isOpen={modalConfirmOpen}
+          onClose={() => setModalConfirmOpen(false)}
+          onConfirm={modalConfig.onConfirm}
+          title={modalConfig.title}
+          message={modalConfig.message}
+        />
 
         {/* Lista de Operadores */}
         <div className="operators-list-container">
@@ -207,14 +211,15 @@ const Operators = () => {
                       <h4>Informações do Operador</h4>
                       <div className="form-row">
                         <div className="form-group">
-                          <FormInput
-                            label="Código"
-                            type="text"
-                            name="cod"
-                            value={operator.operator_code_id}
-                            onChange={(e) => handleInputChange(e, operator)}
-                            readOnly={operator.isDisable}
-                          />
+                          <div className="input-field">
+                            <label>Código</label>
+                            <input
+                              type="text"
+                              value={operator.operator_code_id}
+                              onChange={(e) => handleInputChange(e, operator)}
+                              readOnly={operator.isDisable}
+                            />
+                          </div>
                         </div>
                         <div className="form-group">
                           <FormInput
@@ -303,10 +308,7 @@ const Operators = () => {
       </div>
 
       {modalShow && (
-        <ModalNewOperator
-          setModalShow={setModalShow}
-          setStatus={setStatus}
-        />
+        <ModalNewOperator setModalShow={setModalShow} setStatus={setStatus} />
       )}
 
       <ToastContainer

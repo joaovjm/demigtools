@@ -142,6 +142,8 @@ const ModalWorklist = ({
   const handleOpenDonator = () => {
     navigate(`/donor/${workListSelected.donor_id}`);
   };
+
+  
   return (
     <div className="modal-worklist">
       <div className="modal-worklist-main">

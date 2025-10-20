@@ -1,4 +1,5 @@
 import React from "react";
+import { FaPaperPlane } from "react-icons/fa";
 import { barCodeGenerator } from "../../services/barCodeGenerator";
 import pdfMake from "pdfmake/build/pdfmake";
 import extenso from "extenso";
@@ -216,7 +217,15 @@ const GenerateDepositPDF = ({ data, config }) => {
       })
     });
   };
-  return <button onClick={generatePDF}>Enviar</button>;
+  return (
+    <button 
+      onClick={generatePDF}
+      className="modal-receipt-send-action-btn send"
+      title="Enviar comprovante por WhatsApp"
+    >
+      <FaPaperPlane />
+    </button>
+  );
 };
 
 export default GenerateDepositPDF;
