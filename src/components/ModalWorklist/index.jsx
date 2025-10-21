@@ -115,7 +115,6 @@ const ModalWorklist = ({
 
 
   const handleSaveNewDonation = async () => {
-    console.log({donor_id, value, extraValue, date, campainSelected, observation, request_name})
     if ([campainSelected, value, date, extraValue].some((v) => v === "")) {
       toast.warning("Preencha todos os campos corretamente");
       return;
@@ -223,20 +222,6 @@ const ModalWorklist = ({
                       : "N/A"
                     }
                   </span>
-                </div>
-              </div>
-              
-              <div className="stat-card">
-                <div className="stat-icon">📈</div>
-                <div className="stat-content">
-                  <span className="stat-label">Média de Doações</span>
-                  <span className="stat-value">
-                    {medDonation?.toLocaleString("pt-BR", {
-                      style: "currency",
-                      currency: "BRL",
-                    }) || "N/A"}
-                  </span>
-                  <span className="stat-date">Período analisado</span>
                 </div>
               </div>
             </div>

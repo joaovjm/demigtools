@@ -119,7 +119,7 @@ const Dashboard = () => {
     }
     setStatus(null);
   };
-
+  
   useEffect(() => {
     const getMeta = async () => {
       const metaInfo = await getOperatorMeta(operatorData.operator_code_id);
@@ -198,7 +198,7 @@ const Dashboard = () => {
             </div>
             <div className="divBody">
               <p>R$ {valueMonthReceived}</p>
-              <p>R$ {meta?.[0]?.meta - valueMonthReceived}</p>
+              <p>R$ {(meta[0]?.meta - valueMonthReceived).toFixed(2)}</p>
             </div>
           </div>
         </section>

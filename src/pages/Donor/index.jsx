@@ -224,17 +224,6 @@ const Donor = () => {
                   />
                 )}
               </div>
-
-              {operatorData?.operator_type !== "Admin" && (
-                <div className="form-row">
-                  <FormDonorInput
-                    label="Email"
-                    value={donorData.email}
-                    onChange={(e) => handleInputChange("email", e.target.value)}
-                    readOnly={uiState.edit}
-                  />
-                </div>
-              )}
             </div>
 
             {/* Informações de Endereço e contato*/}

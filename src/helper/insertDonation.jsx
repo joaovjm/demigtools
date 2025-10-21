@@ -35,7 +35,7 @@ export const insertDonation = async (
       {
         donor_id: donor_id,
         operator_code_id: operator ? operator : null,
-        donation_value: valor ? Number(valor): null,
+        donation_value: valor ? Number(valor): 0,
         donation_day_contact: data_contato,
         donation_description: descricao,
         donation_extra: comissao ? Number(comissao) : null,
