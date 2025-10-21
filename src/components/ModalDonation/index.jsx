@@ -30,12 +30,12 @@ const ModalDonation = ({
       return "";
     }
   });
- 
+
   const [operator, setOperator] = useState(operatorData.operator_code_id);
   const [campain, setCampain] = useState([]);
   const [campainSelected, setCampainSelect] = useState("");
   const [operators, setOperators] = useState([]);
-
+  const [extra, setExtra] = useState(false);
   const data_contato = DataNow("noformated");
 
   const fetchCampains = async () => {
@@ -58,6 +58,11 @@ const ModalDonation = ({
   }, []);
 
   useEffect(() => {
+    if (extra) {
+      setValor("");
+      setDescricao("Somente Extra")
+      return;
+    }
     if (mensalidade && comissao == "") {
       setValor(mensalidade);
     } else if (mensalidade && comissao != "") {
@@ -72,6 +77,7 @@ const ModalDonation = ({
       toast.warning("Selecione a campanha");
       return;
     }
+
 
     const promise = insertDonation(
       donor_id,
@@ -112,16 +118,14 @@ const ModalDonation = ({
     const now = DataNow("noformated");
 
     setData_receber(value);
-    
+
     if (tipo === "Mensal") {
       const monthYear = `${DataSelect(value, "year")}-${DataSelect(
         value,
         "month"
       )}-01`;
       setMesref(monthYear);
-      
     }
-
   };
 
   return (
@@ -135,6 +139,15 @@ const ModalDonation = ({
                 Nova Doação
               </h2>
             </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", border: "1px solid #383838" }}>
+              <label>Somente Extra?</label>
+              <input
+                type="checkbox"
+                checked={extra}
+                onChange={(e) => setExtra(e.target.checked)}
+                style={{ width: "20px", height: "20px" }}
+              />
+            </div>
             <button
               onClick={() => setModalShow(!modalShow)}
               className="btn-close-modal"
@@ -145,7 +158,6 @@ const ModalDonation = ({
           </div>
 
           <form onSubmit={handleSubmit} className="modal-donation-body">
-
             <div className="form-section">
               <h3>Dados da Doação</h3>
               <div className="form-grid">
@@ -157,6 +169,7 @@ const ModalDonation = ({
                     onChange={(e) => setValor(e.target.value)}
                     placeholder="0,00"
                     required
+                    disabled={extra}
                   />
                 </div>
 
@@ -188,11 +201,15 @@ const ModalDonation = ({
                     <input
                       type="text"
                       placeholder="Mês de referência"
-                      value={mesref ? new Date(mesref).toLocaleDateString("pt-BR", {
-                        timeZone: "UTC",
-                        month: "numeric",
-                        year: "numeric",
-                      }) : ""}
+                      value={
+                        mesref
+                          ? new Date(mesref).toLocaleDateString("pt-BR", {
+                              timeZone: "UTC",
+                              month: "numeric",
+                              year: "numeric",
+                            })
+                          : ""
+                      }
                       onChange={(e) => setMesref(e.target.value)}
                       readOnly
                     />
@@ -210,7 +227,10 @@ const ModalDonation = ({
                       Selecione um operador...
                     </option>
                     {operators.map((op) => (
-                      <option key={op.operator_code_id} value={op.operator_code_id}>
+                      <option
+                        key={op.operator_code_id}
+                        value={op.operator_code_id}
+                      >
                         {op.operator_name}
                       </option>
                     ))}
@@ -246,7 +266,7 @@ const ModalDonation = ({
                 </div>
               </div>
 
-              {operatorData.operator_type === "Admin" && (
+              {/*{operatorData.operator_type === "Admin" && (
                 <div className="status-section">
                   <h4>Status da Doação</h4>
                   <div className="checkbox-group">
@@ -270,7 +290,7 @@ const ModalDonation = ({
                     </label>
                   </div>
                 </div>
-              )}
+              )}*/}
             </div>
 
             <div className="modal-donation-footer">
