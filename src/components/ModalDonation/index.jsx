@@ -139,15 +139,17 @@ const ModalDonation = ({
                 Nova Doação
               </h2>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px", border: "1px solid #383838" }}>
-              <label>Somente Extra?</label>
-              <input
-                type="checkbox"
-                checked={extra}
-                onChange={(e) => setExtra(e.target.checked)}
-                style={{ width: "20px", height: "20px" }}
-              />
-            </div>
+            {tipo === "Mensal" && (
+              <div style={{ display: "flex", alignItems: "center", gap: "10px"}}>
+                <label>Somente Extra?</label>
+                <input
+                  type="checkbox"
+                  checked={extra}
+                  onChange={(e) => setExtra(e.target.checked)}
+                  style={{ width: "20px", height: "20px" }}
+                />
+              </div>
+            )}
             <button
               onClick={() => setModalShow(!modalShow)}
               className="btn-close-modal"
