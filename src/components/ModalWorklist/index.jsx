@@ -31,7 +31,7 @@ const ModalWorklist = ({
   const [dateScheduling, setDateScheduling] = useState("");
   const [telScheduling, setTelScheduling] = useState("");
   const [observationScheduling, setObservationScheduling] = useState("");
-
+  const [extraValue, setExtraValue] = useState("");
   const {
     id,
     donor_id,
@@ -112,8 +112,11 @@ const ModalWorklist = ({
     }
   };
 
+
+
   const handleSaveNewDonation = async () => {
-    if ([campainSelected, value, date].some((v) => v === "")) {
+    console.log({donor_id, value, extraValue, date, campainSelected, observation, request_name})
+    if ([campainSelected, value, date, extraValue].some((v) => v === "")) {
       toast.warning("Preencha todos os campos corretamente");
       return;
     }
@@ -121,7 +124,7 @@ const ModalWorklist = ({
       donor_id,
       operatorData.operator_code_id,
       value,
-      value,
+      extraValue,
       DataNow("noformated"),
       date,
       false,
@@ -288,6 +291,16 @@ const ModalWorklist = ({
                         onChange={(e) => setValue(e.target.value)}
                         type="text"
                         placeholder="Ex: 50,00"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Extra da Doação *</label>
+                      <input
+                        className="form-input"
+                        value={extraValue}
+                        onChange={(e) => setExtraValue(e.target.value)}
+                        type="text"
+                        placeholder="Ex: 10,00"
                       />
                     </div>
                     

@@ -3,7 +3,7 @@ import "./index.css";
 
 import { getCollector } from "../../helper/getCollector";
 import { changeCollector, handleReasonButtonPressed } from "../../helper/changeCollector";
-import { DataSelect } from "../../components/DataTime";
+import { DataNow, DataSelect } from "../../components/DataTime";
 import { ALERT_TYPES, ICONS, MESSAGES } from "../../constants/constants";
 import FormSelect from "../../components/forms/FormSelect";
 import FormInput from "../../components/forms/FormInput";
@@ -12,7 +12,7 @@ import MessageStatus from "../../components/MessageStatus";
 const ChangeCollector = () => {
   const [formData, setFormData] = useState({
     collector: "",
-    date: "",
+    date: DataNow("noformated"),
     search: "",
   });
   const [collectors, setCollectors] = useState([]);

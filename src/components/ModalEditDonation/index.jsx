@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { ICONS } from "../../constants/constants";
 import { getCampains } from "../../helper/getCampains";
 import { getOperators } from "../../helper/getOperators";
+import { getCollector } from "../../helper/getCollector";
 import { UserContext } from "../../context/UserContext";
 import GenerateReceiptPDF from "../GenerateReceiptPDF";
 import { getEditReceipt } from "../../helper/getEditReceipt";
@@ -13,6 +14,9 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
   const { operatorData } = useContext(UserContext);
   const [value, setValue] = useState(donation.donation_value);
   const [date, setDate] = useState(donation.donation_day_to_receive);
+  const [monthReferent, setMonthReferent] = useState(
+    donation.donation_monthref
+  );
   const [observation, setObservation] = useState(donation.donation_description);
   const [campaign, setCampaign] = useState(donation.campaign_id);
   const [campaigns, setCampaigns] = useState([]);
@@ -23,7 +27,8 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
   const [recebido, setRecebido] = useState(
     donation.donation_received === "Sim" ? true : false
   );
-
+  const [collectors, setCollectors] = useState([]);
+  const [collector, setCollector] = useState(donation.collector_code_id);
   const [operators, setOperators] = useState([]);
   const [receiptConfig, setReceiptConfig] = useState([]);
   useEffect(() => {
@@ -35,11 +40,11 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
   }, []);
 
   useEffect(() => {
-  const fetchReceiptConfig = async () => {
-    const response = await getEditReceipt();
-    setReceiptConfig(response[0]);
-  };
-  fetchReceiptConfig();
+    const fetchReceiptConfig = async () => {
+      const response = await getEditReceipt();
+      setReceiptConfig(response[0]);
+    };
+    fetchReceiptConfig();
   }, []);
 
   useEffect(() => {
@@ -52,6 +57,14 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
     };
     fetchOperators();
   }, []);
+
+  useEffect(() => {
+    const fetchCollectors = async () => {
+      const response = await getCollector();
+      setCollectors(response);
+    };
+    fetchCollectors();
+  }, [])
   const handleConfirm = async () => {
     if (operator === "") {
       toast.warning("Operador deve ser preenchido!");
@@ -74,6 +87,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
             operator_code_id: operator,
             donation_print: impresso ? "Sim" : "Não",
             donation_received: recebido ? "Sim" : "Não",
+            donation_monthref: monthReferent,
           },
         ])
         .eq("receipt_donation_id", donation.receipt_donation_id)
@@ -106,7 +120,6 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
   };
 
   const handleDownloadPDF = async () => {
-    console.log(donation)
     try {
       // Prepara os dados no formato esperado pelo GenerateReceiptPDF
       const donationData = {
@@ -180,6 +193,17 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
                     onChange={(e) => setDate(e.target.value)}
                   />
                 </div>
+                {donation.operator_code_id && (
+                  <div className="input-group">
+                    <label>Mes Referente *</label>
+                    <input
+                      type="date"
+                      value={monthReferent}
+                      onChange={(e) => setMonthReferent(e.target.value)}
+                    />
+                  </div>
+                )}
+
                 <div className="input-group">
                   <label>Operador *</label>
                   <select
@@ -195,6 +219,25 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
                         value={op.operator_code_id}
                       >
                         {op.operator_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="input-group">
+                  <label>Coletador *</label>
+                  <select
+                    value={collector}
+                    onChange={(e) => setCollector(e.target.value)}
+                  >
+                    <option value="" disabled>
+                      Selecione um coletador...
+                    </option>
+                    {collectors.map((op) => (
+                      <option
+                        key={op.collector_code_id}
+                        value={op.collector_code_id}
+                      >
+                        {op.collector_name}
                       </option>
                     ))}
                   </select>
@@ -226,7 +269,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
                 </div>
               </div>
 
-              {operatorData.operator_type === "Admin" && (
+              {/*{operatorData.operator_type === "Admin" && (
                 <div className="status-section">
                   <h4>Status da Doação</h4>
                   <div className="checkbox-group">
@@ -250,7 +293,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
                     </label>
                   </div>
                 </div>
-              )}
+              )}*/}
             </div>
           </div>
 

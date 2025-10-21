@@ -1,6 +1,7 @@
 import supabase from "./superBaseClient";
 
 const getPackage = async ({ type, startDate, endDate, filterPackage }) => {
+  console.log("type", type)
   let createPackage = [];
   try {
     const { data, error } = await supabase
@@ -28,7 +29,7 @@ const getPackage = async ({ type, startDate, endDate, filterPackage }) => {
           donor_type: item?.donor?.donor_type,
         };
       });
-
+      console.log("newPackage", newPackage);
       const count = newPackage.reduce((acc, curr) => {
         acc[curr.donor_id] = (acc[curr.donor_id] || 0) + 1;
         return acc;
@@ -55,17 +56,21 @@ const getPackage = async ({ type, startDate, endDate, filterPackage }) => {
 
       const filteredPackage = [...unit, ...filteredDp];
 
-      const { data: compareData, error: errorData } = await supabase
-        .from("donation")
-        .select()
-        .gt("donation_day_received", endDate);
+      if (type !== "Mensal") {
+        const { data: compareData, error: errorData } = await supabase
+          .from("donation")
+          .select()
+          .gt("donation_day_received", endDate);
 
-      if (compareData?.length > 0) {
-        filteredPackage.forEach((id) => {
-          if (!compareData.some((cp) => cp.donor_id === id.donor_id)) {
-            createPackage.push(id);
-          }
-        });
+        if (compareData?.length > 0) {
+          filteredPackage.forEach((id) => {
+            if (!compareData.some((cp) => cp.donor_id === id.donor_id)) {
+              createPackage.push(id);
+            }
+          });
+        } else {
+          createPackage.push(...filteredPackage);
+        }
       } else {
         createPackage.push(...filteredPackage);
       }
@@ -73,6 +78,7 @@ const getPackage = async ({ type, startDate, endDate, filterPackage }) => {
   } catch (error) {
     console.error(error.message);
   }
+  //console.log("createPackage", createPackage)
   return createPackage;
 };
 
