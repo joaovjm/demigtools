@@ -22,6 +22,7 @@ const WorkList = () => {
   const [workListSelected, setWorkListSelected] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dateAccessed, setDateAccessed] = useState();
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -121,6 +122,41 @@ const WorkList = () => {
     setModalOpen(!modalOpen);
   };
 
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const getSortedData = () => {
+    if (!worklistRequest || !sortConfig.key) {
+      return worklistRequest;
+    }
+
+    return [...worklistRequest].sort((a, b) => {
+      let aValue, bValue;
+
+      if (sortConfig.key === 'mensal_day') {
+        aValue = a?.donor_mensal?.donor_mensal?.donor_mensal_day || 0;
+        bValue = b?.donor_mensal?.donor_mensal?.donor_mensal_day || 0;
+      } else if (sortConfig.key === 'value') {
+        aValue = a.donation.donation_value || 0;
+        bValue = b.donation.donation_value || 0;
+      }
+
+      if (aValue < bValue) {
+        return sortConfig.direction === 'asc' ? -1 : 1;
+      }
+      if (aValue > bValue) {
+        return sortConfig.direction === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+  };
+
+  console.log(worklistRequest)
   return (
     <main className="worklist-container">
       <div className="worklist-content">
@@ -175,14 +211,35 @@ const WorkList = () => {
                   <thead>
                     <tr className="worklist-table-head-row">
                       <th className="worklist-table-head">Doador</th>
-                      <th className="worklist-table-head">Valor</th>
+                      <th 
+                        className="worklist-table-head sortable" 
+                        onClick={() => handleSort('mensal_day')}
+                      >
+                        Dia do Mensal
+                        <span className="sort-arrow">
+                          {sortConfig.key === 'mensal_day' ? (
+                            sortConfig.direction === 'asc' ? '↑' : '↓'
+                          ) : '↕'}
+                        </span>
+                      </th>
+                      <th 
+                        className="worklist-table-head sortable" 
+                        onClick={() => handleSort('value')}
+                      >
+                        Valor
+                        <span className="sort-arrow">
+                          {sortConfig.key === 'value' ? (
+                            sortConfig.direction === 'asc' ? '↑' : '↓'
+                          ) : '↕'}
+                        </span>
+                      </th>
                       <th className="worklist-table-head">Data Recebida</th>
                       <th className="worklist-table-head">Status</th>
                       <th className="worklist-table-head">Data Abertura</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {worklistRequest?.map((list) => (
+                    {getSortedData()?.map((list) => (
                       <tr
                         className={`worklist-table-row ${
                           active === list.receipt_donation_id
@@ -203,6 +260,11 @@ const WorkList = () => {
                         <td className="worklist-table-cell">
                           <div className="donor-info">
                             <span className="donor-name">{list.donor.donor_name}</span>
+                          </div>
+                        </td>
+                        <td className="worklist-table-cell">
+                          <div className="donor-info">
+                            <span className="donor-name">{list?.donor_mensal?.donor_mensal?.donor_mensal_day}</span>
                           </div>
                         </td>
                         <td className="worklist-table-cell">
