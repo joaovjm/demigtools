@@ -31,6 +31,7 @@ const ModalWorklist = ({
   const [observationScheduling, setObservationScheduling] = useState("");
   const [extraValue, setExtraValue] = useState("");
   const [maxPeriod, setMaxPeriod] = useState([]);
+  const [countNotReceived, setCountNotReceived] = useState(0);
   const {
     id,
     donor_id,
@@ -39,19 +40,22 @@ const ModalWorklist = ({
   } = workListSelected;
   const donor_tel_2 = workListSelected?.donor_tel_2b?.donor_tel_2?.donor_tel_2;
   const donor_tel_3 = workListSelected?.donor_tel_3b?.donor_tel_3?.donor_tel_3;
-  const donor_mensal_day = workListSelected?.donor_mensal?.donor_mensal?.donor_mensal_day;
-  const donor_monthly_fee = workListSelected?.donor_mensal?.donor_mensal?.donor_mensal_monthly_fee;
+  const donor_mensal_day =
+    workListSelected?.donor_mensal?.donor_mensal?.donor_mensal_day;
+  const donor_monthly_fee =
+    workListSelected?.donor_mensal?.donor_mensal?.donor_mensal_monthly_fee;
   const navigate = useNavigate();
   const MaxAndMedDonations = async () => {
-    const { maxGeneral, maxPeriod, penultimate } =
+    const { maxGeneral, maxPeriod, penultimate, countNotReceived } =
       await fetchMaxAndMedDonations(
         workListSelected.donor_id,
         workListSelected.request_name
       );
-    if ([maxGeneral, maxPeriod, penultimate].some((v) => v)) {
+    if ([maxGeneral, maxPeriod, penultimate, countNotReceived].some((v) => v)) {
       setPenultimate(penultimate);
       setMaxDonation(maxGeneral);
       setMaxPeriod(maxPeriod);
+      setCountNotReceived(countNotReceived);
     }
   };
 
@@ -159,20 +163,6 @@ const ModalWorklist = ({
               <span className="request-name">{request_name}</span>
             </div>
           </div>
-          <div className="modal-worklist-mensalidade-info">
-            <div className="mensalidade-item">
-              <span className="request-label">Dia do Mensal:</span>
-              <span className="request-name">
-                {donor_mensal_day ? donor_mensal_day : "Não informado"}
-              </span>
-            </div>
-            <div className="mensalidade-item">
-              <span className="request-label">Mensalidade:</span>
-              <span className="request-name">
-                {donor_monthly_fee ? donor_monthly_fee : "Não informado"}
-              </span>
-            </div>
-          </div>
 
           <button className="modal-worklist-close-btn" onClick={handleClose}>
             ✕
@@ -181,7 +171,16 @@ const ModalWorklist = ({
 
         <div className="modal-worklist-body">
           <div className="modal-worklist-section">
-            <h4 className="section-title">📞 Informações de Contato</h4>
+            <h4 className="section-title">
+              📞 Informações de Contato{" "}{" "}{" "}
+              {donor_mensal_day ? `(Dia do Mensal: ${donor_mensal_day})` : ""} |{" "}
+              {donor_monthly_fee
+                ? `(Mensalidade: ${donor_monthly_fee.toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })})`
+                : ""}
+            </h4>
             <div className="contact-info-grid">
               <div className="contact-item">
                 <span className="contact-label">Telefone Principal:</span>
@@ -203,7 +202,7 @@ const ModalWorklist = ({
           </div>
 
           <div className="modal-worklist-section">
-            <h4 className="section-title">💰 Histórico de Doações</h4>
+            <h4 className="section-title">💰 Histórico de Doações | Meses sem receber: {countNotReceived}</h4>
             <div className="donation-stats-grid">
               <div className="stat-card">
                 <div className="stat-icon">📊</div>

@@ -7,6 +7,7 @@ export const getMaxAndMedDonations = async (id, requestName) => {
   let maxGeneral = [];
   let total = 0;
   let penultimate = [];
+  let countNotReceived = 0;
   let history = [];
 
   try {
@@ -37,6 +38,11 @@ export const getMaxAndMedDonations = async (id, requestName) => {
     }
 
     if (data.length > 0) {
+      for (let item of data) {
+        if (item?.donation_received === "Sim") break;
+        if (item?.donation_received === "Não") countNotReceived++;
+      }
+      
       for (let i = 0; i < data.length; i++) {
         if (
           data[i]?.donation_day_received >= startPeriod &&
@@ -84,8 +90,10 @@ export const getMaxAndMedDonations = async (id, requestName) => {
       console.log(penultimate);
       console.log(history);
 
-      return { maxGeneral, maxPeriod, penultimate };
+      
     }
+
+    return { maxGeneral, maxPeriod, penultimate, countNotReceived};
   } catch (error) {
     console.log(error.message);
   }
