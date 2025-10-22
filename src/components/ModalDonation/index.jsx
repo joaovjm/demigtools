@@ -172,6 +172,7 @@ const ModalDonation = ({
                     placeholder="0,00"
                     required
                     disabled={extra}
+                    min="0"
                   />
                 </div>
 
@@ -183,6 +184,7 @@ const ModalDonation = ({
                       placeholder="0,00"
                       value={comissao}
                       onChange={(e) => setComissao(e.target.value)}
+                      min="0"
                     />
                   </div>
                 )}

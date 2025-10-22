@@ -11,6 +11,7 @@ const FormInput = ({ label, icon, type, name, value, autoComplete, onChange, sty
       autoComplete={autoComplete}
       onChange={onChange}
       readOnly={readOnly}
+      min="0"
     />
   </div>
 );

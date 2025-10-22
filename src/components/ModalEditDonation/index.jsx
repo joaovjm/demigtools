@@ -77,6 +77,10 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
       toast.warning("Valor e data devem ser preenchidos!");
       return;
     }
+    if (extraValue < 0 || value < 0) {
+      toast.warning("Valor e extra não podem ser negativos!");
+      return;
+    }
 
     try {
       const { data, error } = await supabase
@@ -225,6 +229,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
                     placeholder="0,00"
+                    min="0"
                   />
                 </div>
                 <div className="input-group">
@@ -235,6 +240,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
                     onChange={(e) => setExtraValue(e.target.value)}
                     placeholder="0,00"
                     disabled={donation.donation_extra === 0}
+                    min="0"
                   />
                 </div>
                 
