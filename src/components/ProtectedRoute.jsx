@@ -3,13 +3,19 @@ import { UserContext } from "../context/UserContext"
 import { Navigate, Outlet } from "react-router";
 
 const ProtectedRoute = ({requiredRole}) => {
-    // const { operatorData } = useContext(UserContext);
-    const caracterOperator = JSON.parse(localStorage.getItem("operatorData"))
-    if(!caracterOperator){
+    const { operatorData, loading } = useContext(UserContext);
+    
+    // Aguardar o UserContext terminar de carregar
+    if (loading) {
         return <div>Carregando...</div>;
     }
+    
+    // Se não há dados do operador, redirecionar para login
+    if (!operatorData) {
+        return <Navigate to="/login" />;
+    }
 
-    const { operator_type } = caracterOperator;
+    const { operator_type } = operatorData;
 
     if (requiredRole === "Admin" && operator_type !== "Admin"){
         return <Navigate to="/dashboard"/>

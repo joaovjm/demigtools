@@ -88,7 +88,7 @@ const TableOperatorAndCollectorWork = ({
                       <th className="table-operatorWork-head">Valor Aberto</th>
                       <th className="table-operatorWork-head">Qtd. Recebido</th>
                       {/*<th className="table-operatorWork-head">Valor</th>*/}
-                      <th className="table-operatorWork-head">Valor Extra</th>
+                      {oc === "Operadores" && <th className="table-operatorWork-head">Valor Extra</th>} 
                       <th className="table-operatorWork-head">
                         Total Recebido
                       </th>
