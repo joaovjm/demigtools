@@ -29,7 +29,7 @@ export async function worklistRequests(operatorID, workSelect) {
   return response;
 }
 
-export async function fetchMaxAndMedDonations(id) {
-  const { max, penultimate } = await getMaxAndMedDonations(id);
-  return { max, penultimate };
+export async function fetchMaxAndMedDonations(id, requestName) {
+  const { maxGeneral, maxPeriod, penultimate } = await getMaxAndMedDonations(id, requestName);
+  return { maxGeneral, maxPeriod, penultimate };
 }

@@ -40,6 +40,7 @@
 }
 
 .modal-worklist-header-content {
+  max-width: 40%;
   flex: 1;
 }
 
@@ -65,6 +66,19 @@
   align-items: center;
   gap: 6px;
   margin-top: 2px;
+}
+
+.modal-worklist-mensalidade-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.mensalidade-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .request-label {
