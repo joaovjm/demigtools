@@ -59,7 +59,7 @@ const ModalDonation = ({
 
   useEffect(() => {
     if (extra) {
-      setValor("");
+      setValor(comissao);
       setDescricao("Somente Extra")
       return;
     }
