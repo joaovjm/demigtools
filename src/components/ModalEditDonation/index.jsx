@@ -9,6 +9,7 @@ import { getCollector } from "../../helper/getCollector";
 import { UserContext } from "../../context/UserContext";
 import GenerateReceiptPDF from "../GenerateReceiptPDF";
 import { getEditReceipt } from "../../helper/getEditReceipt";
+import { FaDollarSign } from "react-icons/fa";
 
 const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
   const { operatorData } = useContext(UserContext);
@@ -31,6 +32,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
   const [collector, setCollector] = useState(donation.collector_code_id);
   const [operators, setOperators] = useState([]);
   const [receiptConfig, setReceiptConfig] = useState([]);
+  const [extraValue, setExtraValue] = useState(donation.donation_extra);
   useEffect(() => {
     const fetchCampaigns = async () => {
       const response = await getCampains();
@@ -64,7 +66,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
       setCollectors(response);
     };
     fetchCollectors();
-  }, [])
+  }, []);
   const handleConfirm = async () => {
     if (operator === "") {
       toast.warning("Operador deve ser preenchido!");
@@ -153,17 +155,57 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
     }
   };
 
+  console.log(donation);
+
   return (
-    <main className="modal-editDonation-container">
-      <div className="modal-editDonation">
-        <div className="modal-editDonation-content">
-          <div className="modal-editDonation-header">
+    <main className="modal-donation-container">
+      <div className="modal-donation">
+        <div className="modal-donation-content">
+          <div className="modal-donation-header">
             <div className="modal-title-section">
-              <h3 className="modal-title">Detalhes da Doação</h3>
-              <span className="receipt-number">
-                Recibo: #{donation.receipt_donation_id}
-              </span>
+              <h2 className="modal-title">
+                <FaDollarSign />
+                Editar Doação
+              </h2>
             </div>
+            {donation.donation_worklist && (
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "10px" }}
+              >
+                <span
+                  style={{
+                    color: "#faa01c",
+                    fontSize: "12px",
+                    fontWeight: "500",
+                    padding: "3px 8px",
+                    backgroundColor: "rgba(250, 160, 28, 0.1)",
+                    borderRadius: "12px",
+                    border: "1px solid rgba(250, 160, 28, 0.3)",
+                  }}
+                >
+                  Worklist: {donation.donation_worklist}
+                </span>
+              </div>
+            )}
+            {donation.operator_code_id && (
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "10px" }}
+              >
+                <span
+                  style={{
+                    color: "#28a745",
+                    fontSize: "12px",
+                    fontWeight: "500",
+                    padding: "3px 8px",
+                    backgroundColor: "rgba(40, 167, 69, 0.1)",
+                    borderRadius: "12px",
+                    border: "1px solid rgba(40, 167, 69, 0.3)",
+                  }}
+                >
+                  Operador: {donation.operator_code_id}
+                </span>
+              </div>
+            )}
             <button
               onClick={() => setModalEdit(false)}
               className="btn-close-modal"
@@ -172,9 +214,9 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
               ✕
             </button>
           </div>
-          <div className="modal-editDonation-body">
+          <div className="modal-donation-body">
             <div className="form-section">
-              <h3>Editar Doação</h3>
+              <h3>Dados da Doação</h3>
               <div className="form-grid">
                 <div className="input-group">
                   <label>Valor *</label>
@@ -185,6 +227,17 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
                     placeholder="0,00"
                   />
                 </div>
+                <div className="input-group">
+                  <label>Extra *</label>
+                  <input
+                    type="number"
+                    value={extraValue}
+                    onChange={(e) => setExtraValue(e.target.value)}
+                    placeholder="0,00"
+                    disabled={donation.donation_extra === 0}
+                  />
+                </div>
+                
                 <div className="input-group">
                   <label>Data para Receber *</label>
                   <input
@@ -297,26 +350,61 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
             </div>
           </div>
 
-          <div className="modal-editDonation-footer">
-            <div className="action-buttons">
+          <div className="modal-donation-footer">
+            <div
+              style={{
+                display: "flex",
+                gap: "12px",
+                width: "100%",
+                justifyContent: "center",
+              }}
+            >
               <button
                 onClick={handleDownloadPDF}
-                className="btn-pdf"
+                style={{
+                  padding: "8px 16px",
+                  border: "none",
+                  borderRadius: "6px",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  cursor: "pointer",
+                  backgroundColor: "#28a745",
+                  color: "#fff",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  transition: "all 0.3s ease",
+                }}
                 title="Baixar PDF do Recibo"
               >
                 📄 Baixar PDF
               </button>
               <button
                 onClick={handleDelete}
-                className="btn-delete"
+                style={{
+                  padding: "8px 16px",
+                  border: "none",
+                  borderRadius: "6px",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  cursor: "pointer",
+                  backgroundColor: "#c70000",
+                  color: "#faf5e9",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  transition: "all 0.3s ease",
+                }}
                 title="Excluir Doação"
               >
                 🗑️ Excluir
               </button>
-            </div>
-            <div className="primary-buttons">
-              <button onClick={handleConfirm} className="btn-confirm">
-                Salvar Alterações
+              <button
+                onClick={handleConfirm}
+                className="btn-create-donation"
+                style={{ minWidth: "auto" }}
+              >
+                💰 Salvar Alterações
               </button>
             </div>
           </div>

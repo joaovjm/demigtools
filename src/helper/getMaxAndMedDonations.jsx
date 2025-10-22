@@ -1,12 +1,10 @@
 import supabase from "./superBaseClient";
 
 export const getMaxAndMedDonations = async (id) => {
-  let max = 0;
+  let max = [];
   let total = 0;
-  let med = 0;
   let penultimate = [];
   let history = [];
-  let day;
   const { data, error } = await supabase
     .from("donation")
     .select("donation_value, donation_day_received, donation_received")
@@ -15,31 +13,31 @@ export const getMaxAndMedDonations = async (id) => {
   if (error) {
     console.log(error.message);
   }
+ 
   if (data.length > 0) {
     for (let i = 0; i < data.length; i++) {
-      if (data[i].donation_value > max) {
-        max = data[i]?.donation_value;
-        day = data[i]?.donation_day_received;
-        if (data[i]?.donation_received === "Sim" && penultimate.length === 0) {
-          penultimate = [
-            data[i]?.donation_value,
-            data[i]?.donation_day_received,
-          ];
-        }
-        if (data[i]?.donation_received === "Sim") {
-            console.log("entrou aqui", [i])
-            history.push({
-                value: data[i]?.donation_value,
-                day: data[i]?.donation_day_received,
-            });
-        }
+      if ((data[i]?.donation_value > max[0]?.value || max.length === 0) && data[i]?.donation_received === "Sim") {
+        max = [{
+          value: data[i]?.donation_value,
+          day: data[i]?.donation_day_received,
+        }];
+      }  
+      if (data[i]?.donation_received === "Sim" && penultimate.length === 0) {
+        penultimate = [{
+          value: data[i]?.donation_value,
+          day: data[i]?.donation_day_received,
+        }];
+      }
+      if (data[i]?.donation_received === "Sim") {
+          history.push({
+              value: data[i]?.donation_value,
+              day: data[i]?.donation_day_received,
+          });
       }
       total += data[i].donation_value;
     }
-    console.log(history)
+    console.log(max)
 
-    med = total / data.length;
-
-    return { max, day, med, penultimate };
+    return { max, penultimate };
   }
 };

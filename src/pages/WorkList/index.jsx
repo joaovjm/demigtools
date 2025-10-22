@@ -156,7 +156,6 @@ const WorkList = () => {
     });
   };
 
-  console.log(worklistRequest)
   return (
     <main className="worklist-container">
       <div className="worklist-content">

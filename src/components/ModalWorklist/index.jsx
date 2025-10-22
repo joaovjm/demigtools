@@ -19,9 +19,7 @@ const ModalWorklist = ({
   const { operatorData } = useContext(UserContext);
   const [newDonationOpen, setNewDonationOpen] = useState(false);
   const [newSchedulingOpen, setNewSchedulingOpen] = useState(false);
-  const [maxDonation, setMaxDonation] = useState();
-  const [medDonation, setMedDonation] = useState();
-  const [day, setDay] = useState();
+  const [maxDonation, setMaxDonation] = useState([]);
   const [penultimate, setPenultimate] = useState();
   const [campains, setCampains] = useState([]);
   const [campainSelected, setCampainSelected] = useState("");
@@ -43,14 +41,13 @@ const ModalWorklist = ({
 
   const navigate = useNavigate();
   const MaxAndMedDonations = async () => {
-    const { max, day, med, penultimate } = await fetchMaxAndMedDonations(
+    const { max, penultimate } = await fetchMaxAndMedDonations(
       workListSelected.donor_id
     );
-    if ([max, day, med, penultimate].some((v) => v)) {
-      setMaxDonation(max);
-      setMedDonation(med);
-      setDay(day);
+    if ([max, penultimate].some((v) => v)) {
+  
       setPenultimate(penultimate);
+      setMaxDonation(max);
     }
   };
 
@@ -192,14 +189,14 @@ const ModalWorklist = ({
                 <div className="stat-content">
                   <span className="stat-label">Doação Anterior</span>
                   <span className="stat-value">
-                    {penultimate?.[0]?.toLocaleString("pt-BR", {
+                    {penultimate?.[0].value.toLocaleString("pt-BR", {
                       style: "currency",
                       currency: "BRL",
                     }) || "N/A"}
                   </span>
                   <span className="stat-date">
-                    {penultimate?.[1] 
-                      ? new Date(penultimate[1]).toLocaleDateString("pt-BR", { timeZone: "UTC" })
+                    {penultimate?.[0]
+                      ? new Date(penultimate?.[0].day).toLocaleDateString("pt-BR", { timeZone: "UTC" })
                       : "N/A"
                     }
                   </span>
@@ -211,14 +208,14 @@ const ModalWorklist = ({
                 <div className="stat-content">
                   <span className="stat-label">Maior Doação</span>
                   <span className="stat-value">
-                    {maxDonation?.toLocaleString("pt-BR", {
+                    {maxDonation?.[0]?.value.toLocaleString("pt-BR", {
                       style: "currency",
                       currency: "BRL",
                     }) || "N/A"}
                   </span>
                   <span className="stat-date">
-                    {day 
-                      ? new Date(day).toLocaleDateString("pt-BR", { timeZone: "UTC" })
+                    {maxDonation?.[0]?.day 
+                      ? new Date(maxDonation?.[0]?.day).toLocaleDateString("pt-BR", { timeZone: "UTC" })
                       : "N/A"
                     }
                   </span>
