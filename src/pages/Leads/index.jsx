@@ -31,6 +31,8 @@ const Leads = () => {
   const [isModalSchedulingOpen, setIsModalSchedulingOpen] = useState(false);
   const [idSession, setIdSession] = useState("");
   const [isModalHistoryOpen, setIsModalHistoryOpen] = useState(false);
+  const [selectedNeighborhood, setSelectedNeighborhood] = useState("");
+  const [availableNeighborhoods, setAvailableNeighborhoods] = useState([]);
   const { operatorData } = useContext(UserContext);
 
   useEffect(() => {
@@ -41,6 +43,40 @@ const Leads = () => {
 
     GetSession();
   }, []);
+
+  const fetchAvailableNeighborhoods = async () => {
+    try {
+      let operatorType;
+      if (operatorData.operator_type === "Operador Casa") {
+        operatorType = "leads_casa";
+      } else {
+        operatorType = "leads";
+      }
+
+      const { data, error } = await supabase
+        .from(operatorType)
+        .select("leads_neighborhood")
+        .not("leads_neighborhood", "is", null)
+        .neq("leads_neighborhood", "");
+
+      if (error) throw error;
+
+      // Extrair bairros únicos e ordenar
+      const uniqueNeighborhoods = [...new Set(data.map(item => item.leads_neighborhood))]
+        .filter(neighborhood => neighborhood && neighborhood.trim() !== "")
+        .sort();
+
+      setAvailableNeighborhoods(uniqueNeighborhoods);
+    } catch (error) {
+      console.error("Erro ao buscar bairros:", error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (operatorData.operator_code_id) {
+      fetchAvailableNeighborhoods();
+    }
+  }, [operatorData.operator_code_id]);
 
   const fetchLeads = async () => {
     setIsLoading(true);
@@ -53,7 +89,8 @@ const Leads = () => {
       setItems,
       setCurrentLead,
       Number(operatorData.operator_code_id),
-      operatorData.operator_type
+      operatorData.operator_type,
+      selectedNeighborhood
     );
 
     if (lead[0].leads_id) {
@@ -70,7 +107,12 @@ const Leads = () => {
 
   useEffect(() => {
     fetchLeads();
-  }, [currentItem]);
+  }, [currentItem, selectedNeighborhood]);
+
+  const handleNeighborhoodChange = (e) => {
+    setSelectedNeighborhood(e.target.value);
+    setCurrentItem(1); // Reset para o primeiro lead quando mudar o filtro
+  };
 
   const handleNext = async () => {
     if (window.confirm("Deseja passar para o proximo?")) {
@@ -283,6 +325,24 @@ const Leads = () => {
         {/* Header */}
         <header className="leads-header">
           <h2 className="leads-title">{ICONS.CIRCLEOUTLINE} Gerenciar Leads</h2>
+          <div className="leads-filters">
+            <div className="filter-group">
+              <label htmlFor="neighborhood-filter" className="filter-label">Filtrar por Bairro:</label>
+              <select
+                id="neighborhood-filter"
+                value={selectedNeighborhood}
+                onChange={handleNeighborhoodChange}
+                className="filter-select"
+              >
+                <option value="">Todos os bairros</option>
+                {availableNeighborhoods.map((neighborhood) => (
+                  <option key={neighborhood} value={neighborhood}>
+                    {neighborhood}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
           <button className="leads-btn secondary" onClick={() => setIsModalHistoryOpen(true)}>Histórico de Leads</button>
           <div className="leads-stats">
             <span className="leads-counter">Lead {currentItem} de {items}</span>
