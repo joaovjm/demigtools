@@ -139,7 +139,7 @@ const ModalDonation = ({
                 Nova Doação
               </h2>
             </div>
-            {tipo === "Mensal" && (
+            {tipo === "Mensal" && operatorData.operator_type === "Admin" && (
               <div style={{ display: "flex", alignItems: "center", gap: "10px"}}>
                 <label>Somente Extra?</label>
                 <input
