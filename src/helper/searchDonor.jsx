@@ -16,16 +16,17 @@ const searchDonor = async (params, donor_type) => {
           )
           .eq("donor_cpf.donor_cpf", params.replace(/\D/g, ""));
       } else if (/^\d{1,9}$/.test(params)) {
-        console.log(donor_type)
-        query = supabase
-        .rpc("search_donor_by_phone", {phone_search: params, donor_type_filter: donor_type.trim() || "Todos"})
-        
+        query = supabase.rpc("search_donor_by_phone", {
+          phone_search: params,
+          donor_type_filter: donor_type.trim() || "Todos",
+        });
       } else if (/[Rr]/.test(params)) {
         query = supabase
           .from("donation")
           .select(
             `
-          donor: donor_id(
+          donor: donation_donor_id_fkey(
+          donor_id,
             donor_name,
             donor_address,
             donor_tel_1,
@@ -46,14 +47,10 @@ const searchDonor = async (params, donor_type) => {
     }
 
     if (query && donor_type !== "" && !/^\d{1,9}$/.test(params)) {
-      if (/[Rr]/.test(params)) {
+      if (/[Rr]/.test(params) && donor_type === "Todos") {
+        query = query.neq("donor.donor_type", "Excluso");
+      } else if (/[Rr]/.test(params) && donor_type !== "Todos") {
         query = query.eq("donor.donor_type", donor_type);
-      } else {
-        query = query.ilike("donor_type", donor_type);
-      }
-    } else {
-      if (/[Rr]/.test(params) && !/^\d{1,9}$/.test(params)) {
-        query = query.neq("donor.donor_type", donor_type);
       } else {
         query = query.neq("donor_type", "Excluso");
       }
@@ -65,6 +62,7 @@ const searchDonor = async (params, donor_type) => {
 
     if (data && /[Rr]/.test(params)) {
       const dataDonor = data[0].donor;
+      console.log(data);
       return [dataDonor];
     } else {
       console.log("data", data);

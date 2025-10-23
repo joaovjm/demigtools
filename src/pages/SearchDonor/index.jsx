@@ -29,7 +29,7 @@ const SearchDonor = () => {
   const handleAddDonorClick = () => {
     navigate("/newdonor");
   };
-
+  console.log(donor)
   return (
     <main className="containersearch">
       {/* Search Section */}
