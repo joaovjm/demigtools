@@ -21,6 +21,7 @@ const TableDonationsInOperatorsAndCollectors = ({
   } else if (filter === "Coletadores") {
     f = "collector_code_id";
   }
+
   const getRelatory = async () => {
     try {
       const { data, error } = await supabase
@@ -29,8 +30,8 @@ const TableDonationsInOperatorsAndCollectors = ({
           "donation_day_received, donation_print, donation_received, donation_value, receipt_donation_id, donor_id, donor: donor_id(donor_name, donor_tel_1), operator_code_id, operator: operator_code_id(operator_name), collector_code_id, collector: collector_code_id(collector_name)"
         )
         .eq(f, click.id)
-        .gte("donation_day_received", startDate)
-        .lte("donation_day_received", endDate);
+        .gte("donation_day_to_receive", startDate)
+        .lte("donation_day_to_receive", endDate);
 
       if (error) throw error;
       if (!error) setDonations(data);

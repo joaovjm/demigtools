@@ -94,6 +94,8 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
             donation_print: impresso ? "Sim" : "Não",
             donation_received: recebido ? "Sim" : "Não",
             donation_monthref: monthReferent,
+            collector_code_id: collector,
+            donation_campain: campaign,
           },
         ])
         .eq("receipt_donation_id", donation.receipt_donation_id)
@@ -158,8 +160,6 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
       toast.error("Erro ao gerar PDF");
     }
   };
-
-  console.log(donation);
 
   return (
     <main className="modal-donation-container">

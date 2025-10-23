@@ -16,13 +16,11 @@ const TableOperatorAndCollectorWork = ({
     addValueExtraReceived,
   } = relatory;
 
-  console.log(relatory);
-
   const [oc, setOc] = useState();
 
   useEffect(() => {
     setOc(filter);
-  }, [relatory, filter]);
+  }, [relatory]);
 
   const handleClick = (name) => {
     setTableDonationOpen(true);

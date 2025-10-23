@@ -8,8 +8,9 @@ const getReceiveDonationPerOperator = async (startDate, endDate) => {
     .select(
       "operator_name:operator_code_id(operator_name), operator_code_id, donation_extra,donation_value, donation_received"
     )
-    .gte("donation_day_received", startDate)
-    .lte("donation_day_received", endDate)
+    .gte("donation_day_to_receive", startDate)
+    .lte("donation_day_to_receive", endDate)
+    .not("operator_code_id", "is", null)
 
     if(error) throw error
     
