@@ -11,7 +11,7 @@ import "./index.css";
 import { SearchForm } from "../../components/forms/SearchForm";
 
 const SearchDonor = () => {
-  const [selectedValue, setSelectValue] = useState("todos");
+  const [selectedValue, setSelectValue] = useState("Todos");
   const [searchTerm, setSearchTerm] = useState("");
   const [donor, setDonor] = useState([]);
   const [loading, setLoading] = useState(false);
