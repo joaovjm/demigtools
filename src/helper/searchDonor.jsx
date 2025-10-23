@@ -1,7 +1,6 @@
 import supabase from "./superBaseClient";
 
 const searchDonor = async (params, donor_type) => {
-  console.log("donor_type", donor_type);
   try {
     let query;
 
@@ -17,8 +16,10 @@ const searchDonor = async (params, donor_type) => {
           )
           .eq("donor_cpf.donor_cpf", params.replace(/\D/g, ""));
       } else if (/^\d{1,9}$/.test(params)) {
+        console.log(donor_type)
         query = supabase
-        .rpc("search_donor_by_phone", {phone_search: params, donor_type_filter: donor_type === "Excluso" ? "Excluso" : donor_type})
+        .rpc("search_donor_by_phone", {phone_search: params, donor_type_filter: donor_type.trim() || "Todos"})
+        
       } else if (/[Rr]/.test(params)) {
         query = supabase
           .from("donation")
