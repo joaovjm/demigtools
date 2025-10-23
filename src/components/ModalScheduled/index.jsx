@@ -8,7 +8,18 @@ import newDonorAndDonation from "../../helper/newDonorAndDonation";
 import { getCampains } from "../../helper/getCampains";
 import updateRequestSelected from "../../helper/updateRequestSelected";
 import { insertDonation } from "../../helper/insertDonation";
-import { FaUser, FaMapMarkerAlt, FaPhone, FaDollarSign, FaCalendarAlt, FaBullhorn, FaEdit, FaTimes, FaCheck, FaArrowLeft } from "react-icons/fa";
+import {
+  FaUser,
+  FaMapMarkerAlt,
+  FaPhone,
+  FaDollarSign,
+  FaCalendarAlt,
+  FaBullhorn,
+  FaEdit,
+  FaTimes,
+  FaCheck,
+  FaArrowLeft,
+} from "react-icons/fa";
 
 const ModalScheduled = ({
   scheduledOpen,
@@ -16,7 +27,6 @@ const ModalScheduled = ({
   setStatus,
   nowScheduled,
 }) => {
-  
   const [isScheduling, setIsScheduling] = useState(false);
   const [dateScheduling, setDateScheduling] = useState("");
   const [observation, setObservation] = useState("");
@@ -109,29 +119,33 @@ const ModalScheduled = ({
       return;
     }
 
-    const response = await newDonorAndDonation(
-      scheduledOpen.id,
-      scheduledOpen.name,
-      address,
-      neighborhood,
-      city,
-      telSuccess,
-      tel2,
-      tel3,
-      scheduledOpen.leads_icpf,
-      valueDonation,
-      dateScheduling,
-      campain,
-      observation,
-      scheduledOpen.operator_code_id,
-      nowScheduled
-    );
+    const response = await newDonorAndDonation({
+      id: scheduledOpen.id,
+      name: scheduledOpen.name,
+      address: address,
+      neighborhood: neighborhood || "",
+      city: city || "RIO DE JANEIRO",
+      telSuccess: telSuccess || "",
+      tel2: tel2 || "",
+      tel3: tel3 || "",
+      icpf: scheduledOpen.leads_icpf || "",
+      valueDonation: valueDonation || "",
+      date: dateScheduling || "",
+      campain: campain || "",
+      observation: observation || "",
+      operatorID: scheduledOpen.operator_code_id,
+      nowScheduled: nowScheduled,
+    });
     if (response) onClose();
   };
 
   const handleNewRequestDonation = async () => {
-    if ([valueDonation, dateScheduling, campain, observation].some(v => v === "")){
-      toast.warning("Preencha todos os campos")
+    if (
+      [valueDonation, dateScheduling, campain, observation].some(
+        (v) => v === ""
+      )
+    ) {
+      toast.warning("Preencha todos os campos");
       return;
     }
     const response = await insertDonation(
@@ -145,9 +159,9 @@ const ModalScheduled = ({
       false,
       observation,
       null,
-      campain      
-    )
-    if (response){
+      campain
+    );
+    if (response) {
       const response = await updateRequestSelected(
         "Sucesso",
         scheduledOpen.id,
@@ -156,7 +170,7 @@ const ModalScheduled = ({
       if (response) {
         onClose();
       }
-    } 
+    }
   };
 
   return (
@@ -169,9 +183,7 @@ const ModalScheduled = ({
                 <FaCalendarAlt />
                 Agendamento
               </h2>
-              <span className="person-name">
-                {scheduledOpen.name}
-              </span>
+              <span className="person-name">{scheduledOpen.name}</span>
             </div>
             <button
               onClick={onClose}
@@ -191,18 +203,14 @@ const ModalScheduled = ({
                     <FaMapMarkerAlt />
                     Endereço
                   </div>
-                  <div className="info-value">
-                    {scheduledOpen.address}
-                  </div>
+                  <div className="info-value">{scheduledOpen.address}</div>
                 </div>
                 <div className="info-item">
                   <div className="info-label">
                     <FaPhone />
                     Telefone 1
                   </div>
-                  <div className="info-value">
-                    {scheduledOpen.phone}
-                  </div>
+                  <div className="info-value">{scheduledOpen.phone}</div>
                 </div>
                 <div className="info-item">
                   <div className="info-label">
@@ -254,16 +262,17 @@ const ModalScheduled = ({
                     <FaEdit />
                     Observação
                   </div>
-                  <div className="info-value">
-                    {scheduledOpen.observation}
-                  </div>
+                  <div className="info-value">{scheduledOpen.observation}</div>
                 </div>
               </div>
             </div>
 
             {!isScheduling && (
               <div className="modal-scheduled-footer">
-                <button onClick={handleNewDonation} className="btn-create-donation">
+                <button
+                  onClick={handleNewDonation}
+                  className="btn-create-donation"
+                >
                   <FaCheck />
                   Criar Doação
                 </button>
@@ -337,7 +346,9 @@ const ModalScheduled = ({
                           value={telSuccess}
                           onChange={(e) => setTelSuccess(e.target.value)}
                         >
-                          <option value="" disabled>Selecione o telefone contactado</option>
+                          <option value="" disabled>
+                            Selecione o telefone contactado
+                          </option>
                           {scheduledOpen.phone && (
                             <option value={scheduledOpen.phone}>
                               {scheduledOpen.phone}

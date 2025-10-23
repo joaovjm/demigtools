@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ICONS } from "../../constants/constants";
 import FormInput from "../forms/FormInput";
 import "./index.css";
+import { getCampains } from "../../helper/getCampains";
 
 const ModalNewDonation = ({ 
   isOpen, 
@@ -9,6 +10,14 @@ const ModalNewDonation = ({
   currentLead, 
   onSave
 }) => {
+  const [campains, setCampains] = useState([]);
+  const fetchCampains = async () => {
+    const response = await getCampains();
+    setCampains(response);
+  };
+  useEffect(() => {
+    fetchCampains();
+  }, []);
   const [formData, setFormData] = useState({
     address: "",
     city: "",
@@ -224,8 +233,11 @@ const ModalNewDonation = ({
                       <option value="" disabled>
                         Selecione...
                       </option>
-                      <option value="fralda">Fralda</option>
-                      <option value="manutenção">Manutenção</option>
+                      {campains?.map((cp) => (
+                        <option key={cp.id} value={cp.campain_name}>
+                          {cp.campain_name}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>

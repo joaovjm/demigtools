@@ -9,7 +9,7 @@ import {
 } from "./insertDonor";
 import supabase from "./superBaseClient";
 
-const newDonorAndDonation = async (
+const newDonorAndDonation = async ({
   id,
   name,
   address,
@@ -24,8 +24,8 @@ const newDonorAndDonation = async (
   campain,
   observation,
   operatorID,
-  nowScheduled
-) => {
+  nowScheduled,
+}) => {
   const handleDonorCreation = async () => {
     const response = await insertDonor(
       name,
@@ -54,9 +54,8 @@ const newDonorAndDonation = async (
       date,
       false,
       false,
-      null,
-      DataNow("mesrefnf"),
       observation,
+      DataNow("mesrefnf"),
       campain
     );
     if (donationResponse.length === 0)
