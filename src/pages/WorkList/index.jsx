@@ -202,6 +202,16 @@ const WorkList = () => {
                   <span className="stats-item">
                     Lista: <strong>{workSelect}</strong>
                   </span>
+                  <span className="stats-item">
+                    Total: <strong>
+                      {worklistRequest
+                        .reduce((sum, item) => sum + (item.donation.donation_value || 0), 0)
+                        .toLocaleString("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                        })}
+                    </strong>
+                  </span>
                 </div>
               </div>
 
