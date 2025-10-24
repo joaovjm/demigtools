@@ -1,9 +1,10 @@
 import supabase from "./superBaseClient";
 
 const getPackage = async ({ type, startDate, endDate, filterPackage }) => {
-  console.log("type", type)
+  
   let createPackage = [];
   try {
+    console.log("type", type)
     const { data, error } = await supabase
       .from("donation")
       .select(

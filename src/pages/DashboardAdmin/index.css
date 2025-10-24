@@ -112,9 +112,9 @@
   background-color: #1f1d1d;
   border: 3px double #363a3d;
   border-radius: 6px;
-  padding: 20px;
+  padding: 6px;
   gap: 16px;
-  min-height: 400px;
+  min-height: 500px;
 }
 
 .section-table-and-info {
@@ -162,16 +162,10 @@
 /* Table Section */
 .section-table {
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
   flex: 1;
   min-width: 600px;
-  height: 400px;
-  overflow-y: auto;
-  border: 2px solid #2f2d2d;
+  height: 100%;
   border-radius: 6px;
-  background-color: #363a3d;
-  padding: 16px;
 }
 
 .section-table::-webkit-scrollbar {
