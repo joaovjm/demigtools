@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import getAllRequests from "../../helper/getAllRequests";
 import { DataSelect } from "../DataTime";
 import "./RequestsTable.css";
+import EditRequestCreated from "./EditRequestCreated";
 
-const RequestsTable = () => {
+const RequestsTable = ({setRequestId}) => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const fetchRequests = async () => {
     try {
       setLoading(true);
@@ -27,12 +27,16 @@ const RequestsTable = () => {
   const getStatusBadge = (status) => {
     console.log(status);
     const statusConfig = {
-      "false": { class: "status-np", text: "Inativo", icon: "❌" },
-      "true": { class: "status-success", text: "Ativo", icon: "✅" },
+      false: { class: "status-np", text: "Inativo", icon: "❌" },
+      true: { class: "status-success", text: "Ativo", icon: "✅" },
     };
 
-    const config = statusConfig[status] || { class: "status-default", text: status, icon: "❓" };
-    
+    const config = statusConfig[status] || {
+      class: "status-default",
+      text: status,
+      icon: "❓",
+    };
+
     return (
       <span className={`status-badge ${config.class}`}>
         <span className="status-icon">{config.icon}</span>
@@ -57,15 +61,17 @@ const RequestsTable = () => {
     );
   }
 
+  const handleRequestClick = (id) => {
+  };
+
   return (
     <div className="requests-table-container">
       <div className="requests-table-header">
-        <h3 className="requests-table-title">
-          📋 Requisições Criadas
-        </h3>
+        <h3 className="requests-table-title">📋 Requisições Criadas</h3>
         <div className="requests-table-stats">
           <span className="stats-item">
-            <strong>{requests.length}</strong> {requests.length === 1 ? 'requisição' : 'requisições'}
+            <strong>{requests.length}</strong>{" "}
+            {requests.length === 1 ? "requisição" : "requisições"}
           </span>
         </div>
       </div>
@@ -82,7 +88,11 @@ const RequestsTable = () => {
             </thead>
             <tbody>
               {requests.map((request) => (
-                <tr key={request.id} className="requests-table-row">
+                <tr
+                  key={request.id}
+                  onDoubleClick={() => setRequestId(request.id)}
+                  className="requests-table-row"
+                >
                   <td className="requests-table-cell">
                     <div className="request-name">
                       <strong>{request.name}</strong>
@@ -106,6 +116,8 @@ const RequestsTable = () => {
           <small>Crie uma nova requisição para vê-la aqui</small>
         </div>
       )}
+
+      
     </div>
   );
 };

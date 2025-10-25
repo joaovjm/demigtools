@@ -1,4 +1,5 @@
 import { getOperators } from "../helper/getOperators";
+import { deleteRequestPackage } from "../helper/deleteRequestPackage";
 
 export const distributePackageService = async (
   createPackage,
@@ -51,11 +52,11 @@ export async function fetchOperatorID (setOperatorID, setOperatorIDState) {
   );
  
   const opFilter = response
-    .filter((op) => op.operator_type === "Operador" || op.operator_type === "Operador Casa")
+    .filter((op) => op.operator_type !== "Admin")
     .map((op) => op.operator_code_id);
 
+    console.log(opFilter);
   setOperatorID(opFilter);
-  setOperatorIDState(opFilter);
   
 }
 
@@ -173,4 +174,13 @@ export async function addEndDataInCreatePackage(createPackage, setCreatePackage,
 
   await setCreatePackage(update)
   return update;
+}
+
+export async function deletePackage(createPackage) {
+    const response = await deleteRequestPackage(createPackage)
+    if (response.length > 0) {
+      return { success: true, message: "Pacote deletado com sucesso" }
+    } else {
+      return { success: false, message: "Erro ao deletar pacote" }
+    }
 }

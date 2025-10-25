@@ -16,31 +16,31 @@ const insertRequest = async (createPackage) => {
     )
   );
 
-  const update = filterPackage.map((pkg) => ({
-    ...pkg,
-    request_start_date: DataNow("noformated"),
-  }));
-  const { data, error } = await supabase
-    .from("request")
-    .insert(update)
+  const { data: requestName, error: requestError } = await supabase
+    .from("request_name")
+    .insert([
+      {
+        name: createPackage[0].request_name,
+        date_created: DataNow("noformated"),
+        date_validate: createPackage[0].request_end_date,
+      },
+    ])
     .select();
-  if (error) console.error("Erro: ", error.message);
 
-  if (data) {
-    const { data: requestName, error: requestError } = await supabase
-      .from("request_name")
-      .insert([
-        {
-          name: update[0].request_name,
-          date_created: DataNow("noformated"),
-          date_validate: update[0].request_end_date,
-        },
-      ])
+  if (requestError) console.error(requestError.message);
+
+  if (requestName) {
+    const update = filterPackage.map((pkg) => ({
+      ...pkg,
+      request_start_date: DataNow("noformated"),
+      request_name_id: requestName[0].id
+    }));
+    const { data, error } = await supabase
+      .from("request")
+      .insert(update)
       .select();
-
-    if (requestError) console.error(requestError.message)
-
-    return data;
+    if (error) console.error("Erro: ", error.message);
+    if (data) return data;
   }
 };
 

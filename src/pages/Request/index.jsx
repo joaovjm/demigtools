@@ -17,6 +17,7 @@ import PackagesRequest from "../../components/Request/PackagesRequest";
 import { DataNow } from "../../components/DataTime";
 import ExportToExcel from "../../components/XLSX";
 import { ICONS } from "../../constants/constants";
+import EditRequestCreated from "../../components/Request/EditRequestCreated";
 
 const Request = () => {
   // Sistema de etapas
@@ -31,6 +32,8 @@ const Request = () => {
   const [selected, setSelected] = useState(null);
   const [continueClick, setContinueClick] = useState(false);
   const [cancelClick, setCancelClick] = useState(false);
+  const [showEditRequestCreated, setShowEditRequestCreated] = useState(false);
+  const [requestId, setRequestId] = useState(null);
   const [createPackageState, setCreatePackageState] = useState([]);
   const [selection, setSelection] = useState([]);
   const [endDateRequest, setEndDateRequest] = useState("");
@@ -67,6 +70,13 @@ const Request = () => {
   useEffect(() => {
     fetchOperatorID(setOperatorID, setOperatorIDState);
   }, [showCreatePackage]);
+
+  // Ativar edição quando requestId for definido
+  useEffect(() => {
+    if (requestId) {
+      setShowEditRequestCreated(true);
+    }
+  }, [requestId]);
 
   const handleCancel = () => {
     setCurrentStep(1);
@@ -135,18 +145,6 @@ const Request = () => {
     }
   };
 
-  /*const handleNextStep = () => {
-    if (currentStep < 4) {
-      setCurrentStep(currentStep + 1);
-    }
-  };
-
-  const handlePrevStep = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
-    }
-  };*/
-
   const handleStep1Complete = () => {
     setCurrentStep(2);
   };
@@ -154,8 +152,6 @@ const Request = () => {
   const handleStep2Complete = () => {
     setCurrentStep(3);
   };
-
-  console.log(operatorID);
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -260,6 +256,9 @@ const Request = () => {
             </div>
           </div>
         );
+
+      case showEditRequestCreated: 
+        return <EditRequestCreated requestId={requestId} onClose={() => setShowEditRequestCreated(false)} />;
       default:
         return null;
     }
@@ -300,12 +299,22 @@ const Request = () => {
         )}
 
         {/* Tabela de Requisições Criadas */}
-        {!showCreatePackage && (
-          <RequestsTable />
+        {!showCreatePackage && !showEditRequestCreated && (
+            <RequestsTable setRequestId={setRequestId} />
+        )}
+
+        {showEditRequestCreated && (
+          <EditRequestCreated 
+            requestId={requestId} 
+            onClose={() => {
+              setShowEditRequestCreated(false);
+              setRequestId(null);
+            }} 
+          />
         )}
 
         {/* Botão para iniciar criação de novo pacote */}
-        {!showCreatePackage && (
+        {!showCreatePackage && !showEditRequestCreated && (
           <div className="new-package-button-container">
             <button 
               onClick={handleStartNewPackage}

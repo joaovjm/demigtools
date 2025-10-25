@@ -34,8 +34,8 @@ const RequestCard = ({
   const [countQuant, setCountQuant] = useState(0);
   const [maxValue, setMaxValue] = useState(0);
   const [isSelected, setIsSelected] = useState(false);
-
   const calculateValues = () => {
+    
     if (perOperator && perOperator.length > 0) {
       const value = perOperator.reduce(
         (acc, item) => acc + item.donation_value,
@@ -121,6 +121,8 @@ const RequestCard = ({
         : [...prev, operatorID]
     );
   };
+
+  
 
   return (
     <div className={`request-card ${isSelected ? "selected" : ""}`}>
