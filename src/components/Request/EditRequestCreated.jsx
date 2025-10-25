@@ -1,17 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
-import DonationTable from './DonationTable';
-import RequestCard from './RequestCard';
-import ExportToExcel from '../XLSX';
-import getRequestById from '../../helper/getRequestById';
-import updateRequest from '../../helper/updateRequest';
-import { deletePackage, fetchOperatorID, removeAllPackage } from '../../services/distributePackageService';
-import { distributePackageService } from '../../services/distributePackageService';
-import { ICONS } from '../../constants/constants';
-import './EditRequestCreated.css';
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import DonationTable from "./DonationTable";
+import RequestCard from "./RequestCard";
+import ExportToExcel from "../XLSX";
+import getRequestById from "../../helper/getRequestById";
+import updateRequest from "../../helper/updateRequest";
+import {
+  deletePackage,
+  fetchOperatorID,
+  removeAllPackage,
+} from "../../services/distributePackageService";
+import { distributePackageService } from "../../services/distributePackageService";
+import { ICONS } from "../../constants/constants";
+import "./EditRequestCreated.css";
 
 const EditRequestCreated = ({ requestId, onClose }) => {
-  // Estados principais 
+  // Estados principais
   const [createPackage, setCreatePackage] = useState([]);
   const [perOperator, setPerOperator] = useState({});
   const [unassigned, setUnassigned] = useState([]);
@@ -25,19 +29,16 @@ const EditRequestCreated = ({ requestId, onClose }) => {
   const [requestName, setRequestName] = useState("");
 
   // Carregar dados da requisição
-  console.log(operatorID.map((cp) => {
-    const operator = perOperator[cp]?.length > 0 ? cp : null;
-    return operator;
-  }).filter((cp) => cp !== null));
   useEffect(() => {
     const loadRequestData = async () => {
       try {
         setLoading(true);
         const requestData = await getRequestById(requestId);
-        
+
         if (requestData && requestData.length > 0) {
           // Transformar dados da requisição para o formato esperado
-          const transformedData = requestData.map(item => ({
+          const transformedData = requestData.map((item) => ({
+            id: item.id,
             donor_id: item.donor_id,
             operator_code_id: item.operator_code_id,
             receipt_donation_id: item.receipt_donation_id,
@@ -47,12 +48,12 @@ const EditRequestCreated = ({ requestId, onClose }) => {
             request_start_date: item.request_start_date,
             // Dados do doador
             donor_tel_1: item.donor?.donor_tel_1 || "",
-            
+
             // Dados do operador
             operator_name: item.operator?.operator_name,
             // Valor da doação
             donation_value: item.donation?.donation_value,
-            last_operation: item.donation?.donation_day_received
+            last_operation: item.donation?.donation_day_received,
           }));
 
           setCreatePackage(transformedData);
@@ -115,10 +116,15 @@ const EditRequestCreated = ({ requestId, onClose }) => {
       }
 
       // Atualizar requisição
-      await updateRequest(requestId, createPackage, endDateRequest);
-      
-      toast.success("Requisição atualizada com sucesso!");
-      onClose();
+      const response = await updateRequest(
+        requestId,
+        createPackage,
+        endDateRequest
+      );
+      if (response) {
+        toast.success("Requisição atualizada com sucesso!");
+        onClose();
+      }
     } catch (error) {
       console.error("Erro ao salvar requisição:", error);
       toast.error("Erro ao salvar requisição: " + error.message);
@@ -126,7 +132,7 @@ const EditRequestCreated = ({ requestId, onClose }) => {
   };
 
   const handleDeletePackage = async () => {
-    if(window.confirm("Deseja deletar a requisição?")) {
+    if (window.confirm("Deseja deletar a requisição?")) {
       const response = await deletePackage(createPackage[0].request_name_id);
       if (response.success) {
         onClose();
@@ -147,7 +153,6 @@ const EditRequestCreated = ({ requestId, onClose }) => {
       </div>
     );
   }
-
 
   return (
     <div className="edit-request-container">
@@ -179,27 +184,29 @@ const EditRequestCreated = ({ requestId, onClose }) => {
         <div className="request-step-4-right">
           <div className="request-step-4-right-body">
             {operatorID?.map((cp) => {
-              return perOperator[cp] != null && perOperator[cp].length > 0 && (
-                <RequestCard
-                  perOperator={perOperator[cp]}
-                  setPerOperator={setPerOperator}
-                  key={cp}
-                  operatorName={operatorName[cp]}
-                  operatorID={cp}
-                  selected={selected}
-                  setSelected={setSelected}
-                  createPackage={createPackage}
-                  setCreatePackage={setCreatePackage}
-                  unassigned={unassigned}
-                  setUnassigned={setUnassigned}
-                  allOperator={operatorID}
-                  setAllOperator={setOperatorID}
-                  selection={selection}
-                  setSelection={setSelection}
-                />
-              )
+              return (
+                perOperator[cp] != null &&
+                perOperator[cp].length > 0 && (
+                  <RequestCard
+                    perOperator={perOperator[cp]}
+                    setPerOperator={setPerOperator}
+                    key={cp}
+                    operatorName={operatorName[cp]}
+                    operatorID={cp}
+                    selected={selected}
+                    setSelected={setSelected}
+                    createPackage={createPackage}
+                    setCreatePackage={setCreatePackage}
+                    unassigned={unassigned}
+                    setUnassigned={setUnassigned}
+                    allOperator={operatorID}
+                    setAllOperator={setOperatorID}
+                    selection={selection}
+                    setSelection={setSelection}
+                  />
+                )
+              );
             })}
-            
           </div>
           <div className="request-step-4-right-bottom">
             <div className="input-field">
@@ -222,10 +229,7 @@ const EditRequestCreated = ({ requestId, onClose }) => {
                 fileName={createPackage[0]?.request_name || "requisicao"}
               />
             ) : (
-              <button
-                onClick={handleSave}
-                className="request-btn conclude"
-              >
+              <button onClick={handleSave} className="request-btn conclude">
                 Salvar
               </button>
             )}

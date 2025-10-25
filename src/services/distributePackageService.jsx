@@ -178,7 +178,7 @@ export async function addEndDataInCreatePackage(createPackage, setCreatePackage,
 
 export async function deletePackage(createPackage) {
     const response = await deleteRequestPackage(createPackage)
-    if (response.length > 0) {
+    if (response) {
       return { success: true, message: "Pacote deletado com sucesso" }
     } else {
       return { success: false, message: "Erro ao deletar pacote" }
