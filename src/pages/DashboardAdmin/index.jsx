@@ -14,6 +14,7 @@ import ModalScheduled from "../../components/ModalScheduled";
 import { UserContext } from "../../context/UserContext";
 import ModalDonationInOpen from "../../components/ModalDonationInOpen";
 import OperatorCard from "../../components/cards/OperatorCard";
+import CollectorCard from "../../components/cards/CollectorCard";
 import ConfirmationCard from "../../components/cards/ConfirmationCard";
 import SchedulingCard from "../../components/cards/SchedulingCard";
 import { getLeadsHistory } from "../../helper/getLeadsHistory";
@@ -57,6 +58,7 @@ const Dashboard = () => {
   const [status, setStatus] = useState();
 
   const [donationFilterPerId, setDonationFilterPerId] = useState("");
+  const [viewType, setViewType] = useState("operator"); // "operator" or "collector"
 
   const donations = async () => {
     try {
@@ -132,6 +134,12 @@ const Dashboard = () => {
   const handleClickCard = (e) => {
     setActive(e.currentTarget.id);
     setDonationFilterPerId(null);
+    setViewType("operator"); // Reset to operator view when changing card
+  };
+
+  const handleViewTypeChange = (type) => {
+    setViewType(type);
+    setDonationFilterPerId(null); // Reset filter when changing view type
   };
 
   return (
@@ -201,6 +209,23 @@ const Dashboard = () => {
 
         {active && active !== "leads" ? (
           <section className="section-grafic">
+            {active === "inOpen" && (
+              <div className="view-type-selector">
+                <button
+                  className={`view-type-button ${viewType === "operator" ? "active" : ""}`}
+                  onClick={() => handleViewTypeChange("operator")}
+                >
+                  Por Operadora
+                </button>
+                <button
+                  className={`view-type-button ${viewType === "collector" ? "active" : ""}`}
+                  onClick={() => handleViewTypeChange("collector")}
+                >
+                  Por Coletor
+                </button>
+              </div>
+            )}
+            
             <div className="section-table-and-info">
               <div className="section-operators">
                 {active === "inConfirmation" ? (
@@ -209,10 +234,17 @@ const Dashboard = () => {
                     setDonationFilterPerId={setDonationFilterPerId}
                   />
                 ) : active === "inOpen" ? (
-                  <OperatorCard
-                    operatorCount={fullNotReceivedDonations}
-                    setDonationFilterPerId={setDonationFilterPerId}
-                  />
+                  viewType === "operator" ? (
+                    <OperatorCard
+                      operatorCount={fullNotReceivedDonations}
+                      setDonationFilterPerId={setDonationFilterPerId}
+                    />
+                  ) : (
+                    <CollectorCard
+                      operatorCount={fullNotReceivedDonations}
+                      setDonationFilterPerId={setDonationFilterPerId}
+                    />
+                  )
                 ) : (
                   active === "inScheduled" && (
                     <SchedulingCard
@@ -237,6 +269,7 @@ const Dashboard = () => {
                     setDonationOpen={setDonationOpen}
                     setModalOpen={setModalOpen}
                     donationFilterPerId={donationFilterPerId}
+                    filterType={viewType}
                   />
                 ) : active === "inScheduled" ? (
                   <TableScheduled

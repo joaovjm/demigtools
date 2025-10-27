@@ -6,7 +6,8 @@ const TableInOpen = ({
   fullNotReceivedDonations,
   setDonationOpen,
   setModalOpen,
-  donationFilterPerId
+  donationFilterPerId,
+  filterType = "operator"
 }) => {
   const handleClick = (donation) => {
     setDonationOpen(donation);
@@ -14,7 +15,15 @@ const TableInOpen = ({
   };
 
   const filterFullNotReceiverDonations = fullNotReceivedDonations.filter(
-    (filter) => filter.operator_code_id === donationFilterPerId  );
+    (filter) => {
+      if (filterType === "operator") {
+        return filter.operator_code_id === donationFilterPerId;
+      } else if (filterType === "collector") {
+        return filter.collector_code_id === donationFilterPerId;
+      }
+      return true;
+    }
+  );
 
   const dataToShow = donationFilterPerId ? filterFullNotReceiverDonations : fullNotReceivedDonations;
 

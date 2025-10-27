@@ -105,8 +105,9 @@
 /* Main Content Section */
 .section-grafic {
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
   width: 100%;
   max-width: 1200px;
   background-color: #1f1d1d;
@@ -115,6 +116,44 @@
   padding: 6px;
   gap: 16px;
   min-height: 500px;
+}
+
+/* View Type Selector */
+.view-type-selector {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.view-type-button {
+  flex: 1;
+  padding: 10px 20px;
+  background-color: #363a3d;
+  border: 2px solid #464a4d;
+  color: #faf5e9;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.view-type-button:hover {
+  background-color: #4a4d50;
+  border-color: #faa01c;
+  box-shadow: 0 2px 8px rgba(250, 160, 28, 0.3);
+}
+
+.view-type-button.active {
+  background-color: #faa01c;
+  border-color: #e8901a;
+  color: #1f1d1d;
+  box-shadow: 0 4px 12px rgba(250, 160, 28, 0.5);
 }
 
 .section-table-and-info {
@@ -280,6 +319,17 @@
     min-height: 300px;
   }
 
+  .view-type-selector {
+    max-width: 100%;
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .view-type-button {
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+
   .section-table-and-info {
     flex-direction: column;
     gap: 12px;
@@ -337,6 +387,17 @@
   .section-grafic {
     padding: 16px;
     min-height: 350px;
+  }
+
+  .view-type-selector {
+    max-width: 100%;
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .view-type-button {
+    padding: 9px 16px;
+    font-size: 12px;
   }
 
   .section-table-and-info {
