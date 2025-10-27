@@ -22,7 +22,6 @@ import { getSchedulingRequest } from "../../helper/getSchedulingRequest";
 import TableReceived from "../../components/TableReceived";
 
 const Dashboard = () => {
-  const caracterOperator = JSON.parse(localStorage.getItem("operatorData"));
   const [confirmations, setConfirmations] = useState(null); //Quantidade de fichas na confirmação
   const [valueConfirmations, setValueConfirmations] = useState(null); //Total valor na confirmação
   const [openDonations, setOpenDonations] = useState(null); //Quantidades de fichas em aberto
@@ -31,7 +30,7 @@ const Dashboard = () => {
   const [scheduling, setScheduling] = useState(0); //Total de leads agendadas
   const [active, setActive] = useState(false);
   const [nowScheduled, setNowScheduled] = useState(null);
-  const { operatorData, setOperatorData } = useContext(UserContext);
+  const { operatorData } = useContext(UserContext);
 
   const [donationConfirmationOpen, setDonationConfirmationOpen] = useState([]);
   const [donationOpen, setDonationOpen] = useState([]);
@@ -60,8 +59,8 @@ const Dashboard = () => {
         setValueOpenDonations,
         setDonationConfirmation,
         setFullNotReceivedDonations,
-        caracterOperator.operator_code_id,
-        caracterOperator.operator_type
+        operatorData.operator_code_id,
+        operatorData.operator_type
       );
       const donationReceived = await getDonationReceived(
         operatorData.operator_code_id,
@@ -71,7 +70,7 @@ const Dashboard = () => {
       setDonationsOperator(donationReceived.donation)
       if (operatorData.operator_type === "Operador Casa") {
         await getScheduledLeads(
-          caracterOperator.operator_code_id,
+          operatorData.operator_code_id,
           setScheduled,
           setScheduling,
           "Operador Casa"
@@ -85,7 +84,7 @@ const Dashboard = () => {
         });
       } else {
         await getScheduledLeads(
-          caracterOperator.operator_code_id,
+          operatorData.operator_code_id,
           setScheduled,
           setScheduling
         );
