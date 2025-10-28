@@ -41,7 +41,7 @@ const LeadsManager = () => {
         return option === searchOptionSelected;
       }
     });
-    console.log(resultOne);
+
   };
 
   return (

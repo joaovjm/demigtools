@@ -457,8 +457,6 @@ const WhatsappManager = () => {
   const saveOperatorCode = async (contactId) => {
     setContactsLoading(true);
     try {
-      console.log("🔄 Tentando atualizar contato:", contactId);
-      console.log("📝 Novo código do operador:", editOperatorCode);
       
       // Usar Supabase diretamente em vez da API
       const { data: updatedContact, error } = await supabase
@@ -519,7 +517,7 @@ const WhatsappManager = () => {
     }
   }, [activeTab]);
 
-  console.log(contacts)
+
 
   return (
     <div className="whatsapp-manager-container">

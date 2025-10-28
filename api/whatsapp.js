@@ -91,7 +91,7 @@ export default async function handler(req, res) {
 
         if (existingConvByContact) {
           conversationId = existingConvByContact.conversation_id;
-          console.log("✅ Conversa encontrada via contato:", conversationId);
+
         } else {
           // 2º: Se não encontrou via contato, procura por título (fallback)
           const { data: existingConvByTitle, error: convByTitleError } = await supabase
@@ -107,7 +107,7 @@ export default async function handler(req, res) {
 
           if (existingConvByTitle) {
             conversationId = existingConvByTitle.conversation_id;
-            console.log("✅ Conversa encontrada via título:", conversationId);
+   
           } else {
             // 3º: Se não encontrou nenhuma, cria nova conversa
             const { data: newConv, error: insertConvError } = await supabase
@@ -120,7 +120,7 @@ export default async function handler(req, res) {
               .single();
             if (insertConvError) throw insertConvError;
             conversationId = newConv.conversation_id;
-            console.log("✅ Nova conversa criada:", conversationId);
+
           }
         }
         // 🔹 Inserir mensagem

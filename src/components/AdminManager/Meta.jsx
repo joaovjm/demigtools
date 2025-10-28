@@ -23,9 +23,9 @@ const Meta = ({ operators, inputs, setInputs, read, setRead }) => {
   };
 
   const handleUpdateMeta = async (id) => {
-    console.log(id)
+
     const { total, date } = inputs[id];
-    console.log(total, date)
+
     const { data, error } = await supabase
       .from("operator_meta")
       .upsert(

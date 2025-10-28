@@ -460,7 +460,7 @@ const GenerateReceiptPDF = async ({ cards, receiptConfig, setOk }) => {
   };
   pdfMake.createPdf(docDefinition).getBlob(async (blob) => {
     try {
-      console.log(cards[0]?.receipt_donation_id);
+
       const { data: uploadData, error } = await supabase.storage
         .from("receiptPdfToPrint")
         .upload(
