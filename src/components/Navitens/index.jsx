@@ -65,6 +65,13 @@ export const AdminMenu = [
         path: "./request",
         cName: "submenu-itens",
     },
+    {
+        id: 9,
+        title: "Tarefas",
+        path: "./tasks",
+        cName: "submenu-itens",
+    },
+
 ];
 
 export const RelatórioMenu = [

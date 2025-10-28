@@ -58,12 +58,11 @@ const getDonationNotReceived = (
       donor_tel_2: item.donor.donor_tel_2?.donor_tel_2,
       donor_tel_3: item.donor.donor_tel_3?.donor_tel_3,
       operator_code_id: item.operator_code_id,
-      operator_name: item.operator_name?.operator_name
+      operator_name: item.operator_name?.operator_name,
     });
   };
 
   const getValueDonation = async () => {
-
     const { data: operatorValue } = await supabase
       .from("donation")
       .select(
@@ -71,7 +70,6 @@ const getDonationNotReceived = (
       )
       .eq("donation_received", "Não")
       .order("donation_day_to_receive", { ascending: false });
-
 
     for (let i = 0; i < operatorValue.length; i++) {
       const item = operatorValue[i];
@@ -92,10 +90,13 @@ const getDonationNotReceived = (
       }
       // Em aberto
       if (
-        (operatorType === "Operador" && operatorID === item.operator_code_id || operatorType === "Operador Casa" && operatorID === item.operator_code_id) && item.collector_code_id !== 10 ||
-        operatorType === "Admin" && item.collector_code_id !== 10
+        (((operatorType === "Operador" &&
+          operatorID === item.operator_code_id) ||
+          (operatorType === "Operador Casa" &&
+            operatorID === item.operator_code_id)) &&
+          item.collector_code_id !== 10) ||
+        (operatorType === "Admin" && item.collector_code_id !== 10)
       ) {
-        
         fillFullNotReceivedDonations(item);
         valueOpenDonations += item.donation_value;
         openCount += 1;

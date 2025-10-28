@@ -12,7 +12,7 @@ const RequestsTable = ({setRequestId}) => {
       setLoading(true);
       const data = await getAllRequests();
       setRequests(data);
-      console.log(data);
+
     } catch (error) {
       console.error("Erro ao carregar requisições:", error);
     } finally {
@@ -25,7 +25,7 @@ const RequestsTable = ({setRequestId}) => {
   }, []);
 
   const getStatusBadge = (status) => {
-    console.log(status);
+
     const statusConfig = {
       false: { class: "status-np", text: "Inativo", icon: "❌" },
       true: { class: "status-success", text: "Ativo", icon: "✅" },

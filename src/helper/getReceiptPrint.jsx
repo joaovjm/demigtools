@@ -14,6 +14,6 @@ export async function getReceiptPrint() {
   if (error) throw error;
 
   const dataFiltered = data.filter(item => item.name !== ".emptyFolderPlaceholder")
-  console.log(dataFiltered)
+
   return dataFiltered;
 }

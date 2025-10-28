@@ -85,10 +85,6 @@ export const getMaxAndMedDonations = async (id, requestName) => {
         }
         total += data[i].donation_value;
       }
-      console.log(maxPeriod);
-      console.log(maxGeneral);
-      console.log(penultimate);
-      console.log(history);
 
       
     }

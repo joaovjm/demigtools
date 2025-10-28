@@ -29,6 +29,7 @@ import Request from "./pages/Request";
 import DashboardAdmin from "./pages/DashboardAdmin";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Chat from "./pages/Chat";
+import Tasks from "./pages/Tasks";
 
 const AppRoutesContent = () => {
   const location = useLocation();
@@ -85,9 +86,7 @@ const AppRoutesContent = () => {
             </Wrapper>
           }
         />
-        
-        
-        
+
         <Route
           path="/worklist"
           element={
@@ -105,9 +104,7 @@ const AppRoutesContent = () => {
             </Wrapper>
           }
         />
-        
-        
-        
+
         <Route element={<ProtectedRoute requiredRole="Admin" />}>
           <Route
             path="/dashboardAdmin"
@@ -118,61 +115,69 @@ const AppRoutesContent = () => {
             }
           />
           <Route
-          path="/request"
-          element={
-            <Wrapper>
-              <Request />
-            </Wrapper>
-          }
-        />
-        <Route
-          path="/loadleads"
-          element={
-            <Wrapper>
-              <LoadLeads />
-            </Wrapper>
-          }
-        />
-        <Route
-          path="/usersmanager"
-          element={
-            <Wrapper>
-              <UsersManager />
-            </Wrapper>
-          }
-        />
-        <Route
-          path="/createmensaldonation"
-          element={
-            <Wrapper>
-              <CreateMensalDonation />
-            </Wrapper>
-          }
-        />
-        <Route
-          path="/operators"
-          element={
-            <Wrapper>
-              <Operators />
-            </Wrapper>
-          }
-        />
-        <Route
-          path="/operatorwork"
-          element={
-            <Wrapper>
-              <OperatorWork />
-            </Wrapper>
-          }
-        />
-        <Route
-          path="/workhistory"
-          element={
-            <Wrapper>
-              <WorkHistory />
-            </Wrapper>
-          }
-        />
+            path="/request"
+            element={
+              <Wrapper>
+                <Request />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="/tasks"
+            element={
+              <Wrapper>
+                <Tasks />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="/loadleads"
+            element={
+              <Wrapper>
+                <LoadLeads />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="/usersmanager"
+            element={
+              <Wrapper>
+                <UsersManager />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="/createmensaldonation"
+            element={
+              <Wrapper>
+                <CreateMensalDonation />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="/operators"
+            element={
+              <Wrapper>
+                <Operators />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="/operatorwork"
+            element={
+              <Wrapper>
+                <OperatorWork />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="/workhistory"
+            element={
+              <Wrapper>
+                <WorkHistory />
+              </Wrapper>
+            }
+          />
         </Route>
         <Route
           path="/countdonations"

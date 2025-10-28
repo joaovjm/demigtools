@@ -59,7 +59,6 @@ const ModalWorklist = ({
     }
   };
 
-  console.log(workListSelected);
 
   const fetchCampains = async () => {
     const response = await getCampains();

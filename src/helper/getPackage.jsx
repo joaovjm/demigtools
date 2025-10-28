@@ -4,7 +4,7 @@ const getPackage = async ({ type, startDate, endDate, filterPackage }) => {
   
   let createPackage = [];
   try {
-    console.log("type", type)
+
     const { data, error } = await supabase
       .from("donation")
       .select(
@@ -30,7 +30,7 @@ const getPackage = async ({ type, startDate, endDate, filterPackage }) => {
           donor_type: item?.donor?.donor_type,
         };
       });
-      console.log("newPackage", newPackage);
+
       const count = newPackage.reduce((acc, curr) => {
         acc[curr.donor_id] = (acc[curr.donor_id] || 0) + 1;
         return acc;
@@ -79,7 +79,7 @@ const getPackage = async ({ type, startDate, endDate, filterPackage }) => {
   } catch (error) {
     console.error(error.message);
   }
-  //console.log("createPackage", createPackage)
+
   return createPackage;
 };
 

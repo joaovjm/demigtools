@@ -10,8 +10,10 @@ import { UserContext } from "../../context/UserContext";
 import GenerateReceiptPDF from "../GenerateReceiptPDF";
 import { getEditReceipt } from "../../helper/getEditReceipt";
 import { FaDollarSign } from "react-icons/fa";
+import GenerateDepositPDF from "../GenerateDepositPDF";
 
 const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
+  
   const { operatorData } = useContext(UserContext);
   const [value, setValue] = useState(donation.donation_value);
   const [date, setDate] = useState(donation.donation_day_to_receive);
@@ -161,6 +163,21 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
     }
   };
 
+  const handleDownloadPDFDeposit = async () => {
+    const donoAndDonationData = {...donation, donor_name: donorData.nome};
+
+    try {
+      await GenerateDepositPDF({
+        data: donoAndDonationData,
+        config: receiptConfig,
+      });
+      toast.success("PDF para deposito gerado com sucesso!");
+    } catch (error) {
+      console.error("Erro ao gerar PDF:", error);
+      toast.error("Erro ao gerar PDF para deposito");
+    }
+  };
+
   return (
     <main className="modal-donation-container">
       <div className="modal-donation">
@@ -243,7 +260,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
                     min="0"
                   />
                 </div>
-                
+
                 <div className="input-group">
                   <label>Data para Receber *</label>
                   <input
@@ -365,6 +382,26 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
                 justifyContent: "center",
               }}
             >
+              <button
+                onClick={handleDownloadPDFDeposit}
+                style={{
+                  padding: "8px 16px",
+                  border: "none",
+                  borderRadius: "6px",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  cursor: "pointer",
+                  backgroundColor: "#faa01c",
+                  color: "#fff",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  transition: "all 0.3s ease",
+                }}
+                title="Baixar PDF do Recibo"
+              >
+                📄 Recibo para Deposito
+              </button>
               <button
                 onClick={handleDownloadPDF}
                 style={{
