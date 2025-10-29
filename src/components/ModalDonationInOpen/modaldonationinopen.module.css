@@ -1,5 +1,5 @@
 /* Modal Container */
-.modal-donation-in-open-container {
+.modalDonationInOpenContainer {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -24,7 +24,7 @@
 }
 
 /* Modal Content */
-.modal-donation-in-open {
+.modalDonationInOpen {
   position: relative;
   z-index: 1;
   background-color: #1f1d1d;
@@ -47,7 +47,7 @@
   }
 }
 
-.modal-donation-in-open-content {
+.modalDonationInOpenContent {
   width: 600px;
   max-height: 96vh;
   border: 3px double #383838;
@@ -59,7 +59,7 @@
 }
 
 /* Header */
-.modal-donation-in-open-header {
+.modalDonationInOpenHeader {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -69,14 +69,14 @@
   flex-shrink: 0;
 }
 
-.modal-title-section {
+.modalTitleSection {
   display: flex;
   flex-direction: column;
   gap: 8px;
   flex: 1;
 }
 
-.modal-title {
+.modalTitle {
   color: #faf5e9;
   font-size: 20px;
   font-weight: 600;
@@ -87,7 +87,7 @@
   gap: 8px;
 }
 
-.receipt-number {
+.receiptNumber {
   color: #faa01c;
   font-size: 14px;
   font-weight: 500;
@@ -98,7 +98,7 @@
   align-self: flex-start;
 }
 
-.btn-close-modal {
+.btnCloseModal {
   background-color: #c70000;
   color: #faf5e9;
   border: none;
@@ -116,13 +116,13 @@
   flex-shrink: 0;
 }
 
-.btn-close-modal:hover {
+.btnCloseModal:hover {
   background-color: #a60000;
   transform: scale(1.1);
 }
 
 /* Body */
-.modal-donation-in-open-body {
+.modalDonationInOpenBody {
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -132,7 +132,7 @@
 }
 
 /* Info Sections */
-.donation-info-section,
+.donationInfoSection,
 .donor-info-section {
   background-color: rgba(56, 91, 173, 0.05);
   border: 1px solid rgba(56, 91, 173, 0.2);
@@ -140,8 +140,8 @@
   padding: 16px;
 }
 
-.donation-info-section h3,
-.donor-info-section h3 {
+.donationInfoSection h3,
+.donorInfoSection h3 {
   color: #faf5e9;
   font-size: 16px;
   margin: 0 0 12px 0;
@@ -151,34 +151,34 @@
   gap: 8px;
 }
 
-.donation-info-section h3::before {
+.donationInfoSection h3::before {
   content: "💰";
   font-size: 18px;
 }
 
-.donor-info-section h3::before {
+.donorInfoSection h3::before {
   content: "👤";
   font-size: 18px;
 }
 
 /* Info Grid */
-.info-grid {
+.infoGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
 
-.info-item {
+.infoItem {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.info-item.full-width {
+.infoItemFullWidth {
   grid-column: span 2;
 }
 
-.info-label {
+.infoLabel {
   color: #faa01c;
   font-size: 12px;
   font-weight: 500;
@@ -189,7 +189,7 @@
   letter-spacing: 0.5px;
 }
 
-.info-value {
+.infoValue {
   color: #faf5e9;
   font-size: 14px;
   font-weight: 500;
@@ -200,7 +200,7 @@
   word-break: break-word;
 }
 
-.info-value.reason {
+.infoValue.reason {
   background-color: rgba(199, 0, 0, 0.1);
   border-color: rgba(199, 0, 0, 0.3);
   color: #ff6b6b;
@@ -208,7 +208,7 @@
 }
 
 /* Footer */
-.modal-donation-in-open-footer {
+.modalDonationInOpenFooter {
   display: flex;
   justify-content: center;
   padding-top: 12px;
@@ -217,7 +217,7 @@
 }
 
 /* Button */
-.btn-view-donor {
+.btnViewDonor {
   padding: 12px 32px;
   border: none;
   border-radius: 6px;
@@ -236,13 +236,13 @@
   color: #faf5e9;
 }
 
-.btn-view-donor:hover {
+.btnViewDonor:hover {
   background-color: #284487;
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(56, 91, 173, 0.4);
 }
 
-.btn-view-donor:disabled {
+.btnViewDonor:disabled {
   background-color: #666;
   cursor: not-allowed;
   transform: none;
@@ -250,76 +250,76 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .modal-donation-in-open-content {
+  .modalDonationInOpenContent {
     width: 90vw;
     max-height: 95vh;
     padding: 12px;
   }
   
-  .modal-title {
+  .modalTitle {
     font-size: 18px;
   }
   
-  .info-grid {
+  .infoGrid {
     grid-template-columns: 1fr;
     gap: 8px;
   }
   
-  .info-item.full-width {
+  .infoItem.fullWidth {
     grid-column: span 1;
   }
   
-  .donation-info-section,
-  .donor-info-section {
+  .donationInfoSection,
+  .donorInfoSection {
     padding: 12px;
   }
 }
 
 @media (max-width: 480px) {
-  .modal-donation-in-open-content {
+  .modalDonationInOpenContent {
     width: 95vw;
     max-height: 95vh;
     padding: 8px;
   }
   
-  .btn-view-donor {
+  .btnViewDonor {
     padding: 10px 24px;
     font-size: 14px;
     height: 44px;
     min-width: 180px;
   }
   
-  .modal-title {
+  .modalTitle {
     font-size: 16px;
   }
   
-  .receipt-number {
+  .receiptNumber {
     font-size: 12px;
     padding: 3px 8px;
   }
 }
 
 /* Scrollbar Styling */
-.modal-donation-in-open::-webkit-scrollbar {
+.modalDonationInOpen::-webkit-scrollbar {
   width: 8px;
 }
 
-.modal-donation-in-open::-webkit-scrollbar-track {
+.modalDonationInOpen::-webkit-scrollbar-track {
   background: #2a2828;
   border-radius: 4px;
 }
 
-.modal-donation-in-open::-webkit-scrollbar-thumb {
+.modalDonationInOpen::-webkit-scrollbar-thumb {
   background: #faa01c;
   border-radius: 4px;
 }
 
-.modal-donation-in-open::-webkit-scrollbar-thumb:hover {
+.modalDonationInOpen::-webkit-scrollbar-thumb:hover {
   background: #e8901a;
 }
 
 /* Legacy support for existing classes (for backwards compatibility) */
-.modal-confirmations {
+.modalConfirmations {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -332,7 +332,7 @@
   z-index: 1000;
 }
 
-.modal-confirmations-content {
+.modalConfirmationsContent {
   background-color: #1f1d1d;
   border-radius: 8px;
   padding: 20px;
@@ -341,13 +341,13 @@
   overflow-y: auto;
 }
 
-.modal-confirmations-div {
+.modalConfirmationsDiv {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.modal-confirmations-title {
+.modalConfirmationsTitle {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -355,13 +355,13 @@
   padding-bottom: 12px;
 }
 
-.modal-confirmations-title h2 {
+.modalConfirmationsTitle h2 {
   color: #faf5e9;
   margin: 0;
   font-size: 18px;
 }
 
-.btn-close {
+.btnClose {
   background-color: #c70000;
   color: #faf5e9;
   border: none;
@@ -371,36 +371,36 @@
   font-size: 14px;
 }
 
-.btn-close:hover {
+.btnClose:hover {
   background-color: #a60000;
 }
 
-.modal-confirmations-body {
+.modalConfirmationsBody {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.modal-confirmations-body label {
+.modalConfirmationsBody label {
   color: #faf5e9;
   font-size: 14px;
   padding: 4px 0;
 }
 
-.modal-confirmations-body h4 {
+.modalConfirmationsBody h4 {
   color: #faa01c;
   margin: 8px 0 0 0;
   font-size: 14px;
 }
 
-.modal-confirmation-body {
+.modalConfirmationBody {
   width: 100%;
   display: flex;
   justify-content: center;
   padding: 10px;
 }
 
-.btn-open-donation {
+.btnOpenDonation {
   padding: 12px 24px;
   border: none;
   border-radius: 6px;
@@ -412,7 +412,7 @@
   transition: all 0.3s ease;
 }
 
-.btn-open-donation:hover {
+.btnOpenDonation:hover {
   background-color: #284487;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(56, 91, 173, 0.3);

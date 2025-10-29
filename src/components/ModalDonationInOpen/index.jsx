@@ -1,103 +1,103 @@
 import { useNavigate } from "react-router";
 import { FaUser, FaMapMarkerAlt, FaPhone, FaDollarSign, FaExclamationTriangle, FaEye } from "react-icons/fa";
-import "./index.css";
+import styles from "./modaldonationinopen.module.css";
 
 const ModalDonationInOpen = ({ donationOpen, onClose }) => {
   const navigate = useNavigate();
   
   return (
-    <main className="modal-donation-in-open-container">
-      <div className="modal-donation-in-open">
-        <div className="modal-donation-in-open-content">
-          <div className="modal-donation-in-open-header">
-            <div className="modal-title-section">
-              <h2 className="modal-title">
+    <main className={styles.modalDonationInOpenContainer}>
+      <div className={styles.modalDonationInOpen}>
+        <div className={styles.modalDonationInOpenContent}>
+          <div className={styles.modalDonationInOpenHeader}>
+            <div className={styles.modalTitleSection}>
+              <h2 className={styles.modalTitle}>
                 <FaExclamationTriangle />
                 Doação em Aberto
               </h2>
-              <span className="receipt-number">
+              <span className={styles.receiptNumber}>
                 Recibo: #{donationOpen.receipt_donation_id}
               </span>
             </div>
             <button
               onClick={() => onClose()}
-              className="btn-close-modal"
+              className={styles.btnCloseModal}
               title="Fechar"
             >
               ✕
             </button>
           </div>
 
-          <div className="modal-donation-in-open-body">
-            <div className="donation-info-section">
+          <div className={styles.modalDonationInOpenBody}>
+            <div className={styles.donationInfoSection}>
               <h3>Informações da Doação</h3>
-              <div className="info-grid">
-                <div className="info-item">
-                  <div className="info-label">
+              <div className={styles.infoGrid}>
+                <div className={styles.infoItem}>
+                  <div className={styles.infoLabel}>
                     <FaDollarSign />
                     Valor
                   </div>
-                  <div className="info-value">
+                  <div className={styles.infoValue}>
                     R$ {donationOpen.donation_value},00
                   </div>
                 </div>
-                <div className="info-item">
-                  <div className="info-label">
+                <div className={styles.infoItem}>
+                  <div className={styles.infoLabel}>
                     <FaExclamationTriangle />
                     Motivo
                   </div>
-                  <div className="info-value reason">
+                  <div className={styles.infoValue.reason}>
                     {donationOpen.donation_confirmation_reason}
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="donor-info-section">
+            <div className={styles.donorInfoSection}>
               <h3>Dados do Doador</h3>
-              <div className="info-grid">
-                <div className="info-item">
-                  <div className="info-label">
+              <div className={styles.infoGrid}>
+                <div className={styles.infoItem}>
+                  <div className={styles.infoLabel}>
                     <FaUser />
                     Nome
                   </div>
-                  <div className="info-value">
+                  <div className={styles.infoValue}>
                     {donationOpen.donor_name}
                   </div>
                 </div>
-                <div className="info-item">
-                  <div className="info-label">
+                <div className={styles.infoItem}>
+                  <div className={styles.infoLabel}>
                     <FaMapMarkerAlt />
                     Endereço
                   </div>
-                  <div className="info-value">
+                  <div className={styles.infoValue}>
                     {donationOpen.donor_address}
                   </div>
                 </div>
-                <div className="info-item">
-                  <div className="info-label">
+                <div className={styles.infoItem}>
+                  <div className={styles.infoLabel}>
                     <FaPhone />
                     Telefone 1
                   </div>
-                  <div className="info-value">
+                  <div className={styles.infoValue}>
                     {donationOpen.donor_tel_1}
                   </div>
                 </div>
-                <div className="info-item">
-                  <div className="info-label">
+                <div className={styles.infoItem}>
+                  <div className={styles.infoLabel}>
                     <FaPhone />
                     Telefone 2
                   </div>
-                  <div className="info-value">
+                  <div className={styles.infoLabel}>
                     {donationOpen.donor_tel_2 || "*****-****"}
                   </div>
                 </div>
-                <div className="info-item">
-                  <div className="info-label">
+                <div className={styles.infoItem}>
+                  <div className={styles.infoLabel}>
                     <FaPhone />
                     Telefone 3
                   </div>
-                  <div className="info-value">
+                  <div className={styles.infoValue}>
                     {donationOpen.donor_tel_3 || "*****-****"}
                   </div>
                 </div>
@@ -105,10 +105,10 @@ const ModalDonationInOpen = ({ donationOpen, onClose }) => {
             </div>
           </div>
 
-          <div className="modal-donation-in-open-footer">
+          <div className={styles.modalDonationInOpenFooter}>
             <button
               onClick={() => navigate(`/donor/${donationOpen.donor_id}`)}
-              className="btn-view-donor"
+              className={styles.btnViewDonor}
             >
               <FaEye />
               Abrir Doador
