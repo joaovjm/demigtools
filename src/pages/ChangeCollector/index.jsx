@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./index.css";
+import styles from "./changecollector.module.css";
 
 import { getCollector } from "../../helper/getCollector";
 import { changeCollector, handleReasonButtonPressed } from "../../helper/changeCollector";
@@ -91,18 +91,18 @@ const ChangeCollector = () => {
   };
 
   return (
-    <div className="change-collector-container">
-      <div className="change-collector-content">
-        <h3 className="change-collector-title">
+    <div className={styles.changeCollectorContainer}>
+      <div className={styles.changeCollectorContent}>
+        <h3 className={styles.changeCollectorTitle}>
           {ICONS.EXCHANGE} Mudar Coletador
         </h3>
         
-        <form className="change-collector-form" onSubmit={handleChangeCollector}>
-          <div className="change-collector-section">
+        <form className={styles.changeCollectorForm} onSubmit={handleChangeCollector}>
+          <div className={styles.changeCollectorSection}>
             <h4>Informações da Alteração</h4>
             
-            <div className="form-row">
-              <div className="form-group">
+            <div className={styles.formRow}>
+              <div className={styles.formGroup}>
                 <FormSelect
                   label="Coletador"
                   icon={ICONS.MOTORCYCLE}
@@ -114,7 +114,7 @@ const ChangeCollector = () => {
                 />
               </div>
               
-              <div className="form-group">
+              <div className={styles.formGroup}>
                 <FormInput
                   label="Data"
                   icon={ICONS.CALENDAR}
@@ -122,10 +122,10 @@ const ChangeCollector = () => {
                   type="date"
                   value={formData.date}
                   onChange={handleInputChange}
-                  classinput="change-collector-input"
+                  classinput={styles.changeCollectorInput}
                 />
               </div>
-              <div className="form-group">
+              <div className={styles.formGroup}>
                 <FormInput
                   label="Buscar Recibo"
                   icon={ICONS.SEARCH}
@@ -133,17 +133,17 @@ const ChangeCollector = () => {
                   name="search"
                   value={formData.search}
                   onChange={handleInputChange}
-                  classinput="change-collector-input"
+                  classinput={styles.changeCollectorInput}
                   placeholder="Digite para buscar o recibo..."
                 />
               </div>
             </div>
           </div>
 
-          <div className="change-collector-actions">
+          <div className={styles.changeCollectorActions}>
             <button 
               type="submit"
-              className="change-collector-btn primary"
+              className={`${styles.changeCollectorBtn} ${styles.primary}`}
             >
               {ICONS.EXCHANGE} Alterar Coletador
             </button>
@@ -151,7 +151,7 @@ const ChangeCollector = () => {
         </form>
 
         {alert && (
-          <div className="change-collector-alert">
+          <div className={styles.changeCollectorAlert}>
             <MessageStatus
               message={alert.message}
               type={alert.type}
@@ -167,24 +167,24 @@ const ChangeCollector = () => {
         )}
 
         {openReason && (
-          <div className="change-collector-reason">
-            <div className="reason-section">
+          <div className={styles.changeCollectorReason}>
+            <div className={styles.reasonSection}>
               <h4>Motivo da Alteração</h4>
-              <div className="form-group">
+              <div className={styles.formGroup}>
                 <label>Descreva o motivo da alteração</label>
                 <input 
                   value={reason} 
                   autoFocus={true} 
                   type="text" 
                   onChange={(e) => setReason(e.target.value)}
-                  className="change-collector-input"
+                  className={styles.changeCollectorInput}
                   placeholder="Digite o motivo..."
                 />
               </div>
-              <div className="reason-actions">
+              <div className={styles.reasonActions}>
                 <button 
                   onClick={() => handleReasonButtonPressed(reason)} 
-                  className="change-collector-btn primary"
+                  className={`${styles.changeCollectorBtn} ${styles.primary}`}
                 >
                   {ICONS.CONFIRMED} Confirmar
                 </button>

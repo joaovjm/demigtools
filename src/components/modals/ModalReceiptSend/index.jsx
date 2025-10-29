@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./index.css";
+import styles from "./modalreceiptsend.module.css";
 import { FaDollarSign, FaEdit, FaSave, FaTimes } from "react-icons/fa";
 import GenerateDepositPDF from "../../GenerateDepositPDF";
 import supabase from "../../../helper/superBaseClient";
@@ -31,14 +31,14 @@ const ModalReceiptSend = ({ setSendModalOpen, deposit, setDeposit }) => {
   
   return (
     <div className="modal-area">
-      <div className="modal-receipt-send-container">
-        <div className="modal-receipt-send-header">
+      <div className={styles.modalReceiptSendContainer}>
+        <div className={styles.modalReceiptSendHeader}>
           <h3>
             <FaDollarSign />
             Comprovantes de Depósitos
           </h3>
           <button
-            className="modal-receipt-send-header-button-exit"
+            className={styles.modalReceiptSendHeaderButtonExit}
             onClick={() => setSendModalOpen(false)}
           >
             <FaTimes />
@@ -46,44 +46,44 @@ const ModalReceiptSend = ({ setSendModalOpen, deposit, setDeposit }) => {
           </button>
         </div>
         
-        <div className="modal-receipt-send-body">
+        <div className={styles.modalReceiptSendBody}>
           {deposit?.length === 0 ? (
-            <div className="modal-receipt-send-empty">
+            <div className={styles.modalReceiptSendEmpty}>
               <p>Nenhum comprovante de depósito encontrado.</p>
             </div>
           ) : (
             deposit?.map((item, index) => (
-              <div key={item.receipt_donation_id} className="modal-receipt-send-item">
-                <div className="modal-receipt-send-item-info">
-                  <div className="input-field">
+              <div key={item.receipt_donation_id} className={styles.modalReceiptSendItem}>
+                <div className={styles.modalReceiptSendItemInfo}>
+                  <div className={styles.inputField}>
                     <label>Recibo</label>
                     <p>{item.receipt_donation_id}</p>
                   </div>
-                  <div className="input-field">
+                  <div className={styles.inputField}>
                     <label>Nome</label>
                     <p>{item.donor?.donor_name}</p>
                   </div>
-                  <div className="input-field">
+                  <div className={styles.inputField}>
                     <label>WhatsApp</label>
                     <input
                       type="text"
                       value={item.donor.donor_tel_1}
                       onChange={(e) => setWhatsapp(e.target.value)}
                       readOnly={inEdit !== item.receipt_donation_id}
-                      className={inEdit === item.receipt_donation_id ? "editable" : "readonly"}
+                      className={inEdit === item.receipt_donation_id ? styles.editable : styles.readonly}
                     />
                   </div>
                 </div>
                 
-                <div className="modal-receipt-send-item-actions">
+                <div className={styles.modalReceiptSendItemActions}>
                   <button
                     onClick={() => handleEdit(item, index)}
-                    className={`modal-receipt-send-action-btn ${inEdit === item.receipt_donation_id ? "save" : "edit"}`}
+                    className={`${styles.modalReceiptSendActionBtn} ${inEdit === item.receipt_donation_id ? styles.save : styles.edit}`}
                     title={inEdit === item.receipt_donation_id ? "Salvar alterações" : "Editar WhatsApp"}
                   >
                     {inEdit === item.receipt_donation_id ? <FaSave /> : <FaEdit />}
                   </button>
-                  <GenerateDepositPDF data={item} config={config}/>
+                  {/* <GenerateDepositPDF data={item} config={config}/> */}
                 </div>
               </div>
             ))

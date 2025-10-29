@@ -1,4 +1,4 @@
-.modal-receipt-send-container {
+.modalReceiptSendContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -9,7 +9,7 @@
   border-radius: 6px;
 }
 
-.modal-receipt-send-header {
+.modalReceiptSendHeader {
   display: flex;
   width: 95%;
   align-items: center;
@@ -21,7 +21,7 @@
   margin: 10px 0;
 }
 
-.modal-receipt-send-header h3 {
+.modalReceiptSendHeader h3 {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -29,7 +29,7 @@
   margin: 0;
 }
 
-.modal-receipt-send-header-button-exit {
+.modalReceiptSendHeaderButtonExit {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -43,12 +43,12 @@
   transition: all 0.2s ease;
 }
 
-.modal-receipt-send-header-button-exit:hover {
+.modalReceiptSendHeaderButtonExit:hover {
   background-color: #b80a0b;
   transform: scale(1.02);
 }
 
-.modal-receipt-send-body {
+.modalReceiptSendBody {
   display: flex;
   width: 95%;
   flex-direction: column;
@@ -59,19 +59,19 @@
   padding: 0 12px;
 }
 
-.modal-receipt-send-body::-webkit-scrollbar {
+.modalReceiptSendBody::-webkit-scrollbar {
   background-color: #1f1d1d;
   border-radius: 6px;
   width: 10px;
 }
 
-.modal-receipt-send-body::-webkit-scrollbar-thumb {
+.modalReceiptSendBody::-webkit-scrollbar-thumb {
   background-color: #faa01c;
   border-radius: 6px;
   cursor: pointer;
 }
 
-.modal-receipt-send-empty {
+.modalReceiptSendEmpty {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -80,7 +80,7 @@
   font-size: 16px;
 }
 
-.modal-receipt-send-item {
+.modalReceiptSendItem {
   display: flex;
   width: 100%;
   align-items: center;
@@ -93,27 +93,27 @@
   gap: 24px;
 }
 
-.modal-receipt-send-item-info {
+.modalReceiptSendItemInfo {
   display: flex;
   gap: 32px;
   align-items: center;
   flex: 1;
 }
 
-.modal-receipt-send-item-info .input-field {
+.modalReceiptSendItemInfo .inputField {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.modal-receipt-send-item-info .input-field label {
+.modalReceiptSendItemInfo .inputField label {
   color: #faa01c;
   font-size: 12px;
   font-weight: bold;
   text-transform: uppercase;
 }
 
-.modal-receipt-send-item-info .input-field p {
+.modalReceiptSendItemInfo .inputField p {
   color: #fff;
   margin: 0;
   font-size: 14px;
@@ -121,7 +121,7 @@
   max-width: 250px;
 }
 
-.modal-receipt-send-item-info .input-field input {
+.modalReceiptSendItemInfo .inputField input {
   background-color: #1f1d1d;
   border: 1px solid #383838;
   border-radius: 4px;
@@ -131,31 +131,31 @@
   transition: all 0.2s ease;
 }
 
-.modal-receipt-send-item-info .input-field input.readonly {
+.modalReceiptSendItemInfo .inputField input.readonly {
   background-color: #2a2828;
   color: #888;
   cursor: not-allowed;
 }
 
-.modal-receipt-send-item-info .input-field input.editable {
+.modalReceiptSendItemInfo .inputField input.editable {
   background-color: #1f1d1d;
   border-color: #faa01c;
   color: #fff;
 }
 
-.modal-receipt-send-item-info .input-field input:focus {
+.modalReceiptSendItemInfo .inputField input:focus {
   outline: none;
   border-color: #faa01c;
   box-shadow: 0 0 0 2px rgba(250, 160, 28, 0.2);
 }
 
-.modal-receipt-send-item-actions {
+.modalReceiptSendItemActions {
   display: flex;
   gap: 12px;
   align-items: center;
 }
 
-.modal-receipt-send-action-btn {
+.modalReceiptSendActionBtn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -169,57 +169,58 @@
   transition: all 0.2s ease;
 }
 
-.modal-receipt-send-action-btn:hover {
+.modalReceiptSendActionBtn:hover {
   transform: scale(1.05);
 }
 
-.modal-receipt-send-action-btn.edit {
+.modalReceiptSendActionBtn.edit {
   background-color: #385bad;
 }
 
-.modal-receipt-send-action-btn.edit:hover {
+.modalReceiptSendActionBtn.edit:hover {
   background-color: #2d4a96;
 }
 
-.modal-receipt-send-action-btn.save {
+.modalReceiptSendActionBtn.save {
   background-color: #28a745;
 }
 
-.modal-receipt-send-action-btn.save:hover {
+.modalReceiptSendActionBtn.save:hover {
   background-color: #218838;
 }
 
-.modal-receipt-send-action-btn.send {
+.modalReceiptSendActionBtn.send {
   background-color: #faa01c;
 }
 
-.modal-receipt-send-action-btn.send:hover {
+.modalReceiptSendActionBtn.send:hover {
   background-color: #e8910a;
 }
 
 /* Responsividade */
 @media (max-width: 768px) {
-  .modal-receipt-send-container {
+  .modalReceiptSendContainer {
     width: 95%;
   }
   
-  .modal-receipt-send-item {
+  .modalReceiptSendItem {
     flex-direction: column;
     gap: 20px;
   }
   
-  .modal-receipt-send-item-info {
+  .modalReceiptSendItemInfo {
     flex-direction: column;
     gap: 16px;
     width: 100%;
   }
   
-  .modal-receipt-send-item-info .input-field p {
+  .modalReceiptSendItemInfo .inputField p {
     max-width: 100%;
   }
   
-  .modal-receipt-send-item-actions {
+  .modalReceiptSendItemActions {
     width: 100%;
     justify-content: center;
   }
 }
+
