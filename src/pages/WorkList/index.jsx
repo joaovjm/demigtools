@@ -261,6 +261,8 @@ const WorkList = () => {
                             ? "status-na"
                             : list.request_status === "Agendado"
                             ? "status-scheduled"
+                            : list.request_status === "Recebido"
+                            ? "status-received"
                             : ""
                         }`}
                         key={list.receipt_donation_id}

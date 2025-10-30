@@ -118,7 +118,7 @@ const ModalWorklist = ({
   };
 
   const handleSaveNewDonation = async () => {
-    if ([campainSelected, value, date, extraValue].some((v) => v === "")) {
+    if ([campainSelected, value, date].some((v) => v === "")) {
       toast.warning("Preencha todos os campos corretamente");
       return;
     }

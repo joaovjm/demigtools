@@ -277,6 +277,11 @@
   border-left: 3px solid #385BAD;
 }
 
+.worklist-table-row.status-received {
+  background-color: rgba(0, 188, 212, 0.1);
+  border-left: 3px solid #00BCD4;
+}
+
 .worklist-table-cell {
   padding: 10px 8px;
   color: #faf5e9;
@@ -350,6 +355,12 @@
   background-color: rgba(56, 91, 173, 0.2);
   color: #385BAD;
   border: 1px solid #385BAD;
+}
+
+.status-badge.status-recebido {
+  background-color: rgba(0, 188, 212, 0.2);
+  color: #00BCD4;
+  border: 1px solid #00BCD4;
 }
 
 /* Empty State */
