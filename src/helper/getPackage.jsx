@@ -1,6 +1,6 @@
 import supabase from "./superBaseClient";
 
-const getPackage = async ({ type, startDate, endDate, filterPackage }) => {
+const getPackage = async ({ type, startDate, endDate, filterPackage, ignoreWorkList }) => {
   
   let createPackage = [];
   try {
@@ -74,6 +74,29 @@ const getPackage = async ({ type, startDate, endDate, filterPackage }) => {
         }
       } else {
         createPackage.push(...filteredPackage);
+      }
+
+      if(ignoreWorkList){
+        console.log("ignoreWorkList", ignoreWorkList);
+        // Buscar os donor_ids que estão em createPackage
+        const donorIds = createPackage.map(item => item.donor_id);
+        console.log("donorIds", donorIds);
+        if (donorIds.length > 0) {
+          // Buscar na tabela request quais desses donor_ids têm request_active = true
+          const { data: activeRequests, error: requestError } = await supabase
+            .from("request")
+            .select("donor_id")
+            .in("donor_id", donorIds)
+            .eq("request_active", "True");
+            console.log("activeRequests", activeRequests);
+          if (activeRequests?.length > 0) {
+            // Extrair os donor_ids que devem ser removidos
+            const activeDonorIds = activeRequests.map(req => req.donor_id);
+            
+            // Filtrar createPackage, removendo os que têm request_active = true
+            createPackage = createPackage.filter(item => !activeDonorIds.includes(item.donor_id));
+          }
+        }
       }
     }
   } catch (error) {

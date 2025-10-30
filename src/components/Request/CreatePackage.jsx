@@ -17,6 +17,7 @@ const CreatePackage = ({
     startDate: "",
     endDate: "",
     filterPackage: "",
+    ignoreWorkList: false,
   });
   const [loading, setLoading] = useState(false);
 
@@ -149,6 +150,15 @@ const CreatePackage = ({
                   type="date"
                   value={requestPackage.endDate}
                   onChange={(e) => handlePackageChange("endDate", e.target.value)}
+                  className="form-input"
+                />
+              </div>
+              <div className="form-group">
+                <label>Ignorar Lista de Trabalho</label>
+                <input
+                  type="checkbox"
+                  value={requestPackage.ignoreWorkList}
+                  onChange={(e) => handlePackageChange("ignoreWorkList", e.target.checked)}
                   className="form-input"
                 />
               </div>
