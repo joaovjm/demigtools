@@ -204,7 +204,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
                     border: "1px solid rgba(250, 160, 28, 0.3)",
                   }}
                 >
-                  Worklist: {donation.donation_worklist}
+                  Lista de trabalho: {donation.donation_worklist}
                 </span>
               </div>
             )}
