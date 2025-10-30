@@ -30,8 +30,8 @@ const TableDonationsInOperatorsAndCollectors = ({
           "donation_day_received, donation_print, donation_received, donation_value, receipt_donation_id, donor_id, donor: donor_id(donor_name, donor_tel_1), operator_code_id, operator: operator_code_id(operator_name), collector_code_id, collector: collector_code_id(collector_name)"
         )
         .eq(f, click.id)
-        .gte("donation_day_to_receive", startDate)
-        .lte("donation_day_to_receive", endDate);
+        .gte("donation_day_received", startDate)
+        .lte("donation_day_received", endDate);
 
       if (error) throw error;
       if (!error) setDonations(data);
@@ -74,7 +74,7 @@ const TableDonationsInOperatorsAndCollectors = ({
               {filter ===
                 "Coletadores" ? `${donation.operator?.operator_name}` : `${donation.collector?.collector_name}`}
             </td>
-            <td>{DataSelect(donation.donation_day_received)}</td>
+            <td>{new Date(donation.donation_day_received).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</td>
             <td>{donation.donation_print}</td>
             <td>{donation.donation_received}</td>
           </tr>

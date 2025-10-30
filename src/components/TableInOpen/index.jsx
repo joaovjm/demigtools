@@ -54,6 +54,7 @@ const TableInOpen = ({
                 <thead>
                   <tr className="table-inopen-head-row">
                     <th className="table-inopen-head">A receber</th>
+                    <th className="table-inopen-head">Recibo</th>
                     <th className="table-inopen-head">Nome</th>
                     <th className="table-inopen-head">Valor</th>
                     <th className="table-inopen-head">Coletador</th>
@@ -69,6 +70,11 @@ const TableInOpen = ({
                       <td className="table-inopen-cell">
                         <span className="date-info">
                           {DataSelect(donation.donation_day_to_receive)}
+                        </span>
+                      </td>
+                      <td className="table-inopen-cell">
+                        <span className="receipt-number">
+                          {donation.receipt_donation_id}
                         </span>
                       </td>
                       <td className="table-inopen-cell">

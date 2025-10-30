@@ -8,8 +8,8 @@ const getReceiveDonationPerOperator = async (startDate, endDate) => {
     .select(
       "operator_name:operator_code_id(operator_name), operator_code_id, donation_extra,donation_value, donation_received"
     )
-    .gte("donation_day_to_receive", startDate)
-    .lte("donation_day_to_receive", endDate)
+    .gte("donation_day_received", startDate)
+    .lte("donation_day_received", endDate)
     .not("operator_code_id", "is", null)
 
     if(error) throw error
@@ -20,9 +20,6 @@ const getReceiveDonationPerOperator = async (startDate, endDate) => {
         console.log("Erro: ", error.message)
     }
 
-    
-  
-    
 };
 
 export default getReceiveDonationPerOperator;

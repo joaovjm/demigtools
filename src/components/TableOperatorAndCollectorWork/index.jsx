@@ -117,10 +117,11 @@ const TableOperatorAndCollectorWork = ({
                         {oc === "Operadores" && (
                           <>
                             <td className="table-operatorWork-cell value-amount">
-                              R${" "}
-                              {(addValueExtraReceived[name.name] || 0)
-                                .toFixed(2)
-                                .replace(".", ",")}
+                              
+                              {(addValueExtraReceived[name.name] || 0).toLocaleString("pt-BR", {
+                                style: "currency",
+                                currency: "BRL",
+                              })}
                             </td>
                             {/*<td className="table-operatorWork-cell value-amount">
                               R${" "}
