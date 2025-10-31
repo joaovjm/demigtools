@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
-import "./index.css";
+import styles from "./modalconfirmation.module.css";
 import { ICONS } from "../../constants/constants";
 import cancelDonation from "../../helper/cancelDonation";
 import supabase from "../../helper/superBaseClient";
 import { DataNow, DataSelect } from "../DataTime";
-import { FaUser, FaMapMarkerAlt, FaPhone, FaDollarSign, FaExclamationTriangle, FaCalendarAlt, FaEdit, FaTimes, FaCheck, FaArrowLeft, FaClock } from "react-icons/fa";
+import {useNavigate} from "react-router"
+import { FaUser, FaMapMarkerAlt, FaPhone, FaDollarSign, FaExclamationTriangle, FaCalendarAlt, FaEdit, FaTimes, FaCheck, FaArrowLeft, FaClock, FaEye } from "react-icons/fa";
 
 const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) => {
   const [isConfirmation, setIsConfirmation] = useState(false);
   const [dateConfirm, setDateConfirm] = useState("");
   const [observation, setObservation] = useState("");
+
+  const navigate = useNavigate()
 
   const handleCancel = async () => {
     window.confirm("Você tem certeza que deseja cancelar a ficha?");
@@ -62,98 +65,98 @@ const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) =>
     }
   };
   return (
-    <main className="modal-confirmations-container">
-      <div className="modal-confirmations">
-        <div className="modal-confirmations-content">
-          <div className="modal-confirmations-header">
-            <div className="modal-title-section">
-              <h2 className="modal-title">
+    <main className={styles.modalConfirmationsContainer}>
+      <div className={styles.modalConfirmations}>
+        <div className={styles.modalConfirmationsContent}>
+          <div className={styles.modalConfirmationsHeader}>
+            <div className={styles.modalTitleSection}>
+              <h2 className={styles.modalTitle}>
                 <FaClock />
                 Confirmação de Doação
               </h2>
-              <span className="receipt-number">
+              <span className={styles.receiptNumber}>
                 Recibo: #{donationConfirmationOpen.id}
               </span>
             </div>
             <button
               onClick={() => onClose()}
-              className="btn-close-modal"
+              className={styles.btnCloseModal}
               title="Fechar"
             >
               ✕
             </button>
           </div>
 
-          <div className="modal-confirmations-body">
-            <div className="donation-info-section">
+          <div className={styles.modalConfirmationsBody}>
+            <div className={styles.donationInfoSection}>
               <h3>Informações da Doação</h3>
-              <div className="info-grid">
-                <div className="info-item">
-                  <div className="info-label">
+              <div className={styles.infoGrid}>
+                <div className={styles.infoItem}>
+                  <div className={styles.infoLabel}>
                     <FaDollarSign />
                     Valor
                   </div>
-                  <div className="info-value">
+                  <div className={styles.infoValue}>
                     R$ {donationConfirmationOpen.value},00
                   </div>
                 </div>
-                <div className="info-item full-width">
-                  <div className="info-label">
+                <div className={`${styles.infoItem} ${styles.fullWidth}`}>
+                  <div className={styles.infoLabel}>
                     <FaExclamationTriangle />
                     Motivo
                   </div>
-                  <div className="info-value reason">
+                  <div className={`${styles.infoValue} ${styles.reason}`}>
                     {donationConfirmationOpen.reason}
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="donor-info-section">
+            <div className={styles.donorInfoSection}>
               <h3>Dados do Doador</h3>
-              <div className="info-grid">
-                <div className="info-item">
-                  <div className="info-label">
+              <div className={styles.infoGrid}>
+                <div className={styles.infoItem}>
+                  <div className={styles.infoLabel}>
                     <FaUser />
                     Nome
                   </div>
-                  <div className="info-value">
+                  <div className={styles.infoValue}>
                     {donationConfirmationOpen.name}
                   </div>
                 </div>
-                <div className="info-item">
-                  <div className="info-label">
+                <div className={styles.infoItem}>
+                  <div className={styles.infoLabel}>
                     <FaPhone />
                     Telefone 1
                   </div>
-                  <div className="info-value">
+                  <div className={styles.infoValue}>
                     {donationConfirmationOpen.phone}
                   </div>
                 </div>
-                <div className="info-item">
-                  <div className="info-label">
+                <div className={styles.infoItem}>
+                  <div className={styles.infoLabel}>
                     <FaPhone />
                     Telefone 2
                   </div>
-                  <div className="info-value">
+                  <div className={styles.infoValue}>
                     {donationConfirmationOpen.phone2 || "*****-****"}
                   </div>
                 </div>
-                <div className="info-item">
-                  <div className="info-label">
+                <div className={styles.infoItem}>
+                  <div className={styles.infoLabel}>
                     <FaPhone />
                     Telefone 3
                   </div>
-                  <div className="info-value">
+                  <div className={styles.infoValue}>
                     {donationConfirmationOpen.phone3 || "*****-****"}
                   </div>
                 </div>
-                <div className="info-item full-width">
-                  <div className="info-label">
+                <div className={`${styles.infoItem} ${styles.fullWidth}`}>
+                  <div className={styles.infoLabel}>
                     <FaMapMarkerAlt />
                     Endereço
                   </div>
-                  <div className="info-value">
+                  <div className={styles.infoValue}>
                     {donationConfirmationOpen.address}
                   </div>
                 </div>
@@ -161,15 +164,20 @@ const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) =>
             </div>
 
             {!isConfirmation && (
-              <div className="modal-confirmations-footer">
+              <div className={styles.modalConfirmationsFooter}>
+                <button className={styles.btnOpenDonor} onClick={() => navigate(`/donor/${donationConfirmationOpen.donor_id}`)}>
+                  <FaEye />
+                  Abrir Doador
+                </button>
+              
                 <button
                   onClick={() => setIsConfirmation(true)}
-                  className="btn-reschedule"
+                  className={styles.btnReschedule}
                 >
                   <FaCalendarAlt />
                   Reagendar Ficha
                 </button>
-                <button onClick={handleCancel} className="btn-cancel">
+                <button onClick={handleCancel} className={styles.btnCancel}>
                   <FaTimes />
                   Cancelar Ficha
                 </button>
@@ -177,10 +185,10 @@ const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) =>
             )}
 
             {isConfirmation && (
-              <div className="reschedule-form-section">
+              <div className={styles.rescheduleFormSection}>
                 <h3>Reagendar Doação</h3>
-                <div className="form-grid">
-                  <div className="input-group">
+                <div className={styles.formGrid}>
+                  <div className={styles.inputGroup}>
                     <label>
                       <FaCalendarAlt />
                       Nova Data
@@ -192,7 +200,7 @@ const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) =>
                       placeholder="Selecione a nova data"
                     />
                   </div>
-                  <div className="input-group full-width">
+                  <div className={`${styles.inputGroup} ${styles.fullWidth}`}>
                     <label>
                       <FaEdit />
                       Observação
@@ -206,15 +214,15 @@ const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) =>
                   </div>
                 </div>
 
-                <div className="form-actions">
+                <div className={styles.formActions}>
                   <button
                     onClick={() => setIsConfirmation(false)}
-                    className="btn-back"
+                    className={styles.btnBack}
                   >
                     <FaArrowLeft />
                     Voltar
                   </button>
-                  <button onClick={handleConfirm} className="btn-confirm">
+                  <button onClick={handleConfirm} className={styles.btnConfirm}>
                     <FaCheck />
                     Confirmar Reagendamento
                   </button>

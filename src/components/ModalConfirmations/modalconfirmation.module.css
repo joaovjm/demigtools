@@ -1,5 +1,5 @@
 /* Modal Container */
-.modal-confirmations-container {
+.modalConfirmationsContainer {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -24,7 +24,7 @@
 }
 
 /* Modal Content */
-.modal-confirmations {
+.modalConfirmations {
   position: relative;
   z-index: 1;
   background-color: #1f1d1d;
@@ -47,7 +47,7 @@
   }
 }
 
-.modal-confirmations-content {
+.modalConfirmationsContent {
   width: 750px;
   max-height: 90vh;
   border: 3px double #383838;
@@ -59,7 +59,7 @@
 }
 
 /* Header */
-.modal-confirmations-header {
+.modalConfirmationsHeader {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -69,14 +69,14 @@
   flex-shrink: 0;
 }
 
-.modal-title-section {
+.modalTitleSection {
   display: flex;
   flex-direction: column;
   gap: 8px;
   flex: 1;
 }
 
-.modal-title {
+.modalTitle {
   color: #faf5e9;
   font-size: 20px;
   font-weight: 600;
@@ -87,7 +87,7 @@
   gap: 8px;
 }
 
-.receipt-number {
+.receiptNumber {
   color: #faa01c;
   font-size: 14px;
   font-weight: 500;
@@ -98,7 +98,7 @@
   align-self: flex-start;
 }
 
-.btn-close-modal {
+.btnCloseModal {
   background-color: #c70000;
   color: #faf5e9;
   border: none;
@@ -116,13 +116,13 @@
   flex-shrink: 0;
 }
 
-.btn-close-modal:hover {
+.btnCloseModal:hover {
   background-color: #a60000;
   transform: scale(1.1);
 }
 
 /* Body */
-.modal-confirmations-body {
+.modalConfirmationsBody {
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -132,16 +132,16 @@
 }
 
 /* Info Sections */
-.donation-info-section,
-.donor-info-section {
+.donationInfoSection,
+.donorInfoSection {
   background-color: rgba(56, 91, 173, 0.05);
   border: 1px solid rgba(56, 91, 173, 0.2);
   border-radius: 8px;
   padding: 16px;
 }
 
-.donation-info-section h3,
-.donor-info-section h3 {
+.donationInfoSection h3,
+.donorInfoSection h3 {
   color: #faf5e9;
   font-size: 16px;
   margin: 0 0 12px 0;
@@ -151,34 +151,34 @@
   gap: 8px;
 }
 
-.donation-info-section h3::before {
+.donationInfoSection h3::before {
   content: "💰";
   font-size: 18px;
 }
 
-.donor-info-section h3::before {
+.donorInfoSection h3::before {
   content: "👤";
   font-size: 18px;
 }
 
 /* Info Grid */
-.info-grid {
+.infoGrid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 12px;
 }
 
-.info-item {
+.infoItem {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.info-item.full-width {
+.infoItem.fullWidth {
   grid-column: span 2;
 }
 
-.info-label {
+.infoLabel {
   color: #faa01c;
   font-size: 12px;
   font-weight: 500;
@@ -189,7 +189,7 @@
   letter-spacing: 0.5px;
 }
 
-.info-value {
+.infoValue {
   color: #faf5e9;
   font-size: 14px;
   font-weight: 500;
@@ -200,7 +200,7 @@
   word-break: break-word;
 }
 
-.info-value.reason {
+.infoValue.reason {
   background-color: rgba(199, 0, 0, 0.1);
   border-color: rgba(199, 0, 0, 0.3);
   color: #ff6b6b;
@@ -208,7 +208,7 @@
 }
 
 /* Footer */
-.modal-confirmations-footer {
+.modalConfirmationsFooter {
   display: flex;
   justify-content: center;
   gap: 16px;
@@ -218,14 +218,14 @@
 }
 
 /* Form Section */
-.reschedule-form-section {
+.rescheduleFormSection {
   background-color: rgba(255, 193, 7, 0.05);
   border: 1px solid rgba(255, 193, 7, 0.2);
   border-radius: 8px;
   padding: 16px;
 }
 
-.reschedule-form-section h3 {
+.rescheduleFormSection h3 {
   color: #faf5e9;
   font-size: 16px;
   margin: 0 0 12px 0;
@@ -235,29 +235,29 @@
   gap: 8px;
 }
 
-.reschedule-form-section h3::before {
+.rescheduleFormSection h3::before {
   content: "📅";
   font-size: 18px;
 }
 
-.form-grid {
+.formGrid {
   display: grid;
   grid-template-columns: 1fr 2fr;
   gap: 16px;
   margin-bottom: 16px;
 }
 
-.input-group {
+.inputGroup {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.input-group.full-width {
+.inputGroup.fullWidth {
   grid-column: span 2;
 }
 
-.input-group label {
+.inputGroup label {
   color: #faf5e9;
   font-size: 12px;
   font-weight: 500;
@@ -266,9 +266,9 @@
   gap: 6px;
 }
 
-.input-group input,
-.input-group select,
-.input-group textarea {
+.inputGroup input,
+.inputGroup select,
+.inputGroup textarea {
   background-color: #2a2828;
   border: 2px solid #383838;
   border-radius: 6px;
@@ -279,27 +279,27 @@
   font-family: inherit;
 }
 
-.input-group input:focus,
-.input-group select:focus,
-.input-group textarea:focus {
+.inputGroup input:focus,
+.inputGroup select:focus,
+.inputGroup textarea:focus {
   outline: none;
   border-color: #385bad;
   box-shadow: 0 0 0 3px rgba(56, 91, 173, 0.2);
   background-color: #333131;
 }
 
-.input-group input::placeholder,
-.input-group textarea::placeholder {
+.inputGroup input::placeholder,
+.inputGroup textarea::placeholder {
   color: rgba(250, 245, 233, 0.5);
 }
 
-.input-group textarea {
+.inputGroup textarea {
   resize: vertical;
   min-height: 45px;
 }
 
 /* Form Actions */
-.form-actions {
+.formActions {
   display: flex;
   justify-content: center;
   gap: 16px;
@@ -308,10 +308,11 @@
 }
 
 /* Buttons */
-.btn-reschedule,
-.btn-cancel,
-.btn-back,
-.btn-confirm {
+.btnReschedule,
+.btnCancel,
+.btnBack,
+.btnConfirm,
+.btnOpenDonor {
   padding: 12px 24px;
   border: none;
   border-radius: 6px;
@@ -328,51 +329,54 @@
   min-width: 160px;
 }
 
-.btn-reschedule {
+.btnReschedule {
   background-color: #ffc107;
   color: #000;
 }
 
-.btn-reschedule:hover {
+.btnReschedule:hover {
   background-color: #e0a800;
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(255, 193, 7, 0.4);
 }
 
-.btn-cancel {
+.btnCancel {
   background-color: #c70000;
   color: #faf5e9;
 }
 
-.btn-cancel:hover {
+.btnCancel:hover {
   background-color: #a60000;
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(199, 0, 0, 0.4);
 }
 
-.btn-back {
+.btnBack {
   background-color: #6c757d;
   color: #faf5e9;
 }
 
-.btn-back:hover {
+.btnBack:hover {
   background-color: #5a6268;
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(108, 117, 125, 0.4);
 }
 
-.btn-confirm {
+.btnConfirm,
+.btnOpenDonor {
   background-color: #28a745;
   color: #fff;
 }
 
-.btn-confirm:hover {
+.btnConfirm:hover,
+.btnOpenDonor:hover {
   background-color: #218838;
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
 }
 
-.btn-confirm:disabled {
+.btnConfirm:disabled,
+.btnOpenDonor:disabled {
   background-color: #666;
   cursor: not-allowed;
   transform: none;
@@ -380,80 +384,82 @@
 
 /* Responsive Design */
 @media (max-width: 900px) {
-  .modal-confirmations-content {
+  .modalConfirmationsContent {
     width: 90vw;
     max-height: 95vh;
     padding: 12px;
   }
   
-  .info-grid {
+  .infoGrid {
     grid-template-columns: 1fr 1fr;
   }
 }
 
 @media (max-width: 768px) {
-  .modal-confirmations-content {
+  .modalConfirmationsContent {
     width: 90vw;
     max-height: 95vh;
     padding: 12px;
   }
   
-  .modal-title {
+  .modalTitle {
     font-size: 18px;
   }
   
-  .info-grid,
-  .form-grid {
+  .infoGrid,
+  .formGrid {
     grid-template-columns: 1fr;
     gap: 8px;
   }
   
-  .info-item.full-width,
-  .input-group.full-width {
+  .infoItem.fullWidth,
+  .inputGroup.fullWidth {
     grid-column: span 1;
   }
   
-  .donation-info-section,
-  .donor-info-section,
-  .reschedule-form-section {
+  .donationInfoSection,
+  .donorInfoSection,
+  .rescheduleFormSection {
     padding: 12px;
   }
   
-  .modal-confirmations-footer,
-  .form-actions {
+  .modalConfirmationsFooter,
+  .formActions {
     flex-direction: column;
     gap: 8px;
   }
   
-  .btn-reschedule,
-  .btn-cancel,
-  .btn-back,
-  .btn-confirm {
+  .btnReschedule,
+  .btnCancel,
+  .btnBack,
+  .btnConfirm,
+  .btnOpenDonor {
     width: 100%;
     min-width: auto;
   }
 }
 
 @media (max-width: 480px) {
-  .modal-confirmations-content {
+  .modalConfirmationsContent {
     width: 95vw;
     max-height: 95vh;
     padding: 8px;
   }
   
-  .modal-title {
+  .modalTitle {
     font-size: 16px;
   }
   
-  .receipt-number {
+  .receiptNumber {
     font-size: 12px;
     padding: 3px 8px;
   }
   
-  .btn-reschedule,
-  .btn-cancel,
-  .btn-back,
-  .btn-confirm {
+  .btnReschedule,
+  .btnCancel,
+  .btnBack,
+  .btnConfirm,
+  .btnOpenDonor {
     padding: 10px 16px;
     font-size: 13px;
     height: 40px;
@@ -461,157 +467,21 @@
 }
 
 /* Scrollbar Styling */
-.modal-confirmations::-webkit-scrollbar {
+.modalConfirmations::-webkit-scrollbar {
   width: 8px;
 }
 
-.modal-confirmations::-webkit-scrollbar-track {
+.modalConfirmations::-webkit-scrollbar-track {
   background: #2a2828;
   border-radius: 4px;
 }
 
-.modal-confirmations::-webkit-scrollbar-thumb {
+.modalConfirmations::-webkit-scrollbar-thumb {
   background: #faa01c;
   border-radius: 4px;
 }
 
-.modal-confirmations::-webkit-scrollbar-thumb:hover {
+.modalConfirmations::-webkit-scrollbar-thumb:hover {
   background: #e8901a;
 }
 
-/* Legacy support for existing classes (for backwards compatibility) */
-.modal-confirmations {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal-confirmations-div {
-  width: 768px;
-  border-radius: 6px;
-  background-color: #1f1d1d;
-}
-
-.modal-confirmations-title {
-  display: flex;
-  justify-content: space-between;
-  margin: 12px;
-  padding: 12px;
-  border: 3px double #383838;
-  border-radius: 6px;
-}
-
-.modal-confirmations-title h2 {
-  font-size: 16px;
-}
-
-.btn-close {
-  width: 90px;
-  border: none;
-  border-radius: 6px;
-  background-color: #385bad;
-  color: #faf5e9;
-  cursor: pointer;
-}
-
-.btn-close:hover {
-  background-color: #284487;
-}
-
-.modal-confirmations-body {
-  display: grid;
-  grid-template-columns: auto auto;
-  margin: 12px;
-  border: 3px double #383838;
-  border-radius: 6px;
-  padding: 12px;
-  gap: 4px;
-}
-
-.modal-confirmations-body label {
-  font-size: 16px;
-}
-
-.modal-confirmations-body h4 {
-  grid-column: span 2;
-  margin-top: 12px;
-}
-
-.modal-confirmations-confirm {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 12px;
-  padding: 12px;
-  border: 3px double #383838;
-  border-radius: 6px;
-  gap: 32px;
-}
-
-.modal-confirmations-confirm-1 {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.modal-confirmations-confirm-2 {
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
-  width: 100%;
-}
-
-.modal-confirmations-confirm-2 .btn-confirm {
-  height: 36px;
-}
-
-.input-field {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.input-field label {
-  color: #faf5e9;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.input-field input,
-.input-field select,
-.input-field textarea {
-  background-color: #2a2828;
-  border: 2px solid #383838;
-  border-radius: 6px;
-  padding: 8px 12px;
-  font-size: 14px;
-  color: #faf5e9;
-  transition: all 0.3s ease;
-  font-family: inherit;
-}
-
-.input-field input:focus,
-.input-field select:focus,
-.input-field textarea:focus {
-  outline: none;
-  border-color: #385bad;
-  box-shadow: 0 0 0 3px rgba(56, 91, 173, 0.2);
-  background-color: #333131;
-}
-
-.input-field input::placeholder,
-.input-field textarea::placeholder {
-  color: rgba(250, 245, 233, 0.5);
-}
-
-.input-field textarea {
-  resize: vertical;
-  min-height: 45px;
-}
