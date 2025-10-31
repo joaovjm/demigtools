@@ -32,6 +32,7 @@ const ModalWorklist = ({
   const [extraValue, setExtraValue] = useState("");
   const [maxPeriod, setMaxPeriod] = useState([]);
   const [countNotReceived, setCountNotReceived] = useState(0);
+  const [lastThreeDonations, setLastThreeDonations] = useState([]);
   const {
     id,
     donor_id,
@@ -46,7 +47,7 @@ const ModalWorklist = ({
     workListSelected?.donor_mensal?.donor_mensal?.donor_mensal_monthly_fee;
   const navigate = useNavigate();
   const MaxAndMedDonations = async () => {
-    const { maxGeneral, maxPeriod, penultimate, countNotReceived } =
+    const { maxGeneral, maxPeriod, penultimate, countNotReceived, lastThreeDonations } =
       await fetchMaxAndMedDonations(
         workListSelected.donor_id,
         workListSelected.request_name
@@ -56,6 +57,7 @@ const ModalWorklist = ({
       setMaxDonation(maxGeneral);
       setMaxPeriod(maxPeriod);
       setCountNotReceived(countNotReceived);
+      setLastThreeDonations(lastThreeDonations || []);
     }
   };
 
@@ -265,6 +267,50 @@ const ModalWorklist = ({
                   </span>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <div className="modal-worklist-section">
+            <h4 className="section-title">📋 Últimas 3 Doações</h4>
+            <div className="last-donations-grid">
+              {lastThreeDonations && lastThreeDonations.length > 0 ? (
+                lastThreeDonations.map((donation, index) => (
+                  <div key={index} className="donation-card">
+                    <div className="donation-card-header">
+                      <span className="donation-number">#{index + 1}</span>
+                      <span className="donation-value">
+                        {donation.value.toLocaleString("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                        })}
+                      </span>
+                    </div>
+                    <div className="donation-card-body">
+                      <div className="donation-info">
+                        <span className="donation-label">📅 Data:</span>
+                        <span className="donation-text">
+                          {new Date(donation.day).toLocaleDateString("pt-BR", {
+                            timeZone: "UTC",
+                          })}
+                        </span>
+                      </div>
+                      <div className="donation-info">
+                        <span className="donation-label">📝 Observação:</span>
+                        <span className="donation-text">
+                          {donation.description || "Sem observação"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="no-donations-message">
+                  <span className="no-donations-icon">📭</span>
+                  <span className="no-donations-text">
+                    Nenhuma doação registrada
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         </div>

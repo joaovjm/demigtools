@@ -30,7 +30,7 @@ export const getMaxAndMedDonations = async (id, requestName) => {
   try {
     const { data, error } = await supabase
       .from("donation")
-      .select("donation_value, donation_day_received, donation_received")
+      .select("donation_value, donation_day_received, donation_received, donation_description")
       .eq("donor_id", id)
       .order("donation_day_received", { ascending: false });
     if (error) {
@@ -81,6 +81,7 @@ export const getMaxAndMedDonations = async (id, requestName) => {
           history.push({
             value: data[i]?.donation_value,
             day: data[i]?.donation_day_received,
+            description: data[i]?.donation_description,
           });
         }
         total += data[i].donation_value;
@@ -89,7 +90,10 @@ export const getMaxAndMedDonations = async (id, requestName) => {
       
     }
 
-    return { maxGeneral, maxPeriod, penultimate, countNotReceived};
+    // Get last 3 donations
+    const lastThreeDonations = history.slice(0, 3);
+
+    return { maxGeneral, maxPeriod, penultimate, countNotReceived, lastThreeDonations};
   } catch (error) {
     console.log(error.message);
   }
