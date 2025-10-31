@@ -21,6 +21,7 @@ export const SearchForm = ({searchTerm, selectedValue, loading, onSearchChange, 
         <option value="Avulso">Avulso</option>
         <option value="Lista">Lista</option>
         <option value="Mensal">Mensal</option>
+        <option value="Leads">Leads</option>
         <option value="Excluso">Excluso</option>
       </select>
     </div>

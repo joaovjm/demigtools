@@ -80,6 +80,7 @@ const Leads = () => {
 
   const fetchLeads = async () => {
     setIsLoading(true);
+    
     const start = currentItem - 1;
     const end = currentItem - 1;
 
@@ -93,7 +94,8 @@ const Leads = () => {
       selectedNeighborhood
     );
 
-    if (lead[0].leads_id) {
+    // Verificar se há leads retornados
+    if (lead && Array.isArray(lead) && lead.length > 0 && lead[0]?.leads_id) {
       await updateLeads(
         "Aberto",
         Number(operatorData.operator_code_id),
@@ -103,42 +105,64 @@ const Leads = () => {
     }
 
     setIsLoading(false);
+    return lead;
   };
 
   useEffect(() => {
-    fetchLeads();
-  }, [currentItem, selectedNeighborhood]);
+    if (operatorData.operator_code_id) {
+      fetchLeads();
+    }
+  }, [currentItem, selectedNeighborhood, operatorData.operator_code_id]);
 
   const handleNeighborhoodChange = (e) => {
     setSelectedNeighborhood(e.target.value);
     setCurrentItem(1); // Reset para o primeiro lead quando mudar o filtro
   };
 
+  const reloadAfterProcess = async () => {
+    // Se estávamos no último lead e ele foi processado
+    if (currentItem === items && items === 1) {
+      // Era o último lead, agora não há mais
+      setItems(0);
+      setCurrentLead(null);
+      return;
+    }
+    
+    if (currentItem === items && items > 1) {
+      // Era o último lead, mas ainda há outros antes
+      setCurrentItem(currentItem - 1);
+      return;
+    }
+    
+    // Nos outros casos, recarregar na mesma posição
+    await fetchLeads();
+  };
+
   const handleNext = async () => {
     if (window.confirm("Deseja passar para o proximo?")) {
       if (operatorData.operator_type === "Operador Casa") {
-        if (currentItem < items && currentLead?.leads_id) {
+        if (currentLead?.leads_id) {
           const data = await updateLeads(
             "Não Atendeu",
             Number(operatorData.operator_code_id),
             currentLead.leads_id,
             "Operador Casa"
           );
-          if (data[0].leads_status === "Não Atendeu") {
-            const next = currentItem + 1;
-            setCurrentItem(next);
+          if (data && data[0]?.leads_status === "Não Atendeu") {
+            // Recarregar leads após marcar como não atendeu
+            await reloadAfterProcess();
           }
         }
       } else {
-        if (currentItem < items && currentLead?.leads_id) {
+        if (currentLead?.leads_id) {
           const data = await updateLeads(
             "Não Atendeu",
             Number(operatorData.operator_code_id),
             currentLead.leads_id
           );
-          if (data[0].leads_status === "Não Atendeu") {
-            const next = currentItem + 1;
-            setCurrentItem(next);
+          if (data && data[0]?.leads_status === "Não Atendeu") {
+            // Recarregar leads após marcar como não atendeu
+            await reloadAfterProcess();
           }
         }
       }
@@ -154,9 +178,9 @@ const Leads = () => {
           currentLead.leads_id,
           "Operador Casa"
         );
-        if (response.length > 0) {
-          const next = currentItem + 1;
-          setCurrentItem(next);
+        if (response && response.length > 0) {
+          // Recarregar leads após processar
+          await reloadAfterProcess();
         }
       } else {
         const response = await updateLeads(
@@ -164,9 +188,9 @@ const Leads = () => {
           Number(operatorData.operator_code_id),
           currentLead.leads_id
         );
-        if (response.length > 0) {
-          const next = currentItem + 1;
-          setCurrentItem(next);
+        if (response && response.length > 0) {
+          // Recarregar leads após processar
+          await reloadAfterProcess();
         }
       }
     }
@@ -214,8 +238,8 @@ const Leads = () => {
       if (!error) {
         toast.success("Agendado com sucesso!");
         setIsModalSchedulingOpen(false);
-        const next = currentItem + 1;
-        setCurrentItem(next);
+        // Recarregar leads após processar
+        await reloadAfterProcess();
       }
     } catch (error) {
       console.error("Erro: ", error.message);
@@ -300,9 +324,10 @@ const Leads = () => {
               .eq("leads_id", currentLead.leads_id);
             if (error) throw error;
 
-            const next = currentItem + 1;
-            setCurrentItem(next);
             setIsModalNewDonationOpen(false);
+            
+            // Recarregar leads após processar
+            await reloadAfterProcess();
 
             return "Processo concluido com sucesso!";
           } catch (error) {
@@ -355,6 +380,20 @@ const Leads = () => {
             <div className="leads-loading">
               <Loader />
               <p>Carregando lead...</p>
+            </div>
+          ) : items === 0 ? (
+            <div className="leads-empty-state">
+              <div className="empty-state-icon">{ICONS.CIRCLEOUTLINE}</div>
+              <h3>Nenhum lead disponível</h3>
+              <p>Não há leads disponíveis no momento{selectedNeighborhood && ` para o bairro "${selectedNeighborhood}"`}.</p>
+              {selectedNeighborhood && (
+                <button 
+                  className="leads-btn secondary" 
+                  onClick={() => setSelectedNeighborhood("")}
+                >
+                  Limpar filtro
+                </button>
+              )}
             </div>
           ) : (
             <>

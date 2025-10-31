@@ -60,6 +60,47 @@
   font-weight: 500;
 }
 
+/* Filters */
+.leads-filters {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.filter-label {
+  color: #faf5e9;
+  font-size: 11px;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.filter-select {
+  padding: 6px 10px;
+  background-color: #363a3d;
+  border: 2px solid #2f2d2d;
+  border-radius: 6px;
+  color: #faf5e9;
+  font-size: 12px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+  min-width: 150px;
+}
+
+.filter-select:focus {
+  border-color: #faa01c;
+}
+
+.filter-select:hover {
+  border-color: #faa01c;
+}
+
 /* Main Content */
 .leads-main-content {
   display: flex;
@@ -88,6 +129,42 @@
   color: #faf5e9;
   font-size: 16px;
   margin: 0;
+}
+
+/* Empty State */
+.leads-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background-color: #1f1d1d;
+  border: 3px double #363a3d;
+  border-radius: 6px;
+  gap: 16px;
+  text-align: center;
+}
+
+.empty-state-icon {
+  font-size: 48px;
+  color: #faa01c;
+  opacity: 0.6;
+}
+
+.leads-empty-state h3 {
+  color: #faa01c;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.leads-empty-state p {
+  color: #faf5e9;
+  font-size: 14px;
+  margin: 0;
+  opacity: 0.8;
 }
 
 /* Sections */
@@ -427,6 +504,22 @@
     font-size: 18px;
   }
   
+  .leads-empty-state {
+    padding: 30px 20px;
+  }
+  
+  .empty-state-icon {
+    font-size: 36px;
+  }
+  
+  .leads-empty-state h3 {
+    font-size: 18px;
+  }
+  
+  .leads-empty-state p {
+    font-size: 13px;
+  }
+  
   .leads-section {
     padding: 10px;
   }
@@ -482,6 +575,22 @@
   
   .leads-title {
     font-size: 16px;
+  }
+  
+  .leads-empty-state {
+    padding: 24px 16px;
+  }
+  
+  .empty-state-icon {
+    font-size: 32px;
+  }
+  
+  .leads-empty-state h3 {
+    font-size: 16px;
+  }
+  
+  .leads-empty-state p {
+    font-size: 12px;
   }
   
   .leads-section {

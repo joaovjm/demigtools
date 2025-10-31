@@ -58,7 +58,15 @@ const GetLeadsWithPagination = async (
 
     return data;
   } catch (error) {
-    console.error("Erro ao buscar os dados", error.message);
+    // Erro 416 (Range Not Satisfiable) significa que não há mais leads disponíveis
+    if (error.message && error.message.includes("Range Not Satisfiable")) {
+      console.log("Não há mais leads disponíveis na posição solicitada");
+    } else {
+      console.error("Erro ao buscar os dados", error.message);
+    }
+    setItems(0);
+    setCurrentLead(null);
+    return [];
   }
 };
 

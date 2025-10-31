@@ -22,8 +22,12 @@ const SearchDonor = () => {
     await fetchDonors(searchTerm, selectedValue, setLoading, setDonor);
   };
 
-  const handleDonorClick = (id) => {
-    navigate(`/donor/${id}`);
+  const handleDonorClick = (id, isLead = false) => {
+    if (isLead) {
+      navigate(`/leads`); // Navega para a página de leads
+    } else {
+      navigate(`/donor/${id}`);
+    }
   };
 
   const handleAddDonorClick = () => {
@@ -63,7 +67,7 @@ const SearchDonor = () => {
               <div key={donors.donor_id} className="donor-card-container fade-in">
                 <DonorCard
                   donor={donors}
-                  onClick={handleDonorClick}
+                  onClick={(id) => handleDonorClick(id, donors.isLead)}
                 />
               </div>
             ))
