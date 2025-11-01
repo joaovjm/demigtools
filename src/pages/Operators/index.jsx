@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./index.css";
+import styles from "./operators.module.css";
 import FormInput from "../../components/forms/FormInput";
 import FormListSelect from "../../components/forms/FormListSelect";
 import { ICONS } from "../../constants/constants";
@@ -149,24 +149,24 @@ const Operators = () => {
 
   const typeOperator = ["Admin", "Operator", "Mensal", "Confirmação"];
   return (
-    <main className="operators-container">
-      <div className="operators-content">
+    <main className={styles.operatorsContainer}>
+      <div className={styles.operatorsContent}>
         {/* Cabeçalho com botões */}
-        <header className="operators-header">
-          <h2 className="operators-title">👥 Operadores</h2>
-          <div className="operators-actions">
-            <div className="operators-filter-tabs">
+        <header className={styles.operatorsHeader}>
+          <h2 className={styles.operatorsTitle}>👥 Operadores</h2>
+          <div className={styles.operatorsActions}>
+            <div className={styles.operatorsFilterTabs}>
               <button
-                className={`operators-tab ${
-                  active === "Ativos" ? "active" : ""
+                className={`${styles.operatorsTab} ${
+                  active === "Ativos" ? styles.active : ""
                 }`}
                 onClick={() => setActive("Ativos")}
               >
                 Ativos
               </button>
               <button
-                className={`operators-tab ${
-                  active === "Desativados" ? "active" : ""
+                className={`${styles.operatorsTab} ${
+                  active === "Desativados" ? styles.active : ""
                 }`}
                 onClick={() => setActive("Desativados")}
               >
@@ -174,7 +174,7 @@ const Operators = () => {
               </button>
             </div>
             <BtnNewOperator
-              className="operators-btn primary"
+              className={`${styles.operatorsBtn} ${styles.primary}`}
               onClick={(e) => handleSubmit(e, "newoperator")}
               icon={ICONS.CIRCLEOUTLINE}
             />
@@ -190,28 +190,28 @@ const Operators = () => {
         />
 
         {/* Lista de Operadores */}
-        <div className="operators-list-container">
-          <div className="operators-list">
+        <div className={styles.operatorsListContainer}>
+          <div className={styles.operatorsList}>
             {isLoading ? (
-              <div className="operators-loading">
+              <div className={styles.operatorsLoading}>
                 <Loader />
               </div>
             ) : (
               tableOperators.map((operator, index) => (
                 <div
                   key={operator.operator_code_id || index}
-                  className="operator-card"
+                  className={styles.operatorCard}
                 >
                   <form
                     onSubmit={(e) => e.preventDefault()}
-                    className="operator-form"
+                    className={styles.operatorForm}
                   >
                     {/* Informações Básicas */}
-                    <div className="operator-section">
+                    <div className={styles.operatorSection}>
                       <h4>Informações do Operador</h4>
-                      <div className="form-row">
-                        <div className="form-group">
-                          <div className="input-field">
+                      <div className={styles.formRow}>
+                        <div className={styles.formGroup}>
+                          <div className={styles.inputField}>
                             <label>Código</label>
                             <input
                               type="text"
@@ -221,7 +221,7 @@ const Operators = () => {
                             />
                           </div>
                         </div>
-                        <div className="form-group">
+                        <div className={styles.formGroup}>
                           <FormInput
                             label="Operador"
                             type="text"
@@ -232,7 +232,7 @@ const Operators = () => {
                             readOnly={operator.isDisable}
                           />
                         </div>
-                        <div className="form-group">
+                        <div className={styles.formGroup}>
                           <FormInput
                             label="Senha"
                             type="password"
@@ -245,8 +245,8 @@ const Operators = () => {
                         </div>
                       </div>
 
-                      <div className="form-row">
-                        <div className="form-group">
+                      <div className={styles.formRow}>
+                        <div className={styles.formGroup}>
                           <FormListSelect
                             label="Tipo de Operador"
                             value={operator.operator_type}
@@ -257,9 +257,9 @@ const Operators = () => {
                             disabled={operator.isDisable}
                           />
                         </div>
-                        <div className="form-group">
-                          <label className="checkbox-label">Status</label>
-                          <div className="checkbox-container">
+                        <div className={styles.formGroup}>
+                          <label className={styles.checkboxLabel}>Status</label>
+                          <div className={styles.checkboxContainer}>
                             <input
                               type="checkbox"
                               value="active"
@@ -267,9 +267,9 @@ const Operators = () => {
                               checked={operator.operator_active}
                               onChange={(e) => handleInputChange(e, operator)}
                               disabled={operator.isDisable}
-                              className="operators-checkbox"
+                              className={styles.operatorsCheckbox}
                             />
-                            <span className="checkbox-text">
+                            <span className={styles.checkboxText}>
                               {operator.operator_active ? "Ativo" : "Inativo"}
                             </span>
                           </div>
@@ -278,7 +278,7 @@ const Operators = () => {
                     </div>
 
                     {/* Botões de Ação */}
-                    <div className="operator-actions">
+                    <div className={styles.operatorActions}>
                       <BtnEdit
                         label={operator.isDisable ? "Editar" : "Salvar"}
                         onClick={(e) =>
@@ -288,10 +288,10 @@ const Operators = () => {
                             operator.operator_code_id
                           )
                         }
-                        className="operators-btn secondary"
+                        className={`${styles.operatorsBtn} ${styles.secondary}`}
                       />
                       <button
-                        className="operators-btn danger"
+                        className={`${styles.operatorsBtn} ${styles.danger}`}
                         onClick={(e) =>
                           handleSubmit(e, "delete", operator.operator_code_id)
                         }

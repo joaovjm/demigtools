@@ -1,5 +1,5 @@
 /* Container Principal */
-.operators-container {
+.operatorsContainer {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -10,7 +10,7 @@
   gap: 16px;
 }
 
-.operators-content {
+.operatorsContent {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -19,7 +19,7 @@
 }
 
 /* Cabeçalho */
-.operators-header {
+.operatorsHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -30,7 +30,7 @@
   gap: 20px;
 }
 
-.operators-title {
+.operatorsTitle {
   color: #faa01c;
   font-size: 24px;
   font-weight: 600;
@@ -40,14 +40,14 @@
   gap: 12px;
 }
 
-.operators-actions {
+.operatorsActions {
   display: flex;
   align-items: center;
   gap: 20px;
 }
 
 /* Tabs de Filtro */
-.operators-filter-tabs {
+.operatorsFilterTabs {
   display: flex;
   gap: 4px;
   background-color: #2f2d2d;
@@ -55,7 +55,7 @@
   padding: 4px;
 }
 
-.operators-tab {
+.operatorsTab {
   padding: 12px 20px;
   background-color: transparent;
   border: none;
@@ -68,18 +68,18 @@
   min-width: 100px;
 }
 
-.operators-tab:hover {
+.operatorsTab:hover {
   background-color: #363a3d;
 }
 
-.operators-tab.active {
+.operatorsTab.active {
   background-color: #faa01c;
   color: #1f1d1d;
   box-shadow: 0 2px 8px rgba(250, 160, 28, 0.4);
 }
 
 /* Botões */
-.operators-btn {
+.operatorsBtn {
   padding: 8px 12px;
   border: none;
   border-radius: 6px;
@@ -94,47 +94,47 @@
   min-width: 80px;
 }
 
-.operators-btn.primary {
+.operatorsBtn.primary {
   background-color: #faa01c;
   color: #1f1d1d;
 }
 
-.operators-btn.primary:hover:not(:disabled) {
+.operatorsBtn.primary:hover:not(:disabled) {
   background-color: #e8901a;
   box-shadow: 0 4px 12px rgba(250, 160, 28, 0.4);
   transform: translateY(-1px);
 }
 
-.operators-btn.secondary {
+.operatorsBtn.secondary {
   background-color: #363a3d;
   color: #faf5e9;
   border: 2px solid #2f2d2d;
 }
 
-.operators-btn.secondary:hover:not(:disabled) {
+.operatorsBtn.secondary:hover:not(:disabled) {
   background-color: #4a4d50;
   border-color: #faa01c;
   color: #faa01c;
 }
 
-.operators-btn.danger {
+.operatorsBtn.danger {
   background-color: #f44336;
   color: #fff;
 }
 
-.operators-btn.danger:hover:not(:disabled) {
+.operatorsBtn.danger:hover:not(:disabled) {
   background-color: #d32f2f;
   box-shadow: 0 4px 12px rgba(244, 67, 54, 0.4);
   transform: translateY(-1px);
 }
 
-.operators-btn:disabled {
+.operatorsBtn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
 /* Lista de Operadores */
-.operators-list-container {
+.operatorsListContainer {
   flex: 1;
   overflow-y: auto;
   background-color: #1f1d1d;
@@ -143,32 +143,32 @@
   padding: 16px;
 }
 
-.operators-list-container::-webkit-scrollbar {
+.operatorsListContainer::-webkit-scrollbar {
   width: 8px;
 }
 
-.operators-list-container::-webkit-scrollbar-track {
+.operatorsListContainer::-webkit-scrollbar-track {
   background-color: #2f2d2d;
   border-radius: 4px;
 }
 
-.operators-list-container::-webkit-scrollbar-thumb {
+.operatorsListContainer::-webkit-scrollbar-thumb {
   background-color: #464a4d;
   border-radius: 4px;
   transition: background-color 0.3s ease;
 }
 
-.operators-list-container::-webkit-scrollbar-thumb:hover {
+.operatorsListContainer::-webkit-scrollbar-thumb:hover {
   background-color: #faa01c;
 }
 
-.operators-list {
+.operatorsList {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 16px;
 }
 
-.operators-loading {
+.operatorsLoading {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -178,7 +178,7 @@
 }
 
 /* Card do Operador */
-.operator-card {
+.operatorCard {
   background-color: #363a3d;
   border: 2px solid #2f2d2d;
   border-radius: 8px;
@@ -187,35 +187,35 @@
   position: relative;
 }
 
-.operator-card:hover {
+.operatorCard:hover {
   border-color: #faa01c;
   box-shadow: 0 8px 24px rgba(250, 160, 28, 0.2);
   transform: translateY(-2px);
 }
 
-.operator-form {
+.operatorForm {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
 /* Seções do Operador */
-.operator-section {
+.operatorSection {
   background-color: #2f2d2d;
   border: 1px solid #464a4d;
   border-radius: 4px;
   padding: 8px;
-
-  & .form-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: 8px;
-    margin-bottom: 6px;
-    height: 70px;
-  }
 }
 
-.operator-section h4 {
+.operatorSection .formRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 8px;
+  margin-bottom: 6px;
+  height: 70px;
+}
+
+.operatorSection h4 {
   color: #faa01c;
   margin: 0 0 6px 0;
   font-size: 12px;
@@ -226,21 +226,19 @@
 }
 
 /* Layout do Formulário */
-
-
-.form-row:last-child {
+.formRow:last-child {
   margin-bottom: 0;
 }
 
-.form-group {
+.formGroup {
   display: flex;
   flex-direction: column;
   gap: 1px;
 }
 
 /* Labels */
-.form-group label,
-.checkbox-label {
+.formGroup label,
+.checkboxLabel {
   color: #faf5e9;
   font-size: 12px;
   font-weight: 500;
@@ -248,8 +246,8 @@
 }
 
 /* Inputs */
-.form-group input,
-.form-group select {
+.formGroup input,
+.formGroup select {
   padding: 4px 6px;
   background-color: #1f1d1d;
   border: 2px solid #464a4d;
@@ -262,51 +260,51 @@
   box-sizing: border-box;
 }
 
-.form-group input:focus:not(:disabled),
-.form-group select:focus:not(:disabled) {
+.formGroup input:focus:not(:disabled),
+.formGroup select:focus:not(:disabled) {
   border-color: #faa01c;
   box-shadow: 0 0 0 3px rgba(250, 160, 28, 0.1);
 }
 
-.form-group input:disabled,
-.form-group select:disabled {
+.formGroup input:disabled,
+.formGroup select:disabled {
   opacity: 0.7;
   background-color: #262626;
   cursor: not-allowed;
 }
 
-.form-group input::placeholder {
+.formGroup input::placeholder {
   color: #9e9e9e;
 }
 
 /* Checkbox personalizado */
-.checkbox-container {
+.checkboxContainer {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 4px 0;
 }
 
-.operators-checkbox {
+.operatorsCheckbox {
   width: 20px !important;
   height: 20px !important;
   accent-color: #faa01c;
   cursor: pointer;
 }
 
-.operators-checkbox:disabled {
+.operatorsCheckbox:disabled {
   cursor: not-allowed;
   opacity: 0.6;
 }
 
-.checkbox-text {
+.checkboxText {
   color: #faf5e9;
   font-size: 11px;
   font-weight: 500;
 }
 
 /* Ações do Operador */
-.operator-actions {
+.operatorActions {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
@@ -316,7 +314,7 @@
 }
 
 /* Botão Editar/Salvar Melhorado */
-.btn-edit {
+.btnEdit {
   padding: 10px 16px;
   border: none;
   border-radius: 6px;
@@ -337,7 +335,7 @@
   overflow: hidden;
 }
 
-.btn-edit::before {
+.btnEdit::before {
   content: '';
   position: absolute;
   top: 0;
@@ -348,34 +346,34 @@
   transition: left 0.5s;
 }
 
-.btn-edit:hover::before {
+.btnEdit:hover::before {
   left: 100%;
 }
 
-.btn-edit:hover:not(:disabled) {
+.btnEdit:hover:not(:disabled) {
   background: linear-gradient(135deg, #e8901a 0%, #d17e0f 100%);
   box-shadow: 0 4px 16px rgba(250, 160, 28, 0.4);
   transform: translateY(-2px);
 }
 
-.btn-edit:active {
+.btnEdit:active {
   transform: translateY(0);
   box-shadow: 0 2px 8px rgba(250, 160, 28, 0.3);
 }
 
-.btn-edit:disabled {
+.btnEdit:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
 }
 
 /* Estado de loading para o botão */
-.btn-edit.loading {
+.btnEdit.loading {
   position: relative;
   color: transparent;
 }
 
-.btn-edit.loading::after {
+.btnEdit.loading::after {
   content: '';
   position: absolute;
   width: 16px;
@@ -397,13 +395,13 @@
 }
 
 /* Estado especial para o botão Salvar */
-.btn-edit.saving {
+.btnEdit.saving {
   background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
   box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
   animation: pulse 2s infinite;
 }
 
-.btn-edit.saving:hover:not(:disabled) {
+.btnEdit.saving:hover:not(:disabled) {
   background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
   box-shadow: 0 4px 16px rgba(76, 175, 80, 0.4);
 }
@@ -422,109 +420,109 @@
 
 /* Responsividade */
 @media (max-width: 1200px) {
-  .operators-container {
+  .operatorsContainer {
     padding: 12px;
   }
   
-  .operators-list {
+  .operatorsList {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   }
   
-  .operators-header {
+  .operatorsHeader {
     padding: 16px 20px;
   }
   
-  .operators-title {
+  .operatorsTitle {
     font-size: 20px;
   }
 }
 
 @media (max-width: 768px) {
-  .operators-header {
+  .operatorsHeader {
     flex-direction: column;
     align-items: stretch;
     gap: 16px;
   }
   
-  .operators-actions {
+  .operatorsActions {
     justify-content: space-between;
     width: 100%;
   }
   
-  .operators-filter-tabs {
+  .operatorsFilterTabs {
     flex: 1;
   }
   
-  .operators-tab {
+  .operatorsTab {
     flex: 1;
     min-width: auto;
   }
   
-  .form-row {
+  .formRow {
     grid-template-columns: 1fr;
   }
   
-  .operator-card {
+  .operatorCard {
     padding: 16px;
   }
   
-  .operator-section {
+  .operatorSection {
     padding: 16px;
   }
   
-  .operator-actions {
+  .operatorActions {
     flex-direction: column;
   }
   
-  .operators-btn {
+  .operatorsBtn {
     width: 100%;
   }
   
-  .btn-edit {
+  .btnEdit {
     width: 100%;
     min-width: auto;
   }
 }
 
 @media (max-width: 480px) {
-  .operators-container {
+  .operatorsContainer {
     padding: 8px;
   }
   
-  .operators-header {
+  .operatorsHeader {
     padding: 12px 16px;
   }
   
-  .operators-title {
+  .operatorsTitle {
     font-size: 18px;
   }
   
-  .operators-list-container {
+  .operatorsListContainer {
     padding: 12px;
   }
   
-  .operator-card {
+  .operatorCard {
     padding: 12px;
   }
   
-  .operator-section {
+  .operatorSection {
     padding: 12px;
   }
 }
 
 /* Estados especiais */
-.operator-card[data-editing="true"] {
+.operatorCard[data-editing="true"] {
   border-color: #faa01c;
   background-color: #463d2a;
   box-shadow: 0 0 0 2px rgba(250, 160, 28, 0.2);
 }
 
-.operator-card[data-inactive="true"] {
+.operatorCard[data-inactive="true"] {
   opacity: 0.7;
   border-color: #666;
 }
 
-.operator-card[data-inactive="true"] .operator-section {
+.operatorCard[data-inactive="true"] .operatorSection {
   background-color: #2a2a2a;
 }
 
@@ -540,12 +538,12 @@
   }
 }
 
-.operator-card {
+.operatorCard {
   animation: fadeIn 0.3s ease;
 }
 
 /* Melhorias no loading */
-.operators-loading {
+.operatorsLoading {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -554,8 +552,47 @@
   gap: 16px;
 }
 
-.operators-loading::after {
+.operatorsLoading::after {
   content: "Carregando operadores...";
   color: #9e9e9e;
   font-size: 14px;
 }
+
+/* Classes auxiliares para input-field */
+.inputField {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.inputField label {
+  color: #faf5e9;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 1px;
+}
+
+.inputField input {
+  padding: 4px 6px;
+  background-color: #1f1d1d;
+  border: 2px solid #464a4d;
+  border-radius: 4px;
+  color: #faf5e9;
+  font-size: 11px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  height: 28px;
+  box-sizing: border-box;
+}
+
+.inputField input:focus:not(:disabled) {
+  border-color: #faa01c;
+  box-shadow: 0 0 0 3px rgba(250, 160, 28, 0.1);
+}
+
+.inputField input:disabled {
+  opacity: 0.7;
+  background-color: #262626;
+  cursor: not-allowed;
+}
+
