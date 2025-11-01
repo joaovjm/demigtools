@@ -18,7 +18,7 @@ const searchDonor = async (params, donor_type) => {
           query = supabase
             .from("leads")
             .select(
-              `leads_id, leads_name, leads_address, leads_tel_1, leads_neighborhood, leads_icpf`
+              `leads_id, leads_name, leads_address, leads_tel_1, leads_neighborhood, leads_icpf, operator: operator_code_id(operator_code_id, operator_name)`
             )
             .eq("leads_cpf", params.replace(/\D/g, ""));
         } else {
@@ -37,7 +37,7 @@ const searchDonor = async (params, donor_type) => {
           query = supabase
             .from("leads")
             .select(
-              `leads_id, leads_name, leads_address, leads_tel_1, leads_neighborhood, leads_icpf`
+              `leads_id, leads_name, leads_address, leads_tel_1, leads_neighborhood, leads_icpf, operator: operator_code_id(operator_code_id, operator_name)`
             )
             .or(`leads_tel_1.ilike.%${params}%,leads_tel_2.ilike.%${params}%`);
         } else {
@@ -71,7 +71,7 @@ const searchDonor = async (params, donor_type) => {
           query = supabase
             .from("leads")
             .select(
-              `leads_id, leads_name, leads_address, leads_tel_1, leads_neighborhood, leads_icpf`
+              `leads_id, leads_name, leads_address, leads_tel_1, leads_neighborhood, leads_icpf, operator: operator_code_id(operator_code_id, operator_name)`
             )
             .ilike("leads_name", `%${params}%`);
         } else {
@@ -116,6 +116,8 @@ const searchDonor = async (params, donor_type) => {
           donor_neighborhood: lead.leads_neighborhood,
           donor_type: "Lead",
           donor_cpf: lead.leads_icpf,
+          operator_code_id: lead.operator.operator_code_id,
+          operator_name: lead.operator.operator_name,
           isLead: true // Flag para identificar que é um lead
         }));
         console.log("Leads encontrados:", normalizedData);
