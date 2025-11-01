@@ -8,7 +8,7 @@ export const DonorCard = ({ donor, onClick }) => (
   >
     <header>
       <h3>
-        <FaMoneyCheckDollar /> {donor.donor_name}
+        <FaMoneyCheckDollar /> {donor.donor_name}{donor.operator_name && ` || ${donor.operator_name}`}
       </h3>
     </header>
     <div className="Cardinfo">
