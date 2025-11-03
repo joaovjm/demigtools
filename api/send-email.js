@@ -65,7 +65,7 @@ export default async function handler(req, res) {
   });
 
   const mailOptions = {
-    from: `"João Oliveira" <${process.env.EMAIL_USER}>`,
+    from: `"Centro Geriátrico Manancial" <${process.env.EMAIL_USER}>`,
     to: emailTo,
     subject,
     text,

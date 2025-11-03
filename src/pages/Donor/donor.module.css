@@ -10,7 +10,7 @@
     box-sizing: border-box;
 }
 
-.donor-content {
+.donorContent {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -18,7 +18,7 @@
     gap: 20px;
 }
 
-.donor-header {
+.donorHeader {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -28,7 +28,7 @@
     gap: 16px;
 }
 
-.donor-title {
+.donorTitle {
     color: #faa01c;
     font-size: 24px;
     font-weight: 600;
@@ -37,14 +37,14 @@
     letter-spacing: 1px;
 }
 
-.donor-actions {
+.donorActions {
     display: flex;
     gap: 12px;
     align-items: center;
     flex-wrap: wrap;
 }
 
-.donor-btn {
+.donorBtn {
     padding: 10px 16px;
     border: none;
     border-radius: 6px;
@@ -60,41 +60,41 @@
     gap: 8px;
 }
 
-.donor-btn.primary {
+.donorBtn.primary {
     background-color: #faa01c;
     color: #1f1d1d;
 }
 
-.donor-btn.primary:hover:not(:disabled) {
+.donorBtn.primary:hover:not(:disabled) {
     background-color: #e8901a;
     box-shadow: 0 4px 12px rgba(250, 160, 28, 0.4);
     transform: translateY(-1px);
 }
 
-.donor-btn.secondary {
+.donorBtn.secondary {
     background-color: #363a3d;
     color: #faf5e9;
     border: 2px solid #2f2d2d;
 }
 
-.donor-btn.secondary:hover:not(:disabled) {
+.donorBtn.secondary:hover:not(:disabled) {
     background-color: #4a4d50;
     border-color: #faa01c;
 }
 
-.donor-btn:disabled {
+.donorBtn:disabled {
     opacity: 0.6;
     cursor: not-allowed;
 }
 
-.donor-form-container {
+.donorFormContainer {
     display: flex;
     flex-direction: column;
     width: 100%;
     height: 100%;
 }
 
-.donor-form {
+.donorForm {
     flex: 1;
     padding: 16px;
     border: 3px double #363a3d;
@@ -106,21 +106,21 @@
     overflow-y: auto;
 }
 
-.donor-section {
+.donorSection {
     background-color: #363a3d;
     border: 2px solid #2f2d2d;
     border-radius: 6px;
     padding: 12px;
 }
 
-.donor-section h4 {
+.donorSection h4 {
     color: #faa01c;
     margin: 0 0 10px 0;
     font-size: 15px;
     font-weight: 600;
 }
 
-.form-row {
+.formRow {
     display: grid !important;
     grid-template-columns: repeat(3, minmax(120px, 1fr)) !important;
     gap: 10px;
@@ -130,16 +130,16 @@
     overflow: hidden;
 }
 
-.form-row:last-child {
+.formRow:last-child {
     margin-bottom: 0;
 }
 
-.form-group.full-width {
+.formGroup.fullWidth {
     grid-column: 1 / -1;
 }
 
 /* Força os componentes a ocuparem o espaço disponível sem largura mínima */
-.donor-form .form-row > * {
+.donorForm .formRow > * {
     min-width: 0 !important;
     width: 100% !important;
     max-width: 100% !important;
@@ -147,9 +147,9 @@
 }
 
 /* Override completo para FormDonorInput e FormListSelect */
-.donor-form .form-row .input-field,
-.donor-form .form-row .form-group,
-.donor-form .form-row > div {
+.donorForm .formRow .inputField,
+.donorForm .formRow .formGroup,
+.donorForm .formRow > div {
     min-width: 0 !important;
     max-width: 100% !important;
     width: 100% !important;
@@ -160,7 +160,7 @@
 }
 
 /* Override específico para componentes FormDonorInput e FormListSelect */
-.donor-form .form-row > .input-field {
+.donorForm .formRow > .inputField {
     min-width: 120px !important;
     width: 100% !important;
     max-width: none !important;
@@ -168,16 +168,16 @@
 }
 
 /* Override específico para sobrescrever o App.css */
-.donor-form .input-field {
+.donorForm .inputField {
     flex: 1 1 0 !important;
     min-width: 120px !important;
     max-width: 100% !important;
 }
 
 /* Override para inputs internos dos componentes */
-.donor-form .form-row input,
-.donor-form .form-row select,
-.donor-form .form-row textarea {
+.donorForm .formRow input,
+.donorForm .formRow select,
+.donorForm .formRow textarea {
     min-width: 0 !important;
     max-width: 100% !important;
     width: 100% !important;
@@ -185,36 +185,36 @@
 }
 
 /* Override para labels */
-.donor-form .form-row label {
+.donorForm .formRow label {
     min-width: 0 !important;
     width: 100% !important;
     box-sizing: border-box !important;
 }
 
-.form-group {
+.formGroup {
     display: flex;
     flex-direction: column;
     gap: 4px;
     min-width: 0;
 }
 
-.input-field {
+.inputField {
     display: flex;
     flex-direction: column;
     gap: 4px;
     min-width: 0;
 }
 
-.donor-form label {
+.donorForm label {
     color: #faf5e9;
     font-size: 12px;
     font-weight: 500;
     margin-bottom: 2px;
 }
 
-.donor-form input,
-.donor-form textarea,
-.donor-form select {
+.donorForm input,
+.donorForm textarea,
+.donorForm select {
     width: 100%;
     min-width: 0;
     padding: 6px 8px;
@@ -229,7 +229,7 @@
     height: 32px;
 }
 
-.input-field input {
+.inputField input {
     width: 100%;
     min-width: 0;
     padding: 6px 8px;
@@ -244,43 +244,43 @@
     height: 32px;
 }
 
-.input-field input:focus:not(:disabled) {
+.inputField input:focus:not(:disabled) {
     border-color: #faa01c;
 }
 
-.input-field input:disabled {
+.inputField input:disabled {
     opacity: 0.7;
     background-color: #262626;
     cursor: not-allowed;
 }
 
-.input-field label {
+.inputField label {
     color: #faf5e9;
     font-size: 12px;
     font-weight: 500;
     margin-bottom: 2px;
 }
 
-.donor-form input:focus:not(:disabled),
-.donor-form textarea:focus:not(:disabled),
-.donor-form select:focus:not(:disabled) {
+.donorForm input:focus:not(:disabled),
+.donorForm textarea:focus:not(:disabled),
+.donorForm select:focus:not(:disabled) {
     border-color: #faa01c;
 }
 
-.donor-form input:disabled,
-.donor-form textarea:disabled,
-.donor-form select:disabled {
+.donorForm input:disabled,
+.donorForm textarea:disabled,
+.donorForm select:disabled {
     opacity: 0.7;
     background-color: #262626;
     cursor: not-allowed;
 }
 
-.donor-form input::placeholder,
-.donor-form textarea::placeholder {
+.donorForm input::placeholder,
+.donorForm textarea::placeholder {
     color: #9e9e9e;
 }
 
-.donor-form textarea {
+.donorForm textarea {
     resize: vertical;
     font-family: inherit;
     min-height: 60px;
@@ -294,65 +294,65 @@
         padding: 8px;
     }
     
-    .donor-header {
+    .donorHeader {
         flex-direction: column;
         align-items: flex-start;
         gap: 8px;
     }
     
-    .donor-title {
+    .donorTitle {
         font-size: 18px;
     }
     
-    .donor-actions {
+    .donorActions {
         width: 100%;
         justify-content: space-between;
     }
     
-    .donor-btn {
+    .donorBtn {
         padding: 6px 10px;
         font-size: 11px;
         min-width: 80px;
         height: 32px;
     }
     
-    .donor-form {
+    .donorForm {
         padding: 8px;
         gap: 8px;
     }
     
-    .donor-section {
+    .donorSection {
         padding: 8px;
     }
     
-    .donor-section h4 {
+    .donorSection h4 {
         font-size: 13px;
         margin-bottom: 6px;
     }
     
-    .form-row {
+    .formRow {
         grid-template-columns: 1fr;
         gap: 8px;
         margin-bottom: 6px;
     }
     
-    .form-group {
+    .formGroup {
         gap: 2px;
     }
     
-    .donor-form label {
+    .donorForm label {
         font-size: 11px;
     }
     
-    .donor-form input,
-    .donor-form textarea,
-    .donor-form select {
+    .donorForm input,
+    .donorForm textarea,
+    .donorForm select {
         font-size: 12px;
         padding: 5px 6px;
         height: 28px;
     }
     
-    .donor-form textarea {
+    .donorForm textarea {
         min-height: 50px;
         padding: 6px;
     }
@@ -364,33 +364,33 @@
         padding: 12px;
     }
     
-    .donor-title {
+    .donorTitle {
         font-size: 20px;
     }
     
-    .donor-form {
+    .donorForm {
         padding: 12px;
         gap: 10px;
     }
     
-    .donor-section {
+    .donorSection {
         padding: 10px;
     }
     
-    .donor-section h4 {
+    .donorSection h4 {
         font-size: 14px;
         margin-bottom: 8px;
     }
     
-    .form-row {
+    .formRow {
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         gap: 10px;
         margin-bottom: 8px;
     }
     
-    .donor-form input,
-    .donor-form textarea,
-    .donor-form select {
+    .donorForm input,
+    .donorForm textarea,
+    .donorForm select {
         height: 30px;
         padding: 5px 7px;
     }
@@ -402,24 +402,24 @@
         padding: 14px;
     }
     
-    .donor-content {
+    .donorContent {
         max-width: 1000px;
     }
     
-    .donor-title {
+    .donorTitle {
         font-size: 22px;
     }
     
-    .donor-form {
+    .donorForm {
         padding: 14px;
         gap: 10px;
     }
     
-    .donor-section {
+    .donorSection {
         padding: 12px;
     }
     
-    .form-row {
+    .formRow {
         grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
         gap: 10px;
         margin-bottom: 8px;
@@ -432,24 +432,24 @@
         padding: 16px;
     }
     
-    .donor-content {
+    .donorContent {
         max-width: 1200px;
     }
     
-    .donor-title {
+    .donorTitle {
         font-size: 24px;
     }
     
-    .donor-form {
+    .donorForm {
         padding: 16px;
         gap: 12px;
     }
     
-    .donor-section {
+    .donorSection {
         padding: 12px;
     }
     
-    .form-row {
+    .formRow {
         grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
         gap: 12px;
         margin-bottom: 10px;
@@ -458,30 +458,28 @@
 
 /* Ajustes especiais para campos que precisam ocupar mais espaço */
 @media (min-width: 769px) {
-    .donor-section:last-child .form-group.full-width {
+    .donorSection:last-child .formGroup.fullWidth {
         grid-column: 1 / -1;
     }
 }
 
 /* Scrollbar personalizada para o form */
-.donor-form::-webkit-scrollbar {
+.donorForm::-webkit-scrollbar {
     width: 6px;
 }
 
-.donor-form::-webkit-scrollbar-track {
+.donorForm::-webkit-scrollbar-track {
     background-color: #2f2d2d;
     border-radius: 3px;
 }
 
-.donor-form::-webkit-scrollbar-thumb {
+.donorForm::-webkit-scrollbar-thumb {
     background-color: #464a4d;
     border-radius: 3px;
     transition: background-color 0.3s ease;
 }
 
-.donor-form::-webkit-scrollbar-thumb:hover {
+.donorForm::-webkit-scrollbar-thumb:hover {
     background-color: #faa01c;
 }
-
-
 

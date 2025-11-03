@@ -1,4 +1,4 @@
-import "./index.css";
+import styles from "./donor.module.css";
 import React, { useState, useEffect, useContext } from "react";
 
 import TableDonor from "../../components/TableDonor";
@@ -21,6 +21,7 @@ import { UserContext } from "../../context/UserContext";
 import ModalEditDonation from "../../components/ModalEditDonation";
 import { setActivityHistoric } from "../../helper/setActivityHistoric";
 import { FaEnvelope } from "react-icons/fa";
+import ModalSendEmail from "../../components/ModalSendEmail";
 
 const Donor = () => {
   const { id } = useParams();
@@ -51,6 +52,7 @@ const Donor = () => {
     modalShow: false,
     loading: false,
     modalEdit: false,
+    modalSendEmail: false,
   });
 
   const params = {};
@@ -154,21 +156,21 @@ const Donor = () => {
 
   const handleBack = () => window.history.back();
   return (
-    <main className="containerDonor">
-      <div className="donor-content">
+    <main className={styles.containerDonor}>
+      <div className={styles.donorContent}>
         {/* Cabeçalho com botões */}
-        <header className="donor-header">
-          <h2 className="donor-title">{ICONS.MONEY} Doador</h2>
-          <div className="donor-actions">
-            <button onClick={handleBack} className="donor-btn secondary">
+        <header className={styles.donorHeader}>
+          <h2 className={styles.donorTitle}>{ICONS.MONEY} Doador</h2>
+          <div className={styles.donorActions}>
+            <button onClick={handleBack} className={`${styles.donorBtn} ${styles.secondary}`}>
               {ICONS.BACK} {BUTTON_TEXTS.BACK}
             </button>
-            <button className="donor-btn secondary">
+            <button onClick={() => setUiState((prev) => ({ ...prev, modalSendEmail: true }))} className={`${styles.donorBtn} ${styles.secondary}`}>
               {<FaEnvelope/>} Envio de Email
             </button>
             <button
               onClick={handleEditDonor}
-              className="donor-btn primary"
+              className={`${styles.donorBtn} ${styles.primary}`}
               disabled={uiState.loading}
             >
               {uiState.loading ? <Loader /> : uiState.btnEdit}
@@ -179,7 +181,7 @@ const Donor = () => {
                   setUiState((prev) => ({ ...prev, modalShow: true }))
                 }
                 type="submit"
-                className="donor-btn primary"
+                className={`${styles.donorBtn} ${styles.primary}`}
               >
                 {BUTTON_TEXTS.CREATE_MOVIMENT}
               </button>
@@ -188,12 +190,12 @@ const Donor = () => {
         </header>
 
         {/* Formulario com informações do doador */}
-        <div className="donor-form-container">
-          <form className="donor-form">
+        <div className={styles.donorFormContainer}>
+          <form className={styles.donorForm}>
             {/* Informações Básicas */}
-            <div className="donor-section">
+            <div className={styles.donorSection}>
               <h4>Informações Básicas</h4>
-              <div className="form-row">
+              <div className={styles.formRow}>
                 <FormDonorInput
                   label={FORM_LABELS.NAME}
                   value={donorData.nome}
@@ -231,9 +233,9 @@ const Donor = () => {
             </div>
 
             {/* Informações de Endereço e contato*/}
-            <div className="donor-section">
+            <div className={styles.donorSection}>
               <h4>Endereço e Contato</h4>
-              <div className="form-row">
+              <div className={styles.formRow}>
                 <FormDonorInput
                   label={FORM_LABELS.ADDRESS}
                   value={donorData.endereco}
@@ -256,7 +258,7 @@ const Donor = () => {
                   onChange={(e) => handleInputChange("bairro", e.target.value)}
                   readOnly={uiState.edit}
                 />
-                <div className="input-field">
+                <div className={styles.inputField}>
                   <label>{FORM_LABELS.PHONE1}</label>
                   <input
                     type="text"
@@ -268,7 +270,7 @@ const Donor = () => {
                   />
                 </div>
 
-                <div className="input-field">
+                <div className={styles.inputField}>
                   <label>{FORM_LABELS.PHONE2}</label>
                   <input
                     type="text"
@@ -280,7 +282,7 @@ const Donor = () => {
                   />
                 </div>
 
-                <div className="input-field">
+                <div className={styles.inputField}>
                   <label>{FORM_LABELS.PHONE3}</label>
                   <input
                     type="text"
@@ -296,9 +298,9 @@ const Donor = () => {
 
             {/* Informações de Doação */}
             {donorData.tipo === DONOR_TYPES.MONTHLY && (
-            <div className="donor-section">
+            <div className={styles.donorSection}>
               <h4>Informações do Mensal</h4>
-              <div className="form-row">
+              <div className={styles.formRow}>
                 <FormDonorInput
                   label={FORM_LABELS.DAY}
                   value={donorData.dia}
@@ -332,9 +334,9 @@ const Donor = () => {
             )} 
 
             {/* Observações */}
-            <div className="donor-section">
+            <div className={styles.donorSection}>
               <h4>Observações e Referências</h4>
-              <div className="form-row">
+              <div className={styles.formRow}>
                 <FormTextArea
                   label={FORM_LABELS.OBSERVATION}
                   value={donorData.observacao}
@@ -390,6 +392,14 @@ const Donor = () => {
           }
           donation={donation}
           donorData={donorData}
+        />
+      )}
+      {uiState.modalSendEmail && (
+        <ModalSendEmail
+          donor_email={donorData.email}
+          setModalSendEmail={(show) =>
+            setUiState((prev) => ({ ...prev, modalSendEmail: show }))
+          }
         />
       )}
     </main>
