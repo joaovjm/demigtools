@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useCampaigns } from "../../hooks/useCampaigns.jsx";
 import { ICONS } from "../../constants/constants";
 import { toast } from "react-toastify";
+import styles from "../../pages/AdminManager/adminmanager.module.css";
 
 /**
  * Versão migrada do componente Campain usando o novo serviço de campanhas
@@ -97,7 +98,7 @@ const CampainMigrated = () => {
 
   if (loading) {
     return (
-      <div className="campain">
+      <div className={styles.campain}>
         <div style={{ textAlign: 'center', padding: '20px' }}>
           Carregando campanhas...
         </div>
@@ -107,7 +108,7 @@ const CampainMigrated = () => {
 
   if (error) {
     return (
-      <div className="campain">
+      <div className={styles.campain}>
         <div style={{ textAlign: 'center', padding: '20px', color: 'red' }}>
           Erro ao carregar campanhas: {error}
         </div>
@@ -116,8 +117,8 @@ const CampainMigrated = () => {
   }
 
   return (
-    <div className="campain">
-      <div className="campain-divs">
+    <div className={styles.campain}>
+      <div className={styles.campainDivs}>
         <label>Nova Campanha</label>
         <div className="input-field">
           <label>Nome da Campanha</label>
@@ -142,7 +143,7 @@ const CampainMigrated = () => {
         </button>
       </div>
 
-      <div className="campain-divs">
+      <div className={styles.campainDivs}>
         <label>Campanhas Existentes ({campaigns.length})</label>
         <div className="campaigns-list">
           {campaigns.length === 0 ? (
@@ -220,7 +221,7 @@ const CampainMigrated = () => {
       </div>
 
       {/* Seção para mensagens de campanha (mantida do componente original) */}
-      <div className="campain-divs" style={{display: "flex", gap: 0}}>
+      <div className={styles.campainDivs} style={{display: "flex", gap: 0}}>
         <label>Mensagens Para Campanhas</label>
         <div className="input-field" style={{maxHeight: 166}}>
           <label>Mensagem</label>

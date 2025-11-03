@@ -14,14 +14,13 @@ const searchDonor = async (params, donor_type) => {
       ) {
         // Busca por CPF
         if (isLeadSearch) {
-
           // Busca na tabela leads por CPF
           query = supabase
             .from("leads")
             .select(
               `leads_id, leads_name, leads_address, leads_tel_1, leads_neighborhood, leads_icpf, operator: operator_code_id(operator_code_id, operator_name)`
             )
-            .eq("leads_cpf", params.replace(/\D/g, ""));
+            .eq("leads_icpf", params.replace(/\D/g, ""));
         } else {
 
           // Busca na tabela donor por CPF

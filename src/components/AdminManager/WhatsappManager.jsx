@@ -4,6 +4,7 @@ import { getOperators } from "../../helper/getOperators";
 import supabase from "../../helper/supaBaseClient";
 import { useCampaigns } from "../../hooks/useCampaigns";
 import campaignsService from "../../services/campaignsService";
+import styles from "../../pages/AdminManager/adminmanager.module.css";
 
 const WhatsappManager = () => {
   const [activeTab, setActiveTab] = useState("templates");
@@ -520,44 +521,44 @@ const WhatsappManager = () => {
 
 
   return (
-    <div className="whatsapp-manager-container">
+    <div className={styles.whatsappManagerContainer}>
       {/* Menu de Tabs */}
-      <div className="whatsapp-manager-tabs">
+      <div className={styles.whatsappManagerTabs}>
         <div
-          className={`whatsapp-manager-tab ${
-            activeTab === "templates" ? "active" : ""
+          className={`${styles.whatsappManagerTab} ${
+            activeTab === "templates" ? styles.active : ""
           }`}
           onClick={() => setActiveTab("templates")}
         >
           Consultar Templates
         </div>
         <div
-          className={`whatsapp-manager-tab ${
-            activeTab === "create" ? "active" : ""
+          className={`${styles.whatsappManagerTab} ${
+            activeTab === "create" ? styles.active : ""
           }`}
           onClick={() => setActiveTab("create")}
         >
           Criar Template
         </div>
         <div
-          className={`whatsapp-manager-tab ${
-            activeTab === "campaigns" ? "active" : ""
+          className={`${styles.whatsappManagerTab} ${
+            activeTab === "campaigns" ? styles.active : ""
           }`}
           onClick={() => setActiveTab("campaigns")}
         >
           Mensagens de Campanha
         </div>
         <div
-          className={`whatsapp-manager-tab ${
-            activeTab === "contacts" ? "active" : ""
+          className={`${styles.whatsappManagerTab} ${
+            activeTab === "contacts" ? styles.active : ""
           }`}
           onClick={() => setActiveTab("contacts")}
         >
           Gerenciar Contatos
         </div>
         <div
-          className={`whatsapp-manager-tab ${
-            activeTab === "diagnostico" ? "active" : ""
+          className={`${styles.whatsappManagerTab} ${
+            activeTab === "diagnostico" ? styles.active : ""
           }`}
           onClick={() => setActiveTab("diagnostico")}
         >
@@ -566,54 +567,54 @@ const WhatsappManager = () => {
       </div>
 
       {/* Conteúdo das Tabs */}
-      <div className="whatsapp-manager-content">
+      <div className={styles.whatsappManagerContent}>
         {activeTab === "templates" && (
-          <div className="whatsapp-manager-section">
+          <div className={styles.whatsappManagerSection}>
             <h3>Consultar Status de Templates</h3>
 
-            <div className="whatsapp-manager-search">
+            <div className={styles.whatsappManagerSearch}>
               <input
                 type="text"
                 placeholder="Nome do template"
                 value={searchTemplate}
                 onChange={(e) => setSearchTemplate(e.target.value)}
-                className="whatsapp-manager-input"
+                className={styles.whatsappManagerInput}
               />
               <button
                 onClick={() => checkTemplateStatus(searchTemplate)}
                 disabled={loading || !searchTemplate}
-                className="whatsapp-manager-btn primary"
+                className={`${styles.whatsappManagerBtn} ${styles.primary}`}
               >
                 {loading ? "Consultando..." : "Consultar"}
               </button>
             </div>
 
             {templateStatus && (
-              <div className="whatsapp-manager-status">{templateStatus}</div>
+              <div className={styles.whatsappManagerStatus}>{templateStatus}</div>
             )}
 
             {templates.length > 0 && (
-              <div className="whatsapp-manager-templates">
+              <div className={styles.whatsappManagerTemplates}>
                 <h4>Templates Encontrados:</h4>
                 {templates.map((template, index) => (
-                  <div key={index} className="whatsapp-manager-template-item">
-                    <div className="template-info">
+                  <div key={index} className={styles.whatsappManagerTemplateItem}>
+                    <div className={styles.templateInfo}>
                       <strong>{template.name}</strong>
-                      <span className="template-category">
+                      <span className={styles.templateCategory}>
                         {template.category}
                       </span>
-                      <span className="template-language">
+                      <span className={styles.templateLanguage}>
                         {template.language}
                       </span>
                     </div>
                     <div
-                      className="template-status"
+                      className={styles.templateStatus}
                       style={{ color: getStatusColor(template.status) }}
                     >
                       {formatTemplateStatus(template.status)}
                     </div>
                     {template.last_updated_time && (
-                      <div className="template-updated">
+                      <div className={styles.templateUpdated}>
                         Atualizado:{" "}
                         {new Date(
                           template.last_updated_time * 1000
@@ -621,7 +622,7 @@ const WhatsappManager = () => {
                       </div>
                     )}
                     {template.rejected_reason && (
-                      <div className="template-rejection">
+                      <div className={styles.templateRejection}>
                         Motivo da rejeição: {template.rejected_reason}
                       </div>
                     )}
@@ -633,12 +634,12 @@ const WhatsappManager = () => {
         )}
 
         {activeTab === "create" && (
-          <div className="whatsapp-manager-section">
+          <div className={styles.whatsappManagerSection}>
             <h3>Criar Novo Template</h3>
 
-            <div className="whatsapp-manager-form">
-              <div className="form-row">
-                <div className="form-group">
+            <div className={styles.whatsappManagerForm}>
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
                   <label>Nome do Template *</label>
                   <input
                     type="text"
@@ -650,10 +651,10 @@ const WhatsappManager = () => {
                       }))
                     }
                     placeholder="Ex: boas_vindas_cliente"
-                    className="whatsapp-manager-input"
+                    className={styles.whatsappManagerInput}
                   />
                 </div>
-                <div className="form-group">
+                <div className={styles.formGroup}>
                   <label>Categoria *</label>
                   <select
                     value={newTemplate.category}
@@ -663,7 +664,7 @@ const WhatsappManager = () => {
                         category: e.target.value,
                       }))
                     }
-                    className="whatsapp-manager-select"
+                    className={styles.whatsappManagerSelect}
                   >
                     <option value="utility">Utility</option>
                     <option value="marketing">Marketing</option>
@@ -672,8 +673,8 @@ const WhatsappManager = () => {
                 </div>
               </div>
 
-              <div className="form-row">
-                <div className="form-group">
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
                   <label>Idioma</label>
                   <select
                     value={newTemplate.language}
@@ -683,14 +684,14 @@ const WhatsappManager = () => {
                         language: e.target.value,
                       }))
                     }
-                    className="whatsapp-manager-select"
+                    className={styles.whatsappManagerSelect}
                   >
                     <option value="pt_BR">Português (BR)</option>
                     <option value="en_US">English (US)</option>
                     <option value="es_ES">Español</option>
                   </select>
                 </div>
-                <div className="form-group">
+                <div className={styles.formGroup}>
                   <label>Cabeçalho (Header)</label>
                   <input
                     type="text"
@@ -702,12 +703,12 @@ const WhatsappManager = () => {
                       }))
                     }
                     placeholder="Texto do cabeçalho (opcional)"
-                    className="whatsapp-manager-input"
+                    className={styles.whatsappManagerInput}
                   />
                 </div>
               </div>
 
-              <div className="form-group">
+              <div className={styles.formGroup}>
                 <label>Corpo da Mensagem *</label>
                 <textarea
                   value={newTemplate.bodyText}
@@ -718,12 +719,12 @@ const WhatsappManager = () => {
                     }))
                   }
                   placeholder="Texto principal da mensagem. Use {{1}}, {{2}}, etc. para variáveis"
-                  className="whatsapp-manager-textarea"
+                  className={styles.whatsappManagerTextarea}
                   rows="4"
                 />
               </div>
 
-              <div className="form-group">
+              <div className={styles.formGroup}>
                 <label>Rodapé (Footer)</label>
                 <input
                   type="text"
@@ -735,25 +736,25 @@ const WhatsappManager = () => {
                     }))
                   }
                   placeholder="Texto do rodapé (opcional)"
-                  className="whatsapp-manager-input"
+                  className={styles.whatsappManagerInput}
                 />
               </div>
 
-              <div className="form-group">
+              <div className={styles.formGroup}>
                 <label>Botões</label>
-                <div className="buttons-section">
+                <div className={styles.buttonsSection}>
                   {newTemplate.buttons.map((button, index) => (
-                    <div key={index} className="button-item">
+                    <div key={index} className={styles.buttonItem}>
                       <input
                         type="text"
                         value={button.text}
                         onChange={(e) => updateButton(index, e.target.value)}
                         placeholder="Texto do botão"
-                        className="whatsapp-manager-input"
+                        className={styles.whatsappManagerInput}
                       />
                       <button
                         onClick={() => removeButton(index)}
-                        className="whatsapp-manager-btn danger small"
+                        className={`${styles.whatsappManagerBtn} ${styles.danger} ${styles.small}`}
                       >
                         Remover
                       </button>
@@ -761,20 +762,20 @@ const WhatsappManager = () => {
                   ))}
                   <button
                     onClick={addButton}
-                    className="whatsapp-manager-btn secondary small"
+                    className={`${styles.whatsappManagerBtn} ${styles.secondary} ${styles.small}`}
                   >
                     Adicionar Botão
                   </button>
                 </div>
               </div>
 
-              <div className="form-actions">
+              <div className={styles.formActions}>
                 <button
                   onClick={createTemplate}
                   disabled={
                     loading || !newTemplate.name || !newTemplate.category
                   }
-                  className="whatsapp-manager-btn primary"
+                  className={`${styles.whatsappManagerBtn} ${styles.primary}`}
                 >
                   {loading ? "Criando..." : "Criar Template"}
                 </button>
@@ -784,16 +785,16 @@ const WhatsappManager = () => {
         )}
 
         {activeTab === "campaigns" && (
-          <div className="whatsapp-manager-section">
+          <div className={styles.whatsappManagerSection}>
             <h3>Mensagens de Campanha</h3>
 
             {/* Seção de Criar Nova Campanha */}
-            <div className="campaign-form-section">
+            <div className={styles.campaignFormSection}>
               <h4>Criar Nova Campanha</h4>
               
-              <div className="whatsapp-manager-form">
-                <div className="form-row">
-                  <div className="form-group">
+              <div className={styles.whatsappManagerForm}>
+                <div className={styles.formRow}>
+                  <div className={styles.formGroup}>
                     <label>Nome da Campanha *</label>
                     <input
                       type="text"
@@ -805,10 +806,10 @@ const WhatsappManager = () => {
                         }))
                       }
                       placeholder="Ex: Campanha Leite"
-                      className="whatsapp-manager-input"
+                      className={styles.whatsappManagerInput}
                     />
                   </div>
-                  <div className="form-group">
+                  <div className={styles.formGroup}>
                     <label>Descrição</label>
                     <input
                       type="text"
@@ -820,40 +821,40 @@ const WhatsappManager = () => {
                         }))
                       }
                       placeholder="Descrição da campanha (opcional)"
-                      className="whatsapp-manager-input"
+                      className={styles.whatsappManagerInput}
                     />
                   </div>
                 </div>
 
                 {/* Seleção de Templates */}
-                <div className="form-group">
+                <div className={styles.formGroup}>
                   <label>Selecionar Templates *</label>
-                  <div className="templates-selection">
+                  <div className={styles.templatesSelection}>
                     {campaignLoading ? (
-                      <div className="loading-message">Carregando templates...</div>
+                      <div className={styles.loadingMessage}>Carregando templates...</div>
                     ) : allTemplates.length > 0 ? (
-                      <div className="templates-grid">
+                        <div className={styles.templatesGrid}>
                         {allTemplates.map((template, index) => {
                           const isSelected = newCampaign.selectedTemplates.find(t => t.name === template.name);
                           return (
                             <div 
                               key={index} 
-                              className={`template-card ${isSelected ? 'selected' : ''}`}
+                              className={`${styles.templateCard} ${isSelected ? styles.selected : ''}`}
                               onClick={() => toggleTemplateSelection(template)}
                             >
-                              <div className="template-card-header">
+                              <div className={styles.templateCardHeader}>
                                 <strong>{template.name}</strong>
-                                <span className="template-category">{template.category}</span>
+                                <span className={styles.templateCategory}>{template.category}</span>
                               </div>
-                              <div className="template-card-body">
+                              <div className={styles.templateCardBody}>
                                 {template.components?.find(c => c.type === 'BODY')?.text || 'Sem texto do corpo'}
                               </div>
-                              <div className="template-card-status">
+                              <div className={styles.templateCardStatus}>
                                 <span style={{ color: getStatusColor(template.status) }}>
                                   {formatTemplateStatus(template.status)}
                                 </span>
                                 <button
-                                  className="test-template-btn"
+                                  className={styles.testTemplateBtn}
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     testTemplate(template.name);
@@ -869,7 +870,7 @@ const WhatsappManager = () => {
                         })}
                       </div>
                     ) : (
-                      <div className="no-templates-message">
+                      <div className={styles.noTemplatesMessage}>
                         Nenhum template aprovado encontrado. Crie e aprove templates primeiro.
                       </div>
                     )}
@@ -877,20 +878,20 @@ const WhatsappManager = () => {
 
                   {/* Templates Selecionados */}
                   {newCampaign.selectedTemplates.length > 0 && (
-                    <div className="selected-templates">
+                    <div className={styles.selectedTemplates}>
                       <h5>Templates Selecionados ({newCampaign.selectedTemplates.length}):</h5>
-                      <div className="selected-templates-list">
+                      <div className={styles.selectedTemplatesList}>
                         {newCampaign.selectedTemplates.map((template, index) => {
                           const paramCount = countTemplateParameters(template);
                           return (
-                            <div key={index} className="selected-template-item">
+                            <div key={index} className={styles.selectedTemplateItem}>
                               <span>
                                 {index + 1}. {template.name} 
                                 {paramCount > 0 && <small> ({paramCount} parâmetros)</small>}
                               </span>
                               <button
                                 onClick={() => toggleTemplateSelection(template)}
-                                className="remove-template-btn"
+                                className={styles.removeTemplateBtn}
                               >
                                 ×
                               </button>
@@ -903,16 +904,16 @@ const WhatsappManager = () => {
 
                   {/* Seção de Variáveis */}
                   {newCampaign.selectedTemplates.length > 0 && newCampaign.variables.length > 0 && (
-                    <div className="campaign-variables">
+                    <div className={styles.campaignVariables}>
                       <h5>Variáveis da Campanha:</h5>
-                      <p className="variables-help">
+                      <p className={styles.variablesHelp}>
                         Configure os valores que serão substituídos nos templates ({"{1}"}, {"{2}"}, etc.)
                       </p>
-                      <div className="variables-list">
+                      <div className={styles.variablesList}>
                         {newCampaign.variables.map((variable, index) => (
-                          <div key={index} className="variable-item">
+                          <div key={index} className={styles.variableItem}>
                             <label>Variável {index + 1}:</label>
-                            <div className="variable-input-group">
+                            <div className={styles.variableInputGroup}>
                               <select
                                 value={variable.startsWith('{{') ? variable : 'static'}
                                 onChange={(e) => {
@@ -922,7 +923,7 @@ const WhatsappManager = () => {
                                     updateVariable(index, e.target.value);
                                   }
                                 }}
-                                className="whatsapp-manager-select variable-type-select"
+                                className={`${styles.whatsappManagerSelect} ${styles.variableTypeSelect}`}
                               >
                                 <option value="static">Valor Estático</option>
                                 <option value="{{selectedConversation.title}}">Nome do Contato</option>
@@ -936,12 +937,12 @@ const WhatsappManager = () => {
                                   value={variable}
                                   onChange={(e) => updateVariable(index, e.target.value)}
                                   placeholder={`Valor para {${index + 1}}`}
-                                  className="whatsapp-manager-input variable-static-input"
+                                  className={`${styles.whatsappManagerInput} ${styles.variableStaticInput}`}
                                 />
                               )}
                               {variable.startsWith('{{') && (
-                                <div className="dynamic-variable-display">
-                                  <span className="dynamic-variable-label">
+                                <div className={styles.dynamicVariableDisplay}>
+                                  <span className={styles.dynamicVariableLabel}>
                                     {variable === '{{selectedConversation.title}}' && 'Nome do contato será usado automaticamente'}
                                     {variable === '{{selectedConversation.phone_number}}' && 'Telefone do contato será usado automaticamente'}
                                     {variable === '{{currentDate}}' && 'Data atual será inserida automaticamente'}
@@ -953,7 +954,7 @@ const WhatsappManager = () => {
                           </div>
                         ))}
                       </div>
-                      <div className="variables-info">
+                      <div className={styles.variablesInfo}>
                         <small>
                           💡 Deixe em branco para usar valores padrão ("Valor 1", "Valor 2", etc.)
                         </small>
@@ -962,11 +963,11 @@ const WhatsappManager = () => {
                   )}
                 </div>
 
-                <div className="form-actions">
+                <div className={styles.formActions}>
                   <button
                     onClick={createCampaign}
                     disabled={campaignLoading || !newCampaign.name || newCampaign.selectedTemplates.length === 0}
-                    className="whatsapp-manager-btn primary"
+                    className={`${styles.whatsappManagerBtn} ${styles.primary}`}
                   >
                     {campaignLoading ? "Criando..." : "Criar Campanha"}
                   </button>
@@ -975,25 +976,25 @@ const WhatsappManager = () => {
             </div>
 
             {/* Seção de Campanhas Criadas */}
-            <div className="campaigns-list-section">
+            <div className={styles.campaignsListSection}>
               <h4>Campanhas Criadas</h4>
               {campaigns.length > 0 ? (
-                <div className="campaigns-grid">
+                <div className={styles.campaignsGrid}>
                   {campaigns.map((campaign, index) => (
-                    <div key={index} className="campaign-item">
-                      <div className="campaign-header">
+                    <div key={index} className={styles.campaignItem}>
+                      <div className={styles.campaignHeader}>
                         <h5>{campaign.name}</h5>
                         <button
                           onClick={() => deleteCampaign(campaign.id)}
-                          className="delete-campaign-btn"
+                          className={styles.deleteCampaignBtn}
                         >
                           ×
                         </button>
                       </div>
                       {campaign.description && (
-                        <p className="campaign-description">{campaign.description}</p>
+                        <p className={styles.campaignDescription}>{campaign.description}</p>
                       )}
-                      <div className="campaign-templates">
+                      <div className={styles.campaignTemplates}>
                         <strong>Templates ({campaign.selectedTemplates?.length || 0}):</strong>
                         <ul>
                           {(campaign.selectedTemplates || []).map((template, idx) => (
@@ -1001,14 +1002,14 @@ const WhatsappManager = () => {
                           ))}
                         </ul>
                       </div>
-                      <div className="campaign-date">
+                      <div className={styles.campaignDate}>
                         Criada em: {campaign.created_at ? new Date(campaign.created_at).toLocaleString() : 'Data não disponível'}
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="no-campaigns-message">
+                <div className={styles.noCampaignsMessage}>
                   Nenhuma campanha criada ainda. Crie sua primeira campanha acima.
                 </div>
               )}
@@ -1017,45 +1018,45 @@ const WhatsappManager = () => {
         )}
 
         {activeTab === "contacts" && (
-          <div className="whatsapp-manager-section">
+          <div className={styles.whatsappManagerSection}>
             <h3>Gerenciar Contatos</h3>
 
-            <div className="contacts-section">
-              <div className="contacts-header">
+            <div className={styles.contactsSection}>
+              <div className={styles.contactsHeader}>
                 <h4>Lista de Contatos</h4>
                 <button
                   onClick={loadContacts}
                   disabled={contactsLoading}
-                  className="whatsapp-manager-btn secondary"
+                  className={`${styles.whatsappManagerBtn} ${styles.secondary}`}
                 >
                   {contactsLoading ? "Carregando..." : "Atualizar Lista"}
                 </button>
               </div>
 
               {contactsLoading ? (
-                <div className="loading-message">Carregando contatos...</div>
+                <div className={styles.loadingMessage}>Carregando contatos...</div>
               ) : contacts.length > 0 ? (
-                <div className="contacts-table">
-                  <div className="contacts-table-header">
-                    <div className="contact-cell">Telefone</div>
-                    <div className="contact-cell">Nome do Operador</div>
-                    <div className="contact-cell">Código do Operador</div>
-                    <div className="contact-cell">Ações</div>
+                <div className={styles.contactsTable}>
+                  <div className={styles.contactsTableHeader}>
+                    <div className={styles.contactCell}>Telefone</div>
+                    <div className={styles.contactCell}>Nome do Operador</div>
+                    <div className={styles.contactCell}>Código do Operador</div>
+                    <div className={styles.contactCell}>Ações</div>
                   </div>
                   {contacts.map((contact) => (
-                    <div key={contact.id} className="contacts-table-row">
-                      <div className="contact-cell" data-label="Telefone">
+                    <div key={contact.id} className={styles.contactsTableRow}>
+                      <div className={styles.contactCell} data-label="Telefone">
                         <strong>{contact.phone_number || "Sem telefone"}</strong>
                       </div>
-                      <div className="contact-cell" data-label="Nome do Operador">
+                      <div className={styles.contactCell} data-label="Nome do Operador">
                         {contact.operator_name || "Sem operador"}
                       </div>
-                      <div className="contact-cell" data-label="Código do Operador">
+                      <div className={styles.contactCell} data-label="Código do Operador">
                         {editingContact === contact.id ? (
                           <select
                             value={editOperatorCode}
                             onChange={(e) => setEditOperatorCode(e.target.value)}
-                            className="whatsapp-manager-select small"
+                            className={`${styles.whatsappManagerSelect} ${styles.small}`}
                             style={{ width: "100%", fontSize: "12px" }}
                           >
                             <option value="">Selecione um operador</option>
@@ -1066,18 +1067,18 @@ const WhatsappManager = () => {
                             ))}
                           </select>
                         ) : (
-                          <span className="operator-code-display">
+                          <span className={styles.operatorCodeDisplay}>
                             {contact.operator_code_id || "Sem código"}
                           </span>
                         )}
                       </div>
-                      <div className="contact-cell" data-label="Ações">
+                      <div className={styles.contactCell} data-label="Ações">
                         {editingContact === contact.id ? (
-                          <div className="edit-actions">
+                            <div className={styles.editActions}>
                             <button
                               onClick={() => saveOperatorCode(contact.id)}
                               disabled={contactsLoading}
-                              className="whatsapp-manager-btn primary small"
+                              className={`${styles.whatsappManagerBtn} ${styles.primary} ${styles.small}`}
                               style={{ fontSize: "11px", padding: "4px 8px" }}
                             >
                               Salvar
@@ -1085,7 +1086,7 @@ const WhatsappManager = () => {
                             <button
                               onClick={cancelEditContact}
                               disabled={contactsLoading}
-                              className="whatsapp-manager-btn secondary small"
+                              className={`${styles.whatsappManagerBtn} ${styles.secondary} ${styles.small}`}
                               style={{ fontSize: "11px", padding: "4px 8px" }}
                             >
                               Cancelar
@@ -1094,7 +1095,7 @@ const WhatsappManager = () => {
                         ) : (
                           <button
                             onClick={() => startEditContact(contact)}
-                            className="whatsapp-manager-btn secondary small"
+                            className={`${styles.whatsappManagerBtn} ${styles.secondary} ${styles.small}`}
                             style={{ fontSize: "11px", padding: "4px 8px" }}
                           >
                             Editar
@@ -1105,7 +1106,7 @@ const WhatsappManager = () => {
                   ))}
                 </div>
               ) : (
-                <div className="no-contacts-message">
+                <div className={styles.noContactsMessage}>
                   Nenhum contato encontrado. Verifique se a tabela 'contacts' existe e possui dados.
                 </div>
               )}
@@ -1114,11 +1115,11 @@ const WhatsappManager = () => {
         )}
 
         {activeTab === "diagnostico" && (
-          <div className="whatsapp-manager-section">
+          <div className={styles.whatsappManagerSection}>
             <h3>Diagnóstico do Sistema</h3>
 
             {/* Seção de Diagnóstico - Migrada para Supabase */}
-            <div className="test-section" style={{ marginBottom: "20px", padding: "16px", backgroundColor: "#363a3d", borderRadius: "8px", border: "2px solid #2f2d2d" }}>
+            <div style={{ marginBottom: "20px", padding: "16px", backgroundColor: "#363a3d", borderRadius: "8px", border: "2px solid #2f2d2d" }}>
               <h4 style={{ color: "#faa01c", marginBottom: "12px", fontSize: "14px" }}>Testes de Conexão Supabase</h4>
               <p style={{ color: "#ccc", fontSize: "13px", marginBottom: "12px" }}>
                 <strong>🔍 Testar Configuração:</strong> Verifica conexão com Supabase<br/>
@@ -1129,7 +1130,7 @@ const WhatsappManager = () => {
                 <button
                   onClick={testConfiguration}
                   disabled={campaignLoading}
-                  className="whatsapp-manager-btn secondary"
+                  className={`${styles.whatsappManagerBtn} ${styles.secondary}`}
                   style={{ fontSize: "12px", padding: "8px 16px" }}
                 >
                   {campaignLoading ? "Testando..." : "🔍 Testar Configuração"}
@@ -1137,7 +1138,7 @@ const WhatsappManager = () => {
                 <button
                   onClick={testDeletion}
                   disabled={campaignLoading}
-                  className="whatsapp-manager-btn secondary"
+                  className={`${styles.whatsappManagerBtn} ${styles.secondary}`}
                   style={{ fontSize: "12px", padding: "8px 16px" }}
                 >
                   {campaignLoading ? "Testando..." : "🗑️ Testar Conexão"}
@@ -1145,7 +1146,7 @@ const WhatsappManager = () => {
                 <button
                   onClick={testDeleteEndpoint}
                   disabled={campaignLoading}
-                  className="whatsapp-manager-btn secondary"
+                  className={`${styles.whatsappManagerBtn} ${styles.secondary}`}
                   style={{ fontSize: "12px", padding: "8px 16px" }}
                 >
                   {campaignLoading ? "Testando..." : "🔧 Teste Direto"}

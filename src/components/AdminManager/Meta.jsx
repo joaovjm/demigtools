@@ -1,6 +1,7 @@
 import React from "react";
 import supabase from "../../helper/superBaseClient";
 import { toast } from "react-toastify";
+import styles from "../../pages/AdminManager/adminmanager.module.css";
 
 const Meta = ({ operators, inputs, setInputs, read, setRead }) => {
   const handleInputChange = (id, field, value) => {
@@ -58,7 +59,7 @@ const Meta = ({ operators, inputs, setInputs, read, setRead }) => {
         .map((operator) => (
           <div
             key={operator.operator_code_id}
-            className="admin-manager-content-operator"
+            className={styles.adminManagerContentOperator}
           >
             <div className="input-field">
               <label>Operador</label>
@@ -117,7 +118,7 @@ const Meta = ({ operators, inputs, setInputs, read, setRead }) => {
                 }
               />
             </div>
-            <div className="admin-manager-content-operator-btns">
+            <div className={styles.adminManagerContentOperatorBtns}>
               <button
                 onClick={() => {
                   if (read?.[operator.operator_code_id]?.only === false) {

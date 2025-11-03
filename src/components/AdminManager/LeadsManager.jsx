@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import supabase from "../../helper/superBaseClient";
 import Loader from "../Loader";
+import styles from "../../pages/AdminManager/adminmanager.module.css";
 
 const LeadsManager = () => {
   const [searchSelected, setSearchSelected] = useState("");
@@ -45,11 +46,11 @@ const LeadsManager = () => {
   };
 
   return (
-    <div className="leads-manager-container">
-      <div className="leads-manager-header">
-        <h2>Gerenciamento de Leads</h2>
+    <div className={styles.whatsappManagerSection}>
+      <div>
+        <h3>Gerenciamento de Leads</h3>
       </div>
-      <div className="leads-manager-body">
+      <div>
         <div className="input-field">
           {/* Busca Por Bairro ou Cidade */}
           <label>Buscar por</label>
@@ -102,7 +103,7 @@ const LeadsManager = () => {
         </div>
         <button onClick={handleSearch}>Buscar</button>
       </div>
-      <div className="page-in-devepoler">
+      <div style={{ textAlign: 'center', padding: '40px 20px', color: '#9e9e9e', fontSize: '16px', backgroundColor: '#363a3d', borderRadius: '8px', border: '2px dashed #2f2d2d', marginTop: '20px' }}>
         <p>Página em desenvolvimento</p>
       </div>
     </div>

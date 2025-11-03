@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./index.css";
+import styles from "./adminmanager.module.css";
 import { getOperators } from "../../helper/getOperators";
 import getOperatorMeta from "../../helper/getOperatorMeta";
 import Meta from "../../components/AdminManager/Meta";
@@ -43,54 +43,34 @@ const AdminManager = () => {
     fetchMeta();
   }, []);
 
+  const menuItems = [
+    { id: "meta", label: "Meta", icon: "🎯" },
+    { id: "whatsapp", label: "WhatsApp", icon: "💬" },
+    { id: "campain", label: "Campanha", icon: "📢" },
+    { id: "receipt", label: "Config. Recibo", icon: "🧾" },
+    { id: "leads", label: "Ger. Leads", icon: "👥" },
+  ];
+
   return (
-    <main className="admin-manager">
-      <div className="admin-manager-menu">
-        <div className="admin-manager-menu-header">
-          <h3>Painel Admin</h3>
+    <main className={styles.adminManager}>
+      <div className={styles.adminManagerMenu}>
+        <div className={styles.adminManagerMenuHeader}>
+          <h3>⚙️ Painel Admin</h3>
         </div>
-        <div
-          className={`admin-manager-menu-item ${
-            active === "meta" ? "active" : ""
-          }`}
-          onClick={() => setActive("meta")}
-        >
-          Meta
-        </div>
-        <div
-          className={`admin-manager-menu-item ${
-            active === "whatsapp" ? "active" : ""
-          }`}
-          onClick={() => setActive("whatsapp")}
-        >
-          WhatsApp
-        </div>
-        <div
-          className={`admin-manager-menu-item ${
-            active === "campain" ? "active" : ""
-          }`}
-          onClick={() => setActive("campain")}
-        >
-          Campanha
-        </div>
-        <div
-          className={`admin-manager-menu-item ${
-            active === "receipt" ? "active" : ""
-          }`}
-          onClick={() => setActive("receipt")}
-        >
-          Config. Recibo
-        </div>
-        <div
-          className={`admin-manager-menu-item ${
-            active === "leads" ? "active" : ""
-          }`}
-          onClick={() => setActive("leads")}
-        >
-          Ger. Leads
-        </div>
+        {menuItems.map((item) => (
+          <div
+            key={item.id}
+            className={`${styles.adminManagerMenuItem} ${
+              active === item.id ? styles.active : ""
+            }`}
+            onClick={() => setActive(item.id)}
+          >
+            <span className={styles.menuIcon}>{item.icon}</span>
+            <span className={styles.menuLabel}>{item.label}</span>
+          </div>
+        ))}
       </div>
-      <div className="admin-manager-content">
+      <div className={styles.adminManagerContent}>
         {active === "meta" ? (
           <Meta
             operators={operators}
@@ -108,7 +88,44 @@ const AdminManager = () => {
         ) : active === "leads" ? (
           <LeadsManager />
         ) : (
-          <></>
+          <div className={styles.welcomeScreen}>
+            <div className={styles.welcomeContent}>
+              <div className={styles.welcomeIcon}>⚙️</div>
+              <h2 className={styles.welcomeTitle}>
+                Bem-vindo ao Painel Administrativo
+              </h2>
+              <p className={styles.welcomeDescription}>
+                Selecione uma opção no menu lateral para começar
+              </p>
+              <div className={styles.welcomeFeatures}>
+                <div className={styles.featureCard}>
+                  <span className={styles.featureIcon}>🎯</span>
+                  <h4>Metas</h4>
+                  <p>Gerencie metas dos operadores</p>
+                </div>
+                <div className={styles.featureCard}>
+                  <span className={styles.featureIcon}>💬</span>
+                  <h4>WhatsApp</h4>
+                  <p>Configure templates e contatos</p>
+                </div>
+                <div className={styles.featureCard}>
+                  <span className={styles.featureIcon}>📢</span>
+                  <h4>Campanhas</h4>
+                  <p>Crie e gerencie campanhas</p>
+                </div>
+                <div className={styles.featureCard}>
+                  <span className={styles.featureIcon}>🧾</span>
+                  <h4>Recibos</h4>
+                  <p>Configure informações de recibos</p>
+                </div>
+                <div className={styles.featureCard}>
+                  <span className={styles.featureIcon}>👥</span>
+                  <h4>Leads</h4>
+                  <p>Gerencie leads e contatos</p>
+                </div>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </main>

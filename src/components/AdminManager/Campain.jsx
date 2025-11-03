@@ -5,6 +5,7 @@ import { updateCampains } from "../../helper/updateCampains";
 import { deleteCampain } from "../../helper/deleteCampain";
 import { insertNewCampain } from "../../helper/insertNewCampain";
 import { toast } from "react-toastify";
+import styles from "../../pages/AdminManager/adminmanager.module.css";
 
 const Campain = () => {
   const [campains, setCampains] = useState([]);
@@ -56,13 +57,13 @@ const Campain = () => {
   };
 
   return (
-    <div className="campain">
-      <div className="campain-divs">
-        <div className="campain-divs-body">
+    <div className={styles.campain}>
+      <div className={styles.campainDivs}>
+        <div className={styles.campainDivsBody}>
           <label>Campanhas</label>
-          <div className="campain-divs-body-campains">
+          <div className={styles.campainDivsBodyCampains}>
             {campains?.map((cp) => (
-              <div key={cp.id} className="campain-divs-body-campains-itens">
+              <div key={cp.id} className={styles.campainDivsBodyCampainsItens}>
                 <input
                   type="text"
                   value={cp.campain_name || ""}
@@ -71,7 +72,7 @@ const Campain = () => {
                   }
                   readOnly={inEdit !== cp.id}
                 />
-                <div className="campain-divs-body-campains-itens-icons">
+                <div className={styles.campainDivsBodyCampainsItensIcons}>
                   <p onClick={() => handleEdit(cp.id)}>
                     {inEdit !== cp.id ? ICONS.EDIT : ICONS.CONFIRMED}
                   </p>
@@ -81,7 +82,7 @@ const Campain = () => {
             ))}
           </div>
         </div>
-        <div className="campain-divs-bottom">
+        <div className={styles.campainDivsBottom}>
           <div className="input-field">
             <label>Nova Campanha</label>
             <input
@@ -94,7 +95,7 @@ const Campain = () => {
         </div>
       </div>
 
-      <div className="campain-divs" style={{display: "flex", gap: 0}}>
+      <div className={styles.campainDivs} style={{display: "flex", gap: 0}}>
         <label>Mensagens Para Campanhas</label>
         <div className="input-field" style={{maxHeight: 166}}>
           <label>Mensagem</label>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import supabase from "../../helper/superBaseClient";
 import { getEditReceipt } from "../../helper/getEditReceipt";
 import { toast } from "react-toastify";
+import styles from "../../pages/AdminManager/adminmanager.module.css";
 
 const ReceiptConfig = () => {
   const [inEdit, setInEdit] = useState(false);
@@ -51,25 +52,25 @@ const ReceiptConfig = () => {
     }
   };
   return (
-    <div className="receipt-config-container">
-      <div className="receipt-config-content">
-        <h3 className="receipt-config-title">Configuração de Recibo</h3>
-        <div className="receipt-config-form">
+    <div className={styles.receiptConfigContainer}>
+      <div className={styles.receiptConfigContent}>
+        <h3 className={styles.receiptConfigTitle}>Configuração de Recibo</h3>
+        <div className={styles.receiptConfigForm}>
           {/* Seção PIX */}
-          <div className="receipt-config-section">
+          <div className={styles.receiptConfigSection}>
             <h4>Informações PIX</h4>
-            <div className="form-row">
-              <div className="form-group">
+            <div className={styles.formRow}>
+              <div className={styles.formGroup}>
                 <label>Chave PIX</label>
                 <input
                   value={editReceipt.pixKey}
                   onChange={(e) => editReceiptChange("pixKey", e.target.value)}
                   type="text"
                   disabled={!inEdit}
-                  className="receipt-config-input"
+                  className={styles.receiptConfigInput}
                 />
               </div>
-              <div className="form-group">
+              <div className={styles.formGroup}>
                 <label>Descrição</label>
                 <input
                   value={editReceipt.description}
@@ -78,79 +79,79 @@ const ReceiptConfig = () => {
                   }
                   type="text"
                   disabled={!inEdit}
-                  className="receipt-config-input"
+                  className={styles.receiptConfigInput}
                 />
               </div>
             </div>
             
-            <div className="form-row">
-              <div className="form-group">
+            <div className={styles.formRow}>
+              <div className={styles.formGroup}>
                 <label>Nome</label>
                 <input
                   value={editReceipt.pixName}
                   onChange={(e) => editReceiptChange("pixName", e.target.value)}
                   type="text"
                   disabled={!inEdit}
-                  className="receipt-config-input"
+                  className={styles.receiptConfigInput}
                 />
               </div>
-              <div className="form-group">
+              <div className={styles.formGroup}>
                 <label>Cidade</label>
                 <input
                   value={editReceipt.pixCity}
                   onChange={(e) => editReceiptChange("pixCity", e.target.value)}
                   type="text"
                   disabled={!inEdit}
-                  className="receipt-config-input"
+                  className={styles.receiptConfigInput}
                 />
               </div>
             </div>
           </div>
 
           {/* Seção Redes Sociais */}
-          <div className="receipt-config-section">
+          <div className={styles.receiptConfigSection}>
             <h4>Midias Sociais e Contatos</h4>
-            <div className="form-row">
-              <div className="form-group">
+            <div className={styles.formRow}>
+              <div className={styles.formGroup}>
                 <label>Instagram</label>
                 <input
                   type="text"
                   value={editReceipt.instagram}
                   onChange={(e) => editReceiptChange("instagram", e.target.value)}
                   disabled={!inEdit}
-                  className="receipt-config-input"
+                  className={styles.receiptConfigInput}
                 />
               </div>
-              <div className="form-group">
+              <div className={styles.formGroup}>
                 <label>Facebook</label>
                 <input
                   type="text"
                   value={editReceipt.facebook}
                   onChange={(e) => editReceiptChange("facebook", e.target.value)}
                   disabled={!inEdit}
-                  className="receipt-config-input"
+                  className={styles.receiptConfigInput}
                 />
               </div>
             </div>
             
-            <div className="form-row">
-              <div className="form-group">
+            <div className={styles.formRow}>
+              <div className={styles.formGroup}>
                 <label>Email</label>
                 <input
                   type="text"
                   value={editReceipt.email}
                   onChange={(e) => editReceiptChange("email", e.target.value)}
                   disabled={!inEdit}
-                  className="receipt-config-input"
+                  className={styles.receiptConfigInput}
                 />
               </div>
             </div>
           </div>
 
           {/* Seção Mensagem do Verso */}
-          <div className="receipt-config-section">
+          <div className={styles.receiptConfigSection}>
             <h4>Verso do Recibo</h4>
-            <div className="form-group">
+            <div className={styles.formGroup}>
               <label>Mensagem do verso do recibo</label>
               <textarea
                 value={editReceipt.backOfReceipt}
@@ -158,17 +159,17 @@ const ReceiptConfig = () => {
                   editReceiptChange("backOfReceipt", e.target.value)
                 }
                 disabled={!inEdit}
-                className="receipt-config-textarea"
+                className={styles.receiptConfigTextarea}
                 placeholder="Digite a mensagem que aparecerá no verso do recibo..."
               />
             </div>
           </div>
 
           {/* Botão de Ação */}
-          <div className="receipt-config-actions">
+          <div className={styles.receiptConfigActions}>
             <button 
               onClick={handleEditReceipt}
-              className="receipt-config-btn primary"
+              className={`${styles.receiptConfigBtn} ${styles.primary}`}
             >
               {inEdit ? "Salvar Configurações" : "Editar Configurações"}
             </button>
