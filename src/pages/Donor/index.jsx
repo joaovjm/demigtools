@@ -20,6 +20,7 @@ import FormListSelect from "../../components/forms/FormListSelect";
 import { UserContext } from "../../context/UserContext";
 import ModalEditDonation from "../../components/ModalEditDonation";
 import { setActivityHistoric } from "../../helper/setActivityHistoric";
+import { FaEnvelope } from "react-icons/fa";
 
 const Donor = () => {
   const { id } = useParams();
@@ -161,6 +162,9 @@ const Donor = () => {
           <div className="donor-actions">
             <button onClick={handleBack} className="donor-btn secondary">
               {ICONS.BACK} {BUTTON_TEXTS.BACK}
+            </button>
+            <button className="donor-btn secondary">
+              {<FaEnvelope/>} Envio de Email
             </button>
             <button
               onClick={handleEditDonor}

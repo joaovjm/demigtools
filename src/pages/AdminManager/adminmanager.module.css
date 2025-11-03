@@ -236,6 +236,19 @@
     height: 18px;
   }
 }
+.adminManagerContentOperatorBtnHistory {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  width: 24px;
+  height: 24px;
+  color: #faf5e9;
+}
+
+.adminManagerContentOperatorBtnHistory:hover {
+  background-color: #faa01c;
+}
 
 .adminManagerContentOperator {
   display: flex;
@@ -253,7 +266,7 @@
 .adminManagerContentOperatorBtns {
   display: flex;
   align-items: flex-end;
-
+  gap: 12px;
   button {
     width: 60px;
     height: 30px;
@@ -263,9 +276,48 @@
   }
 }
 
-.whatsappmanagerContainer {
+.adminManagerContentOperatorBtnSave {
+  min-width: 100px;
+  color: #faf5e9;
+}
+
+  .whatsappmanagerContainer {
   display: flex;
   gap: 2px;
+}
+
+.adminManagerContentOperatorHistory {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto;
+  gap: 12px;
+}
+
+.adminManagerContentOperatorHistoryItem {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background-color: rgba(42, 40, 40, 0.6);
+  border: 1px solid #383838;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 12px;
+  transition: all 0.3s ease;
+}
+
+.adminManagerContentOperatorHistoryItem:hover {
+  background-color: rgba(42, 40, 40, 0.9);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.adminManagerContentOperatorHistoryBtnDelete {
+  background-color: red;
+  border: 1px solid red;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  color: #faf5e9;
 }
 
 .whatsappmanager {

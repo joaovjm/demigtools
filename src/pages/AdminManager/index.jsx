@@ -7,11 +7,17 @@ import WhatsappManager from "../../components/AdminManager/WhatsappManager";
 import Campain from "../../components/AdminManager/Campain";
 import ReceiptConfig from "../../components/AdminManager/ReceiptConfig";
 import LeadsManager from "../../components/AdminManager/LeadsManager";
+import { DataNow } from "../../components/DataTime";
 
 const AdminManager = () => {
   const [active, setActive] = useState();
   const [operators, setOperators] = useState([]);
-  const [inputs, setInputs] = useState({});
+  const [inputs, setInputs] = useState({
+    value: 0.00,
+    percent: 0.00,
+    total: 0.00,
+    date: DataNow("noformated"),
+  });
   const [read, setRead] = useState({});
 
   useEffect(() => {
@@ -26,21 +32,6 @@ const AdminManager = () => {
       setRead(initialReadState);
     };
     fetchOperators();
-
-    const fetchMeta = async () => {
-      const meta = await getOperatorMeta();
-      const metaObject = meta.reduce((acc, item) => {
-        acc[item.operator_code_id] = {
-          value: "",
-          percent: "",
-          total: item.meta || "",
-          date: item.start_date || "",
-        };
-        return acc;
-      }, {});
-      setInputs(metaObject);
-    };
-    fetchMeta();
   }, []);
 
   const menuItems = [
@@ -91,9 +82,6 @@ const AdminManager = () => {
           <div className={styles.welcomeScreen}>
             <div className={styles.welcomeContent}>
               <div className={styles.welcomeIcon}>⚙️</div>
-              <h2 className={styles.welcomeTitle}>
-                Bem-vindo ao Painel Administrativo
-              </h2>
               <p className={styles.welcomeDescription}>
                 Selecione uma opção no menu lateral para começar
               </p>

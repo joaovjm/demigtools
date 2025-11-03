@@ -13,7 +13,7 @@ const getOperatorMeta = async (operator) => {
   }
 
   try {
-    const { data, error } = await query;
+    const { data, error } = await query.eq("status", "Ativo").order("start_date", { ascending: false }).limit(1);
     if (error) throw error;
     if (!error) return data;
   } catch (error) {
