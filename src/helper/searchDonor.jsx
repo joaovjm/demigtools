@@ -14,6 +14,7 @@ const searchDonor = async (params, donor_type) => {
       ) {
         // Busca por CPF
         if (isLeadSearch) {
+
           // Busca na tabela leads por CPF
           query = supabase
             .from("leads")
@@ -22,6 +23,7 @@ const searchDonor = async (params, donor_type) => {
             )
             .eq("leads_cpf", params.replace(/\D/g, ""));
         } else {
+
           // Busca na tabela donor por CPF
           query = supabase
             .from("donor")
@@ -33,6 +35,7 @@ const searchDonor = async (params, donor_type) => {
       } else if (/^\d{1,9}$/.test(params)) {
         // Busca por telefone
         if (isLeadSearch) {
+
           // Busca na tabela leads por telefone
           query = supabase
             .from("leads")
@@ -41,12 +44,14 @@ const searchDonor = async (params, donor_type) => {
             )
             .or(`leads_tel_1.ilike.%${params}%,leads_tel_2.ilike.%${params}%`);
         } else {
+          console.log("caiu no Telefone")
           query = supabase.rpc("search_donor_by_phone", {
             phone_search: params,
             donor_type_filter: donor_type.trim() || "Todos",
           });
         }
-      } else if (/[Rr]/.test(params)) {
+      } else if (/^r\d+$/i.test(params)) {
+
         // Busca por recibo (apenas para donors, não para leads)
         if (!isLeadSearch) {
           query = supabase
@@ -68,6 +73,7 @@ const searchDonor = async (params, donor_type) => {
       } else {
         // Busca por nome
         if (isLeadSearch) {
+          
           query = supabase
             .from("leads")
             .select(
@@ -75,6 +81,7 @@ const searchDonor = async (params, donor_type) => {
             )
             .ilike("leads_name", `%${params}%`);
         } else {
+
           query = supabase
             .from("donor")
             .select(
@@ -87,9 +94,9 @@ const searchDonor = async (params, donor_type) => {
 
     // Filtros adicionais (apenas para donors)
     if (query && donor_type !== "" && !/^\d{1,9}$/.test(params) && !isLeadSearch) {
-      if (/[Rr]/.test(params) && donor_type === "Todos") {
+      if (/^r\d+$/i.test(params) && donor_type === "Todos") {
         query = query.neq("donor.donor_type", "Excluso");
-      } else if (/[Rr]/.test(params) && donor_type !== "Todos") {
+      } else if (/^r\d+$/i.test(params) && donor_type !== "Todos") {
         query = query.eq("donor.donor_type", donor_type);
       } else {
         query = query.neq("donor_type", "Excluso");
@@ -102,9 +109,9 @@ const searchDonor = async (params, donor_type) => {
 
     // Normaliza os dados para manter consistência na interface
     if (data) {
-      if (/[Rr]/.test(params) && !isLeadSearch) {
+      if (/^r\d+$/i.test(params) && !isLeadSearch) {
         const dataDonor = data[0]?.donor;
-        console.log(data);
+
         return dataDonor ? [dataDonor] : [];
       } else if (isLeadSearch && data.length > 0) {
         // Mapeia os campos de leads para o formato esperado pelo componente
@@ -120,7 +127,7 @@ const searchDonor = async (params, donor_type) => {
           operator_name: lead.operator.operator_name,
           isLead: true // Flag para identificar que é um lead
         }));
-        console.log("Leads encontrados:", normalizedData);
+
         return normalizedData;
       } else {
         console.log("data", data);
