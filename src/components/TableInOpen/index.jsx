@@ -30,7 +30,7 @@ const TableInOpen = ({
   return (
     <div className={styles.tableInopenContainer}>
       <div className={styles.tableInopenContent}>
-        <h3 className={styles.tableInopenTitle}>📋 Fichas em Aberto</h3>
+        
         {dataToShow.length > 0 ? (
           <div className={styles.tableInopenWrapper}>
             <div className={styles.tableInopenHeader}>

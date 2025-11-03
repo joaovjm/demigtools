@@ -46,7 +46,6 @@ const TableScheduled = ({
   return (
     <div className="table-scheduled-container">
       <div className="table-scheduled-content">
-        <h3 className="table-scheduled-title">📅 Agendamentos</h3>
         {dataToShow?.length > 0 ? (
           <div className="table-scheduled-wrapper">
             <div className="table-scheduled-header">

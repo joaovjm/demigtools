@@ -5,6 +5,14 @@ const getAllDonationsReceived = async () => {
   let totalValue = 0;
   let donation = [];
   
+  // Calcular primeiro e último dia do mês atual
+  const dataAtual = new Date();
+  const ano = dataAtual.getFullYear();
+  const mes = String(dataAtual.getMonth() + 1).padStart(2, "0");
+  const primeiroDia = `${ano}-${mes}-01`;
+  const ultimoDia = new Date(ano, dataAtual.getMonth() + 1, 0).getDate();
+  const ultimoDiaMes = `${ano}-${mes}-${String(ultimoDia).padStart(2, "0")}`;
+  
   let query = supabase
     .from("donation")
     .select(`
@@ -15,7 +23,8 @@ const getAllDonationsReceived = async () => {
       operator_name: operator_code_id(operator_name)
     `)
     .eq("donation_received", "Sim")
-    .gte("donation_day_received", `${DataNow("mesrefnf")}`)
+    .gte("donation_day_received", primeiroDia)
+    .lte("donation_day_received", ultimoDiaMes)
     .not("operator_code_id", "is", null);
 
   try {

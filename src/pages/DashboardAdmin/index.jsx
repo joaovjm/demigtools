@@ -181,7 +181,7 @@ const Dashboard = () => {
                 <p>R$ {valueReceived?.toFixed(2)}</p>
               </div>
             </div>
-            <div
+            {/* <div
               id="inScheduled"
               className={`${styles.divCard} ${active === "inScheduled" ? styles.active : ""}`}
               onClick={handleClickCard}
@@ -192,7 +192,7 @@ const Dashboard = () => {
               <div className={styles.divBody}>
                 <p>{scheduling}</p>
               </div>
-            </div>
+            </div>*/}
             {/* Card 1 */}
             <div
               id="inConfirmation"

@@ -41,7 +41,6 @@ const TableConfirmation = ({
   return (
     <div className="table-confirmation-container">
       <div className="table-confirmation-content">
-        <h3 className="table-confirmation-title">✅ Confirmações Pendentes</h3>
         {dataToShow.length > 0 ? (
           <div className="table-confirmation-wrapper">
             <div className="table-confirmation-header">

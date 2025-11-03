@@ -49,7 +49,6 @@ const TableDonor = ({
   return (
     <div className="donor-table-container">
       <div className="donor-table-content">
-        <h3 className="donor-table-title">💰 Histórico de Doações</h3>
         {dados.length > 0 ? (
           <div className="donor-table-wrapper">
             <div className="donor-table-header">
