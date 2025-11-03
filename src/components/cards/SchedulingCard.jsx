@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import styles from "../../pages/DashboardAdmin/dashboardadmin.module.css";
 
 const SchedulingCard = ({ operatorCount, setDonationFilterPerId }) => {
 
@@ -38,11 +39,11 @@ const SchedulingCard = ({ operatorCount, setDonationFilterPerId }) => {
       operators.map((operator) => (
       <div
         onClick={() => handleClick(operator.id)}
-        className={`section-operators-card ${active === operator.id ? "active" : ""}`}
+        className={`${styles.sectionOperatorsCard} ${active === operator.id ? styles.active : ""}`}
         key={operator.id}
       >
         <div>{operator.name}</div>
-        <div className="section-operators-card-value">
+        <div className={styles.sectionOperatorsCardValue}>
           <label>{count[operator.id]}</label>
         </div>
       </div>

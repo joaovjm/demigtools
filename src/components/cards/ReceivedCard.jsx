@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../pages/DashboardAdmin/dashboardadmin.module.css";
 
-const OperatorCard = ({ operatorCount, setDonationFilterPerId }) => {
+const ReceivedCard = ({ operatorCount, setDonationFilterPerId }) => {
   
-  const [operators, setOperators] =useState([])
-  const [count, setCount] =useState()
-  const [add, setAdd] = useState(0)
-  const [active, setActive] = useState()
-
+  const [operators, setOperators] = useState([]);
+  const [count, setCount] = useState();
+  const [add, setAdd] = useState();
+  const [active, setActive] = useState();
+  
   const operatorInfo = [
     ...new Map(
       operatorCount?.map((operators) => [
@@ -17,25 +17,26 @@ const OperatorCard = ({ operatorCount, setDonationFilterPerId }) => {
     ).values(),
   ];
 
-  const counting = operatorCount?.reduce((acc, item) => {
-    acc[item.operator_code_id] = (acc[item.operator_code_id] || 0) + 1;
+  const counting = operatorCount?.reduce((acc, count) => {
+    acc[count.operator_code_id] = (acc[count.operator_code_id] || 0) + 1;
     return acc;
   }, {});
 
   const countingValue = operatorCount?.reduce((add, item) => {
-    add[item.operator_code_id] = (add[item.operator_code_id] || 0) + item.donation_value
-    return add
-  }, {})
+    add[item.operator_code_id] = (add[item.operator_code_id] || 0) + item.donation_value;
+    return add;
+  }, {});
 
   useEffect(() => {
-    setOperators(operatorInfo)
-    setCount(counting)
-    setAdd(countingValue)
-  }, [])
+    setOperators(operatorInfo);
+    setCount(counting);
+    setAdd(countingValue);
+  }, []);
+  
 
   const handleClick = (id) => {
     setDonationFilterPerId(id);
-    setActive(id)
+    setActive(id);
   };
 
   return (
@@ -49,15 +50,12 @@ const OperatorCard = ({ operatorCount, setDonationFilterPerId }) => {
         <div>{operator.name}</div>
         <div className={styles.sectionOperatorsCardValue}>
           <label>{count[operator.id]}</label>
-          <label>R$ {add[operator.id]?.toFixed(2).replace('.',',') || '0,00'}</label>
+          <label>R$ {add[operator.id]?.toFixed(2).replace('.', ',') || '0,00'}</label>
         </div>
       </div>
     ))) : <></>
-    
-    
-  )
-  
-  
+  );
 };
 
-export default OperatorCard;
+export default ReceivedCard;
+

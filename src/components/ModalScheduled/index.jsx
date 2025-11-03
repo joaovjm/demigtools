@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./index.css";
+import styles from "./modalscheduled.module.css";
 import { ICONS } from "../../constants/constants";
 import { DataNow } from "../DataTime";
 import updateLeads from "../../helper/updateLeads";
@@ -8,6 +8,8 @@ import newDonorAndDonation from "../../helper/newDonorAndDonation";
 import { getCampains } from "../../helper/getCampains";
 import updateRequestSelected from "../../helper/updateRequestSelected";
 import { insertDonation } from "../../helper/insertDonation";
+import { fetchMaxAndMedDonations } from "../../services/worklistService";
+import { useNavigate } from "react-router";
 import {
   FaUser,
   FaMapMarkerAlt,
@@ -19,6 +21,7 @@ import {
   FaTimes,
   FaCheck,
   FaArrowLeft,
+  FaUserCircle,
 } from "react-icons/fa";
 
 const ModalScheduled = ({
@@ -27,6 +30,7 @@ const ModalScheduled = ({
   setStatus,
   nowScheduled,
 }) => {
+  const navigate = useNavigate();
   const [isScheduling, setIsScheduling] = useState(false);
   const [dateScheduling, setDateScheduling] = useState("");
   const [observation, setObservation] = useState("");
@@ -44,13 +48,27 @@ const ModalScheduled = ({
   const [valueDonation, setValueDonation] = useState("");
   const [name, setName] = useState("");
   const [campains, setCampains] = useState([]);
+  const [lastThreeDonations, setLastThreeDonations] = useState([]);
 
   const fetchCampain = async () => {
     const response = await getCampains();
     setCampains(response);
   };
+
+  const fetchDonations = async () => {
+    if (scheduledOpen.typeScheduled !== "lead" && scheduledOpen.donor_id) {
+      const { lastThreeDonations } = await fetchMaxAndMedDonations(
+        scheduledOpen.donor_id,
+        null
+      );
+      setLastThreeDonations(lastThreeDonations || []);
+    }
+  };
+
   useEffect(() => {
     fetchCampain();
+    fetchDonations();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleNewDonation = () => {
@@ -173,123 +191,190 @@ const ModalScheduled = ({
     }
   };
 
+  const handleOpenDonor = () => {
+    navigate(`/donor/${scheduledOpen.donor_id}`);
+  };
+
   return (
-    <main className="modal-scheduled-container">
-      <div className="modal-scheduled">
-        <div className="modal-scheduled-content">
-          <div className="modal-scheduled-header">
-            <div className="modal-title-section">
-              <h2 className="modal-title">
+    <main className={styles.modalScheduledContainer}>
+      <div className={styles.modalScheduled}>
+        <div className={styles.modalScheduledContent}>
+          <div className={styles.modalScheduledHeader}>
+            <div className={styles.modalTitleSection}>
+              <h2 className={styles.modalTitle}>
                 <FaCalendarAlt />
                 Agendamento
               </h2>
-              <span className="person-name">{scheduledOpen.name}</span>
+              <span className={styles.personName}>{scheduledOpen.name}</span>
             </div>
             <button
               onClick={onClose}
-              className="btn-close-modal"
+              className={styles.btnCloseModal}
               title="Fechar"
             >
               ✕
             </button>
           </div>
 
-          <div className="modal-scheduled-body">
-            <div className="person-info-section">
+          <div className={styles.modalScheduledBody}>
+            <div className={styles.personInfoSection}>
               <h3>Informações do Contato</h3>
-              <div className="info-grid">
-                <div className="info-item">
-                  <div className="info-label">
+              
+              {/* Address */}
+              <div className={styles.infoGrid}>
+                <div className={`${styles.infoItem} ${styles.fullWidth}`}>
+                  <div className={styles.infoLabel}>
                     <FaMapMarkerAlt />
                     Endereço
                   </div>
-                  <div className="info-value">{scheduledOpen.address}</div>
+                  <div className={styles.infoValue}>{scheduledOpen.address}</div>
                 </div>
-                <div className="info-item">
-                  <div className="info-label">
+              </div>
+
+              {/* Compact Phone Display */}
+              <div className={styles.contactGrid}>
+                <div className={styles.contactItem}>
+                  <div className={styles.contactLabel}>
                     <FaPhone />
-                    Telefone 1
+                    Tel. 1
                   </div>
-                  <div className="info-value">{scheduledOpen.phone}</div>
+                  <div className={styles.contactValue}>{scheduledOpen.phone}</div>
                 </div>
-                <div className="info-item">
-                  <div className="info-label">
+                <div className={styles.contactItem}>
+                  <div className={styles.contactLabel}>
                     <FaPhone />
-                    Telefone 2
+                    Tel. 2
                   </div>
-                  <div className="info-value">
-                    {scheduledOpen.phone2 || "*****-****"}
+                  <div className={styles.contactValue}>
+                    {scheduledOpen.phone2 || "N/D"}
                   </div>
                 </div>
-                <div className="info-item">
-                  <div className="info-label">
+                <div className={styles.contactItem}>
+                  <div className={styles.contactLabel}>
                     <FaPhone />
-                    Telefone 3
+                    Tel. 3
                   </div>
-                  <div className="info-value">
-                    {scheduledOpen.phone3 || "*****-****"}
+                  <div className={styles.contactValue}>
+                    {scheduledOpen.phone3 || "N/D"}
                   </div>
                 </div>
-                <div className="info-item">
-                  <div className="info-label">
+                <div className={styles.contactItem}>
+                  <div className={styles.contactLabel}>
                     <FaPhone />
-                    Telefone 4
+                    Tel. 4
                   </div>
-                  <div className="info-value">
-                    {scheduledOpen.phone4 || "*****-****"}
+                  <div className={styles.contactValue}>
+                    {scheduledOpen.phone4 || "N/D"}
                   </div>
                 </div>
-                <div className="info-item">
-                  <div className="info-label">
+                <div className={styles.contactItem}>
+                  <div className={styles.contactLabel}>
                     <FaPhone />
-                    Telefone 5
+                    Tel. 5
                   </div>
-                  <div className="info-value">
-                    {scheduledOpen.phone5 || "*****-****"}
+                  <div className={styles.contactValue}>
+                    {scheduledOpen.phone5 || "N/D"}
                   </div>
                 </div>
-                <div className="info-item">
-                  <div className="info-label">
+                <div className={styles.contactItem}>
+                  <div className={styles.contactLabel}>
                     <FaPhone />
-                    Telefone 6
+                    Tel. 6
                   </div>
-                  <div className="info-value">
-                    {scheduledOpen.phone6 || "*****-****"}
+                  <div className={styles.contactValue}>
+                    {scheduledOpen.phone6 || "N/D"}
                   </div>
                 </div>
-                <div className="info-item full-width">
-                  <div className="info-label">
+              </div>
+
+              {/* Observation */}
+              <div className={styles.infoGrid}>
+                <div className={`${styles.infoItem} ${styles.fullWidth}`}>
+                  <div className={styles.infoLabel}>
                     <FaEdit />
                     Observação
                   </div>
-                  <div className="info-value">{scheduledOpen.observation}</div>
+                  <div className={styles.infoValue}>{scheduledOpen.observation}</div>
                 </div>
               </div>
             </div>
 
+            {/* Last Donations Section - Only show if not a lead */}
+            {scheduledOpen.typeScheduled !== "lead" && (
+              <div className={styles.donationsSection}>
+                <h3>📋 Últimas 3 Doações Recebidas</h3>
+                <div className={styles.lastDonationsGrid}>
+                  {lastThreeDonations && lastThreeDonations.length > 0 ? (
+                    lastThreeDonations.map((donation, index) => (
+                      <div key={index} className={styles.donationCard}>
+                        <div className={styles.donationCardHeader}>
+                          <span className={styles.donationNumber}>#{index + 1}</span>
+                          <span className={styles.donationValue}>
+                            {donation.value.toLocaleString("pt-BR", {
+                              style: "currency",
+                              currency: "BRL",
+                            })}
+                          </span>
+                        </div>
+                        <div className={styles.donationCardBody}>
+                          <div className={styles.donationInfo}>
+                            <span className={styles.donationLabel}>📅 Data:</span>
+                            <span className={styles.donationText}>
+                              {new Date(donation.day).toLocaleDateString("pt-BR", {
+                                timeZone: "UTC",
+                              })}
+                            </span>
+                          </div>
+                          <div className={styles.donationInfo}>
+                            <span className={styles.donationLabel}>📝 Observação:</span>
+                            <span className={styles.donationText}>
+                              {donation.description || "Sem observação"}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className={styles.noDonationsMessage}>
+                      <span className={styles.noDonationsIcon}>📭</span>
+                      <span className={styles.noDonationsText}>
+                        Nenhuma doação registrada
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             {!isScheduling && (
-              <div className="modal-scheduled-footer">
+              <div className={styles.modalScheduledFooter}>
                 <button
                   onClick={handleNewDonation}
-                  className="btn-create-donation"
+                  className={styles.btnCreateDonation}
                 >
                   <FaCheck />
                   Criar Doação
                 </button>
-                <button onClick={handleCancel} className="btn-cancel">
+                <button onClick={handleCancel} className={styles.btnCancel}>
                   <FaTimes />
                   Não pode ajudar
                 </button>
+                {scheduledOpen.typeScheduled !== "lead" && scheduledOpen.donor_id && (
+                  <button onClick={handleOpenDonor} className={styles.btnOpenDonor}>
+                    <FaUserCircle />
+                    Abrir Doador
+                  </button>
+                )}
               </div>
             )}
 
             {isScheduling && (
-              <div className="donation-form-section">
+              <div className={styles.donationFormSection}>
                 <h3>Dados da Doação</h3>
-                <div className="form-grid">
+                <div className={styles.formGrid}>
                   {scheduledOpen.typeScheduled === "lead" && (
                     <>
-                      <div className="input-group">
+                      <div className={styles.inputGroup}>
                         <label>
                           <FaUser />
                           Nome
@@ -301,7 +386,7 @@ const ModalScheduled = ({
                           placeholder="Nome completo"
                         />
                       </div>
-                      <div className="input-group">
+                      <div className={styles.inputGroup}>
                         <label>
                           <FaMapMarkerAlt />
                           Endereço
@@ -313,7 +398,7 @@ const ModalScheduled = ({
                           placeholder="Endereço completo"
                         />
                       </div>
-                      <div className="input-group">
+                      <div className={styles.inputGroup}>
                         <label>
                           <FaMapMarkerAlt />
                           Bairro
@@ -325,7 +410,7 @@ const ModalScheduled = ({
                           placeholder="Bairro"
                         />
                       </div>
-                      <div className="input-group">
+                      <div className={styles.inputGroup}>
                         <label>
                           <FaMapMarkerAlt />
                           Cidade
@@ -337,7 +422,7 @@ const ModalScheduled = ({
                           placeholder="Cidade"
                         />
                       </div>
-                      <div className="input-group">
+                      <div className={styles.inputGroup}>
                         <label>
                           <FaPhone />
                           Qual contactado?
@@ -381,7 +466,7 @@ const ModalScheduled = ({
                           )}
                         </select>
                       </div>
-                      <div className="input-group">
+                      <div className={styles.inputGroup}>
                         <label>
                           <FaPhone />
                           Tel. 2
@@ -393,7 +478,7 @@ const ModalScheduled = ({
                           placeholder="Telefone 2"
                         />
                       </div>
-                      <div className="input-group">
+                      <div className={styles.inputGroup}>
                         <label>
                           <FaPhone />
                           Tel. 3
@@ -408,7 +493,7 @@ const ModalScheduled = ({
                     </>
                   )}
 
-                  <div className="input-group">
+                  <div className={styles.inputGroup}>
                     <label>
                       <FaDollarSign />
                       Valor
@@ -420,7 +505,7 @@ const ModalScheduled = ({
                       placeholder="Valor da doação"
                     />
                   </div>
-                  <div className="input-group">
+                  <div className={styles.inputGroup}>
                     <label>
                       <FaCalendarAlt />
                       Data
@@ -431,7 +516,7 @@ const ModalScheduled = ({
                       onChange={handleDateChange}
                     />
                   </div>
-                  <div className="input-group">
+                  <div className={styles.inputGroup}>
                     <label>
                       <FaBullhorn />
                       Campanha
@@ -450,7 +535,7 @@ const ModalScheduled = ({
                       ))}
                     </select>
                   </div>
-                  <div className="input-group full-width">
+                  <div className={`${styles.inputGroup} ${styles.fullWidth}`}>
                     <label>
                       <FaEdit />
                       Observação
@@ -464,10 +549,10 @@ const ModalScheduled = ({
                   </div>
                 </div>
 
-                <div className="form-actions">
+                <div className={styles.formActions}>
                   <button
                     onClick={() => setIsScheduling(false)}
-                    className="btn-back"
+                    className={styles.btnBack}
                   >
                     <FaArrowLeft />
                     Voltar
@@ -478,7 +563,7 @@ const ModalScheduled = ({
                         ? handleNewDonorAndDonation
                         : handleNewRequestDonation
                     }
-                    className="btn-confirm"
+                    className={styles.btnConfirm}
                   >
                     <FaCheck />
                     Concluir

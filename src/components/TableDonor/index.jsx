@@ -148,7 +148,7 @@ const TableDonor = ({
                               {item.donation_print === "Sim" ? "✓ Impresso" : "○ Não impresso"}
                             </span>
                             <span className={`status-badge ${item.donation_received === "Sim" ? "status-success" : "status-pending"}`}>
-                              {item.donation_received === "Sim" ? "✓ Recebido" : "○ Pendente"}
+                              {item.donation_received === "Sim" ? "✓ Recebido" : "○ Em Aberto"}
                             </span>
                           </div>
                         </td>

@@ -47,11 +47,16 @@ const ModalWorklist = ({
     workListSelected?.donor_mensal?.donor_mensal?.donor_mensal_monthly_fee;
   const navigate = useNavigate();
   const MaxAndMedDonations = async () => {
-    const { maxGeneral, maxPeriod, penultimate, countNotReceived, lastThreeDonations } =
-      await fetchMaxAndMedDonations(
-        workListSelected.donor_id,
-        workListSelected.request_name
-      );
+    const {
+      maxGeneral,
+      maxPeriod,
+      penultimate,
+      countNotReceived,
+      lastThreeDonations,
+    } = await fetchMaxAndMedDonations(
+      workListSelected.donor_id,
+      workListSelected.request_name
+    );
     if ([maxGeneral, maxPeriod, penultimate, countNotReceived].some((v) => v)) {
       setPenultimate(penultimate);
       setMaxDonation(maxGeneral);
@@ -60,7 +65,6 @@ const ModalWorklist = ({
       setLastThreeDonations(lastThreeDonations || []);
     }
   };
-
 
   const fetchCampains = async () => {
     const response = await getCampains();
@@ -173,14 +177,17 @@ const ModalWorklist = ({
         <div className="modal-worklist-body">
           <div className="modal-worklist-section">
             <h4 className="section-title">
-              📞 Informações de Contato{" "}{" "}{" "}
-              {donor_mensal_day ? `(Dia do Mensal: ${donor_mensal_day})` : ""} |{" "}
-              {donor_monthly_fee
-                ? `(Mensalidade: ${donor_monthly_fee.toLocaleString("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  })})`
-                : ""}
+              📞 Informações de Contato{" "}
+              <span style={{ color: "#FAF5E9" }}>
+                {donor_mensal_day ? `Dia do Mensal: ${donor_mensal_day}` : ""}{" "}
+                |{" "}
+                {donor_monthly_fee
+                  ? `Mensalidade: ${donor_monthly_fee.toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    })}`
+                  : ""}
+              </span>
             </h4>
             <div className="contact-info-grid">
               <div className="contact-item">
@@ -203,7 +210,9 @@ const ModalWorklist = ({
           </div>
 
           <div className="modal-worklist-section">
-            <h4 className="section-title">💰 Histórico de Doações | Meses sem receber: {countNotReceived}</h4>
+            <h4 className="section-title">
+              💰 Histórico de Doações <span style={{ color: "#FAF5E9" }}>| Meses sem receber: {countNotReceived}</span>
+            </h4>
             <div className="donation-stats-grid">
               <div className="stat-card">
                 <div className="stat-icon">📊</div>
@@ -271,7 +280,7 @@ const ModalWorklist = ({
           </div>
 
           <div className="modal-worklist-section">
-            <h4 className="section-title">📋 Últimas 3 Doações</h4>
+            <h4 className="section-title">📋 Últimas 3 Doações Recebidas</h4>
             <div className="last-donations-grid">
               {lastThreeDonations && lastThreeDonations.length > 0 ? (
                 lastThreeDonations.map((donation, index) => (

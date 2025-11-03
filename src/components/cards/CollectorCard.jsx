@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import styles from "../../pages/DashboardAdmin/dashboardadmin.module.css";
 
 
 const CollectorCard = ({ operatorCount, setDonationFilterPerId }) => {
@@ -43,11 +44,11 @@ const CollectorCard = ({ operatorCount, setDonationFilterPerId }) => {
       collectors.map((collector) => (
       <div
         onClick={() => handleClick(collector.id)}
-        className={`section-operators-card ${active === collector.id ? "active" : ""}`}
+        className={`${styles.sectionOperatorsCard} ${active === collector.id ? styles.active : ""}`}
         key={collector.id}
       >
         <div>{collector.name}</div>
-        <div className="section-operators-card-value">
+        <div className={styles.sectionOperatorsCardValue}>
           <label>{count[collector.id]}</label>
           <label>R$ {add[collector.id]?.toFixed(2).replace('.',',') || '0,00'}</label>
         </div>

@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import "./index.css";
-//import getDonationReceived from "../../helper/getDonationReceived";
+import styles from "./dashboardadmin.module.css";
+import getDonationReceived from "../../helper/getDonationReceived";
 import getDonationNotReceived from "../../helper/getDonationNotReceived";
+import getAllDonationsReceived from "../../helper/getAllDonationsReceived";
 // import getDonationPerMonthReceived from "../../helper/getDonationPerMonthReceived";
 import { DataNow } from "../../components/DataTime";
 import TableConfirmation from "../../components/TableConfirmation";
@@ -17,9 +18,12 @@ import OperatorCard from "../../components/cards/OperatorCard";
 import CollectorCard from "../../components/cards/CollectorCard";
 import ConfirmationCard from "../../components/cards/ConfirmationCard";
 import SchedulingCard from "../../components/cards/SchedulingCard";
+import ReceivedCard from "../../components/cards/ReceivedCard";
 import { getLeadsHistory } from "../../helper/getLeadsHistory";
 import { leadsHistoryService } from "../../services/leadsHistoryService";
 import TableLeadHistory from "../../components/TableLeadHistory";
+import getOperatorMeta from "../../helper/getOperatorMeta";
+import TableReceived from "../../components/TableReceived";
 
 const Dashboard = () => {
   const caracterOperator = JSON.parse(localStorage.getItem("operatorData"));
@@ -51,6 +55,11 @@ const Dashboard = () => {
   const [leadsSuccess, setLeadsSuccess] = useState([]);
   const [leadsSuccessCasa, setLeadsSuccessCasa] = useState([]);
 
+  // Estados para doações recebidas
+  const [valueReceived, setValueReceived] = useState(0); //Total valor recebido
+  const [donationsReceived, setDonationsReceived] = useState([]); //Todas as doações recebidas
+  const [meta, setMeta] = useState([]); //Meta dos operadores
+
   const [modalOpen, setModalOpen] = useState(false);
 
   const monthref = DataNow("mesref");
@@ -72,6 +81,11 @@ const Dashboard = () => {
         caracterOperator.operator_code_id,
         caracterOperator.operator_type
       );
+
+      // Buscar doações recebidas de todos os operadores
+      const receivedData = await getAllDonationsReceived();
+      setValueReceived(receivedData.totalValue);
+      setDonationsReceived(receivedData.donation);
 
       await getScheduledLeads(null, setScheduled, setScheduling);
     } catch (error) {
@@ -127,9 +141,17 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
+    const getMeta = async () => {
+      const metaInfo = await getOperatorMeta();
+      setMeta(metaInfo);
+    };
+    getMeta();
+  }, []);
+
+  useEffect(() => {
     donations();
     lead();
-  }, [active, modalOpen, status, operatorData]);
+  }, [active, modalOpen, status, operatorData, meta]);
 
   const handleClickCard = (e) => {
     setActive(e.currentTarget.id);
@@ -143,34 +165,46 @@ const Dashboard = () => {
   };
 
   return (
-    <main className="mainDashboard">
+    <main className={styles.mainDashboard}>
       <>
-        <section className="sectionHeader">
-          <div className="sectionHeader-item">
+        <section className={styles.sectionHeader}>
+          <div className={styles.sectionHeaderItem}>
             <div
-              id="inScheduled"
-              className={`divCard ${active === "inScheduled" ? "active" : ""}`}
+              id="received"
+              className={`${styles.divCard} ${active === "received" ? styles.active : ""}`}
               onClick={handleClickCard}
             >
-              <div className="divHeader">
-                <h3 className="h3Header">Agendados</h3>
+              <div className={styles.divHeader}>
+                <h3 className={styles.h3Header}>Recebido</h3>
               </div>
-              <div className="divBody">
+              <div className={styles.divBody}>
+                <p>R$ {valueReceived?.toFixed(2)}</p>
+              </div>
+            </div>
+            <div
+              id="inScheduled"
+              className={`${styles.divCard} ${active === "inScheduled" ? styles.active : ""}`}
+              onClick={handleClickCard}
+            >
+              <div className={styles.divHeader}>
+                <h3 className={styles.h3Header}>Agendados</h3>
+              </div>
+              <div className={styles.divBody}>
                 <p>{scheduling}</p>
               </div>
             </div>
             {/* Card 1 */}
             <div
               id="inConfirmation"
-              className={`divCard ${
-                active === "inConfirmation" ? "active" : ""
+              className={`${styles.divCard} ${
+                active === "inConfirmation" ? styles.active : ""
               }`}
               onClick={handleClickCard}
             >
-              <div className="divHeader">
-                <h3 className="h3Header">Em Confirmação</h3>
+              <div className={styles.divHeader}>
+                <h3 className={styles.h3Header}>Em Confirmação</h3>
               </div>
-              <div className="divBody">
+              <div className={styles.divBody}>
                 <p>{confirmations}</p>
                 <p>R$ {valueConfirmations}</p>
               </div>
@@ -178,27 +212,27 @@ const Dashboard = () => {
 
             <div
               id="inOpen"
-              className={`divCard ${active === "inOpen" ? "active" : ""}`}
+              className={`${styles.divCard} ${active === "inOpen" ? styles.active : ""}`}
               onClick={handleClickCard}
             >
-              <div className="divHeader">
-                <h3 className="h3Header">Em Aberto</h3>
+              <div className={styles.divHeader}>
+                <h3 className={styles.h3Header}>Em Aberto</h3>
               </div>
-              <div className="divBody">
+              <div className={styles.divBody}>
                 <p>{openDonations}</p>
                 <p>R$ {valueOpenDonations}</p>
               </div>
             </div>
             <div
               id="leads"
-              className={`divCard ${active === "leads" ? "active" : ""}`}
+              className={`${styles.divCard} ${active === "leads" ? styles.active : ""}`}
               onClick={handleClickCard}
             >
-              <div className="divHeader">
-                <h3 className="h3Header">Leads</h3>
+              <div className={styles.divHeader}>
+                <h3 className={styles.h3Header}>Leads</h3>
               </div>
               <div
-                className="divBody"
+                className={styles.divBody}
                 style={{ display: "flex", justifyContent: "center" }}
               >
                 <p>{confirmations}</p>
@@ -208,17 +242,17 @@ const Dashboard = () => {
         </section>
 
         {active && active !== "leads" ? (
-          <section className="section-grafic">
+          <section className={styles.sectionGrafic}>
             {active === "inOpen" && (
-              <div className="view-type-selector">
+              <div className={styles.viewTypeSelector}>
                 <button
-                  className={`view-type-button ${viewType === "operator" ? "active" : ""}`}
+                  className={`${styles.viewTypeButton} ${viewType === "operator" ? styles.active : ""}`}
                   onClick={() => handleViewTypeChange("operator")}
                 >
                   Por Operadora
                 </button>
                 <button
-                  className={`view-type-button ${viewType === "collector" ? "active" : ""}`}
+                  className={`${styles.viewTypeButton} ${viewType === "collector" ? styles.active : ""}`}
                   onClick={() => handleViewTypeChange("collector")}
                 >
                   Por Coletor
@@ -226,9 +260,14 @@ const Dashboard = () => {
               </div>
             )}
             
-            <div className="section-table-and-info">
-              <div className="section-operators">
-                {active === "inConfirmation" ? (
+            <div className={styles.sectionTableAndInfo}>
+              <div className={styles.sectionOperators}>
+                {active === "received" ? (
+                  <ReceivedCard
+                    operatorCount={donationsReceived}
+                    setDonationFilterPerId={setDonationFilterPerId}
+                  />
+                ) : active === "inConfirmation" ? (
                   <ConfirmationCard
                     operatorCount={donationConfirmation}
                     setDonationFilterPerId={setDonationFilterPerId}
@@ -255,8 +294,18 @@ const Dashboard = () => {
                 )}
               </div>
 
-              <div className="section-table">
-                {active === "inConfirmation" ? (
+              <div className={styles.sectionTable}>
+                {active === "received" ? (
+                  <TableReceived
+                    donationsOperator={
+                      donationFilterPerId
+                        ? donationsReceived.filter(
+                            (d) => d.operator_code_id === donationFilterPerId
+                          )
+                        : donationsReceived
+                    }
+                  />
+                ) : active === "inConfirmation" ? (
                   <TableConfirmation
                     donationConfirmation={donationConfirmation}
                     setModalOpen={setModalOpen}
@@ -284,8 +333,8 @@ const Dashboard = () => {
             </div>
           </section>
         ) : (
-          <section className="section-grafic">
-            <div className="div-leads">
+          <section className={styles.sectionGrafic}>
+            <div className={styles.divLeads}>
               <TableLeadHistory
                 operator={operator}
                 operatorCasa={operatorCasa}

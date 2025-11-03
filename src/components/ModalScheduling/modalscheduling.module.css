@@ -1,5 +1,5 @@
 /* Modal Scheduling Overlay */
-.modal-scheduling-overlay {
+.modalSchedulingOverlay {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -24,7 +24,7 @@
 }
 
 /* Modal Content */
-.modal-scheduling {
+.modalScheduling {
   position: relative;
   z-index: 1;
   background-color: #1f1d1d;
@@ -47,7 +47,7 @@
   }
 }
 
-.modal-scheduling-content {
+.modalSchedulingContent {
   width: 600px;
   max-height: 96vh;
   border: 3px double #363a3d;
@@ -59,7 +59,7 @@
 }
 
 /* Header */
-.modal-scheduling-header {
+.modalSchedulingHeader {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -69,13 +69,13 @@
   flex-shrink: 0;
 }
 
-.modal-title-section {
+.modalTitleSection {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.modal-scheduling-title {
+.modalSchedulingTitle {
   color: #faa01c;
   font-size: 24px;
   font-weight: 600;
@@ -86,14 +86,14 @@
   gap: 8px;
 }
 
-.modal-subtitle {
+.modalSubtitle {
   color: #faf5e9;
   font-size: 14px;
   margin: 0;
   opacity: 0.8;
 }
 
-.btn-close-modal {
+.btnCloseModal {
   background-color: #f44336;
   color: #faf5e9;
   border: none;
@@ -110,13 +110,13 @@
   box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
 }
 
-.btn-close-modal:hover {
+.btnCloseModal:hover {
   background-color: #d32f2f;
   transform: scale(1.1);
 }
 
 /* Body */
-.modal-scheduling-body {
+.modalSchedulingBody {
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -126,20 +126,20 @@
 }
 
 /* Form */
-.modal-scheduling-form {
+.modalSchedulingForm {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.modal-form-section {
+.modalFormSection {
   background-color: #363a3d;
   border: 2px solid #2f2d2d;
   border-radius: 8px;
   padding: 16px;
 }
 
-.modal-form-section h4 {
+.modalFormSection h4 {
   color: #faa01c;
   margin: 0 0 16px 0;
   font-size: 16px;
@@ -148,35 +148,35 @@
   letter-spacing: 0.5px;
 }
 
-.modal-form-row {
+.modalFormRow {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 16px;
   margin-bottom: 16px;
 }
 
-.modal-form-row:last-child {
+.modalFormRow:last-child {
   margin-bottom: 0;
 }
 
-.modal-form-group {
+.modalFormGroup {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.modal-form-group.full-width {
+.modalFormGroup.fullWidth {
   grid-column: 1 / -1;
 }
 
-.modal-form-group label {
+.modalFormGroup label {
   color: #faf5e9;
   font-size: 12px;
   font-weight: 500;
   margin-bottom: 4px;
 }
 
-.modal-select {
+.modalSelect {
   width: 100%;
   padding: 10px 12px;
   background-color: #2f2d2d;
@@ -191,17 +191,17 @@
   height: 40px;
 }
 
-.modal-select:focus {
+.modalSelect:focus {
   border-color: #faa01c;
 }
 
-.modal-select:disabled {
+.modalSelect:disabled {
   opacity: 0.7;
   background-color: #262626;
   cursor: not-allowed;
 }
 
-.modal-textarea {
+.modalTextarea {
   width: 100%;
   padding: 10px 12px;
   background-color: #2f2d2d;
@@ -217,22 +217,22 @@
   box-sizing: border-box;
 }
 
-.modal-textarea:focus {
+.modalTextarea:focus {
   border-color: #faa01c;
 }
 
-.modal-textarea:disabled {
+.modalTextarea:disabled {
   opacity: 0.7;
   background-color: #262626;
   cursor: not-allowed;
 }
 
-.modal-textarea::placeholder {
+.modalTextarea::placeholder {
   color: #9e9e9e;
 }
 
 /* Footer */
-.modal-scheduling-footer {
+.modalSchedulingFooter {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
@@ -242,7 +242,7 @@
 }
 
 /* Buttons */
-.modal-btn {
+.modalBtn {
   padding: 12px 24px;
   border: none;
   border-radius: 6px;
@@ -260,29 +260,29 @@
   letter-spacing: 0.5px;
 }
 
-.modal-btn.primary {
+.modalBtn.primary {
   background-color: #faa01c;
   color: #1f1d1d;
 }
 
-.modal-btn.primary:hover:not(:disabled) {
+.modalBtn.primary:hover:not(:disabled) {
   background-color: #e8901a;
   box-shadow: 0 4px 12px rgba(250, 160, 28, 0.4);
   transform: translateY(-1px);
 }
 
-.modal-btn.secondary {
+.modalBtn.secondary {
   background-color: #363a3d;
   color: #faf5e9;
   border: 2px solid #2f2d2d;
 }
 
-.modal-btn.secondary:hover:not(:disabled) {
+.modalBtn.secondary:hover:not(:disabled) {
   background-color: #4a4d50;
   border-color: #faa01c;
 }
 
-.modal-btn:disabled {
+.modalBtn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
@@ -290,53 +290,53 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .modal-scheduling-content {
+  .modalSchedulingContent {
     width: 90vw;
     max-height: 95vh;
     padding: 16px;
   }
   
-  .modal-scheduling-title {
+  .modalSchedulingTitle {
     font-size: 20px;
   }
   
-  .modal-form-row {
+  .modalFormRow {
     grid-template-columns: 1fr;
     gap: 12px;
   }
   
-  .modal-scheduling-footer {
+  .modalSchedulingFooter {
     flex-direction: column;
     align-items: stretch;
   }
   
-  .modal-btn {
+  .modalBtn {
     width: 100%;
     min-width: auto;
   }
 }
 
 @media (max-width: 480px) {
-  .modal-scheduling-content {
+  .modalSchedulingContent {
     width: 95vw;
     max-height: 95vh;
     padding: 12px;
   }
   
-  .modal-scheduling-title {
+  .modalSchedulingTitle {
     font-size: 18px;
   }
   
-  .modal-form-section {
+  .modalFormSection {
     padding: 12px;
   }
   
-  .modal-form-section h4 {
+  .modalFormSection h4 {
     font-size: 14px;
     margin-bottom: 12px;
   }
   
-  .modal-btn {
+  .modalBtn {
     padding: 10px 20px;
     font-size: 13px;
     height: 40px;
@@ -344,32 +344,33 @@
 }
 
 /* Scrollbar Styling */
-.modal-scheduling::-webkit-scrollbar {
+.modalScheduling::-webkit-scrollbar {
   width: 8px;
 }
 
-.modal-scheduling::-webkit-scrollbar-track {
+.modalScheduling::-webkit-scrollbar-track {
   background: #2a2828;
   border-radius: 4px;
 }
 
-.modal-scheduling::-webkit-scrollbar-thumb {
+.modalScheduling::-webkit-scrollbar-thumb {
   background: #faa01c;
   border-radius: 4px;
 }
 
-.modal-scheduling::-webkit-scrollbar-thumb:hover {
+.modalScheduling::-webkit-scrollbar-thumb:hover {
   background: #e8901a;
 }
 
 /* Focus states for accessibility */
-.modal-btn:focus-visible {
+.modalBtn:focus-visible {
   outline: 2px solid #faa01c;
   outline-offset: 2px;
 }
 
-.modal-select:focus-visible,
-.modal-textarea:focus-visible {
+.modalSelect:focus-visible,
+.modalTextarea:focus-visible {
   outline: 2px solid #faa01c;
   outline-offset: 2px;
 }
+

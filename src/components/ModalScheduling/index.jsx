@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ICONS } from "../../constants/constants";
 import FormInput from "../forms/FormInput";
 import { DataNow } from "../DataTime";
-import "./index.css";
+import styles from "./modalscheduling.module.css";
 
 const ModalScheduling = ({ 
   isOpen, 
@@ -55,19 +55,19 @@ const ModalScheduling = ({
   if (!isOpen) return null;
 
   return (
-    <div className="modal-scheduling-overlay">
-      <div className="modal-scheduling">
-        <div className="modal-scheduling-content">
+    <div className={styles.modalSchedulingOverlay}>
+      <div className={styles.modalScheduling}>
+        <div className={styles.modalSchedulingContent}>
           {/* Header */}
-          <div className="modal-scheduling-header">
-            <div className="modal-title-section">
-              <h3 className="modal-scheduling-title">
+          <div className={styles.modalSchedulingHeader}>
+            <div className={styles.modalTitleSection}>
+              <h3 className={styles.modalSchedulingTitle}>
                 {ICONS.CALENDAR} Agendamento
               </h3>
-              <p className="modal-subtitle">Agendar novo contato com {currentLead?.leads_name}</p>
+              <p className={styles.modalSubtitle}>Agendar novo contato com {currentLead?.leads_name}</p>
             </div>
             <button 
-              className="btn-close-modal"
+              className={styles.btnCloseModal}
               onClick={handleClose}
               title="Fechar modal"
             >
@@ -76,23 +76,23 @@ const ModalScheduling = ({
           </div>
 
           {/* Body */}
-          <div className="modal-scheduling-body">
-            <form className="modal-scheduling-form">
-              <div className="modal-form-section">
+          <div className={styles.modalSchedulingBody}>
+            <form className={styles.modalSchedulingForm}>
+              <div className={styles.modalFormSection}>
                 <h4>Informações do Agendamento</h4>
-                <div className="modal-form-row">
+                <div className={styles.modalFormRow}>
                   <FormInput
                     label="Data *"
                     value={formData.dateScheduling}
                     onChange={handleSchedulingDateChange}
                     type="date"
                   />
-                  <div className="modal-form-group">
+                  <div className={styles.modalFormGroup}>
                     <label>Telefone para contato *</label>
                     <select
                       value={formData.telScheduling}
                       onChange={(e) => handleInputChange("telScheduling", e.target.value)}
-                      className="modal-select"
+                      className={styles.modalSelect}
                     >
                       <option value="" disabled>Selecione...</option>
                       {currentLead?.leads_tel_1 && <option value={currentLead.leads_tel_1}>{currentLead.leads_tel_1}</option>}
@@ -105,11 +105,11 @@ const ModalScheduling = ({
                   </div>
                 </div>
                 
-                <div className="modal-form-row">
-                  <div className="modal-form-group full-width">
+                <div className={styles.modalFormRow}>
+                  <div className={`${styles.modalFormGroup} ${styles.fullWidth}`}>
                     <label>Observação</label>
                     <textarea
-                      className="modal-textarea"
+                      className={styles.modalTextarea}
                       value={formData.observationScheduling}
                       onChange={(e) => handleInputChange("observationScheduling", e.target.value)}
                       placeholder="Digite observações sobre o agendamento..."
@@ -121,17 +121,17 @@ const ModalScheduling = ({
           </div>
 
           {/* Footer */}
-          <div className="modal-scheduling-footer">
+          <div className={styles.modalSchedulingFooter}>
             <button
               onClick={handleClose}
-              className="modal-btn secondary"
+              className={`${styles.modalBtn} ${styles.secondary}`}
             >
               {ICONS.BACK} Cancelar
             </button>
             <button
               type="button"
               onClick={handleSave}
-              className="modal-btn primary"
+              className={`${styles.modalBtn} ${styles.primary}`}
             >
               Concluir Agendamento
             </button>

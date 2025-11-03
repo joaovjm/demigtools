@@ -13,7 +13,6 @@ import { FaDollarSign } from "react-icons/fa";
 import GenerateDepositPDF from "../GenerateDepositPDF";
 
 const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
-  
   const { operatorData } = useContext(UserContext);
   const [value, setValue] = useState(donation.donation_value);
   const [date, setDate] = useState(donation.donation_day_to_receive);
@@ -164,7 +163,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
   };
 
   const handleDownloadPDFDeposit = async () => {
-    const donoAndDonationData = {...donation, donor_name: donorData.nome};
+    const donoAndDonationData = { ...donation, donor_name: donorData.nome };
 
     try {
       await GenerateDepositPDF({
@@ -382,46 +381,50 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
                 justifyContent: "center",
               }}
             >
-              <button
-                onClick={handleDownloadPDFDeposit}
-                style={{
-                  padding: "8px 16px",
-                  border: "none",
-                  borderRadius: "6px",
-                  fontSize: "14px",
-                  fontWeight: "500",
-                  cursor: "pointer",
-                  backgroundColor: "#faa01c",
-                  color: "#fff",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "4px",
-                  transition: "all 0.3s ease",
-                }}
-                title="Baixar PDF do Recibo"
-              >
-                📄 Recibo para Deposito
-              </button>
-              <button
-                onClick={handleDownloadPDF}
-                style={{
-                  padding: "8px 16px",
-                  border: "none",
-                  borderRadius: "6px",
-                  fontSize: "14px",
-                  fontWeight: "500",
-                  cursor: "pointer",
-                  backgroundColor: "#28a745",
-                  color: "#fff",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "4px",
-                  transition: "all 0.3s ease",
-                }}
-                title="Baixar PDF do Recibo"
-              >
-                📄 Baixar PDF
-              </button>
+              {operatorData.operator_type === "Admin" && (
+                <>
+                  <button
+                    onClick={handleDownloadPDFDeposit}
+                    style={{
+                      padding: "8px 16px",
+                      border: "none",
+                      borderRadius: "6px",
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      cursor: "pointer",
+                      backgroundColor: "#faa01c",
+                      color: "#fff",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "4px",
+                      transition: "all 0.3s ease",
+                    }}
+                    title="Baixar PDF do Recibo"
+                  >
+                    📄 Recibo para Deposito
+                  </button>
+                  <button
+                    onClick={handleDownloadPDF}
+                    style={{
+                      padding: "8px 16px",
+                      border: "none",
+                      borderRadius: "6px",
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      cursor: "pointer",
+                      backgroundColor: "#28a745",
+                      color: "#fff",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "4px",
+                      transition: "all 0.3s ease",
+                    }}
+                    title="Baixar PDF do Recibo"
+                  >
+                    📄 Baixar PDF
+                  </button>
+                </>
+              )}
               <button
                 onClick={handleDelete}
                 style={{

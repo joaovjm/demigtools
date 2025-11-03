@@ -1,5 +1,5 @@
 import React from "react";
-import "./index.css";
+import styles from "./tableinopen.module.css";
 import { DataSelect } from "../DataTime";
 
 const TableInOpen = ({
@@ -28,17 +28,17 @@ const TableInOpen = ({
   const dataToShow = donationFilterPerId ? filterFullNotReceiverDonations : fullNotReceivedDonations;
 
   return (
-    <div className="table-inopen-container">
-      <div className="table-inopen-content">
-        <h3 className="table-inopen-title">📋 Fichas em Aberto</h3>
+    <div className={styles.tableInopenContainer}>
+      <div className={styles.tableInopenContent}>
+        <h3 className={styles.tableInopenTitle}>📋 Fichas em Aberto</h3>
         {dataToShow.length > 0 ? (
-          <div className="table-inopen-wrapper">
-            <div className="table-inopen-header">
-              <div className="table-inopen-stats">
-                <span className="stats-item">
+          <div className={styles.tableInopenWrapper}>
+            <div className={styles.tableInopenHeader}>
+              <div className={styles.tableInopenStats}>
+                <span className={styles.statsItem}>
                   <strong>{dataToShow.length}</strong> {dataToShow.length === 1 ? 'ficha' : 'fichas'} em aberto
                 </span>
-                <span className="stats-item">
+                <span className={styles.statsItem}>
                   Total: <strong>
                     {dataToShow.reduce((acc, item) => acc + (parseFloat(item.donation_value) || 0), 0).toLocaleString("pt-BR", {
                       style: "currency",
@@ -49,52 +49,52 @@ const TableInOpen = ({
               </div>
             </div>
 
-            <div className="table-inopen-scroll">
-              <table className="table-inopen">
+            <div className={styles.tableInopenScroll}>
+              <table className={styles.tableInopen}>
                 <thead>
-                  <tr className="table-inopen-head-row">
-                    <th className="table-inopen-head">A receber</th>
-                    <th className="table-inopen-head">Recibo</th>
-                    <th className="table-inopen-head">Nome</th>
-                    <th className="table-inopen-head">Valor</th>
-                    <th className="table-inopen-head">Coletador</th>
+                  <tr className={styles.tableInopenHeadRow}>
+                    <th className={styles.tableInopenHead}>A receber</th>
+                    <th className={styles.tableInopenHead}>Recibo</th>
+                    <th className={styles.tableInopenHead}>Nome</th>
+                    <th className={styles.tableInopenHead}>Valor</th>
+                    <th className={styles.tableInopenHead}>Coletador</th>
                   </tr>
                 </thead>
                 <tbody>
                   {dataToShow.map((donation) => (
                     <tr
-                      className="table-inopen-row"
+                      className={styles.tableInopenRow}
                       key={donation.receipt_donation_id}
                       onClick={() => handleClick(donation)}
                     >
-                      <td className="table-inopen-cell">
-                        <span className="date-info">
+                      <td className={styles.tableInopenCell}>
+                        <span className={styles.dateInfo}>
                           {DataSelect(donation.donation_day_to_receive)}
                         </span>
                       </td>
-                      <td className="table-inopen-cell">
-                        <span className="receipt-number">
+                      <td className={styles.tableInopenCell}>
+                        <span className={styles.receiptNumber}>
                           {donation.receipt_donation_id}
                         </span>
                       </td>
-                      <td className="table-inopen-cell">
-                        <span className="donor-name">
+                      <td className={styles.tableInopenCell}>
+                        <span className={styles.donorName}>
                           {donation.donor_name}
                         </span>
                       </td>
-                      <td className="table-inopen-cell">
-                        <span className="value-amount">
+                      <td className={styles.tableInopenCell}>
+                        <span className={styles.valueAmount}>
                           {parseFloat(donation.donation_value || 0).toLocaleString("pt-BR", {
                             style: "currency",
                             currency: "BRL",
                           })}
                         </span>
                       </td>
-                      <td className="table-inopen-cell">
-                        <div className="collector-info">
-                          <span className="collector-id">{donation.collector_code_id || "—"}</span>
+                      <td className={styles.tableInopenCell}>
+                        <div className={styles.collectorInfo}>
+                          <span className={styles.collectorId}>{donation.collector_code_id || "—"}</span>
                           {donation.collector_name && (
-                            <span className="collector-name">{donation.collector_name}</span>
+                            <span className={styles.collectorName}>{donation.collector_name}</span>
                           )}
                         </div>
                       </td>
@@ -105,8 +105,8 @@ const TableInOpen = ({
             </div>
           </div>
         ) : (
-          <div className="table-inopen-empty">
-            <div className="empty-icon">📋</div>
+          <div className={styles.tableInopenEmpty}>
+            <div className={styles.emptyIcon}>📋</div>
             <h4>Nenhuma ficha em aberto</h4>
             <p>Não há fichas pendentes para recebimento no momento.</p>
           </div>
