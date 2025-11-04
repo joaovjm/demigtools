@@ -2,15 +2,12 @@ import supabase from "./superBaseClient"
 
 const editOperator = async ({ id, name, type, active, password }) => {
     try{
-        const { data, error } = await supabase.from("operator").update([
-            {
-                operator_code_id: id, 
-                operator_name: name,
-                operator_type: type,
-                operator_active: active,
-                operator_password: password
-            }
-        ])
+        const { data, error } = await supabase.from("operator").update({
+            operator_name: name,
+            operator_type: type,
+            operator_active: active,
+            operator_password: password
+        })
         .eq("operator_code_id", id)
         .select();
 
