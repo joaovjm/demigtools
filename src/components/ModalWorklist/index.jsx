@@ -154,6 +154,8 @@ const ModalWorklist = ({
     navigate(`/donor/${workListSelected.donor_id}`);
   };
 
+  console.log(workListSelected);
+
   return (
     <div className={styles.modalWorklist}>
       <div className={styles.modalWorklistMain}>
@@ -357,8 +359,8 @@ const ModalWorklist = ({
         {!newDonationOpen && !newSchedulingOpen ? (
           <div className={styles.modalWorklistActions}>
             <div className={styles.actionButtonsGrid}>
-              {workListSelected.request_status === "Sucesso" ||
-                (workListSelected.request_status === "Recebido" && (
+              {workListSelected.request_status !== "Sucesso" &&
+                (workListSelected.request_status !== "Recebido" && (
                   <>
                     <button
                       className={`${styles.actionBtn} ${styles.danger}`}
