@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import "./index.css";
+import styles from "./modaldonation.module.css";
 
 import { FaDollarSign } from "react-icons/fa";
 import { insertDonation } from "../../helper/insertDonation";
@@ -129,12 +129,12 @@ const ModalDonation = ({
   };
 
   return (
-    <main className="modal-donation-container">
-      <div className="modal-donation">
-        <div className="modal-donation-content">
-          <div className="modal-donation-header">
-            <div className="modal-title-section">
-              <h2 className="modal-title">
+    <main className={styles['modal-donation-container']}>
+      <div className={styles['modal-donation']}>
+        <div className={styles['modal-donation-content']}>
+          <div className={styles['modal-donation-header']}>
+            <div className={styles['modal-title-section']}>
+              <h2 className={styles['modal-title']}>
                 <FaDollarSign />
                 Nova Doação
               </h2>
@@ -152,18 +152,18 @@ const ModalDonation = ({
             )}
             <button
               onClick={() => setModalShow(!modalShow)}
-              className="btn-close-modal"
+              className={styles['btn-close-modal']}
               title="Fechar"
             >
               ✕
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="modal-donation-body">
-            <div className="form-section">
+          <form onSubmit={handleSubmit} className={styles['modal-donation-body']}>
+            <div className={styles['form-section']}>
               <h3>Dados da Doação</h3>
-              <div className="form-grid">
-                <div className="input-group">
+              <div className={styles['form-grid']}>
+                <div className={styles['input-group']}>
                   <label>Valor *</label>
                   <input
                     type="number"
@@ -177,7 +177,7 @@ const ModalDonation = ({
                 </div>
 
                 {tipo === "Mensal" && (
-                  <div className="input-group">
+                  <div className={styles['input-group']}>
                     <label>Extra</label>
                     <input
                       type="number"
@@ -189,7 +189,7 @@ const ModalDonation = ({
                   </div>
                 )}
 
-                <div className="input-group">
+                <div className={styles['input-group']}>
                   <label>Data para Receber *</label>
                   <input
                     type="date"
@@ -200,7 +200,7 @@ const ModalDonation = ({
                 </div>
 
                 {tipo === "Mensal" && (
-                  <div className="input-group">
+                  <div className={styles['input-group']}>
                     <label>Mês Referente</label>
                     <input
                       type="text"
@@ -220,7 +220,7 @@ const ModalDonation = ({
                   </div>
                 )}
 
-                <div className="input-group">
+                <div className={styles['input-group']}>
                   <label>Operador *</label>
                   <select
                     value={operator}
@@ -241,7 +241,7 @@ const ModalDonation = ({
                   </select>
                 </div>
 
-                <div className="input-group">
+                <div className={styles['input-group']}>
                   <label>Campanha *</label>
                   <select
                     value={campainSelected}
@@ -259,7 +259,7 @@ const ModalDonation = ({
                   </select>
                 </div>
 
-                <div className="input-group full-width">
+                <div className={`${styles['input-group']} ${styles['full-width']}`}>
                   <label>Descrição</label>
                   <textarea
                     placeholder="Observações sobre a doação..."
@@ -271,10 +271,10 @@ const ModalDonation = ({
               </div>
 
               {/*{operatorData.operator_type === "Admin" && (
-                <div className="status-section">
+                <div className={styles['status-section']}>
                   <h4>Status da Doação</h4>
-                  <div className="checkbox-group">
-                    <label className="checkbox-label">
+                  <div className={styles['checkbox-group']}>
+                    <label className={styles['checkbox-label']}>
                       <input
                         type="checkbox"
                         checked={impresso}
@@ -283,7 +283,7 @@ const ModalDonation = ({
                       <span className="checkmark"></span>
                       Impresso
                     </label>
-                    <label className="checkbox-label">
+                    <label className={styles['checkbox-label']}>
                       <input
                         type="checkbox"
                         checked={recebido}
@@ -297,8 +297,8 @@ const ModalDonation = ({
               )}*/}
             </div>
 
-            <div className="modal-donation-footer">
-              <button type="submit" className="btn-create-donation">
+            <div className={styles['modal-donation-footer']}>
+              <button type="submit" className={styles['btn-create-donation']}>
                 💰 Criar Doação
               </button>
             </div>
