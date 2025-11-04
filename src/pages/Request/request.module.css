@@ -1,5 +1,5 @@
 /* Request Main Container */
-.request-main {
+.requestMain {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -11,7 +11,7 @@
   box-sizing: border-box;
 }
 
-.request-container {
+.requestContainer {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -20,7 +20,7 @@
 }
 
 /* Request Header */
-.request-header {
+.requestHeader {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -28,7 +28,7 @@
   gap: 20px;
 }
 
-.request-title {
+.requestTitle {
   color: #faa01c;
   font-size: 24px;
   font-weight: 600;
@@ -38,7 +38,7 @@
 }
 
 /* Steps Navigation */
-.request-steps {
+.requestSteps {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -75,7 +75,7 @@
   color: #fff;
 }
 
-.step-number {
+.stepNumber {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -87,15 +87,15 @@
   font-size: 14px;
 }
 
-.step.active .step-number {
+.step.active .stepNumber {
   background-color: rgba(31, 29, 29, 0.2);
 }
 
-.step.completed .step-number {
+.step.completed .stepNumber {
   background-color: rgba(255, 255, 255, 0.2);
 }
 
-.step-label {
+.stepLabel {
   font-size: 12px;
   font-weight: 500;
   text-align: center;
@@ -104,7 +104,7 @@
 }
 
 /* Request Content */
-.request-content {
+.requestContent {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -112,7 +112,7 @@
 }
 
 /* Step Container */
-.request-step-container {
+.requestStepContainer {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -122,77 +122,77 @@
   overflow: hidden;
 }
 
-.request-step-header {
+.requestStepHeader {
   background-color: #363a3d;
   border-bottom: 2px solid #2f2d2d;
   padding: 16px 20px;
 }
 
-.request-step-header h3 {
+.requestStepHeader h3 {
   color: #faa01c;
   margin: 0 0 8px 0;
   font-size: 18px;
   font-weight: 600;
 }
 
-.request-step-header p {
+.requestStepHeader p {
   color: #c0c0c0;
   margin: 0;
   font-size: 14px;
 }
 
-.request-step-content {
+.requestStepContent {
   padding: 20px;
   flex: 1;
 }
 
 /* Request Form */
-.request-form {
+.requestForm {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.form-section {
+.formSection {
   background-color: #363a3d;
   border: 2px solid #2f2d2d;
   border-radius: 6px;
   padding: 16px;
 }
 
-.form-section h4 {
+.formSection h4 {
   color: #faa01c;
   margin: 0 0 12px 0;
   font-size: 15px;
   font-weight: 600;
 }
 
-.form-row {
+.formRow {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 16px;
   margin-bottom: 12px;
 }
 
-.form-row:last-child {
+.formRow:last-child {
   margin-bottom: 0;
 }
 
-.form-group {
+.formGroup {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.form-group label {
+.formGroup label {
   color: #faf5e9;
   font-size: 12px;
   font-weight: 500;
   margin-bottom: 2px;
 }
 
-.form-input,
-.form-select {
+.formInput,
+.formSelect {
   width: 100%;
   padding: 8px 12px;
   background-color: #2f2d2d;
@@ -204,18 +204,32 @@
   transition: border-color 0.3s ease;
   box-sizing: border-box;
   height: 40px;
+  font-family: inherit;
+  line-height: 1.5;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
-.form-input:focus,
-.form-select:focus {
+.formSelect {
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23faf5e9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+.formInput:focus,
+.formSelect:focus {
   border-color: #faa01c;
 }
 
-.form-input::placeholder {
+.formInput::placeholder {
   color: #9e9e9e;
 }
 
-.form-actions {
+.formActions {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
@@ -225,7 +239,7 @@
 }
 
 /* Request Buttons */
-.request-btn {
+.requestBtn {
   padding: 10px 20px;
   border: none;
   border-radius: 6px;
@@ -241,71 +255,71 @@
   gap: 8px;
 }
 
-.request-btn.primary {
+.requestBtn.primary {
   background-color: #faa01c;
   color: #1f1d1d;
 }
 
-.request-btn.primary:hover:not(:disabled) {
+.requestBtn.primary:hover:not(:disabled) {
   background-color: #e8901a;
   box-shadow: 0 4px 12px rgba(250, 160, 28, 0.4);
   transform: translateY(-1px);
 }
 
-.request-btn.secondary {
+.requestBtn.secondary {
   background-color: #363a3d;
   color: #faf5e9;
   border: 2px solid #2f2d2d;
 }
 
-.request-btn.secondary:hover:not(:disabled) {
+.requestBtn.secondary:hover:not(:disabled) {
   background-color: #4a4d50;
   border-color: #faa01c;
 }
 
-.request-btn.cancel {
+.requestBtn.cancel {
   background-color: #d60b0c;
   color: #faf5e9;
 }
 
-.request-btn.cancel:hover:not(:disabled) {
+.requestBtn.cancel:hover:not(:disabled) {
   background-color: #b9090a;
   transform: translateY(-1px);
 }
 
-.request-btn.reset {
+.requestBtn.reset {
   background-color: #ff9800;
   color: #1f1d1d;
 }
 
-.request-btn.reset:hover:not(:disabled) {
+.requestBtn.reset:hover:not(:disabled) {
   background-color: #e68900;
   transform: translateY(-1px);
 }
 
-.request-btn.conclude {
+.requestBtn.conclude {
   background-color: #4caf50;
   color: #fff;
 }
 
-.request-btn.conclude:hover:not(:disabled) {
+.requestBtn.conclude:hover:not(:disabled) {
   background-color: #45a049;
   transform: translateY(-1px);
 }
 
-.request-btn:disabled {
+.requestBtn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
 /* Date Confirmation */
-.date-confirmation {
+.dateConfirmation {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.date-confirmation-header {
+.dateConfirmationHeader {
   text-align: center;
   padding: 20px;
   background-color: #363a3d;
@@ -313,26 +327,26 @@
   border: 2px solid #2f2d2d;
 }
 
-.date-confirmation-header h4 {
+.dateConfirmationHeader h4 {
   color: #4caf50;
   margin: 0 0 8px 0;
   font-size: 18px;
   font-weight: 600;
 }
 
-.date-confirmation-header p {
+.dateConfirmationHeader p {
   color: #c0c0c0;
   margin: 0;
   font-size: 14px;
 }
 
-.date-list {
+.dateList {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.date-item {
+.dateItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -343,18 +357,18 @@
   transition: all 0.3s ease;
 }
 
-.date-item:hover {
+.dateItem:hover {
   border-color: #faa01c;
   box-shadow: 0 2px 8px rgba(250, 160, 28, 0.2);
 }
 
-.date-info {
+.dateInfo {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.date-label {
+.dateLabel {
   color: #faa01c;
   font-size: 12px;
   font-weight: 600;
@@ -362,43 +376,43 @@
   letter-spacing: 0.5px;
 }
 
-.date-range {
+.dateRange {
   color: #faf5e9;
   font-size: 14px;
   font-weight: 500;
 }
 
-.date-status {
+.dateStatus {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.status-icon {
+.statusIcon {
   color: #4caf50;
   font-size: 16px;
 }
 
-.status-text {
+.statusText {
   color: #4caf50;
   font-size: 12px;
   font-weight: 500;
 }
 
 /* Package Summary */
-.package-summary {
+.packageSummary {
   display: flex;
   flex-direction: column;
   gap: 24px;
 }
 
-.summary-cards {
+.summaryCards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
 }
 
-.summary-card {
+.summaryCard {
   display: flex;
   align-items: center;
   gap: 16px;
@@ -409,12 +423,12 @@
   transition: all 0.3s ease;
 }
 
-.summary-card:hover {
+.summaryCard:hover {
   border-color: #faa01c;
   box-shadow: 0 4px 12px rgba(250, 160, 28, 0.2);
 }
 
-.card-icon {
+.cardIcon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -426,63 +440,63 @@
   font-size: 20px;
 }
 
-.card-content {
+.cardContent {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.card-content h4 {
+.cardContent h4 {
   color: #faf5e9;
   margin: 0;
   font-size: 14px;
   font-weight: 600;
 }
 
-.card-value {
+.cardValue {
   color: #faa01c;
   font-size: 24px;
   font-weight: 700;
 }
 
-.card-label {
+.cardLabel {
   color: #c0c0c0;
   font-size: 12px;
 }
 
-.package-details {
+.packageDetails {
   background-color: #363a3d;
   border: 2px solid #2f2d2d;
   border-radius: 6px;
   padding: 16px;
 }
 
-.package-details h4 {
+.packageDetails h4 {
   color: #faa01c;
   margin: 0 0 16px 0;
   font-size: 15px;
   font-weight: 600;
 }
 
-.details-grid {
+.detailsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 16px;
 }
 
-.detail-item {
+.detailItem {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.detail-item label {
+.detailItem label {
   color: #faf5e9;
   font-size: 12px;
   font-weight: 500;
 }
 
-.status-badge {
+.statusBadge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -492,25 +506,25 @@
   font-weight: 500;
 }
 
-.status-badge.success {
+.statusBadge.success {
   background-color: rgba(76, 175, 80, 0.2);
   color: #4caf50;
   border: 1px solid #4caf50;
 }
 
-.status-icon {
+.statusIcon {
   font-size: 14px;
 }
 
 /* Step 4 - Distribution */
-.request-step-4 {
+.requestStep4 {
   display: flex;
   gap: 20px;
   width: 100%;
   max-height: 1000px;
 }
 
-.request-step-4-left {
+.requestStep4Left {
   flex: 1;
   background-color: #363a3d;
   border: 2px solid #2f2d2d;
@@ -519,7 +533,7 @@
   overflow: hidden;
 }
 
-.request-step-4-right {
+.requestStep4Right {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -527,7 +541,7 @@
   
 }
 
-.request-step-4-right-body {
+.requestStep4RightBody {
   flex: 1;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -539,7 +553,7 @@
   border-radius: 6px;
 }
 
-.request-step-4-right-bottom {
+.requestStep4RightBottom {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -550,12 +564,12 @@
   border-radius: 6px;
 }
 
-.request-step-4-right-bottom .input-field {
+.requestStep4RightBottom .inputField {
   flex: 1;
   max-width: 200px;
 }
 
-.request-step-4-right-bottom .input-field label {
+.requestStep4RightBottom .inputField label {
   color: #faf5e9;
   font-size: 12px;
   font-weight: 500;
@@ -563,7 +577,7 @@
   display: block;
 }
 
-.request-step-4-right-bottom .input-field input {
+.requestStep4RightBottom .inputField input {
   width: 100%;
   padding: 8px 12px;
   background-color: #2f2d2d;
@@ -577,12 +591,42 @@
   height: 40px;
 }
 
-.request-step-4-right-bottom .input-field input:focus {
+.requestStep4RightBottom .inputField input:focus {
+  border-color: #faa01c;
+}
+
+.inputField {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.inputField label {
+  color: #faf5e9;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.inputField input {
+  width: 100%;
+  padding: 8px 12px;
+  background-color: #2f2d2d;
+  border: 2px solid #464a4d;
+  border-radius: 6px;
+  color: #faf5e9;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+  height: 40px;
+}
+
+.inputField input:focus {
   border-color: #faa01c;
 }
 
 /* Request Navigation */
-.request-navigation {
+.requestNavigation {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -594,15 +638,15 @@
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
-  .request-main {
+  .requestMain {
     padding: 12px;
   }
   
-  .request-title {
+  .requestTitle {
     font-size: 20px;
   }
   
-  .request-steps {
+  .requestSteps {
     gap: 12px;
     padding: 16px;
   }
@@ -612,56 +656,56 @@
     padding: 10px 12px;
   }
   
-  .step-label {
+  .stepLabel {
     font-size: 11px;
   }
   
-  .request-step-content {
+  .requestStepContent {
     padding: 16px;
   }
   
-  .form-row {
+  .formRow {
     grid-template-columns: 1fr;
     gap: 12px;
   }
   
-  .summary-cards {
+  .summaryCards {
     grid-template-columns: 1fr;
   }
   
-  .details-grid {
+  .detailsGrid {
     grid-template-columns: 1fr;
   }
   
-  .request-step-4 {
+  .requestStep4 {
     flex-direction: column;
   }
   
-  .request-step-4-right-bottom {
+  .requestStep4RightBottom {
     flex-direction: column;
     align-items: stretch;
   }
   
-  .request-step-4-right-bottom .input-field {
+  .requestStep4RightBottom .inputField {
     max-width: none;
   }
   
-  .request-navigation {
+  .requestNavigation {
     flex-direction: column;
     gap: 12px;
   }
 }
 
 @media (max-width: 480px) {
-  .request-main {
+  .requestMain {
     padding: 8px;
   }
   
-  .request-title {
+  .requestTitle {
     font-size: 18px;
   }
   
-  .request-steps {
+  .requestSteps {
     gap: 8px;
     padding: 12px;
   }
@@ -671,33 +715,33 @@
     padding: 8px 10px;
   }
   
-  .step-number {
+  .stepNumber {
     width: 28px;
     height: 28px;
     font-size: 12px;
   }
   
-  .step-label {
+  .stepLabel {
     font-size: 10px;
   }
   
-  .request-step-content {
+  .requestStepContent {
     padding: 12px;
   }
   
-  .form-section {
+  .formSection {
     padding: 12px;
   }
   
-  .summary-card {
+  .summaryCard {
     padding: 16px;
   }
   
-  .card-value {
+  .cardValue {
     font-size: 20px;
   }
   
-  .request-btn {
+  .requestBtn {
     padding: 8px 16px;
     font-size: 12px;
     min-width: 100px;
@@ -706,27 +750,27 @@
 }
 
 /* Scrollbar Styles */
-.request-step-4-right-body::-webkit-scrollbar {
+.requestStep4RightBody::-webkit-scrollbar {
   width: 8px;
 }
 
-.request-step-4-right-body::-webkit-scrollbar-track {
+.requestStep4RightBody::-webkit-scrollbar-track {
   background-color: #2f2d2d;
   border-radius: 4px;
 }
 
-.request-step-4-right-body::-webkit-scrollbar-thumb {
+.requestStep4RightBody::-webkit-scrollbar-thumb {
   background-color: #464a4d;
   border-radius: 4px;
   transition: background-color 0.3s ease;
 }
 
-.request-step-4-right-body::-webkit-scrollbar-thumb:hover {
+.requestStep4RightBody::-webkit-scrollbar-thumb:hover {
   background-color: #faa01c;
 }
 
 /* Estilos Compactos para Header e Steps */
-.request-header-compact {
+.requestHeaderCompact {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -734,7 +778,7 @@
   gap: 8px;
 }
 
-.request-title-compact {
+.requestTitleCompact {
   color: #faa01c;
   font-size: 18px;
   font-weight: 600;
@@ -743,7 +787,7 @@
   letter-spacing: 0.5px;
 }
 
-.request-steps-compact {
+.requestStepsCompact {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -755,7 +799,7 @@
   flex-wrap: wrap;
 }
 
-.step-compact {
+.stepCompact {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -767,19 +811,19 @@
   min-width: 80px;
 }
 
-.step-compact.active {
+.stepCompact.active {
   background-color: #faa01c;
   border-color: #e8901a;
   color: #1f1d1d;
 }
 
-.step-compact.completed {
+.stepCompact.completed {
   background-color: #4caf50;
   border-color: #45a049;
   color: #fff;
 }
 
-.step-number-compact {
+.stepNumberCompact {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -791,15 +835,15 @@
   font-size: 11px;
 }
 
-.step-compact.active .step-number-compact {
+.stepCompact.active .stepNumberCompact {
   background-color: rgba(31, 29, 29, 0.2);
 }
 
-.step-compact.completed .step-number-compact {
+.stepCompact.completed .stepNumberCompact {
   background-color: rgba(255, 255, 255, 0.2);
 }
 
-.step-label-compact {
+.stepLabelCompact {
   font-size: 10px;
   font-weight: 500;
   text-align: center;
@@ -807,7 +851,7 @@
 }
 
 /* New Package Button */
-.new-package-button-container {
+.newPackageButtonContainer {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -819,7 +863,7 @@
   margin-top: 20px;
 }
 
-.new-package-btn {
+.newPackageBtn {
   padding: 12px 24px;
   font-size: 16px;
   font-weight: 600;
@@ -835,12 +879,13 @@
   transition: all 0.3s ease;
 }
 
-.new-package-btn:hover {
+.newPackageBtn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(250, 160, 28, 0.4);
 }
 
-.new-package-btn:active {
+.newPackageBtn:active {
   transform: translateY(0);
   box-shadow: 0 2px 8px rgba(250, 160, 28, 0.3);
 }
+

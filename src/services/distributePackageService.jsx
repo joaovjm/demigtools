@@ -137,19 +137,64 @@ export function removeAllPackage(createPackage, operatorID, setCreatePackage) {
 }
 
 export function distribute(unassigned, createPackage, selection) {
-  let o = 0;
   const update = createPackage.map((pkg) => ({...pkg}));
-  const unassignedID = unassigned.map(un => un.receipt_donation_id)
-  for(let i = 0; i < unassignedID.length; i++){
-    const find = createPackage.findIndex(pkg => pkg.receipt_donation_id === unassignedID[i])
-    if(o === selection.length) o = 0;
-    if(find !== -1){
-      update[find].operator_code_id = selection[o]
-      o++
-    }
-  }
-  return update;
   
+  // Calcular o que cada operador já possui (valor e quantidade)
+  const operatorStats = {};
+  selection.forEach(opId => {
+    operatorStats[opId] = {
+      totalValue: 0,
+      count: 0
+    };
+  });
+  
+  // Contabilizar fichas já atribuídas
+  update.forEach(pkg => {
+    if (selection.includes(pkg.operator_code_id)) {
+      operatorStats[pkg.operator_code_id].totalValue += pkg.donation_value || 0;
+      operatorStats[pkg.operator_code_id].count += 1;
+    }
+  });
+  
+  // Ordenar fichas não atribuídas do maior para o menor valor
+  const sortedUnassigned = [...unassigned].sort((a, b) => 
+    (b.donation_value || 0) - (a.donation_value || 0)
+  );
+  
+  // Distribuir cada ficha para o operador com menor carga
+  sortedUnassigned.forEach(unassignedItem => {
+    const find = update.findIndex(pkg => 
+      pkg.receipt_donation_id === unassignedItem.receipt_donation_id
+    );
+    
+    if (find !== -1) {
+      // Encontrar operador com menor carga (prioriza valor, depois quantidade)
+      let selectedOperator = selection[0];
+      let minScore = Infinity;
+      
+      selection.forEach(opId => {
+        const stats = operatorStats[opId];
+        // Score considera valor com peso maior que quantidade
+        // Normaliza quantidade multiplicando por valor médio das fichas
+        const avgValue = unassignedItem.donation_value || 100;
+        const score = stats.totalValue + (stats.count * avgValue * 0.3);
+        
+        if (score < minScore) {
+          minScore = score;
+          selectedOperator = opId;
+        }
+      });
+      
+      // Atribuir a ficha ao operador selecionado
+      update[find].operator_code_id = selectedOperator;
+      
+      // Atualizar estatísticas do operador
+      operatorStats[selectedOperator].totalValue += unassignedItem.donation_value || 0;
+      operatorStats[selectedOperator].count += 1;
+    }
+  });
+  
+  return update;
 }
 
 export function deleteOperatorInList (allOperator, setAllOperator, operatorID, createPackage, setCreatePackage) {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ICONS } from "../../constants/constants";
 import Loader from "../Loader";
+import styles from "./requestComponents.module.css";
 
 const DonationValues = ({ createPackage, onComplete, onCancel }) => {
   const [packageCount, setPackageCount] = useState(0);
@@ -24,63 +25,63 @@ const DonationValues = ({ createPackage, onComplete, onCancel }) => {
   };
 
   return (
-    <div className="request-step-container">
-      <div className="request-step-header">
+    <div className={styles.requestStepContainer}>
+      <div className={styles.requestStepHeader}>
         <h3>Etapa 3: Valores e Quantidade do Pacote</h3>
         <p>Visualize os valores e quantidade de doações encontradas</p>
       </div>
       
-      <div className="request-step-content">
-        <div className="package-summary">
-          <div className="summary-cards">
-            <div className="summary-card">
-              <div className="card-icon">{ICONS.MONEY}</div>
-              <div className="card-content">
+      <div className={styles.requestStepContent}>
+        <div className={styles.packageSummary}>
+          <div className={styles.summaryCards}>
+            <div className={styles.summaryCard}>
+              <div className={styles.cardIcon}>{ICONS.MONEY}</div>
+              <div className={styles.cardContent}>
                 <h4>Quantidade de Doações</h4>
-                <span className="card-value">{createPackage.length}</span>
-                <span className="card-label">registros encontrados</span>
+                <span className={styles.cardValue}>{createPackage.length}</span>
+                <span className={styles.cardLabel}>registros encontrados</span>
               </div>
             </div>
             
-            <div className="summary-card">
-              <div className="card-icon">{ICONS.CONFIRMED}</div>
-              <div className="card-content">
+            <div className={styles.summaryCard}>
+              <div className={styles.cardIcon}>{ICONS.CONFIRMED}</div>
+              <div className={styles.cardContent}>
                 <h4>Valor Total</h4>
-                <span className="card-value">
+                <span className={styles.cardValue}>
                   {packageCount.toLocaleString("pt-BR", {
                     style: "currency",
                     currency: "BRL",
                   })}
                 </span>
-                <span className="card-label">valor total arrecadado</span>
+                <span className={styles.cardLabel}>valor total arrecadado</span>
               </div>
             </div>
           </div>
 
-          <div className="package-details">
+          <div className={styles.packageDetails}>
             <h4>Detalhes do Pacote</h4>
-            <div className="details-grid">
-              <div className="detail-item">
+            <div className={styles.detailsGrid}>
+              <div className={styles.detailItem}>
                 <label>Status</label>
-                <div className="status-badge success">
-                  <span className="status-icon">{ICONS.CONFIRMED}</span>
+                <div className={`${styles.statusBadge} ${styles.success}`}>
+                  <span className={styles.statusIcon}>{ICONS.CONFIRMED}</span>
                   <span>Pacote Processado</span>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="form-actions">
+          <div className={styles.formActions}>
             <button 
               onClick={onCancel}
-              className="request-btn secondary"
+              className={`${styles.requestBtn} ${styles.secondary}`}
             >
               Cancelar
             </button>
             <button 
               onClick={handleContinue}
               disabled={loading}
-              className="request-btn primary"
+              className={`${styles.requestBtn} ${styles.primary}`}
             >
               {loading ? <Loader /> : "Continuar para Distribuição"}
             </button>

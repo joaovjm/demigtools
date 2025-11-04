@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import "./index.css";
+import styles from "./request.module.css";
 import DateSelected from "../../components/Request/DateSelected";
 import DonationValues from "../../components/Request/DonationValues";
 import CreatePackage from "../../components/Request/CreatePackage";
@@ -188,8 +188,8 @@ const Request = () => {
 
       case 3:
         return (
-          <div className="request-step-4">
-            <div className="request-step-4-left">
+          <div className={styles.requestStep4}>
+            <div className={styles.requestStep4Left}>
               <DonationTable
                 unassigned={unassigned}
                 selected={selected}
@@ -202,8 +202,8 @@ const Request = () => {
                 setButtonTest={setButtonTest}
               />
             </div>
-            <div className="request-step-4-right">
-              <div className="request-step-4-right-body">
+            <div className={styles.requestStep4Right}>
+              <div className={styles.requestStep4RightBody}>
                 {operatorID?.map((cp) => (
                   <RequestCard
                     perOperator={perOperator[cp]}
@@ -224,8 +224,8 @@ const Request = () => {
                   />
                 ))}
               </div>
-              <div className="request-step-4-right-bottom">
-                <div className="input-field">
+              <div className={styles.requestStep4RightBottom}>
+                <div className={styles.inputField}>
                   <label>Data fim da requisição</label>
                   <input
                     type="date"
@@ -233,10 +233,10 @@ const Request = () => {
                     onChange={(e) => setEndDateRequest(e.target.value)}
                   />
                 </div>
-                <button onClick={handleCancel} className="request-btn cancel">
+                <button onClick={handleCancel} className={`${styles.requestBtn} ${styles.cancel}`}>
                   Cancelar
                 </button>
-                <button onClick={handleReset} className="request-btn reset">
+                <button onClick={handleReset} className={`${styles.requestBtn} ${styles.reset}`}>
                   Resetar
                 </button>
                 {buttonTest ? (
@@ -247,7 +247,7 @@ const Request = () => {
                 ) : (
                   <button
                     onClick={handleConclude}
-                    className="request-btn conclude"
+                    className={`${styles.requestBtn} ${styles.conclude}`}
                   >
                     Concluir
                   </button>
@@ -265,34 +265,34 @@ const Request = () => {
   };
 
   return (
-    <div className="request-main">
-      <div className="request-container">
+    <div className={styles.requestMain}>
+      <div className={styles.requestContainer}>
         {/* Header compacto com navegação das etapas - só aparece quando showCreatePackage é true */}
         {showCreatePackage && (
-          <div className="request-header-compact">
-            <h2 className="request-title-compact">
+          <div className={styles.requestHeaderCompact}>
+            <h2 className={styles.requestTitleCompact}>
               {ICONS.MONEY} Gerenciamento de Requisições
             </h2>
-            <div className="request-steps-compact">
+            <div className={styles.requestStepsCompact}>
               <div
-                className={`step-compact ${currentStep >= 1 ? "active" : ""} ${
-                  currentStep > 1 ? "completed" : ""
+                className={`${styles.stepCompact} ${currentStep >= 1 ? styles.active : ""} ${
+                  currentStep > 1 ? styles.completed : ""
                 }`}
               >
-                <span className="step-number-compact">1</span>
-                <span className="step-label-compact">Criar Pacote</span>
+                <span className={styles.stepNumberCompact}>1</span>
+                <span className={styles.stepLabelCompact}>Criar Pacote</span>
               </div>
               <div
-                className={`step-compact ${currentStep >= 2 ? "active" : ""} ${
-                  currentStep > 2 ? "completed" : ""
+                className={`${styles.stepCompact} ${currentStep >= 2 ? styles.active : ""} ${
+                  currentStep > 2 ? styles.completed : ""
                 }`}
               >
-                <span className="step-number-compact">2</span>
-                <span className="step-label-compact">Valores</span>
+                <span className={styles.stepNumberCompact}>2</span>
+                <span className={styles.stepLabelCompact}>Valores</span>
               </div>
-              <div className={`step-compact ${currentStep >= 3 ? "active" : ""}`}>
-                <span className="step-number-compact">3</span>
-                <span className="step-label-compact">Distribuir</span>
+              <div className={`${styles.stepCompact} ${currentStep >= 3 ? styles.active : ""}`}>
+                <span className={styles.stepNumberCompact}>3</span>
+                <span className={styles.stepLabelCompact}>Distribuir</span>
               </div>
             </div>
           </div>
@@ -315,10 +315,10 @@ const Request = () => {
 
         {/* Botão para iniciar criação de novo pacote */}
         {!showCreatePackage && !showEditRequestCreated && (
-          <div className="new-package-button-container">
+          <div className={styles.newPackageButtonContainer}>
             <button 
               onClick={handleStartNewPackage}
-              className="request-btn primary new-package-btn"
+              className={`${styles.requestBtn} ${styles.primary} ${styles.newPackageBtn}`}
             >
               {ICONS.PLUS} Criar Novo Pacote
             </button>
@@ -327,7 +327,7 @@ const Request = () => {
 
         {/* Conteúdo da etapa atual - só aparece quando showCreatePackage é true */}
         {showCreatePackage && (
-          <div className="request-content">{renderStepContent()}</div>
+          <div className={styles.requestContent}>{renderStepContent()}</div>
         )}
       </div>
     </div>
