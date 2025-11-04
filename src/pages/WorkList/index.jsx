@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import "./index.css";
+import styles from "./worklist.module.css";
 import {
   fetchWorklist,
   worklistRequests,
@@ -23,6 +23,7 @@ const WorkList = () => {
   const [loading, setLoading] = useState(false);
   const [dateAccessed, setDateAccessed] = useState();
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+  const [statusFilter, setStatusFilter] = useState('');
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -130,12 +131,29 @@ const WorkList = () => {
     setSortConfig({ key, direction });
   };
 
-  const getSortedData = () => {
-    if (!worklistRequest || !sortConfig.key) {
+  const getFilteredAndSortedData = () => {
+    if (!worklistRequest) {
       return worklistRequest;
     }
 
-    return [...worklistRequest].sort((a, b) => {
+    // Aplicar filtro de status
+    let filteredData = [...worklistRequest];
+    if (statusFilter) {
+      filteredData = filteredData.filter((item) => {
+        const status = item.request_status;
+        if (statusFilter === 'Não visitado') {
+          return !status || status === '';
+        }
+        return status === statusFilter;
+      });
+    }
+
+    // Aplicar ordenação
+    if (!sortConfig.key) {
+      return filteredData;
+    }
+
+    return filteredData.sort((a, b) => {
       let aValue, bValue;
 
       if (sortConfig.key === 'mensal_day') {
@@ -157,18 +175,18 @@ const WorkList = () => {
   };
 
   return (
-    <main className="worklist-container">
-      <div className="worklist-content">
+    <main className={styles.worklistContainer}>
+      <div className={styles.worklistContent}>
         {/* Header Section */}
-        <header className="worklist-header">
-          <h2 className="worklist-title">📋 Lista de Trabalho</h2>
-          <div className="worklist-actions">
-            <div className="worklist-select-container">
-              <label className="worklist-select-label">Selecionar Lista</label>
+        <header className={styles.worklistHeader}>
+          <h2 className={styles.worklistTitle}>📋 Lista de Trabalho</h2>
+          <div className={styles.worklistActions}>
+            <div className={styles.worklistSelectContainer}>
+              <label className={styles.worklistSelectLabel}>Selecionar Lista</label>
               <select 
                 value={workSelect} 
                 onChange={handleChange}
-                className="worklist-select"
+                className={styles.worklistSelect}
                 disabled={loading}
               >
                 <option value="" disabled>
@@ -182,29 +200,47 @@ const WorkList = () => {
                   ))}
               </select>
             </div>
+            <div className={styles.worklistSelectContainer}>
+              <label className={styles.worklistSelectLabel}>Filtrar por Status</label>
+              <select 
+                value={statusFilter} 
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className={styles.worklistSelect}
+                disabled={loading || !workSelect}
+              >
+                <option value="">Todos</option>
+                <option value="NA">NA</option>
+                <option value="NP">NP</option>
+                <option value="Agendado">Agendado</option>
+                <option value="Não visitado">Não visitado</option>
+                <option value="Sucesso">Sucesso</option>
+                <option value="Recebido">Recebido</option>
+              </select>
+            </div>
           </div>
         </header>
 
         {/* Content Section */}
-        <div className="worklist-main-content">
+        <div className={styles.worklistMainContent}>
           {loading ? (
-            <div className="worklist-loading">
-              <div className="loading-spinner"></div>
+            <div className={styles.worklistLoading}>
+              <div className={styles.loadingSpinner}></div>
               <p>Carregando lista de trabalho...</p>
             </div>
           ) : worklistRequest?.length > 0 ? (
-            <div className="worklist-table-container">
-              <div className="worklist-table-header">
-                <div className="worklist-table-stats">
-                  <span className="stats-item">
-                    <strong>{worklistRequest.length}</strong> {worklistRequest.length === 1 ? 'item' : 'itens'}
+            <div className={styles.worklistTableContainer}>
+              <div className={styles.worklistTableHeader}>
+                <div className={styles.worklistTableStats}>
+                  <span className={styles.statsItem}>
+                    <strong>{getFilteredAndSortedData()?.length || 0}</strong> {getFilteredAndSortedData()?.length === 1 ? 'item' : 'itens'}
+                    {statusFilter && ` (filtrado por: ${statusFilter})`}
                   </span>
-                  <span className="stats-item">
+                  <span className={styles.statsItem}>
                     Lista: <strong>{workSelect}</strong>
                   </span>
-                  <span className="stats-item">
+                  <span className={styles.statsItem}>
                     Total: <strong>
-                      {worklistRequest
+                      {(getFilteredAndSortedData() || [])
                         .reduce((sum, item) => sum + (item.donation.donation_value || 0), 0)
                         .toLocaleString("pt-BR", {
                           style: "currency",
@@ -215,89 +251,89 @@ const WorkList = () => {
                 </div>
               </div>
 
-              <div className="worklist-table-scroll">
-                <table className="worklist-table">
+              <div className={styles.worklistTableScroll}>
+                <table className={styles.worklistTable}>
                   <thead>
-                    <tr className="worklist-table-head-row">
-                      <th className="worklist-table-head">Doador</th>
+                    <tr className={styles.worklistTableHeadRow}>
+                      <th className={styles.worklistTableHead}>Doador</th>
                       <th 
-                        className="worklist-table-head sortable" 
+                        className={`${styles.worklistTableHead} ${styles.sortable}`}
                         onClick={() => handleSort('mensal_day')}
                       >
                         Dia do Mensal
-                        <span className="sort-arrow">
+                        <span className={styles.sortArrow}>
                           {sortConfig.key === 'mensal_day' ? (
                             sortConfig.direction === 'asc' ? '↑' : '↓'
                           ) : '↕'}
                         </span>
                       </th>
                       <th 
-                        className="worklist-table-head sortable" 
+                        className={`${styles.worklistTableHead} ${styles.sortable}`}
                         onClick={() => handleSort('value')}
                       >
                         Valor
-                        <span className="sort-arrow">
+                        <span className={styles.sortArrow}>
                           {sortConfig.key === 'value' ? (
                             sortConfig.direction === 'asc' ? '↑' : '↓'
                           ) : '↕'}
                         </span>
                       </th>
-                      <th className="worklist-table-head">Data Recebida</th>
-                      <th className="worklist-table-head">Status</th>
-                      <th className="worklist-table-head">Data Abertura</th>
+                      <th className={styles.worklistTableHead}>Data Recebida</th>
+                      <th className={styles.worklistTableHead}>Status</th>
+                      <th className={styles.worklistTableHead}>Data Abertura</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {getSortedData()?.map((list) => (
+                    {getFilteredAndSortedData()?.map((list) => (
                       <tr
-                        className={`worklist-table-row ${
+                        className={`${styles.worklistTableRow} ${
                           active === list.receipt_donation_id
-                            ? "active"
+                            ? styles.active
                             : list.request_status === "NP"
-                            ? "status-np"
+                            ? styles.statusNp
                             : list.request_status === "Sucesso"
-                            ? "status-success"
+                            ? styles.statusSuccess
                             : list.request_status === "NA"
-                            ? "status-na"
+                            ? styles.statusNa
                             : list.request_status === "Agendado"
-                            ? "status-scheduled"
+                            ? styles.statusScheduled
                             : list.request_status === "Recebido"
-                            ? "status-received"
+                            ? styles.statusReceived
                             : ""
                         }`}
                         key={list.receipt_donation_id}
                         onClick={() => handleRequest(list)}
                       >
-                        <td className="worklist-table-cell">
-                          <div className="donor-info">
-                            <span className="donor-name">{list.donor.donor_name}</span>
+                        <td className={styles.worklistTableCell}>
+                          <div className={styles.donorInfo}>
+                            <span className={styles.donorName}>{list.donor.donor_name}</span>
                           </div>
                         </td>
-                        <td className="worklist-table-cell">
-                          <div className="donor-info">
-                            <span className="donor-name">{list?.donor_mensal?.donor_mensal?.donor_mensal_day}</span>
+                        <td className={styles.worklistTableCell}>
+                          <div className={styles.donorInfo}>
+                            <span className={styles.donorName}>{list?.donor_mensal?.donor_mensal?.donor_mensal_day}</span>
                           </div>
                         </td>
-                        <td className="worklist-table-cell">
-                          <span className="value-amount">
+                        <td className={styles.worklistTableCell}>
+                          <span className={styles.valueAmount}>
                             {list.donation.donation_value.toLocaleString("pt-BR", {
                               style: "currency",
                               currency: "BRL",
                             })}
                           </span>
                         </td>
-                        <td className="worklist-table-cell">
-                          <span className="date-info">
+                        <td className={styles.worklistTableCell}>
+                          <span className={styles.dateInfo}>
                             {DataSelect(list.donation.donation_day_received)}
                           </span>
                         </td>
-                        <td className="worklist-table-cell">
-                          <span className={`status-badge status-${list?.request_status?.toLowerCase()}`}>
+                        <td className={styles.worklistTableCell}>
+                          <span className={`${styles.statusBadge} ${styles[`status${list?.request_status?.charAt(0).toUpperCase() + list?.request_status?.slice(1).toLowerCase()}`]}`}>
                             {list.request_status}
                           </span>
                         </td>
-                        <td className="worklist-table-cell">
-                          <span className="date-info">
+                        <td className={styles.worklistTableCell}>
+                          <span className={styles.dateInfo}>
                             {list?.request_date_accessed
                               ? `${new Date(list?.request_date_accessed).toLocaleDateString("pt-BR")} - ${new Date(list?.request_date_accessed).toLocaleTimeString("pt-BR")}`
                               : "—"}
@@ -310,14 +346,14 @@ const WorkList = () => {
               </div>
             </div>
           ) : workSelect ? (
-            <div className="worklist-empty">
-              <div className="empty-icon">📋</div>
+            <div className={styles.worklistEmpty}>
+              <div className={styles.emptyIcon}>📋</div>
               <h4>Nenhum item encontrado</h4>
               <p>A lista "{workSelect}" não possui itens disponíveis.</p>
             </div>
           ) : (
-            <div className="worklist-empty">
-              <div className="empty-icon">📋</div>
+            <div className={styles.worklistEmpty}>
+              <div className={styles.emptyIcon}>📋</div>
               <h4>Selecione uma lista</h4>
               <p>Escolha uma lista de trabalho para visualizar os itens.</p>
             </div>

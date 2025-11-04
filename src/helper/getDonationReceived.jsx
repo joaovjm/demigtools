@@ -28,6 +28,8 @@ const getDonationReceived = async (id, dateMeta) => {
         }
       }
       donation = operatorValue;
+      console.log({id,dateMeta})
+      console.log({totalValue, count, donation})
     } catch (error) {
       console.error("Error", error.message);
     }

@@ -1,4 +1,4 @@
-import "./index.css";
+import styles from "./modalworklist.module.css";
 import updateRequestSelected from "../../helper/updateRequestSelected";
 import { fetchMaxAndMedDonations } from "../../services/worklistService";
 import { useContext, useEffect, useState } from "react";
@@ -155,32 +155,34 @@ const ModalWorklist = ({
   };
 
   return (
-    <div className="modal-worklist">
-      <div className="modal-worklist-main">
-        <div className="modal-worklist-header">
-          <div className="modal-worklist-header-content">
-            <h3 className="modal-worklist-title">
-              <span className="donor-icon">👤</span>
+    <div className={styles.modalWorklist}>
+      <div className={styles.modalWorklistMain}>
+        <div className={styles.modalWorklistHeader}>
+          <div className={styles.modalWorklistHeaderContent}>
+            <h3 className={styles.modalWorklistTitle}>
+              <span className={styles.donorIcon}>👤</span>
               {donor_name}
             </h3>
-            <div className="modal-worklist-request-info">
-              <span className="request-label">Solicitação:</span>
-              <span className="request-name">{request_name}</span>
+            <div className={styles.modalWorklistRequestInfo}>
+              <span className={styles.requestLabel}>Solicitação:</span>
+              <span className={styles.requestName}>{request_name}</span>
             </div>
           </div>
 
-          <button className="modal-worklist-close-btn" onClick={handleClose}>
+          <button
+            className={styles.modalWorklistCloseBtn}
+            onClick={handleClose}
+          >
             ✕
           </button>
         </div>
 
-        <div className="modal-worklist-body">
-          <div className="modal-worklist-section">
-            <h4 className="section-title">
+        <div className={styles.modalWorklistBody}>
+          <div className={styles.modalWorklistSection}>
+            <h4 className={styles.sectionTitle}>
               📞 Informações de Contato{" "}
               <span style={{ color: "#FAF5E9" }}>
-                {donor_mensal_day ? `Dia do Mensal: ${donor_mensal_day}` : ""}{" "}
-                |{" "}
+                {donor_mensal_day ? `Dia do Mensal: ${donor_mensal_day}` : ""} |{" "}
                 {donor_monthly_fee
                   ? `Mensalidade: ${donor_monthly_fee.toLocaleString("pt-BR", {
                       style: "currency",
@@ -189,42 +191,47 @@ const ModalWorklist = ({
                   : ""}
               </span>
             </h4>
-            <div className="contact-info-grid">
-              <div className="contact-item">
-                <span className="contact-label">Telefone Principal:</span>
-                <span className="contact-value primary">{donor_tel_1}</span>
+            <div className={styles.contactInfoGrid}>
+              <div className={styles.contactItem}>
+                <span className={styles.contactLabel}>Telefone Principal:</span>
+                <span className={`${styles.contactValue} ${styles.primary}`}>
+                  {donor_tel_1}
+                </span>
               </div>
-              <div className="contact-item">
-                <span className="contact-label">Telefone 2:</span>
-                <span className="contact-value">
+              <div className={styles.contactItem}>
+                <span className={styles.contactLabel}>Telefone 2:</span>
+                <span className={styles.contactValue}>
                   {donor_tel_2 ? donor_tel_2 : "Não informado"}
                 </span>
               </div>
-              <div className="contact-item">
-                <span className="contact-label">Telefone 3:</span>
-                <span className="contact-value">
+              <div className={styles.contactItem}>
+                <span className={styles.contactLabel}>Telefone 3:</span>
+                <span className={styles.contactValue}>
                   {donor_tel_3 ? donor_tel_3 : "Não informado"}
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="modal-worklist-section">
-            <h4 className="section-title">
-              💰 Histórico de Doações <span style={{ color: "#FAF5E9" }}>| Meses sem receber: {countNotReceived}</span>
+          <div className={styles.modalWorklistSection}>
+            <h4 className={styles.sectionTitle}>
+              💰 Histórico de Doações{" "}
+              <span style={{ color: "#FAF5E9" }}>
+                | Meses sem receber: {countNotReceived}
+              </span>
             </h4>
-            <div className="donation-stats-grid">
-              <div className="stat-card">
-                <div className="stat-icon">📊</div>
-                <div className="stat-content">
-                  <span className="stat-label">Doação Anterior</span>
-                  <span className="stat-value">
+            <div className={styles.donationStatsGrid}>
+              <div className={styles.statCard}>
+                <div className={styles.statIcon}>📊</div>
+                <div className={styles.statContent}>
+                  <span className={styles.statLabel}>Doação Anterior</span>
+                  <span className={styles.statValue}>
                     {penultimate?.[0].value.toLocaleString("pt-BR", {
                       style: "currency",
                       currency: "BRL",
                     }) || "N/A"}
                   </span>
-                  <span className="stat-date">
+                  <span className={styles.statDate}>
                     {penultimate?.[0]
                       ? new Date(penultimate?.[0].day).toLocaleDateString(
                           "pt-BR",
@@ -235,17 +242,19 @@ const ModalWorklist = ({
                 </div>
               </div>
 
-              <div className="stat-card highlight">
-                <div className="stat-icon">🏆</div>
-                <div className="stat-content">
-                  <span className="stat-label">Maior Doação no Período</span>
-                  <span className="stat-value">
+              <div className={`${styles.statCard} ${styles.highlight}`}>
+                <div className={styles.statIcon}>🏆</div>
+                <div className={styles.statContent}>
+                  <span className={styles.statLabel}>
+                    Maior Doação no Período
+                  </span>
+                  <span className={styles.statValue}>
                     {maxPeriod?.[0]?.value.toLocaleString("pt-BR", {
                       style: "currency",
                       currency: "BRL",
                     }) || "N/A"}
                   </span>
-                  <span className="stat-date">
+                  <span className={styles.statDate}>
                     {maxPeriod?.[0]?.day
                       ? new Date(maxPeriod?.[0]?.day).toLocaleDateString(
                           "pt-BR",
@@ -256,17 +265,17 @@ const ModalWorklist = ({
                 </div>
               </div>
 
-              <div className="stat-card">
-                <div className="stat-icon">📊</div>
-                <div className="stat-content">
-                  <span className="stat-label">Maior Doação Geral</span>
-                  <span className="stat-value">
+              <div className={styles.statCard}>
+                <div className={styles.statIcon}>📊</div>
+                <div className={styles.statContent}>
+                  <span className={styles.statLabel}>Maior Doação Geral</span>
+                  <span className={styles.statValue}>
                     {maxDonation?.[0]?.value.toLocaleString("pt-BR", {
                       style: "currency",
                       currency: "BRL",
                     }) || "N/A"}
                   </span>
-                  <span className="stat-date">
+                  <span className={styles.statDate}>
                     {maxDonation?.[0]?.day
                       ? new Date(maxDonation?.[0]?.day).toLocaleDateString(
                           "pt-BR",
@@ -279,33 +288,39 @@ const ModalWorklist = ({
             </div>
           </div>
 
-          <div className="modal-worklist-section">
-            <h4 className="section-title">📋 Últimas 3 Doações Recebidas</h4>
-            <div className="last-donations-grid">
+          <div className={styles.modalWorklistSection}>
+            <h4 className={styles.sectionTitle}>
+              📋 Últimas 3 Doações Recebidas
+            </h4>
+            <div className={styles.lastDonationsGrid}>
               {lastThreeDonations && lastThreeDonations.length > 0 ? (
                 lastThreeDonations.map((donation, index) => (
-                  <div key={index} className="donation-card">
-                    <div className="donation-card-header">
-                      <span className="donation-number">#{index + 1}</span>
-                      <span className="donation-value">
+                  <div key={index} className={styles.donationCard}>
+                    <div className={styles.donationCardHeader}>
+                      <span className={styles.donationNumber}>
+                        #{index + 1}
+                      </span>
+                      <span className={styles.donationValue}>
                         {donation.value.toLocaleString("pt-BR", {
                           style: "currency",
                           currency: "BRL",
                         })}
                       </span>
                     </div>
-                    <div className="donation-card-body">
-                      <div className="donation-info">
-                        <span className="donation-label">📅 Data:</span>
-                        <span className="donation-text">
+                    <div className={styles.donationCardBody}>
+                      <div className={styles.donationInfo}>
+                        <span className={styles.donationLabel}>📅 Data:</span>
+                        <span className={styles.donationText}>
                           {new Date(donation.day).toLocaleDateString("pt-BR", {
                             timeZone: "UTC",
                           })}
                         </span>
                       </div>
-                      <div className="donation-info">
-                        <span className="donation-label">📝 Observação:</span>
-                        <span className="donation-text">
+                      <div className={styles.donationInfo}>
+                        <span className={styles.donationLabel}>
+                          📝 Observação:
+                        </span>
+                        <span className={styles.donationText}>
                           {donation.description || "Sem observação"}
                         </span>
                       </div>
@@ -313,9 +328,9 @@ const ModalWorklist = ({
                   </div>
                 ))
               ) : (
-                <div className="no-donations-message">
-                  <span className="no-donations-icon">📭</span>
-                  <span className="no-donations-text">
+                <div className={styles.noDonationsMessage}>
+                  <span className={styles.noDonationsIcon}>📭</span>
+                  <span className={styles.noDonationsText}>
                     Nenhuma doação registrada
                   </span>
                 </div>
@@ -325,36 +340,48 @@ const ModalWorklist = ({
         </div>
 
         {!newDonationOpen && !newSchedulingOpen ? (
-          <div className="modal-worklist-actions">
-            <div className="action-buttons-grid">
-              <button className="action-btn danger" onClick={handleNP}>
-                <span className="btn-icon">❌</span>
-                <span className="btn-text">Não pode ajudar</span>
-              </button>
-              <button className="action-btn warning" onClick={handleNA}>
-                <span className="btn-icon">📵</span>
-                <span className="btn-text">Não atendeu</span>
-              </button>
+          <div className={styles.modalWorklistActions}>
+            <div className={styles.actionButtonsGrid}>
+              {workListSelected.request_status === "Sucesso" ||
+                (workListSelected.request_status === "Recebido" && (
+                  <>
+                    <button
+                      className={`${styles.actionBtn} ${styles.danger}`}
+                      onClick={handleNP}
+                    >
+                      <span className={styles.btnIcon}>❌</span>
+                      <span className={styles.btnText}>Não pode ajudar</span>
+                    </button>
+                    <button
+                      className={`${styles.actionBtn} ${styles.warning}`}
+                      onClick={handleNA}
+                    >
+                      <span className={styles.btnIcon}>📵</span>
+                      <span className={styles.btnText}>Não atendeu</span>
+                    </button>
+                    <button
+                      className={`${styles.actionBtn} ${styles.info}`}
+                      onClick={handleSchedulingOpen}
+                    >
+                      <span className={styles.btnIcon}>📅</span>
+                      <span className={styles.btnText}>Agendar</span>
+                    </button>
+                    <button
+                      className={`${styles.actionBtn} ${styles.success}`}
+                      onClick={handleNewDonation}
+                    >
+                      <span className={styles.btnIcon}>💰</span>
+                      <span className={styles.btnText}>Nova doação</span>
+                    </button>
+                  </>
+                ))}
+
               <button
-                className="action-btn info"
-                onClick={handleSchedulingOpen}
-              >
-                <span className="btn-icon">📅</span>
-                <span className="btn-text">Agendar</span>
-              </button>
-              <button
-                className="action-btn success"
-                onClick={handleNewDonation}
-              >
-                <span className="btn-icon">💰</span>
-                <span className="btn-text">Nova doação</span>
-              </button>
-              <button
-                className="action-btn primary"
+                className={`${styles.actionBtn} ${styles.primary}`}
                 onClick={handleOpenDonator}
               >
-                <span className="btn-icon">👤</span>
-                <span className="btn-text">Abrir Doador</span>
+                <span className={styles.btnIcon}>👤</span>
+                <span className={styles.btnText}>Abrir Doador</span>
               </button>
             </div>
           </div>
@@ -362,33 +389,37 @@ const ModalWorklist = ({
           <>
             <hr />
             {newDonationOpen ? (
-              <div className="modal-worklist-form-section">
-                <div className="form-section-header">
-                  <h4 className="form-title">
-                    <span className="form-icon">💰</span>
+              <div className={styles.modalWorklistFormSection}>
+                <div className={styles.formSectionHeader}>
+                  <h4 className={styles.formTitle}>
+                    <span className={styles.formIcon}>💰</span>
                     Nova Doação
                   </h4>
-                  <p className="form-description">
+                  <p className={styles.formDescription}>
                     Preencha os dados da nova doação para este doador
                   </p>
                 </div>
 
-                <div className="form-section-body">
-                  <div className="form-grid">
-                    <div className="form-group">
-                      <label className="form-label">Valor da Doação *</label>
+                <div className={styles.formSectionBody}>
+                  <div className={styles.formGrid}>
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel}>
+                        Valor da Doação *
+                      </label>
                       <input
-                        className="form-input"
+                        className={styles.formInput}
                         value={value}
                         onChange={(e) => setValue(e.target.value)}
                         type="text"
                         placeholder="Ex: 50,00"
                       />
                     </div>
-                    <div className="form-group">
-                      <label className="form-label">Extra da Doação *</label>
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel}>
+                        Extra da Doação *
+                      </label>
                       <input
-                        className="form-input"
+                        className={styles.formInput}
                         value={extraValue}
                         onChange={(e) => setExtraValue(e.target.value)}
                         type="text"
@@ -396,20 +427,22 @@ const ModalWorklist = ({
                       />
                     </div>
 
-                    <div className="form-group">
-                      <label className="form-label">Data para Receber *</label>
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel}>
+                        Data para Receber *
+                      </label>
                       <input
-                        className="form-input"
+                        className={styles.formInput}
                         value={date}
                         onChange={(e) => setDate(e.target.value)}
                         type="date"
                       />
                     </div>
 
-                    <div className="form-group">
-                      <label className="form-label">Campanha *</label>
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel}>Campanha *</label>
                       <select
-                        className="form-select"
+                        className={styles.formSelect}
                         value={campainSelected}
                         onChange={(e) => setCampainSelected(e.target.value)}
                       >
@@ -424,10 +457,10 @@ const ModalWorklist = ({
                       </select>
                     </div>
 
-                    <div className="form-group full-width">
-                      <label className="form-label">Observações</label>
+                    <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                      <label className={styles.formLabel}>Observações</label>
                       <textarea
-                        className="form-textarea"
+                        className={styles.formTextarea}
                         value={observation}
                         onChange={(e) => setObservation(e.target.value)}
                         placeholder="Observações adicionais sobre a doação..."
@@ -436,56 +469,56 @@ const ModalWorklist = ({
                     </div>
                   </div>
 
-                  <div className="form-actions">
+                  <div className={styles.formActions}>
                     <button
-                      className="form-btn secondary"
+                      className={`${styles.formBtn} ${styles.secondary}`}
                       onClick={handleCancel}
                     >
-                      <span className="btn-icon">↩️</span>
+                      <span className={styles.btnIcon}>↩️</span>
                       Cancelar
                     </button>
                     <button
-                      className="form-btn primary"
+                      className={`${styles.formBtn} ${styles.primary}`}
                       onClick={handleSaveNewDonation}
                     >
-                      <span className="btn-icon">💾</span>
+                      <span className={styles.btnIcon}>💾</span>
                       Salvar Doação
                     </button>
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="modal-worklist-form-section">
-                <div className="form-section-header">
-                  <h4 className="form-title">
-                    <span className="form-icon">📅</span>
+              <div className={styles.modalWorklistFormSection}>
+                <div className={styles.formSectionHeader}>
+                  <h4 className={styles.formTitle}>
+                    <span className={styles.formIcon}>📅</span>
                     Agendamento de Contato
                   </h4>
-                  <p className="form-description">
+                  <p className={styles.formDescription}>
                     Agende um novo contato com este doador
                   </p>
                 </div>
 
-                <div className="form-section-body">
-                  <div className="form-grid">
-                    <div className="form-group">
-                      <label className="form-label">
+                <div className={styles.formSectionBody}>
+                  <div className={styles.formGrid}>
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel}>
                         Data do Agendamento *
                       </label>
                       <input
-                        className="form-input"
+                        className={styles.formInput}
                         type="date"
                         value={dateScheduling}
                         onChange={(e) => setDateScheduling(e.target.value)}
                       />
                     </div>
 
-                    <div className="form-group">
-                      <label className="form-label">
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel}>
                         Telefone para Contato *
                       </label>
                       <select
-                        className="form-select"
+                        className={styles.formSelect}
                         value={telScheduling}
                         onChange={(e) => setTelScheduling(e.target.value)}
                       >
@@ -508,12 +541,12 @@ const ModalWorklist = ({
                       </select>
                     </div>
 
-                    <div className="form-group full-width">
-                      <label className="form-label">
+                    <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                      <label className={styles.formLabel}>
                         Observações do Agendamento
                       </label>
                       <textarea
-                        className="form-textarea"
+                        className={styles.formTextarea}
                         value={observationScheduling}
                         onChange={(e) =>
                           setObservationScheduling(e.target.value)
@@ -524,20 +557,20 @@ const ModalWorklist = ({
                     </div>
                   </div>
 
-                  <div className="form-actions">
+                  <div className={styles.formActions}>
                     <button
-                      className="form-btn secondary"
+                      className={`${styles.formBtn} ${styles.secondary}`}
                       onClick={() => setNewSchedulingOpen(false)}
                     >
-                      <span className="btn-icon">↩️</span>
+                      <span className={styles.btnIcon}>↩️</span>
                       Cancelar
                     </button>
                     <button
                       type="button"
-                      className="form-btn primary"
+                      className={`${styles.formBtn} ${styles.primary}`}
                       onClick={handleSchedulingClick}
                     >
-                      <span className="btn-icon">✅</span>
+                      <span className={styles.btnIcon}>✅</span>
                       Confirmar Agendamento
                     </button>
                   </div>
