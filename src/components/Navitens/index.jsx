@@ -115,6 +115,12 @@ export const OperadorMenu = [
         cName: "submenu-itens",
     },
     {
+        id: 4,
+        title: "Relatório de Doações",
+        path: "./operatorreport",
+        cName: "submenu-itens",
+    },
+    {
         id: 5,
         title: "CHAT",
         path: "./chat",

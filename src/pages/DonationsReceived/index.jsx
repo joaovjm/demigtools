@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./index.css";
+import styles from "./donationsreceived.module.css";
 import supabase from "../../helper/superBaseClient";
 import { DataSelect } from "../../components/DataTime";
 import Loader from "../../components/Loader";
@@ -74,15 +74,15 @@ const DonationsReceived = () => {
   };
 
   return (
-    <main className="donations-received-container">
-      <div className="donations-received-content">
+    <main className={styles.donationsReceivedContainer}>
+      <div className={styles.donationsReceivedContent}>
         {/* Cabeçalho com título e ações */}
-        <header className="donations-received-header">
-          <h2 className="donations-received-title">💰 Doações Recebidas</h2>
-          <div className="donations-received-actions">
+        <header className={styles.donationsReceivedHeader}>
+          <h2 className={styles.donationsReceivedTitle}>💰 Doações Recebidas</h2>
+          <div className={styles.donationsReceivedActions}>
             <button 
               onClick={() => window.history.back()} 
-              className="donations-received-btn secondary"
+              className={`${styles.donationsReceivedBtn} ${styles.secondary}`}
             >
               ← Voltar
             </button>
@@ -90,33 +90,33 @@ const DonationsReceived = () => {
         </header>
 
         {/* Seção de Filtros */}
-        <div className="donations-received-filters">
+        <div className={styles.donationsReceivedFilters}>
           <h3>Filtros de Período</h3>
-          <div className="filters-form">
-            <div className="form-row">
-              <div className="form-group">
+          <div className={styles.filtersForm}>
+            <div className={styles.formRow}>
+              <div className={styles.formGroup}>
                 <label>Data Início</label>
                 <input
                   type="date"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
-                  className="donations-received-input"
+                  className={styles.donationsReceivedInput}
                 />
               </div>
-              <div className="form-group">
+              <div className={styles.formGroup}>
                 <label>Data Fim</label>
                 <input
                   type="date"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
-                  className="donations-received-input"
+                  className={styles.donationsReceivedInput}
                 />
               </div>
-              <div className="form-group">
+              <div className={styles.formGroup}>
                 <button 
                   onClick={handleDonationReceived}
                   disabled={isLoading || !startDate || !endDate}
-                  className="donations-received-btn primary"
+                  className={`${styles.donationsReceivedBtn} ${styles.primary}`}
                 >
                   {isLoading ? <Loader /> : "Gerar Relatório"}
                 </button>
@@ -127,20 +127,20 @@ const DonationsReceived = () => {
 
         {/* Cards de Resumo */}
         {donationReceived.length > 0 && (
-          <div className="donations-received-summary">
-            <div className="summary-cards">
-              <div className="summary-card">
-                <div className="summary-card-icon">📊</div>
-                <div className="summary-card-content">
+          <div className={styles.donationsReceivedSummary}>
+            <div className={styles.summaryCards}>
+              <div className={styles.summaryCard}>
+                <div className={styles.summaryCardIcon}>📊</div>
+                <div className={styles.summaryCardContent}>
                   <h4>Total de Fichas</h4>
-                  <span className="summary-card-value">{totalCount}</span>
+                  <span className={styles.summaryCardValue}>{totalCount}</span>
                 </div>
               </div>
-              <div className="summary-card">
-                <div className="summary-card-icon">💰</div>
-                <div className="summary-card-content">
+              <div className={styles.summaryCard}>
+                <div className={styles.summaryCardIcon}>💰</div>
+                <div className={styles.summaryCardContent}>
                   <h4>Valor Total</h4>
-                  <span className="summary-card-value">
+                  <span className={styles.summaryCardValue}>
                     {totalValue?.toLocaleString("pt-BR", {
                       style: "currency",
                       currency: "BRL",
@@ -148,11 +148,11 @@ const DonationsReceived = () => {
                   </span>
                 </div>
               </div>
-              <div className="summary-card">
-                <div className="summary-card-icon">📅</div>
-                <div className="summary-card-content">
+              <div className={styles.summaryCard}>
+                <div className={styles.summaryCardIcon}>📅</div>
+                <div className={styles.summaryCardContent}>
                   <h4>Período</h4>
-                  <span className="summary-card-value">
+                  <span className={styles.summaryCardValue}>
                     {donationReceived.length} {donationReceived.length === 1 ? 'dia' : 'dias'}
                   </span>
                 </div>
@@ -162,14 +162,14 @@ const DonationsReceived = () => {
         )}
 
         {/* Tabela de Resultados */}
-        <div className="donations-received-table-section">
+        <div className={styles.donationsReceivedTableSection}>
           {donationReceived.length > 0 ? (
-            <div className="donations-received-table-wrapper">
+            <div className={styles.donationsReceivedTableWrapper}>
               <h3>Relatório Diário</h3>
-              <div className="table-container">
-                <table className="donations-received-table">
+              <div className={styles.tableContainer}>
+                <table className={styles.donationsReceivedTable}>
                   <thead>
-                    <tr className="donations-received-table-header">
+                    <tr className={styles.donationsReceivedTableHeader}>
                       <th>Data</th>
                       <th>Quantidade de Fichas</th>
                       <th>Valor Total</th>
@@ -177,19 +177,19 @@ const DonationsReceived = () => {
                   </thead>
                   <tbody>
                     {donationReceived?.map((item, index) => (
-                      <tr key={index} className="donations-received-table-row">
-                        <td className="date-cell">
-                          <span className="date-value">
+                      <tr key={index} className={styles.donationsReceivedTableRow}>
+                        <td className={styles.dateCell}>
+                          <span className={styles.dateValue}>
                             {new Date(item.dateAdd).toLocaleDateString("pt-BR", {
                               timeZone: "UTC",
                             }) || "—"}
                           </span>
                         </td>
-                        <td className="count-cell">
-                          <span className="count-value">{item.count || 0}</span>
+                        <td className={styles.countCell}>
+                          <span className={styles.countValue}>{item.count || 0}</span>
                         </td>
-                        <td className="value-cell">
-                          <span className="value-amount">
+                        <td className={styles.valueCell}>
+                          <span className={styles.valueAmount}>
                             {item.valueDonation?.toLocaleString("pt-BR", {
                               style: "currency",
                               currency: "BRL",
@@ -203,8 +203,8 @@ const DonationsReceived = () => {
               </div>
             </div>
           ) : (
-            <div className="donations-received-empty">
-              <div className="empty-icon">📊</div>
+            <div className={styles.donationsReceivedEmpty}>
+              <div className={styles.emptyIcon}>📊</div>
               <h4>Nenhum dado encontrado</h4>
               <p>Selecione um período e clique em "Gerar Relatório" para visualizar as doações recebidas.</p>
             </div>

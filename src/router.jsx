@@ -16,6 +16,7 @@ import CountDonations from "./pages/CountDonations";
 import DonationsReceived from "./pages/DonationsReceived";
 import Operators from "./pages/Operators";
 import OperatorWork from "./pages/OperatorWork";
+import OperatorReport from "./pages/OperatorReport";
 import WorkHistory from "./pages/WorkHistory";
 import WorkList from "./pages/WorkList";
 import Wrapper from "./components/Wrapper";
@@ -92,6 +93,15 @@ const AppRoutesContent = () => {
           element={
             <Wrapper>
               <WorkList />
+            </Wrapper>
+          }
+        />
+
+        <Route
+          path="/operatorreport"
+          element={
+            <Wrapper>
+              <OperatorReport />
             </Wrapper>
           }
         />
