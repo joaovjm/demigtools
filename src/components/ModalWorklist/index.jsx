@@ -239,6 +239,11 @@ const ModalWorklist = ({
                         )
                       : "N/A"}
                   </span>
+                  {penultimate?.[0] && (
+                    <span className={styles.statObservation}>
+                      📝 {penultimate?.[0].description || "Sem observação"}
+                    </span>
+                  )}
                 </div>
               </div>
 
@@ -262,6 +267,11 @@ const ModalWorklist = ({
                         )
                       : "N/A"}
                   </span>
+                  {maxPeriod?.[0] && (
+                    <span className={styles.statObservation}>
+                      📝 {maxPeriod?.[0].description || "Sem observação"}
+                    </span>
+                  )}
                 </div>
               </div>
 
@@ -283,6 +293,11 @@ const ModalWorklist = ({
                         )
                       : "N/A"}
                   </span>
+                  {maxDonation?.[0] && (
+                    <span className={styles.statObservation}>
+                      📝 {maxDonation?.[0].description || "Sem observação"}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>

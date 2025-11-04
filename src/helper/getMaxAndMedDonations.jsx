@@ -53,6 +53,7 @@ export const getMaxAndMedDonations = async (id, requestName) => {
               {
                 value: data[i]?.donation_value,
                 day: data[i]?.donation_day_received,
+                description: data[i]?.donation_description,
               },
             ];
           }
@@ -66,6 +67,7 @@ export const getMaxAndMedDonations = async (id, requestName) => {
             {
               value: data[i]?.donation_value,
               day: data[i]?.donation_day_received,
+              description: data[i]?.donation_description,
             },
           ];
         }
@@ -74,6 +76,7 @@ export const getMaxAndMedDonations = async (id, requestName) => {
             {
               value: data[i]?.donation_value,
               day: data[i]?.donation_day_received,
+              description: data[i]?.donation_description,
             },
           ];
         }

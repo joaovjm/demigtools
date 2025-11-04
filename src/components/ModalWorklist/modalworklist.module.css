@@ -257,6 +257,18 @@
   font-style: italic;
 }
 
+.statObservation {
+  color: #b0b0b0;
+  font-size: 9px;
+  font-style: italic;
+  margin-top: 4px;
+  padding: 4px 6px;
+  background-color: #363a3d;
+  border-radius: 3px;
+  border-left: 2px solid #faa01c;
+  line-height: 1.4;
+}
+
 /* Action Buttons */
 .modalWorklistActions {
   padding: 16px;
