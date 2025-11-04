@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "../../pages/DashboardAdmin/dashboardadmin.module.css";
 
 const ReceivedCard = ({ operatorCount, setDonationFilterPerId }) => {
-  
+  console.log(operatorCount)
   const [operators, setOperators] = useState([]);
   const [count, setCount] = useState();
   const [add, setAdd] = useState();
@@ -12,7 +12,7 @@ const ReceivedCard = ({ operatorCount, setDonationFilterPerId }) => {
     ...new Map(
       operatorCount?.map((operators) => [
         operators.operator_code_id,
-        { id: operators.operator_code_id, name: operators.operator_name },
+        { id: operators.operator_code_id, name: operators.operator_name.operator_name },
       ])
     ).values(),
   ];

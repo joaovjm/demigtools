@@ -3,6 +3,7 @@ import styles from "./tablereceived.module.css";
 import { DataSelect } from "../DataTime";
 
 const TableReceived = ({ donationsOperator }) => {
+  
   const dataToShow = donationsOperator || [];
 
   return (
