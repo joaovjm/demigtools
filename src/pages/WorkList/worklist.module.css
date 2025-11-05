@@ -282,6 +282,11 @@
   border-left: 3px solid #00BCD4;
 }
 
+.worklistTableRow.statusWhatsapp {
+  background-color: rgba(37, 211, 102, 0.1);
+  border-left: 3px solid #25D366;
+}
+
 .worklistTableCell {
   padding: 10px 8px;
   color: #faf5e9;
@@ -361,6 +366,12 @@
   background-color: rgba(0, 188, 212, 0.2);
   color: #00BCD4;
   border: 1px solid #00BCD4;
+}
+
+.statusBadge.statusWhatsapp {
+  background-color: rgba(37, 211, 102, 0.2);
+  color: #25D366;
+  border: 1px solid #25D366;
 }
 
 /* Empty State */

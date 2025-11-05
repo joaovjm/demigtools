@@ -47,7 +47,7 @@ export default async function handler(req, res) {
       .json({ error: `Método ${req.method} não permitido` });
   }
 
-  const { emailTo, subject, text } = req.body;
+  const { emailTo, subject, text, image } = req.body;
 
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
     return res.status(500).json({
@@ -64,12 +64,43 @@ export default async function handler(req, res) {
     },
   });
 
+  // Prepara o conteúdo do email
+  let htmlContent = `<div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
+    <p style="white-space: pre-wrap;">${text}</p>
+  `;
+
   const mailOptions = {
     from: `"Centro Geriátrico Manancial" <${process.env.EMAIL_USER}>`,
     to: emailTo,
     subject,
-    text,
+    text, // Mantém o texto simples como fallback
   };
+
+  // Adiciona a imagem incorporada no corpo do email se existir
+  if (image && image.content && image.filename) {
+    const imageId = 'embedded-image';
+    
+    // Adiciona a imagem no HTML
+    htmlContent += `
+      <div style="margin-top: 20px;">
+        <img src="cid:${imageId}" alt="${image.filename}" style="max-width: 600px; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />
+      </div>
+    `;
+    
+    // Define os anexos com CID para incorporar a imagem
+    mailOptions.attachments = [
+      {
+        filename: image.filename,
+        content: image.content,
+        encoding: 'base64',
+        contentType: image.contentType || 'image/jpeg',
+        cid: imageId, // Content-ID para referenciar no HTML
+      },
+    ];
+  }
+
+  htmlContent += '</div>';
+  mailOptions.html = htmlContent;
 
   try {
     await transporter.sendMail(mailOptions);

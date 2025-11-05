@@ -92,6 +92,11 @@ const ModalWorklist = ({
     navigate(`?pkg=${workSelect}`);
   };
 
+  const handleWhatsapp = () => {
+    updateRequestSelected("Whatsapp", id, setModalOpen, setActive);
+    navigate(`?pkg=${workSelect}`);
+  };
+
   const handleNewDonation = () => {
     setNewDonationOpen(true);
   };
@@ -382,6 +387,13 @@ const ModalWorklist = ({
                     >
                       <span className={styles.btnIcon}>📅</span>
                       <span className={styles.btnText}>Agendar</span>
+                    </button>
+                    <button
+                      className={`${styles.actionBtn} ${styles.info}`}
+                      onClick={handleWhatsapp}
+                    >
+                      <span className={styles.btnIcon}>💬</span>
+                      <span className={styles.btnText}>Whatsapp</span>
                     </button>
                     <button
                       className={`${styles.actionBtn} ${styles.success}`}

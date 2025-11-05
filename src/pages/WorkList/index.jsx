@@ -212,6 +212,7 @@ const WorkList = () => {
                 <option value="NA">NA</option>
                 <option value="NP">NP</option>
                 <option value="Agendado">Agendado</option>
+                <option value="Whatsapp">Whatsapp</option>
                 <option value="Não visitado">Não visitado</option>
                 <option value="Sucesso">Sucesso</option>
                 <option value="Recebido">Recebido</option>
@@ -297,6 +298,8 @@ const WorkList = () => {
                             ? styles.statusNa
                             : list.request_status === "Agendado"
                             ? styles.statusScheduled
+                            : list.request_status === "Whatsapp"
+                            ? styles.statusWhatsapp
                             : list.request_status === "Recebido"
                             ? styles.statusReceived
                             : ""

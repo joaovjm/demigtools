@@ -24,10 +24,13 @@
 
 .modalSendEmailContent {
   width: 60%;
-  min-height: 60vh;
+  max-height: 90vh;
   background-color: #1f1d1d;
   border: none;
   border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .modalSendEmailHeader {
@@ -54,6 +57,28 @@
 
 .modalSendEmailBody {
     padding: 20px 24px;
+    overflow-y: auto;
+    flex: 1;
+    max-height: calc(90vh - 60px);
+}
+
+/* Estilização da barra de scroll */
+.modalSendEmailBody::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modalSendEmailBody::-webkit-scrollbar-track {
+    background: #2f2d2d;
+    border-radius: 4px;
+}
+
+.modalSendEmailBody::-webkit-scrollbar-thumb {
+    background: #5a8fd4;
+    border-radius: 4px;
+}
+
+.modalSendEmailBody::-webkit-scrollbar-thumb:hover {
+    background: #4a7fc4;
 }
 
 .searchInputGroup {
@@ -102,7 +127,7 @@
     box-sizing: border-box;
     resize: vertical;
     font-family: inherit;
-    height: 80px;
+    min-height: 80px;
     text-transform: none;
 }
 
@@ -165,4 +190,84 @@
     background-color: rgba(245, 101, 101, 0.2);
     border: 1px solid #f56565;
     color: #f56565;
+}
+
+/* Image Upload Styles */
+.imageUploadContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.imageInput {
+    display: none;
+}
+
+.imageUploadLabel {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background-color: #363a3d;
+    border: 2px solid #2f2d2d;
+    border-radius: 6px;
+    color: #faf5e9;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: fit-content;
+}
+
+.imageUploadLabel:hover {
+    background-color: #454a4d;
+    border-color: #5a8fd4;
+}
+
+.imagePreviewContainer {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    background-color: #363a3d;
+    border: 2px solid #2f2d2d;
+    border-radius: 6px;
+}
+
+.imagePreview {
+    width: 100%;
+    max-width: 300px;
+    max-height: 200px;
+    object-fit: contain;
+    border-radius: 4px;
+    border: 1px solid #2f2d2d;
+}
+
+.removeImageButton {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: #d60b0c;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.removeImageButton:hover {
+    background-color: #b00a0b;
+    transform: scale(1.05);
+}
+
+.imageName {
+    color: #faf5e9;
+    font-size: 12px;
+    font-weight: 500;
+    word-break: break-all;
 }
