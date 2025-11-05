@@ -397,6 +397,7 @@ const Donor = () => {
       {uiState.modalSendEmail && (
         <ModalSendEmail
           donor_email={donorData.email}
+          donor_name={donorData.nome}
           setModalSendEmail={(show) =>
             setUiState((prev) => ({ ...prev, modalSendEmail: show }))
           }

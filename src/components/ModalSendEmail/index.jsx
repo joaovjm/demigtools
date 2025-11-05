@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import styles from './modalsendemail.module.css'
 import { FaEnvelope, FaTimes, FaPaperPlane, FaImage, FaTrash } from 'react-icons/fa';
+import { getCampains } from '../../helper/getCampains';
+import { getCampainTexts } from '../../helper/getCampainTexts';
 
-const ModalSendEmail = ({ donor_email, setModalSendEmail }) => {
+const ModalSendEmail = ({ donor_email, donor_name, setModalSendEmail }) => {
   const [emailTo, setEmailTo] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
@@ -10,6 +12,13 @@ const ModalSendEmail = ({ donor_email, setModalSendEmail }) => {
   const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState({ type: '', message: '' });
+  
+  // Estados para campanhas e textos
+  const [campains, setCampains] = useState([]);
+  const [campainTexts, setCampainTexts] = useState([]);
+  const [selectedCampainId, setSelectedCampainId] = useState('');
+  const [selectedTextId, setSelectedTextId] = useState('');
+  const [campainsWithTexts, setCampainsWithTexts] = useState([]);
 
   // Preenche o email automaticamente se vier do prop
   useEffect(() => {
@@ -17,6 +26,69 @@ const ModalSendEmail = ({ donor_email, setModalSendEmail }) => {
       setEmailTo(donor_email);
     }
   }, [donor_email]);
+
+  // Buscar campanhas e textos ao carregar o componente
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [campainsData, textsData] = await Promise.all([
+          getCampains(),
+          getCampainTexts()
+        ]);
+        
+        setCampains(campainsData || []);
+        setCampainTexts(textsData || []);
+        
+        // Filtrar campanhas que têm textos
+        const campainsWithTextsIds = [...new Set(textsData.map(text => text.campain_id))];
+        const filtered = campainsData.filter(camp => campainsWithTextsIds.includes(camp.id));
+        setCampainsWithTexts(filtered);
+      } catch (error) {
+        console.error('Erro ao buscar campanhas:', error);
+      }
+    };
+    
+    fetchData();
+  }, []);
+
+  // Quando selecionar uma campanha, filtrar os textos dela
+  useEffect(() => {
+    if (selectedCampainId) {
+      const textsForCampain = campainTexts.filter(
+        text => text.campain_id === parseInt(selectedCampainId)
+      );
+      // Se houver apenas um texto, seleciona automaticamente
+      if (textsForCampain.length === 1) {
+        setSelectedTextId(textsForCampain[0].id.toString());
+      }
+    } else {
+      setSelectedTextId('');
+    }
+  }, [selectedCampainId, campainTexts]);
+
+  // Quando selecionar um texto, preencher o formulário
+  useEffect(() => {
+    if (selectedTextId) {
+      const selectedText = campainTexts.find(
+        text => text.id === parseInt(selectedTextId)
+      );
+      
+      if (selectedText) {
+        setSubject(selectedText.title);
+        
+        // Substituir {{imagem}} por [IMAGEM] para compatibilidade
+        let content = selectedText.content.replace(/\{\{imagem\}\}/gi, '[IMAGEM]');
+        setMessage(content);
+        
+        // Se o texto tem imagem anexada, carregar a imagem
+        if (selectedText.image) {
+          setImagePreview(selectedText.image);
+          // Criar um objeto File fictício para manter a compatibilidade
+          setImage({ name: 'imagem_campanha.jpg' });
+        }
+      }
+    }
+  }, [selectedTextId, campainTexts]);
 
   // Função para lidar com seleção de imagem
   const handleImageChange = (e) => {
@@ -71,11 +143,17 @@ const ModalSendEmail = ({ donor_email, setModalSendEmail }) => {
       // URL da API - ajustada para funcionar com Vercel
       const apiUrl = '/api/send-email';
 
+      // Substituir {{nome_doador}} pelo nome real do doador
+      let processedMessage = message;
+      if (donor_name) {
+        processedMessage = processedMessage.replace(/\{\{nome_doador\}\}/gi, donor_name);
+      }
+
       // Preparar o body com a imagem se existir
       const emailData = {
         emailTo,
         subject,
-        text: message,
+        text: processedMessage,
       };
 
       // Se houver imagem, adicionar ao payload
@@ -155,6 +233,52 @@ const ModalSendEmail = ({ donor_email, setModalSendEmail }) => {
                             required
                         />
                     </div>
+
+                    {/* Seleção de Campanha */}
+                    <div className={styles.searchInputGroup}>
+                        <label>📋 Usar Mensagem de Campanha (opcional)</label>
+                        <select
+                            className={styles.searchInput}
+                            value={selectedCampainId}
+                            onChange={(e) => {
+                              setSelectedCampainId(e.target.value);
+                              setSelectedTextId(''); // Limpa o texto selecionado
+                            }}
+                        >
+                            <option value="">Selecione uma campanha...</option>
+                            {campainsWithTexts.map((camp) => (
+                                <option key={camp.id} value={camp.id}>
+                                    {camp.campain_name}
+                                </option>
+                            ))}
+                        </select>
+                        {campainsWithTexts.length === 0 && (
+                            <small style={{ color: '#999', fontSize: '0.85em', marginTop: '5px', display: 'block' }}>
+                                ℹ️ Nenhuma campanha com textos cadastrados ainda
+                            </small>
+                        )}
+                    </div>
+
+                    {/* Seleção de Texto da Campanha */}
+                    {selectedCampainId && (
+                        <div className={styles.searchInputGroup}>
+                            <label>📝 Selecione o Texto</label>
+                            <select
+                                className={styles.searchInput}
+                                value={selectedTextId}
+                                onChange={(e) => setSelectedTextId(e.target.value)}
+                            >
+                                <option value="">Escolha um texto...</option>
+                                {campainTexts
+                                    .filter(text => text.campain_id === parseInt(selectedCampainId))
+                                    .map((text) => (
+                                        <option key={text.id} value={text.id}>
+                                            {text.title}
+                                        </option>
+                                    ))}
+                            </select>
+                        </div>
+                    )}
 
                     <div className={styles.searchInputGroup}>
                         <label>Assunto</label>
