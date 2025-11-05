@@ -221,11 +221,11 @@ export async function addEndDataInCreatePackage(createPackage, setCreatePackage,
   return update;
 }
 
-export async function deletePackage(createPackage) {
-    const response = await deleteRequestPackage(createPackage)
-    if (response) {
-      return { success: true, message: "Pacote deletado com sucesso" }
+export async function deletePackage(requestNameId) {
+    const response = await deleteRequestPackage(requestNameId)
+    if (response && response.success) {
+      return { success: true, message: "Requisição deletada com sucesso" }
     } else {
-      return { success: false, message: "Erro ao deletar pacote" }
+      return { success: false, message: response?.message || "Erro ao deletar requisição" }
     }
 }

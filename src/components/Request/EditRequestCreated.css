@@ -201,6 +201,80 @@
   background-color: #218838;
 }
 
+.request-btn.add-operator {
+  background-color: #007bff;
+  color: white;
+  width: 100%;
+}
+
+.request-btn.add-operator:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.request-btn.add-operator:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.request-btn.confirm-small {
+  background-color: #28a745;
+  color: white;
+  padding: 8px 16px;
+  min-width: 80px;
+}
+
+.request-btn.confirm-small:hover {
+  background-color: #218838;
+}
+
+.request-btn.cancel-small {
+  background-color: #6c757d;
+  color: white;
+  padding: 8px 16px;
+  min-width: 80px;
+}
+
+.request-btn.cancel-small:hover {
+  background-color: #5a6268;
+}
+
+/* Add Operator Section */
+.add-operator-section {
+  padding: 16px;
+  background-color: #363a3d;
+  border: 2px solid #2f2d2d;
+  border-radius: 6px;
+}
+
+.add-operator-form {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.operator-select {
+  flex: 1;
+  padding: 8px 12px;
+  background-color: #2f2d2d;
+  border: 2px solid #464a4d;
+  border-radius: 6px;
+  color: #faf5e9;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  height: 40px;
+}
+
+.operator-select:focus {
+  border-color: #faa01c;
+}
+
+.operator-select option {
+  background-color: #2f2d2d;
+  color: #faf5e9;
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .edit-request-container {

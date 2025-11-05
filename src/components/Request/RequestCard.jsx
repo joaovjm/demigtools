@@ -61,10 +61,6 @@ const RequestCard = ({
   };
 
   useEffect(() => {
-    setSelection(prev => [...prev, operatorID])
-  }, [])
-
-  useEffect(() => {
     calculateValues();
     relatory();
   }, [perOperator]);

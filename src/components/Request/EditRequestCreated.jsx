@@ -27,6 +27,8 @@ const EditRequestCreated = ({ requestId, onClose }) => {
   const [buttonTest, setButtonTest] = useState(false);
   const [loading, setLoading] = useState(true);
   const [requestName, setRequestName] = useState("");
+  const [showAddOperator, setShowAddOperator] = useState(false);
+  const [selectedOperatorToAdd, setSelectedOperatorToAdd] = useState("");
 
   // Carregar dados da requisição
   useEffect(() => {
@@ -90,12 +92,17 @@ const EditRequestCreated = ({ requestId, onClose }) => {
     }
   }, [createPackage]);
 
-  // Inicializar selection com todos os operadores
+  // Inicializar selection apenas com operadores que têm doações na requisição
   useEffect(() => {
-    if (operatorID && operatorID.length > 0) {
-      setSelection(operatorID);
+    if (createPackage.length > 0) {
+      const operatorsInRequest = [...new Set(
+        createPackage
+          .filter(pkg => pkg.operator_code_id)
+          .map(pkg => pkg.operator_code_id)
+      )];
+      setSelection(operatorsInRequest);
     }
-  }, [operatorID]);
+  }, [createPackage.length]);
 
   const handleSave = async () => {
     try {
@@ -132,16 +139,54 @@ const EditRequestCreated = ({ requestId, onClose }) => {
   };
 
   const handleDeletePackage = async () => {
+    if (!createPackage || createPackage.length === 0) {
+      toast.error("Não há requisição para deletar");
+      return;
+    }
+
+    const requestNameId = createPackage[0].request_name_id;
+    if (!requestNameId) {
+      toast.error("ID da requisição não encontrado");
+      return;
+    }
+
     if (window.confirm("Deseja deletar a requisição?")) {
-      const response = await deletePackage(createPackage[0].request_name_id);
-      if (response.success) {
-        onClose();
-        toast.success("Pacote deletado com sucesso!");
-      } else {
-        toast.error("Erro ao deletar pacote: " + response.message);
+      try {
+        const response = await deletePackage(requestNameId);
+        if (response && response.success) {
+          toast.success("Requisição deletada com sucesso!");
+          onClose();
+        } else {
+          toast.error("Erro ao deletar requisição: " + (response?.message || "Erro desconhecido"));
+        }
+      } catch (error) {
+        console.error("Erro ao deletar requisição:", error);
+        toast.error("Erro ao deletar requisição: " + error.message);
       }
     }
   };
+
+  const handleAddOperator = () => {
+    if (!selectedOperatorToAdd) {
+      toast.warning("Selecione um operador para adicionar");
+      return;
+    }
+    
+    if (selection.includes(selectedOperatorToAdd)) {
+      toast.warning("Este operador já está na requisição");
+      return;
+    }
+    
+    setSelection([...selection, selectedOperatorToAdd]);
+    setSelectedOperatorToAdd("");
+    setShowAddOperator(false);
+    toast.success("Operador adicionado à requisição!");
+  };
+
+  // Filtrar operadores disponíveis (que não estão na requisição)
+  const availableOperators = operatorID.filter(
+    (op) => !selection.includes(op)
+  );
 
   if (loading) {
     return (
@@ -182,29 +227,67 @@ const EditRequestCreated = ({ requestId, onClose }) => {
           />
         </div>
         <div className="request-step-4-right">
+          <div className="add-operator-section">
+            {!showAddOperator ? (
+              <button
+                onClick={() => setShowAddOperator(true)}
+                className="request-btn add-operator"
+                disabled={availableOperators.length === 0}
+              >
+                {ICONS.ADD} Adicionar Operador
+              </button>
+            ) : (
+              <div className="add-operator-form">
+                <select
+                  value={selectedOperatorToAdd}
+                  onChange={(e) => setSelectedOperatorToAdd(e.target.value)}
+                  className="operator-select"
+                >
+                  <option value="">Selecione um operador...</option>
+                  {availableOperators.map((opId) => (
+                    <option key={opId} value={opId}>
+                      {opId} - {operatorName[opId] || "Operador"}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  onClick={handleAddOperator}
+                  className="request-btn confirm-small"
+                >
+                  Confirmar
+                </button>
+                <button
+                  onClick={() => {
+                    setShowAddOperator(false);
+                    setSelectedOperatorToAdd("");
+                  }}
+                  className="request-btn cancel-small"
+                >
+                  Cancelar
+                </button>
+              </div>
+            )}
+          </div>
           <div className="request-step-4-right-body">
-            {operatorID?.map((cp) => {
+            {selection?.map((cp) => {
               return (
-                perOperator[cp] != null &&
-                perOperator[cp].length > 0 && (
-                  <RequestCard
-                    perOperator={perOperator[cp]}
-                    setPerOperator={setPerOperator}
-                    key={cp}
-                    operatorName={operatorName[cp]}
-                    operatorID={cp}
-                    selected={selected}
-                    setSelected={setSelected}
-                    createPackage={createPackage}
-                    setCreatePackage={setCreatePackage}
-                    unassigned={unassigned}
-                    setUnassigned={setUnassigned}
-                    allOperator={operatorID}
-                    setAllOperator={setOperatorID}
-                    selection={selection}
-                    setSelection={setSelection}
-                  />
-                )
+                <RequestCard
+                  perOperator={perOperator[cp] || []}
+                  setPerOperator={setPerOperator}
+                  key={cp}
+                  operatorName={operatorName[cp]}
+                  operatorID={cp}
+                  selected={selected}
+                  setSelected={setSelected}
+                  createPackage={createPackage}
+                  setCreatePackage={setCreatePackage}
+                  unassigned={unassigned}
+                  setUnassigned={setUnassigned}
+                  allOperator={operatorID}
+                  setAllOperator={setOperatorID}
+                  selection={selection}
+                  setSelection={setSelection}
+                />
               );
             })}
           </div>
