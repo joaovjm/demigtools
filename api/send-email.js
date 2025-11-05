@@ -65,9 +65,9 @@ export default async function handler(req, res) {
   });
 
   // Prepara o conteúdo do email
-  let htmlContent = `<div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
-    <p style="white-space: pre-wrap;">${text}</p>
-  `;
+  const imageId = 'embedded-image';
+  let htmlContent = '';
+  let textContent = text;
 
   const mailOptions = {
     from: `"Centro Geriátrico Manancial" <${process.env.EMAIL_USER}>`,
@@ -78,14 +78,20 @@ export default async function handler(req, res) {
 
   // Adiciona a imagem incorporada no corpo do email se existir
   if (image && image.content && image.filename) {
-    const imageId = 'embedded-image';
-    
-    // Adiciona a imagem no HTML
-    htmlContent += `
-      <div style="margin-top: 20px;">
+    // Verifica se existe o marcador [IMAGEM] no texto
+    if (textContent.includes('[IMAGEM]')) {
+      // Substitui o marcador [IMAGEM] pela tag img
+      const imageTag = `<div style="margin: 20px 0; text-align: center;">
         <img src="cid:${imageId}" alt="${image.filename}" style="max-width: 600px; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />
-      </div>
-    `;
+      </div>`;
+      
+      textContent = textContent.replace('[IMAGEM]', imageTag);
+    } else {
+      // Se não houver marcador, adiciona a imagem no final (comportamento padrão)
+      textContent += `\n\n<div style="margin-top: 20px; text-align: center;">
+        <img src="cid:${imageId}" alt="${image.filename}" style="max-width: 600px; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />
+      </div>`;
+    }
     
     // Define os anexos com CID para incorporar a imagem
     mailOptions.attachments = [
@@ -99,7 +105,10 @@ export default async function handler(req, res) {
     ];
   }
 
-  htmlContent += '</div>';
+  htmlContent = `<div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
+    <div style="white-space: pre-wrap;">${textContent}</div>
+  </div>`;
+  
   mailOptions.html = htmlContent;
 
   try {
