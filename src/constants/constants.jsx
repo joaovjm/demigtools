@@ -5,8 +5,8 @@ import { GoAlertFill } from "react-icons/go";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { PiMagnifyingGlassBold } from "react-icons/pi";
 import { TbArrowsExchange } from "react-icons/tb";
-import { MdEdit } from "react-icons/md";
-import { FaTrashAlt } from "react-icons/fa";
+import { MdEdit, MdCancel } from "react-icons/md";
+import { FaTrashAlt, FaBullhorn } from "react-icons/fa";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { FaPhoneAlt, FaPlus } from "react-icons/fa";
 
@@ -23,7 +23,10 @@ export const ICONS = {
   TRASH: <FaTrashAlt />,
   CIRCLEOUTLINE: <IoMdAddCircleOutline />,
   PHONE: <FaPhoneAlt />,
-  PLUS: <FaPlus />
+  PLUS: <FaPlus />,
+  ADD: <FaPlus />,
+  CANCEL: <MdCancel />,
+  MEGAPHONE: <FaBullhorn />
 };
 
 export const MESSAGES = {

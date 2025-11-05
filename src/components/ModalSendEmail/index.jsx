@@ -178,6 +178,9 @@ const ModalSendEmail = ({ donor_email, setModalSendEmail }) => {
                             rows="10"
                             required
                         />
+                        <small style={{ color: '#666', fontSize: '0.85em', marginTop: '5px', display: 'block' }}>
+                            💡 Dica: Use <strong>[IMAGEM]</strong> no texto para posicionar a imagem onde desejar
+                        </small>
                     </div>
 
                     <div className={styles.searchInputGroup}>
