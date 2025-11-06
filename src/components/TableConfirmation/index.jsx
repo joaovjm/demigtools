@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./index.css";
 import { DataSelect } from "../DataTime";
 
@@ -8,6 +8,8 @@ const TableConfirmation = ({
   setDonationConfirmationOpen,
   donationFilterPerId,
 }) => {
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+
   const handleClick = (donation) => {
     setDonationConfirmationOpen({
       id: donation.receipt_donation_id,
@@ -32,11 +34,44 @@ const TableConfirmation = ({
     setModalOpen(true);
   };
 
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
   const filterDonationConfirmation = donationConfirmation.filter(
     (dc) => dc.operator_code_id === donationFilterPerId
   );
 
-  const dataToShow = donationFilterPerId ? filterDonationConfirmation : donationConfirmation;
+  const getFilteredAndSortedData = () => {
+    const filtered = donationFilterPerId ? filterDonationConfirmation : donationConfirmation;
+    
+    if (!sortConfig.key) {
+      return filtered;
+    }
+
+    return [...filtered].sort((a, b) => {
+      let aValue, bValue;
+
+      if (sortConfig.key === 'date') {
+        aValue = new Date(a.donation_day_to_receive || 0).getTime();
+        bValue = new Date(b.donation_day_to_receive || 0).getTime();
+      }
+
+      if (aValue < bValue) {
+        return sortConfig.direction === 'asc' ? -1 : 1;
+      }
+      if (aValue > bValue) {
+        return sortConfig.direction === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+  };
+
+  const dataToShow = getFilteredAndSortedData();
 
   return (
     <div className="table-confirmation-container">
@@ -63,7 +98,18 @@ const TableConfirmation = ({
               <table className="table-confirmation">
                 <thead>
                   <tr className="table-confirmation-head-row">
-                    <th className="table-confirmation-head">Data</th>
+                    <th 
+                      className="table-confirmation-head sortable"
+                      onClick={() => handleSort('date')}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      Data
+                      <span className="sort-arrow">
+                        {sortConfig.key === 'date' ? (
+                          sortConfig.direction === 'asc' ? ' ↑' : ' ↓'
+                        ) : ' ↕'}
+                      </span>
+                    </th>
                     <th className="table-confirmation-head">Nome</th>
                     <th className="table-confirmation-head">Valor</th>
                     <th className="table-confirmation-head">Motivo</th>

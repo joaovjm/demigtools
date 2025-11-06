@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./tableinopen.module.css";
 import { DataSelect } from "../DataTime";
 
@@ -9,9 +9,19 @@ const TableInOpen = ({
   donationFilterPerId,
   filterType = "operator"
 }) => {
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+
   const handleClick = (donation) => {
     setDonationOpen(donation);
     setModalOpen(true);
+  };
+
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
   };
 
   const filterFullNotReceiverDonations = fullNotReceivedDonations.filter(
@@ -25,7 +35,32 @@ const TableInOpen = ({
     }
   );
 
-  const dataToShow = donationFilterPerId ? filterFullNotReceiverDonations : fullNotReceivedDonations;
+  const getFilteredAndSortedData = () => {
+    const filtered = donationFilterPerId ? filterFullNotReceiverDonations : fullNotReceivedDonations;
+    
+    if (!sortConfig.key) {
+      return filtered;
+    }
+
+    return [...filtered].sort((a, b) => {
+      let aValue, bValue;
+
+      if (sortConfig.key === 'date') {
+        aValue = new Date(a.donation_day_to_receive || 0).getTime();
+        bValue = new Date(b.donation_day_to_receive || 0).getTime();
+      }
+
+      if (aValue < bValue) {
+        return sortConfig.direction === 'asc' ? -1 : 1;
+      }
+      if (aValue > bValue) {
+        return sortConfig.direction === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+  };
+
+  const dataToShow = getFilteredAndSortedData();
 
   return (
     <div className={styles.tableInopenContainer}>
@@ -53,7 +88,18 @@ const TableInOpen = ({
               <table className={styles.tableInopen}>
                 <thead>
                   <tr className={styles.tableInopenHeadRow}>
-                    <th className={styles.tableInopenHead}>A receber</th>
+                    <th 
+                      className={`${styles.tableInopenHead} ${styles.sortable}`}
+                      onClick={() => handleSort('date')}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      A receber
+                      <span className={styles.sortArrow}>
+                        {sortConfig.key === 'date' ? (
+                          sortConfig.direction === 'asc' ? ' ↑' : ' ↓'
+                        ) : ' ↕'}
+                      </span>
+                    </th>
                     <th className={styles.tableInopenHead}>Recibo</th>
                     <th className={styles.tableInopenHead}>Nome</th>
                     <th className={styles.tableInopenHead}>Valor</th>
