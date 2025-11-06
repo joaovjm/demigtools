@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { getCampains } from "../../helper/getCampains";
 import { UserContext } from "../../context/UserContext";
 import { getOperators } from "../../helper/getOperators";
+import { logDonorActivity } from "../../helper/logDonorActivity";
 
 const ModalDonation = ({
   modalShow,
@@ -100,7 +101,27 @@ const ModalDonation = ({
     });
 
     try {
-      await promise;
+      const result = await promise;
+
+      // Registrar criação de doação no histórico
+      if (result && result[0]) {
+        logDonorActivity({
+          donor_id: donor_id,
+          operator_code_id: operatorData.operator_code_id,
+          action_type: "donation_create",
+          action_description: `Criou uma doação no valor de R$ ${valor}${comissao ? ` (Extra: R$ ${comissao})` : ""}`,
+          new_values: {
+            donation_value: valor,
+            donation_extra: comissao,
+            donation_day_to_receive: data_receber,
+            donation_description: descricao,
+            donation_monthref: mesref,
+            donation_campain: campainSelected,
+            receipt_donation_id: result[0].receipt_donation_id,
+          },
+          related_donation_id: result[0].donation_code_id || null,
+        });
+      }
 
       setModalShow(false);
       setValor("");

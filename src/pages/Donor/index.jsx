@@ -1,5 +1,5 @@
 import styles from "./donor.module.css";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 
 import TableDonor from "../../components/TableDonor";
 import { useParams } from "react-router";
@@ -20,8 +20,11 @@ import FormListSelect from "../../components/forms/FormListSelect";
 import { UserContext } from "../../context/UserContext";
 import ModalEditDonation from "../../components/ModalEditDonation";
 import { setActivityHistoric } from "../../helper/setActivityHistoric";
-import { FaEnvelope } from "react-icons/fa";
+import { FaEnvelope, FaTable, FaHistory } from "react-icons/fa";
 import ModalSendEmail from "../../components/ModalSendEmail";
+import TabNavigation from "../../components/TabNavigation";
+import DonorActivityHistory from "../../components/DonorActivityHistory";
+import { logDonorActivity } from "../../helper/logDonorActivity";
 
 const Donor = () => {
   const { id } = useParams();
@@ -54,17 +57,24 @@ const Donor = () => {
     modalEdit: false,
     modalSendEmail: false,
   });
+  
+  const [activeTab, setActiveTab] = useState("donations");
+  const [originalDonorData, setOriginalDonorData] = useState({});
+  const accessLoggedRef = useRef(false);
 
   const params = {};
   if (id) params.id = id;
 
   useEffect(() => {
+    // Resetar a flag quando o ID do doador mudar
+    accessLoggedRef.current = false;
+    
     const loadDonorData = async () => {
       try {
         const data = await getInfoDonor(id);
         const donor = data[0];
 
-        SetDonorData({
+        const donorDataObject = {
           nome: donor.donor_name,
           endereco: donor.donor_address,
           cidade: donor.donor_city,
@@ -79,14 +89,28 @@ const Donor = () => {
           observacao: donor.donor_observation?.donor_observation || "",
           referencia: donor.donor_reference?.donor_reference || "",
           tipo: donor.donor_type,
-        });
+        };
+
+        SetDonorData(donorDataObject);
+        setOriginalDonorData(donorDataObject);
+
+        // Registrar acesso ao doador apenas uma vez por carregamento
+        if (operatorData?.operator_code_id && !accessLoggedRef.current) {
+          accessLoggedRef.current = true;
+          logDonorActivity({
+            donor_id: id,
+            operator_code_id: operatorData.operator_code_id,
+            action_type: "donor_access",
+            action_description: "Acessou a página do doador",
+          });
+        }
       } catch (error) {
         console.error("Erro ao carregar os dados do doador: ", error.message);
       }
     };
 
     loadDonorData();
-  }, [id]);
+  }, [id, operatorData?.operator_code_id]);
 
   const handleInputChange = (field, value) => {
     SetDonorData((prev) => ({ ...prev, [field]: value }));
@@ -132,6 +156,20 @@ const Donor = () => {
             dataBase: "donor",
             operatorID: operatorData.operator_code_id,
           });
+
+          // Registrar edição do doador no histórico
+          logDonorActivity({
+            donor_id: id,
+            operator_code_id: operatorData.operator_code_id,
+            action_type: "donor_edit",
+            action_description: "Editou as informações do doador",
+            old_values: originalDonorData,
+            new_values: donorData,
+          });
+
+          // Atualizar os dados originais para refletir a edição
+          setOriginalDonorData(donorData);
+
           setUiState({
             edit: true,
             btnEdit: BUTTON_TEXTS.EDIT,
@@ -362,14 +400,33 @@ const Donor = () => {
           </form>
         </div>
         {uiState.showBtn && (
-          <TableDonor
-            idDonor={id}
-            modalShow={uiState.modalShow}
-            setModalEdit={(showEdit) =>
-              setUiState((prev) => ({ ...prev, modalEdit: true }))
-            }
-            setDonation={setDonation}
-            modalEdit={uiState.modalEdit}
+          <TabNavigation
+            tabs={[
+              {
+                id: "donations",
+                label: "Doações",
+                icon: <FaTable />,
+                content: (
+                  <TableDonor
+                    idDonor={id}
+                    modalShow={uiState.modalShow}
+                    setModalEdit={(showEdit) =>
+                      setUiState((prev) => ({ ...prev, modalEdit: true }))
+                    }
+                    setDonation={setDonation}
+                    modalEdit={uiState.modalEdit}
+                  />
+                ),
+              },
+              {
+                id: "history",
+                label: "Histórico de Ações",
+                icon: <FaHistory />,
+                content: <DonorActivityHistory donorId={id} />,
+              },
+            ]}
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
           />
         )}
       </div>
@@ -392,6 +449,7 @@ const Donor = () => {
           }
           donation={donation}
           donorData={donorData}
+          idDonor={id}
         />
       )}
       {uiState.modalSendEmail && (

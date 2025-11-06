@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import styles from "./modalconfirmation.module.css";
 import { ICONS } from "../../constants/constants";
 import cancelDonation from "../../helper/cancelDonation";
@@ -6,62 +6,91 @@ import supabase from "../../helper/superBaseClient";
 import { DataNow, DataSelect } from "../DataTime";
 import {useNavigate} from "react-router"
 import { FaUser, FaMapMarkerAlt, FaPhone, FaDollarSign, FaExclamationTriangle, FaCalendarAlt, FaEdit, FaTimes, FaCheck, FaArrowLeft, FaClock, FaEye } from "react-icons/fa";
+import { UserContext } from "../../context/UserContext";
+import { logDonorActivity } from "../../helper/logDonorActivity";
 
 const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) => {
   const [isConfirmation, setIsConfirmation] = useState(false);
   const [dateConfirm, setDateConfirm] = useState("");
   const [observation, setObservation] = useState("");
+  const { operatorData } = useContext(UserContext);
 
   const navigate = useNavigate()
 
   const handleCancel = async () => {
-    window.confirm("Você tem certeza que deseja cancelar a ficha?");
-    if (window.confirm) {
-      const status = await cancelDonation({
-        donation: {
-          receipt_donation_id: donationConfirmationOpen.id,
-          donor_id: donationConfirmationOpen.donor_id,
-          donation_value: donationConfirmationOpen.value,
-          donation_extra: donationConfirmationOpen.extra,
-          donation_day_contact: donationConfirmationOpen.day_contact,
-          donation_day_to_receive: donationConfirmationOpen.day_to_receive,
-          donation_print: donationConfirmationOpen.print,
-          donation_monthref: donationConfirmationOpen.monthref,
-          donation_description: donationConfirmationOpen.description,
-          donation_received: "Não",
-          operator_code_id: donationConfirmationOpen.operator_code_id,
-          collector_code_id: donationConfirmationOpen.collector_code_id,
-        },
-      });
-
-      setStatus(status);
-      onClose();
+    if (!window.confirm("Você tem certeza que deseja cancelar a ficha?")) {
+      return;
     }
+    
+    const status = await cancelDonation({
+      donation: {
+        receipt_donation_id: donationConfirmationOpen.id,
+        donor_id: donationConfirmationOpen.donor_id,
+        donation_value: donationConfirmationOpen.value,
+        donation_extra: donationConfirmationOpen.extra,
+        donation_day_contact: donationConfirmationOpen.day_contact,
+        donation_day_to_receive: donationConfirmationOpen.day_to_receive,
+        donation_print: donationConfirmationOpen.print,
+        donation_monthref: donationConfirmationOpen.monthref,
+        donation_description: donationConfirmationOpen.description,
+        donation_received: "Não",
+        operator_code_id: donationConfirmationOpen.operator_code_id,
+        collector_code_id: donationConfirmationOpen.collector_code_id,
+      },
+      operatorCodeId: operatorData?.operator_code_id,
+    });
+
+    setStatus(status);
+    onClose();
   };
 
   const handleConfirm = async () => {
-    window.confirm("Você deseja reagendar a ficha?");
-    if (window.confirm) {
-      try {
-        const { data: updateConfirm, error: errorConfirm } = await supabase
-          .from("donation")
-          .update({
-            donation_day_contact: DataNow("noformated"),
+    if (!window.confirm("Você deseja reagendar a ficha?")) {
+      return;
+    }
+    
+    try {
+      const oldValues = {
+        donation_day_to_receive: donationConfirmationOpen.day_to_receive,
+        donation_description: donationConfirmationOpen.description,
+        collector_code_id: donationConfirmationOpen.collector_code_id,
+      };
+
+      const { data: updateConfirm, error: errorConfirm } = await supabase
+        .from("donation")
+        .update({
+          donation_day_contact: DataNow("noformated"),
+          donation_day_to_receive: dateConfirm,
+          donation_description: observation,
+          donation_received: "Não",
+          collector_code_id: null,
+        })
+        .eq("receipt_donation_id", donationConfirmationOpen.id);
+
+      if (errorConfirm) throw errorConfirm;
+
+      // Registrar reagendamento no histórico
+      if (operatorData?.operator_code_id) {
+        await logDonorActivity({
+          donor_id: donationConfirmationOpen.donor_id,
+          operator_code_id: operatorData.operator_code_id,
+          action_type: "donation_edit",
+          action_description: `Reagendou doação de R$ ${donationConfirmationOpen.value} para ${dateConfirm}`,
+          old_values: oldValues,
+          new_values: {
             donation_day_to_receive: dateConfirm,
             donation_description: observation,
-            donation_received: "Não",
             collector_code_id: null,
-          })
-          .eq("receipt_donation_id", donationConfirmationOpen.id);
-
-        if (errorConfirm) throw errorConfirm;
-        
-          setStatus("Update OK")
-          onClose();
-        
-      } catch (errorConfirm) {
-        console.error("Error updating donation:", errorConfirm);
+          },
+          related_donation_id: null,
+        });
       }
+      
+      setStatus("Update OK")
+      onClose();
+      
+    } catch (errorConfirm) {
+      console.error("Error updating donation:", errorConfirm);
     }
   };
   return (

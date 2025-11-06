@@ -12,8 +12,9 @@ import { getEditReceipt } from "../../helper/getEditReceipt";
 import { FaDollarSign } from "react-icons/fa";
 import GenerateDepositPDF from "../GenerateDepositPDF";
 import { DataSelect } from "../DataTime";
+import { logDonorActivity } from "../../helper/logDonorActivity";
 
-const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
+const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
   const { operatorData } = useContext(UserContext);
   const [value, setValue] = useState(donation.donation_value);
   const [date, setDate] = useState(donation.donation_day_to_receive);
@@ -35,6 +36,18 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
   const [operators, setOperators] = useState([]);
   const [receiptConfig, setReceiptConfig] = useState([]);
   const [extraValue, setExtraValue] = useState(donation.donation_extra);
+  
+  // Armazenar valores originais para comparação
+  const [originalValues] = useState({
+    donation_value: donation.donation_value,
+    donation_day_to_receive: donation.donation_day_to_receive,
+    donation_monthref: donation.donation_monthref,
+    donation_description: donation.donation_description,
+    campaign_id: donation.campaign_id,
+    operator_code_id: donation.operator_code_id,
+    collector_code_id: donation.collector_code_id,
+    donation_extra: donation.donation_extra,
+  });
   useEffect(() => {
     const fetchCampaigns = async () => {
       const response = await getCampains();
@@ -117,6 +130,27 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
       if (error) throw error;
 
       if (data.length > 0) {
+        // Registrar edição de doação no histórico
+        logDonorActivity({
+          donor_id: idDonor,
+          operator_code_id: operatorData.operator_code_id,
+          action_type: "donation_edit",
+          action_description: `Editou a doação de R$ ${originalValues.donation_value} para R$ ${value}`,
+          old_values: originalValues,
+          new_values: {
+            donation_value: value,
+            donation_day_to_receive: date,
+            donation_description: observation,
+            operator_code_id: operator,
+            donation_monthref: monthReferent,
+            collector_code_id: collector,
+            donation_campain: campaign,
+            donation_extra: extraValue,
+            receipt_donation_id: donation.receipt_donation_id,
+          },
+          related_donation_id: donation.donation_code_id || null,
+        });
+
         toast.success("Doação atualizado com sucesso");
         setModalEdit(false);
         setObservation("");
@@ -127,6 +161,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
   };
 
   const handleDelete = async () => {
+    console.log({donation, donorData})
     if (window.confirm("Deseja deletar a doação?")) {
       const { error } = await supabase
         .from("donation")
@@ -134,6 +169,25 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
         .eq("receipt_donation_id", donation.receipt_donation_id);
       if (error) throw error;
       if (!error) {
+        // Registrar deleção de doação no histórico
+        logDonorActivity({
+          donor_id: idDonor,
+          operator_code_id: operatorData.operator_code_id,
+          action_type: "donation_delete",
+          action_description: `Deletou uma doação no valor de R$ ${donation.donation_value}`,
+          old_values: {
+            donation_value: donation.donation_value,
+            donation_day_to_receive: donation.donation_day_to_receive,
+            donation_description: donation.donation_description,
+            operator_code_id: donation.operator_code_id,
+            donation_monthref: donation.donation_monthref,
+            donation_extra: donation.donation_extra,
+            donation_campain: donation.donation_campain,
+            receipt_donation_id: donation.receipt_donation_id,
+          },
+          related_donation_id: donation.donation_code_id || null,
+        });
+
         toast.success("Doação deletada com sucesso!");
         setModalEdit(false);
       }
