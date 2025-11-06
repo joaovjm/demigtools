@@ -36,7 +36,7 @@ const TableInOpen = ({
   );
 
   const getFilteredAndSortedData = () => {
-    const filtered = donationFilterPerId ? filterFullNotReceiverDonations : fullNotReceivedDonations;
+    const filtered = donationFilterPerId !== undefined ? filterFullNotReceiverDonations : fullNotReceivedDonations;
     
     if (!sortConfig.key) {
       return filtered;

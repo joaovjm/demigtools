@@ -81,12 +81,13 @@ const DonorActivityHistory = ({ donorId }) => {
       return (
         <div className={styles.changesContainer}>
           <h4>Dados da Doação Criada:</h4>
-          <div className={styles.changesList}>
-            {Object.entries(activity.new_values).map(([key, value]) => (
-              <div key={key} className={styles.changeItem}>
+          <div className={styles.inlineDetails}>
+            {Object.entries(activity.new_values).map(([key, value], index, arr) => (
+              <span key={key} className={styles.inlineItem}>
                 <span className={styles.fieldName}>{getFieldLabel(key)}:</span>
                 <span className={styles.newValue}>{formatValue(value)}</span>
-              </div>
+                {index < arr.length - 1 && <span className={styles.separator}> • </span>}
+              </span>
             ))}
           </div>
         </div>
@@ -99,12 +100,13 @@ const DonorActivityHistory = ({ donorId }) => {
       return (
         <div className={styles.changesContainer}>
           <h4>Dados da Doação Deletada:</h4>
-          <div className={styles.changesList}>
-            {Object.entries(activity.old_values).map(([key, value]) => (
-              <div key={key} className={styles.changeItem}>
+          <div className={styles.inlineDetails}>
+            {Object.entries(activity.old_values).map(([key, value], index, arr) => (
+              <span key={key} className={styles.inlineItem}>
                 <span className={styles.fieldName}>{getFieldLabel(key)}:</span>
                 <span className={styles.oldValue}>{formatValue(value)}</span>
-              </div>
+                {index < arr.length - 1 && <span className={styles.separator}> • </span>}
+              </span>
             ))}
           </div>
         </div>

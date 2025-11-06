@@ -13,6 +13,7 @@ import { FaDollarSign } from "react-icons/fa";
 import GenerateDepositPDF from "../GenerateDepositPDF";
 import { DataSelect } from "../DataTime";
 import { logDonorActivity } from "../../helper/logDonorActivity";
+import { DONOR_TYPES } from "../../constants/constants";
 
 const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
   const { operatorData } = useContext(UserContext);
@@ -36,7 +37,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
   const [operators, setOperators] = useState([]);
   const [receiptConfig, setReceiptConfig] = useState([]);
   const [extraValue, setExtraValue] = useState(donation.donation_extra);
-  
+
   // Armazenar valores originais para comparação
   const [originalValues] = useState({
     donation_value: donation.donation_value,
@@ -161,7 +162,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
   };
 
   const handleDelete = async () => {
-    console.log({donation, donorData})
+    console.log({ donation, donorData });
     if (window.confirm("Deseja deletar a doação?")) {
       const { error } = await supabase
         .from("donation")
@@ -266,12 +267,12 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
   };
 
   return (
-    <main className={styles['modal-donation-container']}>
-      <div className={styles['modal-donation']}>
-        <div className={styles['modal-donation-content']}>
-          <div className={styles['modal-donation-header']}>
-            <div className={styles['modal-title-section']}>
-              <h2 className={styles['modal-title']}>
+    <main className={styles["modal-donation-container"]}>
+      <div className={styles["modal-donation"]}>
+        <div className={styles["modal-donation-content"]}>
+          <div className={styles["modal-donation-header"]}>
+            <div className={styles["modal-title-section"]}>
+              <h2 className={styles["modal-title"]}>
                 <FaDollarSign />
                 Editar Doação
               </h2>
@@ -316,17 +317,17 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
             )}
             <button
               onClick={() => setModalEdit(false)}
-              className={styles['btn-close-modal']}
+              className={styles["btn-close-modal"]}
               title="Fechar"
             >
               ✕
             </button>
           </div>
-          <div className={styles['modal-donation-body']}>
-            <div className={styles['form-section']}>
+          <div className={styles["modal-donation-body"]}>
+            <div className={styles["form-section"]}>
               <h3>Dados da Doação</h3>
-              <div className={styles['form-grid']}>
-                <div className={styles['input-group']}>
+              <div className={styles["form-grid"]}>
+                <div className={styles["input-group"]}>
                   <label>Valor *</label>
                   <input
                     type="number"
@@ -336,7 +337,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
                     min="0"
                   />
                 </div>
-                <div className={styles['input-group']}>
+                <div className={styles["input-group"]}>
                   <label>Extra *</label>
                   <input
                     type="number"
@@ -347,27 +348,26 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
                     min="0"
                   />
                 </div>
-
-                <div className={styles['input-group']}>
-                  <label>Data para Receber *</label>
-                  <input
-                    type="date"
-                    value={date}
-                    onChange={handleDate}
-                  />
-                </div>
-                {donation.operator_code_id && (
-                  <div className={styles['input-group']}>
-                    <label>Mês Referente</label>
-                    <input
-                      type="month"
-                      value={monthReferent ? monthReferent.substring(0, 7) : ""}
-                      onChange={handleMesRefChange}
-                    />
+                <div style={{ display: "flex", gap: "10px" }}>
+                  <div className={styles["input-group"]}>
+                    <label>Data para Receber *</label>
+                    <input type="date" value={date} onChange={handleDate} />
                   </div>
-                )}
+                  {donation.donor_type === DONOR_TYPES.MONTHLY && (
+                    <div className={styles["input-group"]}>
+                      <label>Mês Referente</label>
+                      <input
+                        type="month"
+                        value={
+                          monthReferent ? monthReferent.substring(0, 7) : ""
+                        }
+                        onChange={handleMesRefChange}
+                      />
+                    </div>
+                  )}
+                </div>
 
-                <div className={styles['input-group']}>
+                <div className={styles["input-group"]}>
                   <label>Operador *</label>
                   <select
                     value={operator}
@@ -386,7 +386,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
                     ))}
                   </select>
                 </div>
-                <div className={styles['input-group']}>
+                <div className={styles["input-group"]}>
                   <label>Coletador *</label>
                   <select
                     value={collector}
@@ -405,7 +405,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
                     ))}
                   </select>
                 </div>
-                <div className={styles['input-group']}>
+                <div className={styles["input-group"]}>
                   <label>Campanha</label>
                   <select
                     value={campaign}
@@ -421,7 +421,9 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
                     ))}
                   </select>
                 </div>
-                <div className={`${styles['input-group']} ${styles['full-width']}`}>
+                <div
+                  className={`${styles["input-group"]} ${styles["full-width"]}`}
+                >
                   <label>Observação</label>
                   <textarea
                     value={observation}
@@ -460,7 +462,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
             </div>
           </div>
 
-          <div className={styles['modal-donation-footer']}>
+          <div className={styles["modal-donation-footer"]}>
             <div
               style={{
                 display: "flex",
@@ -535,7 +537,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
               </button>
               <button
                 onClick={handleConfirm}
-                className={styles['btn-create-donation']}
+                className={styles["btn-create-donation"]}
                 style={{ minWidth: "auto" }}
               >
                 💰 Salvar Alterações

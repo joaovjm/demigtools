@@ -259,6 +259,55 @@
   margin-left: 8px;
 }
 
+/* Estilos para detalhes em linha (criação/deleção) */
+.inlineDetails {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.inlineItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.inlineItem .fieldName {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.inlineItem .newValue,
+.inlineItem .oldValue {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.inlineItem .newValue {
+  background: #f1f8f4;
+  border: 1px solid #c8e6c9;
+  color: #2e7d32;
+}
+
+.inlineItem .oldValue {
+  background: #fff5f5;
+  border: 1px solid #ffcdd2;
+  color: #c62828;
+}
+
+.separator {
+  color: #6c757d;
+  font-weight: bold;
+  margin: 0 4px;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
   .container {

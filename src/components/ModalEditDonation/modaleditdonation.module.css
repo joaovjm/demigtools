@@ -7,9 +7,10 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   background-color: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(5px);
+  overflow-y: auto;
   z-index: 1000;
   animation: fadeIn 0.3s ease-out;
 }
@@ -32,8 +33,8 @@
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   animation: slideIn 0.3s ease-out;
   max-width: 100vw;
-  max-height: 95vh;
-  overflow: hidden;
+  max-height: 90vh;
+  overflow: auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -53,7 +54,7 @@
 .modal-donation-content {
   width: min(90vw, 800px);
   max-height: 90vh;
-  min-height: 400px;
+  min-height: 300px;
   border: 3px double #383838;
   border-radius: 12px;
   padding: 16px;
@@ -67,8 +68,8 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 12px;
-  padding-bottom: 8px;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
   border-bottom: 2px solid #383838;
   flex-shrink: 0;
 }
@@ -117,8 +118,8 @@
 .modal-donation-body {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: 10px;
+  margin-bottom: 10px;
   flex: 1;
   overflow-y: auto;
   padding-right: 8px;
@@ -135,8 +136,8 @@
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
 .input-group {
@@ -233,7 +234,7 @@
 .modal-donation-footer {
   display: flex;
   justify-content: center;
-  padding-top: 12px;
+  padding-top: 8px;
   border-top: 2px solid #383838;
   flex-shrink: 0;
 }
@@ -294,7 +295,8 @@
     width: 95vw;
     max-height: 95vh;
     padding: 10px;
-    min-height: 320px;
+    min-height: 200px;
+    
   }
   
   .modal-donation-header {
@@ -335,11 +337,15 @@
 }
 
 @media (max-width: 900px) {
+  .modal-donation-container{
+    overflow-y: auto;
+  }
+
   .modal-donation-content {
     width: 96vw;
     max-height: 96vh;
     padding: 8px;
-    min-height: 300px;
+    min-height: auto;
   }
   
   .modal-donation-header {
@@ -360,22 +366,22 @@
   .input-group textarea {
     padding: 6px 8px;
     font-size: 14px;
-    min-height: 36px;
+    min-height: 34px;
   }
   
   .input-group textarea {
-    min-height: 50px;
+    min-height: 45px;
   }
   
   .input-group label {
     font-size: 11px;
-    margin-bottom: 2px;
+    margin-bottom: 1px;
   }
   
   .btn-create-donation {
     padding: 8px 16px;
     font-size: 14px;
-    height: 40px;
+    height: 38px;
   }
 }
 
@@ -387,6 +393,8 @@
   .modal-donation {
     width: 100%;
     max-width: 100%;
+    height: 90vh;
+    overflow-y: auto;
     margin: 0;
   }
   
@@ -397,6 +405,7 @@
     min-height: auto;
     border-radius: 6px;
   }
+
   
   .modal-title {
     font-size: 14px;
@@ -446,27 +455,27 @@
   .input-group input,
   .input-group select,
   .input-group textarea {
-    padding: 8px 10px;
-    font-size: 15px;
-    min-height: 38px;
+    padding: 6px 8px;
+    font-size: 14px;
+    min-height: 36px;
     border-radius: 4px;
   }
   
   .input-group textarea {
-    min-height: 60px;
+    min-height: 50px;
     resize: vertical;
   }
   
   .input-group label {
     font-size: 11px;
     font-weight: 600;
-    margin-bottom: 2px;
+    margin-bottom: 1px;
   }
   
   .btn-create-donation {
-    padding: 10px 16px;
+    padding: 8px 16px;
     font-size: 14px;
-    height: 42px;
+    height: 38px;
     min-width: 100%;
     width: 100%;
     border-radius: 4px;
@@ -475,17 +484,17 @@
   
   .modal-donation-footer {
     padding-top: 6px;
-    margin-top: 4px;
+    margin-top: 3px;
   }
   
   .form-section h3 {
     font-size: 13px;
-    margin-bottom: 6px;
+    margin-bottom: 5px;
     font-weight: 700;
   }
   
   .modal-donation-body {
-    gap: 8px;
+    gap: 6px;
     padding-right: 2px;
     flex: 1;
     overflow-y: auto;
@@ -540,26 +549,26 @@
   .input-group input,
   .input-group select,
   .input-group textarea {
-    padding: 8px 10px;
-    font-size: 16px;
-    min-height: 40px;
+    padding: 6px 8px;
+    font-size: 15px;
+    min-height: 38px;
     border-radius: 6px;
   }
   
   .input-group textarea {
-    min-height: 60px;
+    min-height: 50px;
   }
   
   .input-group label {
     font-size: 11px;
     font-weight: 600;
-    margin-bottom: 2px;
+    margin-bottom: 1px;
   }
   
   .btn-create-donation {
-    padding: 12px 18px;
+    padding: 10px 16px;
     font-size: 14px;
-    height: 44px;
+    height: 40px;
     min-width: 100%;
     width: 100%;
     border-radius: 6px;
@@ -567,18 +576,18 @@
   }
   
   .modal-donation-footer {
-    padding-top: 8px;
-    margin-top: 4px;
+    padding-top: 6px;
+    margin-top: 3px;
   }
   
   .form-section h3 {
     font-size: 13px;
-    margin-bottom: 6px;
+    margin-bottom: 5px;
     font-weight: 700;
   }
   
   .modal-donation-body {
-    gap: 8px;
+    gap: 6px;
     padding-right: 1px;
   }
 }
