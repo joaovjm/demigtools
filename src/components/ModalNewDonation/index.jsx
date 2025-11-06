@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ICONS } from "../../constants/constants";
 import FormInput from "../forms/FormInput";
-import "./index.css";
+import styles from "./modalnewdonation.module.css";
 import { getCampains } from "../../helper/getCampains";
 
 const ModalNewDonation = ({ 
@@ -90,19 +90,19 @@ const ModalNewDonation = ({
   if (!isOpen) return null;
 
   return (
-    <div className="modal-new-donation-overlay">
-      <div className="modal-new-donation">
-        <div className="modal-new-donation-content">
+    <div className={styles.modalNewDonationOverlay}>
+      <div className={styles.modalNewDonation}>
+        <div className={styles.modalNewDonationContent}>
           {/* Header */}
-          <div className="modal-new-donation-header">
-            <div className="modal-title-section">
-              <h3 className="modal-new-donation-title">
+          <div className={styles.modalNewDonationHeader}>
+            <div className={styles.modalTitleSection}>
+              <h3 className={styles.modalNewDonationTitle}>
                 {ICONS.CIRCLEOUTLINE} Nova Doação
               </h3>
-              <p className="modal-subtitle">Criar nova doação para {currentLead?.leads_name}</p>
+              <p className={styles.modalSubtitle}>Criar nova doação para {currentLead?.leads_name}</p>
             </div>
             <button 
-              className="btn-close-modal"
+              className={styles.btnCloseModal}
               onClick={handleClose}
               title="Fechar modal"
             >
@@ -111,12 +111,12 @@ const ModalNewDonation = ({
           </div>
 
           {/* Body */}
-          <div className="modal-new-donation-body">
-            <form className="modal-new-donation-form">
+          <div className={styles.modalNewDonationBody}>
+            <form className={styles.modalNewDonationForm}>
               {/* Endereço Section */}
-              <div className="modal-form-section">
+              <div className={styles.modalFormSection}>
                 <h4>Endereço</h4>
-                <div className="modal-form-row">
+                <div className={styles.modalFormRow}>
                   <FormInput
                     label="Endereço"
                     value={formData.address}
@@ -142,10 +142,10 @@ const ModalNewDonation = ({
               </div>
 
               {/* Contato Section */}
-              <div className="modal-form-section">
+              <div className={styles.modalFormSection}>
                 <h4>Contato</h4>
-                <div className="modal-form-row">
-                  <div className="modal-form-group">
+                <div className={styles.modalFormRow}>
+                  <div className={styles.modalFormGroup}>
                     <label htmlFor="telSuccess">
                       Qual telefone conseguiu contato? *
                     </label>
@@ -154,7 +154,7 @@ const ModalNewDonation = ({
                       id="telSuccess"
                       value={formData.telSuccess}
                       onChange={(e) => handleInputChange("telSuccess", e.target.value)}
-                      className="modal-select"
+                      className={styles.modalSelect}
                     >
                       <option value="" disabled>
                         Selecione...
@@ -209,9 +209,9 @@ const ModalNewDonation = ({
               </div>
 
               {/* Doação Section */}
-              <div className="modal-form-section">
+              <div className={styles.modalFormSection}>
                 <h4>Informações da Doação</h4>
-                <div className="modal-form-row compact">
+                <div className={`${styles.modalFormRow} ${styles.compact}`}>
                   <FormInput
                     label="Valor *"
                     value={formData.valueDonation}
@@ -223,12 +223,12 @@ const ModalNewDonation = ({
                     type="date"
                     onChange={(e) => handleInputChange("dateDonation", e.target.value)}
                   />
-                  <div className="modal-form-group">
+                  <div className={styles.modalFormGroup}>
                     <label>Campanha *</label>
                     <select
                       value={formData.campain}
                       onChange={(e) => handleInputChange("campain", e.target.value)}
-                      className="modal-select"
+                      className={styles.modalSelect}
                     >
                       <option value="" disabled>
                         Selecione...
@@ -244,22 +244,22 @@ const ModalNewDonation = ({
               </div>
 
               {/* Observações Section */}
-              <div className="modal-form-section">
+              <div className={styles.modalFormSection}>
                 <h4>Observações</h4>
-                <div className="modal-form-row observations">
-                  <div className="modal-form-group">
+                <div className={`${styles.modalFormRow} ${styles.observations}`}>
+                  <div className={styles.modalFormGroup}>
                     <label>Observação da Ficha</label>
                     <textarea
-                      className="modal-textarea"
+                      className={styles.modalTextarea}
                       value={formData.observation}
                       onChange={(e) => handleInputChange("observation", e.target.value)}
                       placeholder="Digite observações sobre o lead..."
                     />
                   </div>
-                  <div className="modal-form-group">
+                  <div className={styles.modalFormGroup}>
                     <label>Referência do Doador</label>
                     <textarea
-                      className="modal-textarea"
+                      className={styles.modalTextarea}
                       value={formData.reference}
                       onChange={(e) => handleInputChange("reference", e.target.value)}
                       placeholder="Digite referências do doador..."
@@ -271,17 +271,17 @@ const ModalNewDonation = ({
           </div>
 
           {/* Footer */}
-          <div className="modal-new-donation-footer">
+          <div className={styles.modalNewDonationFooter}>
             <button
               onClick={handleClose}
-              className="modal-btn secondary"
+              className={`${styles.modalBtn} ${styles.secondary}`}
             >
               {ICONS.BACK} Voltar
             </button>
             <button
               type="button"
               onClick={handleSave}
-              className="modal-btn primary"
+              className={`${styles.modalBtn} ${styles.primary}`}
             >
               Criar Nova doação
             </button>

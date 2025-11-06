@@ -1,5 +1,5 @@
 /* Create Mensal Donation Container */
-.create-mensal-donation-container {
+.createMensalDonationContainer {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -9,7 +9,7 @@
   box-sizing: border-box;
 }
 
-.create-mensal-donation-content {
+.createMensalDonationContent {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -23,7 +23,7 @@
 }
 
 /* Header Section */
-.create-mensal-donation-header {
+.createMensalDonationHeader {
   background: linear-gradient(135deg, #363a3d 0%, #2f2d2d 100%);
   padding: 12px 20px;
   border-bottom: 2px solid #464a4d;
@@ -31,7 +31,7 @@
   flex-shrink: 0;
 }
 
-.create-mensal-donation-title {
+.createMensalDonationTitle {
   color: #faa01c;
   font-size: 18px;
   font-weight: 600;
@@ -44,12 +44,12 @@
   letter-spacing: 0.5px;
 }
 
-.title-icon {
+.titleIcon {
   font-size: 20px;
   color: #faa01c;
 }
 
-.create-mensal-donation-subtitle {
+.createMensalDonationSubtitle {
   color: #faf5e9;
   font-size: 11px;
   margin: 0;
@@ -59,7 +59,7 @@
 }
 
 /* Form Section */
-.create-mensal-donation-form {
+.createMensalDonationForm {
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -68,7 +68,7 @@
   overflow-y: auto;
 }
 
-.create-mensal-donation-section {
+.createMensalDonationSection {
   background-color: #363a3d;
   border: 2px solid #2f2d2d;
   border-radius: 6px;
@@ -77,12 +77,12 @@
   flex-shrink: 0;
 }
 
-.create-mensal-donation-section:hover {
+.createMensalDonationSection:hover {
   border-color: #464a4d;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.section-title {
+.sectionTitle {
   color: #faa01c;
   font-size: 16px;
   font-weight: 600;
@@ -94,26 +94,26 @@
   letter-spacing: 0.5px;
 }
 
-.section-icon {
+.sectionIcon {
   font-size: 16px;
   color: #faa01c;
 }
 
 /* Form Elements */
-.form-row {
+.formRow {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
   margin-bottom: 16px;
 }
 
-.form-group {
+.formGroup {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.form-label {
+.formLabel {
   color: #faf5e9;
   font-size: 12px;
   font-weight: 500;
@@ -122,8 +122,8 @@
   letter-spacing: 0.5px;
 }
 
-.create-mensal-donation-input,
-.create-mensal-donation-select {
+.createMensalDonationInput,
+.createMensalDonationSelect {
   width: 100%;
   padding: 10px 12px;
   background-color: #2f2d2d;
@@ -138,25 +138,25 @@
   height: 40px;
 }
 
-.create-mensal-donation-input:focus,
-.create-mensal-donation-select:focus {
+.createMensalDonationInput:focus,
+.createMensalDonationSelect:focus {
   border-color: #faa01c;
   box-shadow: 0 0 0 3px rgba(250, 160, 28, 0.1);
 }
 
-.create-mensal-donation-input::placeholder {
+.createMensalDonationInput::placeholder {
   color: #9e9e9e;
   text-transform: none;
 }
 
-.create-mensal-donation-select option {
+.createMensalDonationSelect option {
   background-color: #2f2d2d;
   color: #faf5e9;
   padding: 8px;
 }
 
 /* Button */
-.form-actions {
+.formActions {
   display: flex;
   justify-content: center;
   padding-top: 12px;
@@ -164,7 +164,7 @@
   margin-top: 4px;
 }
 
-.create-mensal-donation-btn {
+.createMensalDonationBtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -184,37 +184,37 @@
   height: 44px;
 }
 
-.create-mensal-donation-btn.primary {
+.createMensalDonationBtn.primary {
   background: linear-gradient(135deg, #faa01c 0%, #e8901a 100%);
   color: #1f1d1d;
   box-shadow: 0 4px 16px rgba(250, 160, 28, 0.3);
 }
 
-.create-mensal-donation-btn.primary:hover:not(:disabled) {
+.createMensalDonationBtn.primary:hover:not(:disabled) {
   background: linear-gradient(135deg, #e8901a 0%, #d17e18 100%);
   box-shadow: 0 6px 24px rgba(250, 160, 28, 0.4);
   transform: translateY(-2px);
 }
 
-.create-mensal-donation-btn:disabled {
+.createMensalDonationBtn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
 }
 
-.btn-icon {
+.btnIcon {
   font-size: 18px;
 }
 
 /* Status Container */
-.status-container {
+.statusContainer {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.status-message {
+.statusMessage {
   display: flex;
   align-items: flex-start;
   gap: 12px;
@@ -236,31 +236,31 @@
   }
 }
 
-.status-message.info {
+.statusMessage.info {
   background-color: rgba(33, 150, 243, 0.1);
   border-color: #2196f3;
   color: #faf5e9;
 }
 
-.status-message.warning {
+.statusMessage.warning {
   background-color: rgba(255, 152, 0, 0.1);
   border-color: #ff9800;
   color: #faf5e9;
 }
 
-.status-message.success {
+.statusMessage.success {
   background-color: rgba(76, 175, 80, 0.1);
   border-color: #4caf50;
   color: #faf5e9;
 }
 
-.status-message.loading {
+.statusMessage.loading {
   background-color: rgba(156, 39, 176, 0.1);
   border-color: #9c27b0;
   color: #faf5e9;
 }
 
-.status-icon {
+.statusIcon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -271,96 +271,96 @@
   flex-shrink: 0;
 }
 
-.status-message.info .status-icon {
+.statusMessage.info .statusIcon {
   background-color: #2196f3;
   color: white;
 }
 
-.status-message.warning .status-icon {
+.statusMessage.warning .statusIcon {
   background-color: #ff9800;
   color: white;
 }
 
-.status-message.success .status-icon {
+.statusMessage.success .statusIcon {
   background-color: #4caf50;
   color: white;
 }
 
-.status-message.loading .status-icon {
+.statusMessage.loading .statusIcon {
   background-color: #9c27b0;
   color: white;
 }
 
-.status-content {
+.statusContent {
   flex: 1;
 }
 
-.status-content h5 {
+.statusContent h5 {
   margin: 0 0 6px 0;
   font-size: 14px;
   font-weight: 600;
   color: inherit;
 }
 
-.status-content p {
+.statusContent p {
   margin: 0;
   font-size: 12px;
   line-height: 1.4;
   opacity: 0.9;
 }
 
-.status-content strong {
+.statusContent strong {
   color: #faa01c;
   font-weight: 700;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .create-mensal-donation-container {
+  .createMensalDonationContainer {
     padding: 8px;
   }
 
-  .create-mensal-donation-content {
+  .createMensalDonationContent {
     max-width: 100%;
   }
 
-  .create-mensal-donation-header {
+  .createMensalDonationHeader {
     padding: 12px 16px;
   }
 
-  .create-mensal-donation-title {
+  .createMensalDonationTitle {
     font-size: 18px;
     flex-direction: column;
     gap: 6px;
   }
 
-  .create-mensal-donation-form {
+  .createMensalDonationForm {
     padding: 16px;
     gap: 12px;
   }
 
-  .create-mensal-donation-section {
+  .createMensalDonationSection {
     padding: 12px;
   }
 
-  .form-row {
+  .formRow {
     grid-template-columns: 1fr;
     gap: 12px;
   }
 
-  .create-mensal-donation-btn {
+  .createMensalDonationBtn {
     width: 100%;
     min-width: auto;
   }
 
-  .status-message {
+  .statusMessage {
     flex-direction: column;
     text-align: center;
     gap: 8px;
     padding: 12px;
   }
 
-  .status-icon {
+  .statusIcon {
     width: 36px;
     height: 36px;
     font-size: 18px;
@@ -368,41 +368,42 @@
 }
 
 @media (max-width: 480px) {
-  .create-mensal-donation-header {
+  .createMensalDonationHeader {
     padding: 10px 12px;
   }
 
-  .create-mensal-donation-title {
+  .createMensalDonationTitle {
     font-size: 16px;
   }
 
-  .create-mensal-donation-subtitle {
+  .createMensalDonationSubtitle {
     font-size: 11px;
   }
 
-  .create-mensal-donation-form {
+  .createMensalDonationForm {
     padding: 12px;
     gap: 10px;
   }
 
-  .create-mensal-donation-section {
+  .createMensalDonationSection {
     padding: 10px;
   }
 
-  .section-title {
+  .sectionTitle {
     font-size: 14px;
   }
 
-  .create-mensal-donation-input,
-  .create-mensal-donation-select {
+  .createMensalDonationInput,
+  .createMensalDonationSelect {
     padding: 8px 10px;
     font-size: 12px;
     height: 36px;
   }
 
-  .create-mensal-donation-btn {
+  .createMensalDonationBtn {
     padding: 10px 20px;
     font-size: 13px;
     height: 40px;
   }
 }
+

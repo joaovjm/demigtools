@@ -1,5 +1,5 @@
 /* Modal New Donation Overlay */
-.modal-new-donation-overlay {
+.modalNewDonationOverlay {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -24,7 +24,7 @@
 }
 
 /* Modal Content */
-.modal-new-donation {
+.modalNewDonation {
   position: relative;
   z-index: 1;
   background-color: #1f1d1d;
@@ -47,7 +47,7 @@
   }
 }
 
-.modal-new-donation-content {
+.modalNewDonationContent {
   width: 900px;
   max-height: 96vh;
   border: 3px double #363a3d;
@@ -59,7 +59,7 @@
 }
 
 /* Header */
-.modal-new-donation-header {
+.modalNewDonationHeader {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -69,13 +69,13 @@
   flex-shrink: 0;
 }
 
-.modal-title-section {
+.modalTitleSection {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.modal-new-donation-title {
+.modalNewDonationTitle {
   color: #faa01c;
   font-size: 18px;
   font-weight: 600;
@@ -86,14 +86,14 @@
   gap: 4px;
 }
 
-.modal-subtitle {
+.modalSubtitle {
   color: #faf5e9;
   font-size: 11px;
   margin: 0;
   opacity: 0.8;
 }
 
-.btn-close-modal {
+.btnCloseModal {
   background-color: #f44336;
   color: #faf5e9;
   border: none;
@@ -110,13 +110,13 @@
   box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
 }
 
-.btn-close-modal:hover {
+.btnCloseModal:hover {
   background-color: #d32f2f;
   transform: scale(1.1);
 }
 
 /* Body */
-.modal-new-donation-body {
+.modalNewDonationBody {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -126,20 +126,20 @@
 }
 
 /* Form */
-.modal-new-donation-form {
+.modalNewDonationForm {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.modal-form-section {
+.modalFormSection {
   background-color: #363a3d;
   border: 2px solid #2f2d2d;
   border-radius: 8px;
   padding: 6px;
 }
 
-.modal-form-section h4 {
+.modalFormSection h4 {
   color: #faa01c;
   margin: 0 0 4px 0;
   font-size: 13px;
@@ -148,41 +148,41 @@
   letter-spacing: 0.5px;
 }
 
-.modal-form-row {
+.modalFormRow {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 8px;
   margin-bottom: 4px;
 }
 
-.modal-form-row:last-child {
+.modalFormRow:last-child {
   margin-bottom: 0;
 }
 
-.modal-form-row.observations {
+.modalFormRow.observations {
   grid-template-columns: 1fr 1fr;
   gap: 6px;
 }
 
-.modal-form-row.compact {
+.modalFormRow.compact {
   grid-template-columns: repeat(3, 1fr);
   gap: 6px;
 }
 
-.modal-form-group {
+.modalFormGroup {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.modal-form-group label {
+.modalFormGroup label {
   color: #faf5e9;
   font-size: 10px;
   font-weight: 500;
   margin-bottom: 1px;
 }
 
-.modal-select {
+.modalSelect {
   width: 100%;
   padding: 4px 8px;
   background-color: #2f2d2d;
@@ -197,17 +197,17 @@
   height: 28px;
 }
 
-.modal-select:focus {
+.modalSelect:focus {
   border-color: #faa01c;
 }
 
-.modal-select:disabled {
+.modalSelect:disabled {
   opacity: 0.7;
   background-color: #262626;
   cursor: not-allowed;
 }
 
-.modal-textarea {
+.modalTextarea {
   width: 100%;
   padding: 4px 8px;
   background-color: #2f2d2d;
@@ -223,22 +223,22 @@
   box-sizing: border-box;
 }
 
-.modal-textarea:focus {
+.modalTextarea:focus {
   border-color: #faa01c;
 }
 
-.modal-textarea:disabled {
+.modalTextarea:disabled {
   opacity: 0.7;
   background-color: #262626;
   cursor: not-allowed;
 }
 
-.modal-textarea::placeholder {
+.modalTextarea::placeholder {
   color: #9e9e9e;
 }
 
 /* Footer */
-.modal-new-donation-footer {
+.modalNewDonationFooter {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
@@ -248,7 +248,7 @@
 }
 
 /* Buttons */
-.modal-btn {
+.modalBtn {
   padding: 6px 12px;
   border: none;
   border-radius: 6px;
@@ -266,29 +266,29 @@
   letter-spacing: 0.5px;
 }
 
-.modal-btn.primary {
+.modalBtn.primary {
   background-color: #faa01c;
   color: #1f1d1d;
 }
 
-.modal-btn.primary:hover:not(:disabled) {
+.modalBtn.primary:hover:not(:disabled) {
   background-color: #e8901a;
   box-shadow: 0 4px 12px rgba(250, 160, 28, 0.4);
   transform: translateY(-1px);
 }
 
-.modal-btn.secondary {
+.modalBtn.secondary {
   background-color: #363a3d;
   color: #faf5e9;
   border: 2px solid #2f2d2d;
 }
 
-.modal-btn.secondary:hover:not(:disabled) {
+.modalBtn.secondary:hover:not(:disabled) {
   background-color: #4a4d50;
   border-color: #faa01c;
 }
 
-.modal-btn:disabled {
+.modalBtn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
@@ -296,53 +296,53 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .modal-new-donation-content {
+  .modalNewDonationContent {
     width: 90vw;
     max-height: 95vh;
     padding: 16px;
   }
   
-  .modal-new-donation-title {
+  .modalNewDonationTitle {
     font-size: 20px;
   }
   
-  .modal-form-row {
+  .modalFormRow {
     grid-template-columns: 1fr;
     gap: 12px;
   }
   
-  .modal-new-donation-footer {
+  .modalNewDonationFooter {
     flex-direction: column;
     align-items: stretch;
   }
   
-  .modal-btn {
+  .modalBtn {
     width: 100%;
     min-width: auto;
   }
 }
 
 @media (max-width: 480px) {
-  .modal-new-donation-content {
+  .modalNewDonationContent {
     width: 95vw;
     max-height: 95vh;
     padding: 12px;
   }
   
-  .modal-new-donation-title {
+  .modalNewDonationTitle {
     font-size: 18px;
   }
   
-  .modal-form-section {
+  .modalFormSection {
     padding: 12px;
   }
   
-  .modal-form-section h4 {
+  .modalFormSection h4 {
     font-size: 14px;
     margin-bottom: 12px;
   }
   
-  .modal-btn {
+  .modalBtn {
     padding: 10px 20px;
     font-size: 13px;
     height: 40px;
@@ -350,32 +350,33 @@
 }
 
 /* Scrollbar Styling */
-.modal-new-donation::-webkit-scrollbar {
+.modalNewDonation::-webkit-scrollbar {
   width: 8px;
 }
 
-.modal-new-donation::-webkit-scrollbar-track {
+.modalNewDonation::-webkit-scrollbar-track {
   background: #2a2828;
   border-radius: 4px;
 }
 
-.modal-new-donation::-webkit-scrollbar-thumb {
+.modalNewDonation::-webkit-scrollbar-thumb {
   background: #faa01c;
   border-radius: 4px;
 }
 
-.modal-new-donation::-webkit-scrollbar-thumb:hover {
+.modalNewDonation::-webkit-scrollbar-thumb:hover {
   background: #e8901a;
 }
 
 /* Focus states for accessibility */
-.modal-btn:focus-visible {
+.modalBtn:focus-visible {
   outline: 2px solid #faa01c;
   outline-offset: 2px;
 }
 
-.modal-select:focus-visible,
-.modal-textarea:focus-visible {
+.modalSelect:focus-visible,
+.modalTextarea:focus-visible {
   outline: 2px solid #faa01c;
   outline-offset: 2px;
 }
+

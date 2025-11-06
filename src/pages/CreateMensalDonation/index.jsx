@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./index.css";
+import styles from "./createmensaldonation.module.css";
 import { DataSelect } from "../../components/DataTime";
 import { monthHystoryChecker } from "../../helper/monthHistoryChecker";
 import { monthlyfeeGenerator } from "../../helper/monthlyfeeGenerator";
@@ -49,44 +49,44 @@ const CreateMensalDonation = () => {
   };
 
   return (
-    <div className="create-mensal-donation-container">
-      <div className="create-mensal-donation-content">
-        <div className="create-mensal-donation-header">
-          <h3 className="create-mensal-donation-title">
-            <FaCog className="title-icon" />
+    <div className={styles.createMensalDonationContainer}>
+      <div className={styles.createMensalDonationContent}>
+        <div className={styles.createMensalDonationHeader}>
+          <h3 className={styles.createMensalDonationTitle}>
+            <FaCog className={styles.titleIcon} />
             Gerador de Mensalidades
           </h3>
-          <p className="create-mensal-donation-subtitle">
+          <p className={styles.createMensalDonationSubtitle}>
             Configure e gere mensalidades para campanhas específicas
           </p>
         </div>
 
-        <div className="create-mensal-donation-form">
+        <div className={styles.createMensalDonationForm}>
           {/* Seção de Configuração */}
-          <div className="create-mensal-donation-section">
-            <h4 className="section-title">
-              <FaCalendarAlt className="section-icon" />
+          <div className={styles.createMensalDonationSection}>
+            <h4 className={styles.sectionTitle}>
+              <FaCalendarAlt className={styles.sectionIcon} />
               Configuração da Mensalidade
             </h4>
             
-            <div className="form-row">
-              <div className="form-group">
-                <label className="form-label">Mês Referente *</label>
+            <div className={styles.formRow}>
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>Mês Referente *</label>
                 <input
                   type="date"
                   value={mesrefGenerator}
                   onChange={onMonthHystoryChecker}
-                  className="create-mensal-donation-input"
+                  className={styles.createMensalDonationInput}
                   placeholder="Selecione o mês"
                 />
               </div>
               
-              <div className="form-group">
-                <label className="form-label">Campanha *</label>
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>Campanha *</label>
                 <select
                   value={campainSelected}
                   onChange={(e) => setCampainSelected(e.target.value)}
-                  className="create-mensal-donation-select"
+                  className={styles.createMensalDonationSelect}
                 >
                   <option value="" disabled>
                     Selecione uma campanha...
@@ -100,9 +100,9 @@ const CreateMensalDonation = () => {
               </div>
             </div>
 
-            <div className="form-actions">
+            <div className={styles.formActions}>
               <button
-                className="create-mensal-donation-btn primary"
+                className={`${styles.createMensalDonationBtn} ${styles.primary}`}
                 onClick={handleGerar}
                 disabled={isDisable || confirmed || !mesrefGenerator || !campainSelected}
               >
@@ -113,7 +113,7 @@ const CreateMensalDonation = () => {
                   </>
                 ) : (
                   <>
-                    <FaBullhorn className="btn-icon" />
+                    <FaBullhorn className={styles.btnIcon} />
                     <span>Gerar Mensalidade</span>
                   </>
                 )}
@@ -122,19 +122,19 @@ const CreateMensalDonation = () => {
           </div>
 
           {/* Seção de Status */}
-          <div className="create-mensal-donation-section">
-            <h4 className="section-title">
-              <GiConfirmed className="section-icon" />
+          <div className={styles.createMensalDonationSection}>
+            <h4 className={styles.sectionTitle}>
+              <GiConfirmed className={styles.sectionIcon} />
               Status da Operação
             </h4>
             
-            <div className="status-container">
+            <div className={styles.statusContainer}>
               {!isDisable && !confirmed && !isLoading && (
-                <div className="status-message info">
-                  <div className="status-icon">
+                <div className={`${styles.statusMessage} ${styles.info}`}>
+                  <div className={styles.statusIcon}>
                     <FaCog />
                   </div>
-                  <div className="status-content">
+                  <div className={styles.statusContent}>
                     <h5>Pronto para Gerar</h5>
                     <p>Configure o mês e a campanha para gerar as mensalidades</p>
                   </div>
@@ -142,11 +142,11 @@ const CreateMensalDonation = () => {
               )}
 
               {isDisable && (
-                <div className="status-message warning">
-                  <div className="status-icon">
+                <div className={`${styles.statusMessage} ${styles.warning}`}>
+                  <div className={styles.statusIcon}>
                     <GiConfirmed />
                   </div>
-                  <div className="status-content">
+                  <div className={styles.statusContent}>
                     <h5>Mensalidade Já Gerada</h5>
                     <p>As mensalidades para este mês já foram processadas anteriormente</p>
                   </div>
@@ -154,11 +154,11 @@ const CreateMensalDonation = () => {
               )}
 
               {confirmed && (
-                <div className="status-message success">
-                  <div className="status-icon">
+                <div className={`${styles.statusMessage} ${styles.success}`}>
+                  <div className={styles.statusIcon}>
                     <GiConfirmed />
                   </div>
-                  <div className="status-content">
+                  <div className={styles.statusContent}>
                     <h5>Mensalidade Gerada com Sucesso!</h5>
                     <p>
                       <strong>{contador}</strong> mensalidades foram criadas para a campanha selecionada
@@ -168,11 +168,11 @@ const CreateMensalDonation = () => {
               )}
 
               {isLoading && (
-                <div className="status-message loading">
-                  <div className="status-icon">
+                <div className={`${styles.statusMessage} ${styles.loading}`}>
+                  <div className={styles.statusIcon}>
                     <Loader />
                   </div>
-                  <div className="status-content">
+                  <div className={styles.statusContent}>
                     <h5>Processando...</h5>
                     <p>Gerando mensalidades, aguarde um momento</p>
                   </div>
