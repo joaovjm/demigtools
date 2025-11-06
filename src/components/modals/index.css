@@ -43,3 +43,33 @@ button {
 
 .modal-area-container-header {
 }
+
+/* Estilos para as guias */
+.modal-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 12px 24px;
+  background-color: #2a2828;
+  border-bottom: 2px solid #383838;
+}
+
+.modal-tab {
+  padding: 10px 20px;
+  background-color: #383838;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.modal-tab:hover {
+  background-color: #4a4848;
+}
+
+.modal-tab.active {
+  background-color: #385bad;
+  box-shadow: 0 2px 4px rgba(56, 91, 173, 0.4);
+}

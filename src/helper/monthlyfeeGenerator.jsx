@@ -57,7 +57,10 @@ export const monthlyfeeGenerator = async ({ mesRefGenerator, campain }) => {
             22,
             status.monthly_fee_history_id
           );
-          count += 1;
+          if(response.length > 0) {
+            count += 1;
+          }
+          
         } else {
           console.log(`Doação já existe para o doador ${item.donor_id} no mês ${mesRefYearMonth} - pulando`);
         }

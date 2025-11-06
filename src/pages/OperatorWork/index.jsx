@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./index.css";
+import styles from "./operatorwork.module.css";
 import { operatorWorkService } from "../../services/operatorWorkService";
 import TableOperatorAndCollectorWork from "../../components/TableOperatorAndCollectorWork";
 import { toast } from "react-toastify";
@@ -37,38 +37,38 @@ const OperatorWork = () => {
   };
 
   return (
-    <div className="operator-work-container">
-      <div className="operator-work-content">
-        <h3 className="operator-work-title">Relatório de Trabalho</h3>
+    <div className={styles.operatorWorkContainer}>
+      <div className={styles.operatorWorkContent}>
+        <h3 className={styles.operatorWorkTitle}>Relatório de Trabalho</h3>
         
         {/* Seção de Filtros */}
-        <div className="operator-work-filters">
-          <div className="operator-work-form">
-            <div className="form-row">
-              <div className="form-group">
+        <div className={styles.operatorWorkFilters}>
+          <div className={styles.operatorWorkForm}>
+            <div className={styles.formRow}>
+              <div className={styles.formGroup}>
                 <label>Data de Início</label>
                 <input
                   type="date"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
-                  className="operator-work-input"
+                  className={styles.operatorWorkInput}
                 />
               </div>
-              <div className="form-group">
+              <div className={styles.formGroup}>
                 <label>Data de Fim</label>
                 <input
                   type="date"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
-                  className="operator-work-input"
+                  className={styles.operatorWorkInput}
                 />
               </div>
-              <div className="form-group">
+              <div className={styles.formGroup}>
                 <label>Tipo de Relatório</label>
                 <select 
                   value={filter} 
                   onChange={(e) => setFilter(e.target.value)}
-                  className="operator-work-select"
+                  className={styles.operatorWorkSelect}
                 >
                   <option value="" disabled>Selecione o tipo...</option>
                   <option value="Operadores">Operadores</option>
@@ -77,10 +77,10 @@ const OperatorWork = () => {
               </div>
             </div>
             
-            <div className="form-actions">
+            <div className={styles.formActions}>
               <button 
                 onClick={handleGenerate} 
-                className="operator-work-btn primary"
+                className={`${styles.operatorWorkBtn} ${styles.primary}`}
                 disabled={!startDate || !endDate || !filter}
               >
                 Gerar Relatório
@@ -91,7 +91,7 @@ const OperatorWork = () => {
 
         {/* Seção de Resultados */}
         {relatory && relatory.names.length !== 0 && (
-          <div className="operator-work-results">
+          <div className={styles.operatorWorkResults}>
             <TableOperatorAndCollectorWork
               relatory={relatory}
               setClick={setClick}
@@ -103,8 +103,8 @@ const OperatorWork = () => {
 
         {/* Estado Vazio */}
         {(!relatory || !relatory.names || relatory.names.length === 0) && (startDate && endDate && filter) && (
-          <div className="operator-work-empty">
-            <div className="empty-icon">📊</div>
+          <div className={styles.operatorWorkEmpty}>
+            <div className={styles.emptyIcon}>📊</div>
             <h4>Nenhum dado encontrado</h4>
             <p>Não há registros para o período e filtro selecionados.</p>
           </div>
