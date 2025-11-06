@@ -11,6 +11,7 @@ import GenerateReceiptPDF from "../GenerateReceiptPDF";
 import { getEditReceipt } from "../../helper/getEditReceipt";
 import { FaDollarSign } from "react-icons/fa";
 import GenerateDepositPDF from "../GenerateDepositPDF";
+import { DataSelect } from "../DataTime";
 
 const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
   const { operatorData } = useContext(UserContext);
@@ -67,6 +68,17 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
       setCollectors(response);
     };
     fetchCollectors();
+  }, []);
+
+  useEffect(() => {
+    // Sincroniza o mês referente com a data para receber quando o modal carrega
+    if (donation.operator_code_id && date) {
+      const monthYear = `${DataSelect(date, "year")}-${DataSelect(
+        date,
+        "month"
+      )}-01`;
+      setMonthReferent(monthYear);
+    }
   }, []);
   const handleConfirm = async () => {
     if (operator === "") {
@@ -177,6 +189,28 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
     }
   };
 
+  const handleDate = (e) => {
+    const value = e.target.value;
+    setDate(value);
+
+    if (donation.operator_code_id) {
+      const monthYear = `${DataSelect(value, "year")}-${DataSelect(
+        value,
+        "month"
+      )}-01`;
+      setMonthReferent(monthYear);
+    }
+  };
+
+  const handleMesRefChange = (e) => {
+    const value = e.target.value; // formato: yyyy-mm
+    if (value) {
+      setMonthReferent(`${value}-01`); // adiciona o dia 01 para o formato yyyy-mm-dd
+    } else {
+      setMonthReferent("");
+    }
+  };
+
   return (
     <main className={styles['modal-donation-container']}>
       <div className={styles['modal-donation']}>
@@ -265,16 +299,16 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData }) => {
                   <input
                     type="date"
                     value={date}
-                    onChange={(e) => setDate(e.target.value)}
+                    onChange={handleDate}
                   />
                 </div>
                 {donation.operator_code_id && (
                   <div className={styles['input-group']}>
-                    <label>Mes Referente *</label>
+                    <label>Mês Referente</label>
                     <input
-                      type="date"
-                      value={monthReferent}
-                      onChange={(e) => setMonthReferent(e.target.value)}
+                      type="month"
+                      value={monthReferent ? monthReferent.substring(0, 7) : ""}
+                      onChange={handleMesRefChange}
                     />
                   </div>
                 )}
