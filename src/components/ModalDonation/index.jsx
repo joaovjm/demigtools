@@ -128,6 +128,15 @@ const ModalDonation = ({
     }
   };
 
+  const handleMesRefChange = (e) => {
+    const value = e.target.value; // formato: yyyy-mm
+    if (value) {
+      setMesref(`${value}-01`); // adiciona o dia 01 para o formato yyyy-mm-dd
+    } else {
+      setMesref("");
+    }
+  };
+
   return (
     <main className={styles['modal-donation-container']}>
       <div className={styles['modal-donation']}>
@@ -203,19 +212,9 @@ const ModalDonation = ({
                   <div className={styles['input-group']}>
                     <label>Mês Referente</label>
                     <input
-                      type="text"
-                      placeholder="Mês de referência"
-                      value={
-                        mesref
-                          ? new Date(mesref).toLocaleDateString("pt-BR", {
-                              timeZone: "UTC",
-                              month: "numeric",
-                              year: "numeric",
-                            })
-                          : ""
-                      }
-                      onChange={(e) => setMesref(e.target.value)}
-                      readOnly
+                      type="month"
+                      value={mesref ? mesref.substring(0, 7) : ""}
+                      onChange={handleMesRefChange}
                     />
                   </div>
                 )}
