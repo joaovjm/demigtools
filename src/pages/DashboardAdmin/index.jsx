@@ -88,10 +88,6 @@ const Dashboard = () => {
       setValueReceived(receivedData.totalValue);
       setDonationsReceived(receivedData.donation);
 
-      // Buscar agendamentos da nova tabela scheduled_donations (todos para admin)
-      const scheduledDonationsData = await getAllScheduledDonations();
-      setScheduledDonations(scheduledDonationsData);
-
       await getScheduledLeads(null, setScheduled, setScheduling);
     } catch (error) {
       console.error("Error fetching donations:", error);

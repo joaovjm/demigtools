@@ -6,6 +6,8 @@ import extenso from "extenso";
 import { receiptInBase64 } from "../../assets/receiptInBase64";
 
 const GenerateDepositPDF = async ({ data, config }) => {
+  console.log(data)
+  console.log(data.donation_monthref)
   const barcode = await barCodeGenerator(data.receipt_donation_id);
   const depositReceipt = [
     {
@@ -160,7 +162,7 @@ const GenerateDepositPDF = async ({ data, config }) => {
           margin: [0, 0, 0, 24],
         },
         {
-          text: `Rio de Janeiro,     ${new Date().toLocaleDateString("pt-BR", {
+          text: `Rio de Janeiro,     ${new Date(data.donation_monthref || data.donation_day_to_receive).toLocaleDateString("pt-BR", {
             timeZone: "UTC",
             day: "numeric",
             month: "long",
@@ -215,9 +217,14 @@ const GenerateDepositPDF = async ({ data, config }) => {
       }),
     });
   });*/
+
+  const fileName = `${data.receipt_donation_id} - ${data.donor_name
+    .normalize("NFD")
+    .toUpperCase()}.pdf`.replace(/[\/\\:*?"<>|]/g, "");
   
-  const fileName = `${data.receipt_donation_id} - ${data.donor_name.normalize("NFD").toUpperCase()}.pdf`.replace(/[\/\\:*?"<>|]/g, '')
-  pdfMake.createPdf(docDefinition).download(fileName)
+  
+  pdfMake.createPdf(docDefinition).download(fileName);
+
 };
 
 export default GenerateDepositPDF;
