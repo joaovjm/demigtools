@@ -93,6 +93,12 @@ export const RelatórioMenu = [
         path: "./workhistory",
         cName: "submenu-itens",
     },
+    {
+        id: 4,
+        title: "Histórico Mensal",
+        path: "./monthhistory",
+        cName: "submenu-itens",
+    }
 ];
 
 export const OperadorMenu = [

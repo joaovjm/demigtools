@@ -21,7 +21,6 @@ const WorkList = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [workListSelected, setWorkListSelected] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [dateAccessed, setDateAccessed] = useState();
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
   const [statusFilter, setStatusFilter] = useState('');
 
@@ -118,6 +117,7 @@ const WorkList = () => {
     navigate(
       `?pkg=${workSelect}&active=${list.receipt_donation_id}&modal=true`
     );
+    
     setActive(list.receipt_donation_id);
     setWorkListSelected(list);
     setModalOpen(!modalOpen);

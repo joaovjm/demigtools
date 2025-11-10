@@ -9,6 +9,7 @@ import { getCampains } from "../../helper/getCampains";
 import { UserContext } from "../../context/UserContext";
 import { getOperators } from "../../helper/getOperators";
 import { logDonorActivity } from "../../helper/logDonorActivity";
+import { updateCollectorForDonor } from "../../helper/updateCollectorForDonor";
 
 const ModalDonation = ({
   modalShow,
@@ -121,6 +122,12 @@ const ModalDonation = ({
           },
           related_donation_id: result[0].donation_code_id || null,
         });
+
+        // Atualizar todas as doações desse doador com collector_code_id = 10 para 11
+        const updateResult = await updateCollectorForDonor(donor_id, 10, 11);
+        if (updateResult.success && updateResult.count > 0) {
+          console.log(`${updateResult.count} doação(ões) atualizada(s) do coletor 10 para 11`);
+        }
       }
 
       setModalShow(false);

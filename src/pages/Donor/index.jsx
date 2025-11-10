@@ -245,7 +245,7 @@ const Donor = () => {
                   label={FORM_LABELS.TYPE}
                   value={donorData.tipo}
                   onChange={(e) => handleInputChange("tipo", e.target.value)}
-                  disabled={uiState.edit || operatorData?.operator_type !== "Admin"}
+                  disabled={(uiState.edit && operatorData?.operator_type !== "Admin" && operatorData?.operator_code_id !== 521) || uiState.edit}
                   options={Object.values(DONOR_TYPES)}
                 />
 

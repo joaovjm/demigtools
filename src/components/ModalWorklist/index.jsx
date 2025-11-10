@@ -16,6 +16,7 @@ const ModalWorklist = ({
   setActive,
   workSelect,
 }) => {
+  console.log(workSelect);
   const { operatorData } = useContext(UserContext);
   const [newDonationOpen, setNewDonationOpen] = useState(false);
   const [newSchedulingOpen, setNewSchedulingOpen] = useState(false);

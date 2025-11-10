@@ -23,7 +23,7 @@ const CreatePackage = ({
   const [loading, setLoading] = useState(false);
 
   const handlePackageChange = (field, value) => {
-    setRequestPackage((prev) => ({ ...prev, [field]: value }));
+    setRequestPackage((prev) => ({ ...prev, [field]: value.trim() }));
   };
 
   const handleAddData = async () => {

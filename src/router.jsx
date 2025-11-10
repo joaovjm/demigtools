@@ -31,6 +31,7 @@ import DashboardAdmin from "./pages/DashboardAdmin";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Chat from "./pages/Chat";
 import Tasks from "./pages/Tasks";
+import MonthHistory from "./pages/MonthHistory";
 
 const AppRoutesContent = () => {
   const location = useLocation();
@@ -185,6 +186,14 @@ const AppRoutesContent = () => {
             element={
               <Wrapper>
                 <WorkHistory />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="/monthhistory"
+            element={
+              <Wrapper>
+                <MonthHistory />
               </Wrapper>
             }
           />

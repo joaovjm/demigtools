@@ -1,0 +1,143 @@
+.monthHistory {
+  width: 100%;
+  height: calc(100vh - 11.8vh);
+  color: #faf5e9;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.monthHistoryHeader {
+  display: flex;
+  gap: 20px;
+  align-items: flex-end;
+  margin-bottom: 30px;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputGroup label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #faf5e9;
+}
+
+.inputGroup input {
+  padding: 10px 15px;
+  border: 1px solid rgba(250, 245, 233, 0.3);
+  border-radius: 6px;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: #faf5e9;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.inputGroup input:focus {
+  border-color: #faf5e9;
+  box-shadow: 0 0 0 2px rgba(250, 245, 233, 0.1);
+}
+
+.button button {
+  padding: 10px 30px;
+  background-color: #4a90e2;
+  color: #faf5e9;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.button button:hover:not(:disabled) {
+  background-color: #357abd;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.button button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.monthHistoryContent {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.tableSection {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.tableTitle {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  color: #faf5e9;
+  border-bottom: 2px solid rgba(250, 245, 233, 0.3);
+  padding-bottom: 10px;
+}
+
+.tableContainer {
+  overflow-x: auto;
+}
+
+.tableContainer table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.tableContainer thead {
+  background-color: rgba(74, 144, 226, 0.3);
+}
+
+.tableContainer th,
+.tableContainer td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid rgba(250, 245, 233, 0.1);
+}
+
+.tableContainer th {
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #faf5e9;
+}
+
+.tableContainer td {
+  font-size: 14px;
+  color: #faf5e9;
+}
+
+.tableContainer tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.tableContainer tbody tr:hover {
+  background-color: rgba(250, 245, 233, 0.05);
+}
+
+.tableContainer tfoot {
+  background-color: rgba(74, 144, 226, 0.2);
+  font-weight: 600;
+}
+
+.tableContainer tfoot td {
+  border-bottom: none;
+  font-size: 15px;
+}
