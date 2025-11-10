@@ -473,26 +473,29 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
             >
               {operatorData.operator_type === "Admin" && (
                 <>
-                  <button
-                    onClick={handleDownloadPDFDeposit}
-                    style={{
-                      padding: "8px 16px",
-                      border: "none",
-                      borderRadius: "6px",
-                      fontSize: "14px",
-                      fontWeight: "500",
-                      cursor: "pointer",
-                      backgroundColor: "#faa01c",
-                      color: "#fff",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "4px",
-                      transition: "all 0.3s ease",
-                    }}
-                    title="Baixar PDF do Recibo"
-                  >
-                    📄 Recibo para Deposito
-                  </button>
+                  {donation.donation_received === "Sim" && (
+                    <button
+                      onClick={handleDownloadPDFDeposit}
+                      style={{
+                        padding: "8px 16px",
+                        border: "none",
+                        borderRadius: "6px",
+                        fontSize: "14px",
+                        fontWeight: "500",
+                        cursor: "pointer",
+                        backgroundColor: "#faa01c",
+                        color: "#fff",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "4px",
+                        transition: "all 0.3s ease",
+                      }}
+                      title="Baixar PDF do Recibo"
+                    >
+                      📄 Recibo para Deposito
+                    </button>
+                  )}
+
                   <button
                     onClick={handleDownloadPDF}
                     style={{

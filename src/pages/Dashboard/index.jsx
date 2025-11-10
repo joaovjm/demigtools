@@ -38,6 +38,7 @@ const Dashboard = () => {
   const [donationConfirmation, setDonationConfirmation] = useState([]);
   const [fullNotReceivedDonations, setFullNotReceivedDonations] = useState([]);
   const [scheduled, setScheduled] = useState([]);
+  const [scheduledDonations, setScheduledDonations] = useState([]);
   const [donationFilterPerId, setDonationFilterPerId] = useState("");
   const [donationsOperator, setDonationsOperator] = useState()
   const [meta, setMeta] = useState([]);
@@ -68,6 +69,11 @@ const Dashboard = () => {
       );
       setValueMonthReceived(donationReceived.totalValue);
       setDonationsOperator(donationReceived.donation)
+      
+      // Buscar agendamentos da nova tabela scheduled_donations
+      const scheduledDonationsData = await getScheduledDonations(operatorData.operator_code_id);
+      setScheduledDonations(scheduledDonationsData);
+      
       if (operatorData.operator_type === "Operador Casa") {
         await getScheduledLeads(
           operatorData.operator_code_id,
@@ -130,6 +136,27 @@ const Dashboard = () => {
   useEffect(() => {
     donations();
   }, [active, modalOpen, status, operatorData, meta]);
+
+  // Atualizar quando a página ganhar foco (útil quando criar agendamento em outra página)
+  useEffect(() => {
+    const handleFocus = () => {
+      if (operatorData.operator_code_id) {
+        donations();
+      }
+    };
+
+    window.addEventListener('focus', handleFocus);
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden && operatorData.operator_code_id) {
+        donations();
+      }
+    });
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      document.removeEventListener('visibilitychange', handleFocus);
+    };
+  }, [operatorData.operator_code_id]);
 
   useEffect(() => {
     setActive(false);
@@ -225,6 +252,7 @@ const Dashboard = () => {
           ) : active === "inScheduled" ? (
             <TableScheduled
               scheduled={scheduled}
+              scheduledDonations={scheduledDonations}
               setModalOpen={setModalOpen}
               setScheduledOpen={setScheduledOpen}
               setNowScheduled={setNowScheduled}

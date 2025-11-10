@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import styles from "./modalscheduled.module.css";
-import { ICONS } from "../../constants/constants";
 import { DataNow } from "../DataTime";
 import updateLeads from "../../helper/updateLeads";
 import { toast } from "react-toastify";
@@ -97,6 +96,13 @@ const ModalScheduled = ({
           toast.success("Processo concluído com sucesso");
           onClose();
         }
+      } else if (scheduledOpen.typeScheduled === "scheduled_donation") {
+        // Processar cancelamento de agendamento da nova tabela
+        const response = await markScheduledAsCannotHelp(scheduledOpen.id);
+        if (response) {
+          toast.success("Agendamento marcado como 'Não pode ajudar'");
+          onClose();
+        }
       } else {
         const response = await updateRequestSelected(
           "NP",
@@ -188,6 +194,44 @@ const ModalScheduled = ({
       if (response) {
         onClose();
       }
+    }
+  };
+
+  const handleNewScheduledDonation = async () => {
+    if (
+      [valueDonation, dateScheduling, campain].some((v) => v === "")
+    ) {
+      toast.warning("Preencha todos os campos obrigatórios");
+      return;
+    }
+
+    try {
+      // Criar a doação
+      const donationResponse = await insertDonation(
+        scheduledOpen.donor_id,
+        scheduledOpen.operator_code_id,
+        valueDonation,
+        null,
+        DataNow("noformated"),
+        dateScheduling,
+        false,
+        false,
+        observation,
+        null,
+        campain
+      );
+
+      if (donationResponse && donationResponse.length > 0) {
+        // Marcar agendamento como concluído e vincular à doação criada
+        await completeScheduledDonation(
+          scheduledOpen.id,
+          donationResponse[0].receipt_donation_id
+        );
+        toast.success("Doação criada e agendamento concluído com sucesso!");
+        onClose();
+      }
+    } catch (error) {
+      toast.error("Erro ao processar doação: " + error.message);
     }
   };
 
@@ -561,6 +605,8 @@ const ModalScheduled = ({
                     onClick={
                       scheduledOpen.typeScheduled === "lead"
                         ? handleNewDonorAndDonation
+                        : scheduledOpen.typeScheduled === "scheduled_donation"
+                        ? handleNewScheduledDonation
                         : handleNewRequestDonation
                     }
                     className={styles.btnConfirm}

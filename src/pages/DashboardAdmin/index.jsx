@@ -42,6 +42,7 @@ const Dashboard = () => {
   const [donationConfirmation, setDonationConfirmation] = useState([]);
   const [fullNotReceivedDonations, setFullNotReceivedDonations] = useState([]);
   const [scheduled, setScheduled] = useState([]);
+  const [scheduledDonations, setScheduledDonations] = useState([]);
   const [operator, setOperator] = useState([]);
   const [operatorCasa, setOperatorCasa] = useState([]);
   const [schedule, setSchedule] = useState([]);
@@ -86,6 +87,10 @@ const Dashboard = () => {
       const receivedData = await getAllDonationsReceived();
       setValueReceived(receivedData.totalValue);
       setDonationsReceived(receivedData.donation);
+
+      // Buscar agendamentos da nova tabela scheduled_donations (todos para admin)
+      const scheduledDonationsData = await getAllScheduledDonations();
+      setScheduledDonations(scheduledDonationsData);
 
       await getScheduledLeads(null, setScheduled, setScheduling);
     } catch (error) {
@@ -323,6 +328,7 @@ const Dashboard = () => {
                 ) : active === "inScheduled" ? (
                   <TableScheduled
                     scheduled={scheduled}
+                    scheduledDonations={scheduledDonations}
                     setModalOpen={setModalOpen}
                     setScheduledOpen={setScheduledOpen}
                     setNowScheduled={setNowScheduled}
