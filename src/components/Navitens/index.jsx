@@ -71,6 +71,12 @@ export const AdminMenu = [
         path: "./tasks",
         cName: "submenu-itens",
     },
+    {
+        id: 10,
+        title: "Email em massa",
+        path: "./bulkemailsend",
+        cName: "submenu-itens",
+    },
 
 ];
 
