@@ -134,8 +134,7 @@ const Meta = ({ operators, inputs, setInputs, read, setRead }) => {
       {operators
         .filter(
           (op) =>
-            op.operator_type === "Operador" ||
-            op.operator_type === "Operador Casa"
+            op.operator_type !== "Admin"
         )
         .map((operator) => (
           <>

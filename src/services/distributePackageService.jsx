@@ -14,14 +14,11 @@ export const distributePackageService = async (
   }
   );
   const opFilter = response
-    .filter((op) => op.operator_type === "Operador" || op.operator_type === "Operador Casa")
+    .filter((op) => op.operator_type !== "Admin")
     .map((op) => op.operator_code_id);
 
   const opName = response.reduce((acc, op) => {
-    if (
-      op.operator_type === "Operador" ||
-      op.operator_type === "Operador Casa"
-    ) {
+    if (op.operator_type !== "Admin") {
       acc[op.operator_code_id] = op.operator_name;
     }
     return acc;

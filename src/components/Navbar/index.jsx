@@ -224,7 +224,7 @@ const Navbar = () => {
               </Link>
             )}
           </div>
-          {(operatorData?.operator_type === "Operador" || operatorData?.operator_type === "Operador Casa") && (
+          {(operatorData?.operator_type !== "Admin") && (
               <div className="meta">
                 <label>
                   META: R$ {operatorMeta?.[0]?.meta || "?"}
@@ -344,8 +344,7 @@ const Navbar = () => {
               </div>
             </div>
           ) : isAuthenticated &&
-            (operatorData?.operator_type === "Operador" ||
-              operatorData?.operator_type === "Operador Casa") ? (
+            (operatorData?.operator_type !== "Admin") ? (
             <div className="menu-and-logo">
               <ul className="nav-items">
                 <li
@@ -535,8 +534,7 @@ const Navbar = () => {
           </div>
         ) : (
           isAuthenticated &&
-          (operatorData?.operator_type === "Operador" ||
-            operatorData?.operator_type === "Operador Casa") && (
+          (operatorData?.operator_type !== "Admin") && (
             <div
               ref={mobileMenuRef}
               className={`mobile-menu ${mobileMenuOpen ? "active" : ""}`}

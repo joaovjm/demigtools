@@ -38,16 +38,25 @@ const WorkHistory = () => {
       toast.warning("Selecione todas as opções!");
       return;
     }
-    
+
     setLoading(true);
     try {
-      const { data, error } = await supabase
+      let query = supabase
         .from("donation")
         .select("*, donor: donor_id(donor_name, donor_tel_1)")
-        .eq("operator_code_id", operatorSelected)
-        .gte("donation_day_received", startDate)
-        .lte("donation_day_received", endDate)
-        .eq("donation_received", receivedSelected);
+        .eq("operator_code_id", operatorSelected);
+      if (receivedSelected === "Sim") {
+        query = query
+          .eq("donation_received", "Sim")
+          .gte("donation_day_received", startDate)
+          .lte("donation_day_received", endDate);
+      } else {
+        query = query
+          .eq("donation_received", "Não")
+          .gte("donation_day_to_receive", startDate)
+          .lte("donation_day_to_receive", endDate);
+      }
+      const { data, error } = await query;
       if (error) throw error;
       if (data) setDonationList(data);
     } catch (error) {
@@ -59,17 +68,30 @@ const WorkHistory = () => {
   };
 
   // Calculate statistics
-  const worklistDonations = donationList.filter((item) => item.donation_worklist !== null);
-  const newDonations = donationList.filter((item) => item.donation_worklist === null);
-  const totalValue = donationList.reduce((acc, item) => acc + (item.donation_value || 0) + (item.donation_extra || 0), 0);
-  const receivedCount = donationList.filter(item => item.donation_received === "Sim").length;
-  const printedCount = donationList.filter(item => item.donation_print === "Sim").length;
+  const worklistDonations = donationList.filter(
+    (item) => item.donation_worklist !== null
+  );
+  const newDonations = donationList.filter(
+    (item) => item.donation_worklist === null
+  );
+  const totalValue = donationList.reduce(
+    (acc, item) =>
+      acc + (item.donation_value || 0) + (item.donation_extra || 0),
+    0
+  );
+  const receivedCount = donationList.filter(
+    (item) => item.donation_received === "Sim"
+  ).length;
+  const printedCount = donationList.filter(
+    (item) => item.donation_print === "Sim"
+  ).length;
 
+  console.log({ receivedSelected, operatorSelected, startDate, endDate });
   return (
     <div className="work-history-container">
       <div className="work-history-content">
         <h3 className="work-history-title">📊 Histórico de Trabalho</h3>
-        
+
         {/* Filter Form Section */}
         <div className="work-history-form-section">
           <h4>Filtros de Relatório</h4>
@@ -129,7 +151,7 @@ const WorkHistory = () => {
               </div>
               <div className="form-group">
                 <label>&nbsp;</label>
-                <button 
+                <button
                   onClick={handleGenerate}
                   disabled={loading}
                   className="work-history-btn primary"
@@ -191,9 +213,14 @@ const WorkHistory = () => {
                       </thead>
                       <tbody>
                         {worklistDonations.map((item) => (
-                          <tr key={item.receipt_donation_id} className="work-history-row">
+                          <tr
+                            key={item.receipt_donation_id}
+                            className="work-history-row"
+                          >
                             <td className="work-history-cell">
-                              <span className="receipt-number">{item.receipt_donation_id}</span>
+                              <span className="receipt-number">
+                                {item.receipt_donation_id}
+                              </span>
                             </td>
                             <td className="work-history-cell">
                               <span className="value-amount">
@@ -212,21 +239,43 @@ const WorkHistory = () => {
                               </span>
                             </td>
                             <td className="work-history-cell">
-                              <span className="worklist-info">{item.donation_worklist || "N/A"}</span>
+                              <span className="worklist-info">
+                                {item.donation_worklist || "N/A"}
+                              </span>
                             </td>
                             <td className="work-history-cell">
-                              <span className="donor-name">{item.donor?.donor_name || "N/A"}</span>
+                              <span className="donor-name">
+                                {item.donor?.donor_name || "N/A"}
+                              </span>
                             </td>
                             <td className="work-history-cell">
-                              <span className="contact-info">{item.donor?.donor_tel_1 || "N/A"}</span>
+                              <span className="contact-info">
+                                {item.donor?.donor_tel_1 || "N/A"}
+                              </span>
                             </td>
                             <td className="work-history-cell">
                               <div className="status-group">
-                                <span className={`status-badge ${item.donation_print === "Sim" ? "status-success" : "status-pending"}`}>
-                                  {item.donation_print === "Sim" ? "✓ Impresso" : "○ Não impresso"}
+                                <span
+                                  className={`status-badge ${
+                                    item.donation_print === "Sim"
+                                      ? "status-success"
+                                      : "status-pending"
+                                  }`}
+                                >
+                                  {item.donation_print === "Sim"
+                                    ? "✓ Impresso"
+                                    : "○ Não impresso"}
                                 </span>
-                                <span className={`status-badge ${item.donation_received === "Sim" ? "status-success" : "status-pending"}`}>
-                                  {item.donation_received === "Sim" ? "✓ Recebido" : "○ Em Aberto"}
+                                <span
+                                  className={`status-badge ${
+                                    item.donation_received === "Sim"
+                                      ? "status-success"
+                                      : "status-pending"
+                                  }`}
+                                >
+                                  {item.donation_received === "Sim"
+                                    ? "✓ Recebido"
+                                    : "○ Em Aberto"}
                                 </span>
                               </div>
                             </td>
@@ -258,9 +307,14 @@ const WorkHistory = () => {
                       </thead>
                       <tbody>
                         {newDonations.map((item) => (
-                          <tr key={item.receipt_donation_id} className="work-history-row">
+                          <tr
+                            key={item.receipt_donation_id}
+                            className="work-history-row"
+                          >
                             <td className="work-history-cell">
-                              <span className="receipt-number">{item.receipt_donation_id}</span>
+                              <span className="receipt-number">
+                                {item.receipt_donation_id}
+                              </span>
                             </td>
                             <td className="work-history-cell">
                               <span className="value-amount">
@@ -279,18 +333,38 @@ const WorkHistory = () => {
                               </span>
                             </td>
                             <td className="work-history-cell">
-                              <span className="donor-name">{item.donor?.donor_name || "N/A"}</span>
+                              <span className="donor-name">
+                                {item.donor?.donor_name || "N/A"}
+                              </span>
                             </td>
                             <td className="work-history-cell">
-                              <span className="contact-info">{item.donor?.donor_tel_1 || "N/A"}</span>
+                              <span className="contact-info">
+                                {item.donor?.donor_tel_1 || "N/A"}
+                              </span>
                             </td>
                             <td className="work-history-cell">
                               <div className="status-group">
-                                <span className={`status-badge ${item.donation_print === "Sim" ? "status-success" : "status-pending"}`}>
-                                  {item.donation_print === "Sim" ? "✓ Impresso" : "○ Não impresso"}
+                                <span
+                                  className={`status-badge ${
+                                    item.donation_print === "Sim"
+                                      ? "status-success"
+                                      : "status-pending"
+                                  }`}
+                                >
+                                  {item.donation_print === "Sim"
+                                    ? "✓ Impresso"
+                                    : "○ Não impresso"}
                                 </span>
-                                <span className={`status-badge ${item.donation_received === "Sim" ? "status-success" : "status-pending"}`}>
-                                  {item.donation_received === "Sim" ? "✓ Recebido" : "○ Em Aberto"}
+                                <span
+                                  className={`status-badge ${
+                                    item.donation_received === "Sim"
+                                      ? "status-success"
+                                      : "status-pending"
+                                  }`}
+                                >
+                                  {item.donation_received === "Sim"
+                                    ? "✓ Recebido"
+                                    : "○ Em Aberto"}
                                 </span>
                               </div>
                             </td>
@@ -310,7 +384,9 @@ const WorkHistory = () => {
           <div className="work-history-empty">
             <div className="empty-icon">📊</div>
             <h4>Nenhum registro encontrado</h4>
-            <p>Selecione os filtros e gere um relatório para visualizar os dados.</p>
+            <p>
+              Selecione os filtros e gere um relatório para visualizar os dados.
+            </p>
           </div>
         )}
       </div>

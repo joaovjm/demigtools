@@ -2,7 +2,14 @@ import React from "react";
 import styles from "./tablereceived.module.css";
 import { DataSelect } from "../DataTime";
 
-const TableReceived = ({ donationsOperator }) => {
+const TableReceived = ({ donationsOperator, operatorType }) => {
+  console.log(donationsOperator)
+  let typeOperator;
+  if (operatorType === "Operador Extra") {
+    typeOperator = "donation_extra"
+  } else {
+    typeOperator = "donation_value"
+  }
   
   const dataToShow = donationsOperator || [];
 
@@ -24,7 +31,7 @@ const TableReceived = ({ donationsOperator }) => {
                     {dataToShow
                       .reduce(
                         (acc, item) =>
-                          acc + (parseFloat(item.donation_value) || 0),
+                          acc + (parseFloat(item[typeOperator]) || 0),
                         0
                       )
                       .toLocaleString("pt-BR", {
@@ -41,7 +48,7 @@ const TableReceived = ({ donationsOperator }) => {
                 <thead>
                   <tr className={styles.tableReceivedHeadRow}>
                     <th className={styles.tableReceivedHead}>Nome</th>
-                    <th className={styles.tableReceivedHead}>Valor</th>
+                    <th className={styles.tableReceivedHead}>{operatorType === "Operador Extra" ? "Valor Extra" : "Valor"}</th>
                     <th className={styles.tableReceivedHead}>Data Recebida</th>
                   </tr>
                 </thead>
@@ -55,7 +62,7 @@ const TableReceived = ({ donationsOperator }) => {
                       </td>
                       <td className={styles.tableReceivedCell}>
                         <span className={styles.valueAmount}>
-                          {item.donation_value.toLocaleString("pt-BR", {
+                          {item[typeOperator]?.toLocaleString("pt-BR", {
                             style: "currency",
                             currency: "BRL",
                           })}

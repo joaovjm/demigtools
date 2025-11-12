@@ -65,14 +65,11 @@ const Dashboard = () => {
       );
       const donationReceived = await getDonationReceived(
         operatorData.operator_code_id,
-        meta
+        meta,
+        operatorData.operator_type
       );
       setValueMonthReceived(donationReceived.totalValue);
       setDonationsOperator(donationReceived.donation)
-      
-      // Buscar agendamentos da nova tabela scheduled_donations
-      const scheduledDonationsData = await getScheduledDonations(operatorData.operator_code_id);
-      setScheduledDonations(scheduledDonationsData);
       
       if (operatorData.operator_type === "Operador Casa") {
         await getScheduledLeads(
@@ -258,7 +255,7 @@ const Dashboard = () => {
               setNowScheduled={setNowScheduled}
             />
           ) : active === "received" ? (
-            <TableReceived donationsOperator={donationsOperator} />
+            <TableReceived donationsOperator={donationsOperator} operatorType={operatorData.operator_type} />
           ) : null}
         </section>
         {modalOpen && active === "inConfirmation" && (

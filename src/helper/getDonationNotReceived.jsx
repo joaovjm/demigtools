@@ -80,7 +80,7 @@ const getDonationNotReceived = (
           valueConfirmations += item.donation_value;
           fillDonationConfirmation(item);
         } else if (
-          (operatorType === "Operador" || operatorType === "Operador Casa") &&
+          (operatorType !== "Admin") &&
           item.operator_code_id === operatorID
         ) {
           confirmations += 1;
@@ -90,10 +90,8 @@ const getDonationNotReceived = (
       }
       // Em aberto
       if (
-        (((operatorType === "Operador" &&
-          operatorID === item.operator_code_id) ||
-          (operatorType === "Operador Casa" &&
-            operatorID === item.operator_code_id)) &&
+        (((operatorType !== "Admin") &&
+          operatorID === item.operator_code_id) &&
           item.collector_code_id !== 10) ||
         (operatorType === "Admin" && item.collector_code_id !== 10)
       ) {
