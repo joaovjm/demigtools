@@ -134,27 +134,6 @@ const Dashboard = () => {
     donations();
   }, [active, modalOpen, status, operatorData, meta]);
 
-  // Atualizar quando a página ganhar foco (útil quando criar agendamento em outra página)
-  useEffect(() => {
-    const handleFocus = () => {
-      if (operatorData.operator_code_id) {
-        donations();
-      }
-    };
-
-    window.addEventListener('focus', handleFocus);
-    document.addEventListener('visibilitychange', () => {
-      if (!document.hidden && operatorData.operator_code_id) {
-        donations();
-      }
-    });
-
-    return () => {
-      window.removeEventListener('focus', handleFocus);
-      document.removeEventListener('visibilitychange', handleFocus);
-    };
-  }, [operatorData.operator_code_id]);
-
   useEffect(() => {
     setActive(false);
     setDonationFilterPerId("");
