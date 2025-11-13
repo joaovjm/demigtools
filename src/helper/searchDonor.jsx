@@ -11,15 +11,49 @@ const searchDonor = async (params, donor_type) => {
       // Remove tudo que não for número
       const cleanParam = params.replace(/\D/g, "");
 
-      // Detecta padrões de CPF completo ou parcial
+      // Detecta padrões de CPF e CNPJ completos
       const isFullCpf = /^\d{11}$/.test(cleanParam);
+      const isFullCnpj = /^\d{14}$/.test(cleanParam);
+
+      // Detecta CNPJ parcial: começa com 2 dígitos e ponto (ex: "12.")
+      const isCnpjStart = /^\d{2}\./.test(params);
+
+      // Detecta padrões parciais de CPF e CNPJ
       const isCpfLike =
         /^\d{3,11}$/.test(cleanParam) ||
         /^\d{1,3}(\.\d{1,3}){0,2}(-\d{0,2})?$/.test(params);
 
-      if (isFullCpf || isCpfLike) {
+      const isCnpjLike =
+        isCnpjStart ||
+        (/^\d{5,14}$/.test(cleanParam) && params.includes("/")) ||
+        /^\d{2}\.?\d{3}\.?\d{3}\/?\d{0,4}-?\d{0,2}$/.test(params);
+
+      // Detecta telefone (8–11 dígitos, sem barra e sem ponto/traço de CPF)
+      const isPhoneLike =
+        /^\d{8,11}$/.test(cleanParam) &&
+        !params.includes("/") &&
+        !params.includes("-") &&
+        !params.includes(".");
+
+      // 🧩 Ordem: telefone primeiro, depois CPF/CNPJ
+      if (isPhoneLike) {
+        // Busca por telefone
         if (isLeadSearch) {
-          // Busca por CPF (parcial ou completo) na tabela leads
+          query = supabase
+            .from("leads")
+            .select(
+              `leads_id, leads_name, leads_address, leads_tel_1, leads_neighborhood, leads_icpf, operator: operator_code_id(operator_code_id, operator_name)`
+            )
+            .or(`leads_tel_1.ilike.%${params}%,leads_tel_2.ilike.%${params}%`);
+        } else {
+          query = supabase.rpc("search_donor_by_phone", {
+            phone_search: params,
+            donor_type_filter: donor_type.trim() || "Todos",
+          });
+        }
+      } else if (isFullCpf || isCpfLike || isFullCnpj || isCnpjLike) {
+        // Busca por CPF ou CNPJ no mesmo campo
+        if (isLeadSearch) {
           query = supabase
             .from("leads")
             .select(
@@ -27,7 +61,6 @@ const searchDonor = async (params, donor_type) => {
             )
             .ilike("leads_icpf", `%${cleanParam}%`);
         } else {
-          // Busca por CPF (parcial ou completo) na tabela donor
           query = supabase
             .from("donor")
             .select(
