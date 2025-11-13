@@ -26,7 +26,6 @@ const OperatorWork = () => {
 
     if (filter === "Operadores") {
       setRelatory(null);
-      console.log({startDate: startDate, endDate: endDate});
       const response = await operatorWorkService({startDate: startDate, endDate: endDate});
       setRelatory(response);
     } else if (filter === "Coletadores") {

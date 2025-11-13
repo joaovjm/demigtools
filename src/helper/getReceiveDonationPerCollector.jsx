@@ -7,8 +7,8 @@ const getCollectorPerReceived = async (startDate, endDate) => {
       .select(
         "collector_code_id, collector_name: collector_code_id(collector_name), donation_received, donation_value"
       )
-      .gte("donation_day_to_receive", startDate)
-      .lte("donation_day_to_receive", endDate)
+      .gte("donation_day_received", startDate)
+      .lte("donation_day_received", endDate)
       .not("collector_code_id", "is", null)
     if (error) throw error;
 
