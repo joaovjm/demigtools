@@ -37,7 +37,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
   const [operators, setOperators] = useState([]);
   const [receiptConfig, setReceiptConfig] = useState([]);
   const [extraValue, setExtraValue] = useState(donation.donation_extra);
-
+  const [request, setRequest] = useState([]);
   // Armazenar valores originais para comparação
   const [originalValues] = useState({
     donation_value: donation.donation_value,
@@ -74,6 +74,26 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
       setOperators(response);
     };
     fetchOperators();
+  }, []);
+
+  useEffect(() => {
+    const fetchRequest = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("request")
+          .select("*, operator: operator_code_id(operator_name)")
+          .eq("receipt_donation_id", donation.receipt_donation_id)
+          .limit(1);
+        if (error) throw error;
+        if (data) {
+          console.log(data)
+          setRequest(data);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar requisição:", error.message);
+      }
+    };
+    fetchRequest();
   }, []);
 
   useEffect(() => {
@@ -277,7 +297,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
                 Editar Doação
               </h2>
             </div>
-            {donation.donation_worklist && (
+            {request.length > 0 && (
               <div
                 style={{ display: "flex", alignItems: "center", gap: "10px" }}
               >
@@ -292,7 +312,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
                     border: "1px solid rgba(250, 160, 28, 0.3)",
                   }}
                 >
-                  Lista de trabalho: {donation.donation_worklist}
+                  Lista de trabalho: {request[0].request_name}
                 </span>
               </div>
             )}
@@ -311,7 +331,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
                     border: "1px solid rgba(40, 167, 69, 0.3)",
                   }}
                 >
-                  Operador: {donation.operator_code_id}
+                  Operador: {request?.[0]?.operator?.operator_name}
                 </span>
               </div>
             )}
