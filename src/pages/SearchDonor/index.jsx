@@ -7,7 +7,7 @@ import fetchDonors from "../../services/searchDonorService"
 import { DonorCard } from "../../components/cards/DonorCard";
 
 //Styles
-import "./index.css";
+import styles from "./searchdonor.module.css";
 import { SearchForm } from "../../components/forms/SearchForm";
 
 const SearchDonor = () => {
@@ -33,11 +33,12 @@ const SearchDonor = () => {
   const handleAddDonorClick = () => {
     navigate("/newdonor");
   };
-  console.log(donor)
+
   return (
-    <main className="containersearch">
+    <main className={styles.containerSearch}>
       {/* Search Section */}
-      <div className="search-section">
+      <div className={styles.searchSection}>
+        <h3 className={styles.searchSectionTitle}>Buscar Doador</h3>
         <SearchForm
           searchTerm={searchTerm}
           selectedValue={selectedValue}
@@ -45,26 +46,27 @@ const SearchDonor = () => {
           onSearchChange={(e) => setSearchTerm(e.target.value)}
           setSelectedValue={setSelectValue}
           onSearchSubmit={handleSearchDonor}
+          styles={styles}
         />
       </div>
 
       {/* Results Section */}
-      <div className="results-section">
-        <h3 className="results-section-title">
+      <div className={styles.resultsSection}>
+        <h3 className={styles.resultsSectionTitle}>
           {donor && donor.length > 0 
             ? `${donor.length} Doador${donor.length > 1 ? 'es' : ''} Encontrado${donor.length > 1 ? 's' : ''}`
             : 'Resultados da Busca'
           }
         </h3>
         
-        <div className="Carddiv">
+        <div className={styles.cardDiv}>
           {loading ? (
-            <div className="loading-container">
+            <div className={styles.loadingContainer}>
               <div>Buscando doadores...</div>
             </div>
           ) : donor && donor.length > 0 ? (
             donor.map((donors) => (
-              <div key={donors.donor_id} className="donor-card-container fade-in">
+              <div key={donors.donor_id} className={styles.fadeIn}>
                 <DonorCard
                   donor={donors}
                   onClick={(id) => handleDonorClick(id, donors.isLead)}
@@ -72,8 +74,8 @@ const SearchDonor = () => {
               </div>
             ))
           ) : (
-            <div className="no-results">
-              <div className="no-results-icon">🔍</div>
+            <div className={styles.noResults}>
+              <div className={styles.noResultsIcon}>🔍</div>
               <div>Nenhum doador encontrado</div>
               <div style={{ fontSize: '14px', marginTop: '8px' }}>
                 Tente ajustar os filtros de busca ou adicione um novo doador
@@ -83,9 +85,9 @@ const SearchDonor = () => {
         </div>
 
         {/* Add Donor Section */}
-        <div className="add-donor-section">
-          <button className="add-donor-button" onClick={handleAddDonorClick}>
-            <span className="add-donor-icon">➕</span>
+        <div className={styles.addDonorSection}>
+          <button className={styles.addDonorButton} onClick={handleAddDonorClick}>
+            <span className={styles.addDonorIcon}>➕</span>
             Adicionar Novo Doador
           </button>
         </div>

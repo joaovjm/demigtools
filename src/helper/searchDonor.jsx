@@ -8,33 +8,36 @@ const searchDonor = async (params, donor_type) => {
     const tableName = isLeadSearch ? "leads" : "donor";
 
     if (params) {
-      if (
-        /^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(params) ||
-        /^\d{11}$/.test(params)
-      ) {
-        // Busca por CPF
+      // Remove tudo que não for número
+      const cleanParam = params.replace(/\D/g, "");
+
+      // Detecta padrões de CPF completo ou parcial
+      const isFullCpf = /^\d{11}$/.test(cleanParam);
+      const isCpfLike =
+        /^\d{3,11}$/.test(cleanParam) ||
+        /^\d{1,3}(\.\d{1,3}){0,2}(-\d{0,2})?$/.test(params);
+
+      if (isFullCpf || isCpfLike) {
         if (isLeadSearch) {
-          // Busca na tabela leads por CPF
+          // Busca por CPF (parcial ou completo) na tabela leads
           query = supabase
             .from("leads")
             .select(
               `leads_id, leads_name, leads_address, leads_tel_1, leads_neighborhood, leads_icpf, operator: operator_code_id(operator_code_id, operator_name)`
             )
-            .eq("leads_icpf", params.replace(/\D/g, ""));
+            .ilike("leads_icpf", `%${cleanParam}%`);
         } else {
-
-          // Busca na tabela donor por CPF
+          // Busca por CPF (parcial ou completo) na tabela donor
           query = supabase
             .from("donor")
             .select(
               `donor_id, donor_name, donor_address, donor_tel_1, donor_neighborhood, donor_type, donor_cpf!inner(donor_cpf)`
             )
-            .eq("donor_cpf.donor_cpf", params.replace(/\D/g, ""));
+            .ilike("donor_cpf.donor_cpf", `%${cleanParam}%`);
         }
       } else if (/^\d{1,9}$/.test(params)) {
         // Busca por telefone
         if (isLeadSearch) {
-
           // Busca na tabela leads por telefone
           query = supabase
             .from("leads")
@@ -43,14 +46,13 @@ const searchDonor = async (params, donor_type) => {
             )
             .or(`leads_tel_1.ilike.%${params}%,leads_tel_2.ilike.%${params}%`);
         } else {
-          console.log("caiu no Telefone")
+          console.log("caiu no Telefone");
           query = supabase.rpc("search_donor_by_phone", {
             phone_search: params,
             donor_type_filter: donor_type.trim() || "Todos",
           });
         }
       } else if (/^r\d+$/i.test(params)) {
-
         // Busca por recibo (apenas para donors, não para leads)
         if (!isLeadSearch) {
           query = supabase
@@ -72,7 +74,6 @@ const searchDonor = async (params, donor_type) => {
       } else {
         // Busca por nome
         if (isLeadSearch) {
-          
           query = supabase
             .from("leads")
             .select(
@@ -80,7 +81,6 @@ const searchDonor = async (params, donor_type) => {
             )
             .ilike("leads_name", `%${params}%`);
         } else {
-
           query = supabase
             .from("donor")
             .select(
@@ -92,7 +92,12 @@ const searchDonor = async (params, donor_type) => {
     }
 
     // Filtros adicionais (apenas para donors)
-    if (query && donor_type !== "" && !/^\d{1,9}$/.test(params) && !isLeadSearch) {
+    if (
+      query &&
+      donor_type !== "" &&
+      !/^\d{1,9}$/.test(params) &&
+      !isLeadSearch
+    ) {
       if (/^r\d+$/i.test(params) && donor_type === "Todos") {
         query = query.neq("donor.donor_type", "Excluso");
       } else if (/^r\d+$/i.test(params) && donor_type !== "Todos") {
@@ -114,7 +119,7 @@ const searchDonor = async (params, donor_type) => {
         return dataDonor ? [dataDonor] : [];
       } else if (isLeadSearch && data.length > 0) {
         // Mapeia os campos de leads para o formato esperado pelo componente
-        const normalizedData = data.map(lead => ({
+        const normalizedData = data.map((lead) => ({
           donor_id: lead.leads_id,
           donor_name: lead.leads_name,
           donor_address: lead.leads_address,
@@ -124,7 +129,7 @@ const searchDonor = async (params, donor_type) => {
           donor_cpf: lead.leads_icpf,
           operator_code_id: lead.operator.operator_code_id,
           operator_name: lead.operator.operator_name,
-          isLead: true // Flag para identificar que é um lead
+          isLead: true, // Flag para identificar que é um lead
         }));
 
         return normalizedData;
@@ -133,7 +138,7 @@ const searchDonor = async (params, donor_type) => {
         return data;
       }
     }
-    
+
     return [];
   } catch (error) {
     console.error("Erro ao buscar doador: ", error);

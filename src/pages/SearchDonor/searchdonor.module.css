@@ -1,5 +1,5 @@
 /* Main Container */
-.containersearch {
+.containerSearch {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -13,7 +13,7 @@
 }
 
 /* Search Section */
-.search-section {
+.searchSection {
     background-color: #1f1d1d;
     border: 3px double #363a3d;
     border-radius: 8px;
@@ -22,7 +22,7 @@
     max-width: 900px;
 }
 
-.search-section-title {
+.searchSectionTitle {
     color: #faa01c;
     font-size: 14px;
     font-weight: 600;
@@ -32,27 +32,27 @@
     letter-spacing: 0.5px;
 }
 
-.formsearch {
+.formSearch {
     display: grid;
     grid-template-columns: 1fr 160px auto;
     gap: 12px;
     align-items: end;
 }
 
-.search-input-group {
+.searchInputGroup {
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
 
-.search-input-group label {
+.searchInputGroup label {
     color: #faf5e9;
     font-size: 12px;
     font-weight: 500;
     margin-bottom: 2px;
 }
 
-.search-input {
+.searchInput {
     width: 100%;
     padding: 8px 12px;
     background-color: #363a3d;
@@ -66,17 +66,17 @@
     height: 36px;
 }
 
-.search-input:focus {
+.searchInput:focus {
     border-color: #faa01c;
     box-shadow: 0 0 0 2px rgba(250, 160, 28, 0.1);
 }
 
-.search-input::placeholder {
+.searchInput::placeholder {
     color: #9e9e9e;
     font-size: 12px;
 }
 
-.search-select {
+.searchSelect {
     width: 100%;
     padding: 8px 12px;
     background-color: #363a3d;
@@ -91,12 +91,12 @@
     height: 36px;
 }
 
-.search-select:focus {
+.searchSelect:focus {
     border-color: #faa01c;
     box-shadow: 0 0 0 2px rgba(250, 160, 28, 0.1);
 }
 
-.btnsearch {
+.btnSearch {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -112,20 +112,21 @@
     min-width: 90px;
     height: 36px;
     box-sizing: border-box;
+    width: 100px;
 }
 
-.btnsearch:hover {
+.btnSearch:hover {
     background-color: #e8901a;
     box-shadow: 0 4px 16px rgba(250, 160, 28, 0.4);
     transform: translateY(-2px);
 }
 
-.btnsearch:active {
+.btnSearch:active {
     transform: translateY(0);
 }
 
 /* Results Section */
-.results-section {
+.resultsSection {
     background-color: #1f1d1d;
     border: 3px double #363a3d;
     border-radius: 8px;
@@ -135,7 +136,7 @@
     min-height: 300px;
 }
 
-.results-section-title {
+.resultsSectionTitle {
     color: #faa01c;
     font-size: 14px;
     font-weight: 600;
@@ -145,57 +146,14 @@
     letter-spacing: 0.5px;
 }
 
-.Carddiv {
+.cardDiv {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 12px;
     margin-bottom: 12px;
 }
 
-.donor-card-container {
-    background-color: #363a3d;
-    border: 2px solid #2f2d2d;
-    border-radius: 8px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    position: relative;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-}
-
-.donor-card-container:hover {
-    border-color: #faa01c;
-    box-shadow: 0 8px 24px rgba(250, 160, 28, 0.2);
-    transform: translateY(-4px);
-}
-
-.donor-card-container::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(250, 160, 28, 0.1),
-        transparent
-    );
-    transition: left 0.5s ease;
-}
-
-.donor-card-container:hover::before {
-    left: 100%;
-}
-
-.Cardinfo {
-    background-color: #1f1d1d;
-    padding: 12px;
-    border-top: 2px solid #faa01c;
-}
-
-.no-results {
+.noResults {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -207,14 +165,14 @@
     min-height: 120px;
 }
 
-.no-results-icon {
+.noResultsIcon {
     font-size: 32px;
     margin-bottom: 12px;
     color: #464a4d;
 }
 
 /* Add Donor Button */
-.add-donor-section {
+.addDonorSection {
     display: flex;
     justify-content: center;
     padding-top: 12px;
@@ -222,7 +180,7 @@
     margin-top: 12px;
 }
 
-.add-donor-button {
+.addDonorButton {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -239,7 +197,7 @@
     text-decoration: none;
 }
 
-.add-donor-button:hover {
+.addDonorButton:hover {
     background-color: #faa01c;
     border-color: #e8901a;
     color: #1f1d1d;
@@ -247,16 +205,12 @@
     transform: translateY(-2px);
 }
 
-.add-donor-icon {
+.addDonorIcon {
     font-size: 18px;
 }
 
-.btnsearch{
-    width: 100px;
-}
-
 /* Loading State */
-.loading-container {
+.loadingContainer {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -267,136 +221,136 @@
 }
 
 /* Scrollbar Styling */
-.results-section::-webkit-scrollbar {
+.resultsSection::-webkit-scrollbar {
     width: 8px;
 }
 
-.results-section::-webkit-scrollbar-track {
+.resultsSection::-webkit-scrollbar-track {
     background-color: #2f2d2d;
     border-radius: 4px;
 }
 
-.results-section::-webkit-scrollbar-thumb {
+.resultsSection::-webkit-scrollbar-thumb {
     background-color: #464a4d;
     border-radius: 4px;
     transition: background-color 0.3s ease;
 }
 
-.results-section::-webkit-scrollbar-thumb:hover {
+.resultsSection::-webkit-scrollbar-thumb:hover {
     background-color: #faa01c;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .containersearch {
+    .containerSearch {
         padding: 8px;
         gap: 8px;
     }
 
-    .search-section {
+    .searchSection {
         padding: 12px;
     }
 
-    .search-section-title {
+    .searchSectionTitle {
         font-size: 13px;
         margin-bottom: 8px;
     }
 
-    .formsearch {
+    .formSearch {
         grid-template-columns: 1fr;
         gap: 8px;
     }
 
-    .search-input,
-    .search-select,
-    .btnsearch {
+    .searchInput,
+    .searchSelect,
+    .btnSearch {
         width: 100%;
         height: 32px;
         font-size: 12px;
     }
 
-    .search-input-group label {
+    .searchInputGroup label {
         font-size: 11px;
     }
 
-    .btnsearch {
+    .btnSearch {
         min-width: unset;
         padding: 6px 12px;
     }
 
-    .results-section {
+    .resultsSection {
         padding: 12px;
         min-height: 200px;
     }
 
-    .results-section-title {
+    .resultsSectionTitle {
         font-size: 13px;
         margin-bottom: 8px;
     }
 
-    .Carddiv {
+    .cardDiv {
         grid-template-columns: 1fr;
         gap: 8px;
     }
 
-    .add-donor-button {
+    .addDonorButton {
         padding: 10px 20px;
         font-size: 13px;
     }
 
-    .add-donor-icon {
+    .addDonorIcon {
         font-size: 16px;
     }
 
-    .no-results {
+    .noResults {
         min-height: 100px;
         padding: 16px 12px;
         font-size: 13px;
     }
 
-    .loading-container {
+    .loadingContainer {
         min-height: 100px;
         font-size: 13px;
     }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
-    .containersearch {
+    .containerSearch {
         padding: 10px;
         gap: 10px;
     }
 
-    .search-section {
+    .searchSection {
         padding: 14px;
     }
 
-    .formsearch {
+    .formSearch {
         grid-template-columns: 1fr 140px auto;
         gap: 10px;
     }
 
-    .results-section {
+    .resultsSection {
         padding: 14px;
     }
 
-    .Carddiv {
+    .cardDiv {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: 10px;
     }
 }
 
 @media (min-width: 1025px) {
-    .formsearch {
+    .formSearch {
         grid-template-columns: 1fr 160px auto;
     }
 
-    .Carddiv {
+    .cardDiv {
         grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     }
 }
 
 /* Animation classes */
-.fade-in {
+.fadeIn {
     animation: fadeIn 0.3s ease-in-out;
 }
 
@@ -410,5 +364,3 @@
         transform: translateY(0);
     }
 }
-
-        
