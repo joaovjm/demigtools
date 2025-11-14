@@ -30,6 +30,8 @@ const TableConfirmation = ({
       operator_code_id: donation.operator_code_id,
       collector_code_id: donation.collector_code_id,
       donation_received: donation.donation_received,
+      confirmation_scheduled: donation.confirmation_scheduled,
+      confirmation_status: donation.confirmation_status,
     });
     setModalOpen(true);
   };
@@ -113,6 +115,8 @@ const TableConfirmation = ({
                     <th className="table-confirmation-head">Nome</th>
                     <th className="table-confirmation-head">Valor</th>
                     <th className="table-confirmation-head">Motivo</th>
+                    <th className="table-confirmation-head">Status</th>
+                    <th className="table-confirmation-head">Agendado</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -143,6 +147,16 @@ const TableConfirmation = ({
                       <td className="table-confirmation-cell">
                         <span className="reason-text">
                           {donation.donor_confirmation_reason}
+                        </span>
+                      </td>
+                      <td className="table-confirmation-cell">
+                        <span className={`status-badge ${donation.confirmation_status === 'Agendado' ? 'status-scheduled' : donation.confirmation_status === 'Não Atendeu' ? 'status-not-attended' : 'status-none'}`}>
+                          {donation.confirmation_status || '-'}
+                        </span>
+                      </td>
+                      <td className="table-confirmation-cell">
+                        <span className="schedule-date">
+                          {donation.confirmation_scheduled ? DataSelect(donation.confirmation_scheduled) : '-'}
                         </span>
                       </td>
                     </tr>

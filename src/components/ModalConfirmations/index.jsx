@@ -5,7 +5,7 @@ import cancelDonation from "../../helper/cancelDonation";
 import supabase from "../../helper/superBaseClient";
 import { DataNow, DataSelect } from "../DataTime";
 import {useNavigate} from "react-router"
-import { FaUser, FaMapMarkerAlt, FaPhone, FaDollarSign, FaExclamationTriangle, FaCalendarAlt, FaEdit, FaTimes, FaCheck, FaArrowLeft, FaClock, FaEye } from "react-icons/fa";
+import { FaUser, FaMapMarkerAlt, FaPhone, FaDollarSign, FaExclamationTriangle, FaCalendarAlt, FaEdit, FaTimes, FaCheck, FaArrowLeft, FaClock, FaEye, FaPhoneSlash, FaCalendarCheck } from "react-icons/fa";
 import { UserContext } from "../../context/UserContext";
 import { logDonorActivity } from "../../helper/logDonorActivity";
 import { getDonorConfirmationData } from "../../helper/getDonorConfirmationData";
@@ -14,6 +14,8 @@ const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) =>
   const [isConfirmation, setIsConfirmation] = useState(false);
   const [dateConfirm, setDateConfirm] = useState("");
   const [observation, setObservation] = useState("");
+  const [isScheduling, setIsScheduling] = useState(false);
+  const [scheduleDate, setScheduleDate] = useState("");
   const { operatorData } = useContext(UserContext);
   const [donorMensalDay, setDonorMensalDay] = useState(null);
   const [donorMonthlyFee, setDonorMonthlyFee] = useState(null);
@@ -23,6 +25,13 @@ const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) =>
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Resetar estados quando o modal é aberto com uma nova doação
+    setIsConfirmation(false);
+    setIsScheduling(false);
+    setDateConfirm("");
+    setScheduleDate("");
+    setObservation("");
+
     const fetchDonorData = async () => {
       if (operatorData?.operator_code_id === 521 && donationConfirmationOpen?.donor_id) {
         const data = await getDonorConfirmationData(donationConfirmationOpen.donor_id);
@@ -100,6 +109,96 @@ const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) =>
             donation_day_to_receive: dateConfirm,
             donation_description: observation,
             collector_code_id: null,
+          },
+          related_donation_id: null,
+        });
+      }
+      
+      setStatus("Update OK")
+      onClose();
+      
+    } catch (errorConfirm) {
+      console.error("Error updating donation:", errorConfirm);
+    }
+  };
+
+  const handleNotAttended = async () => {
+    if (!window.confirm("Você deseja marcar esta doação como 'Não Atendeu'?")) {
+      return;
+    }
+    
+    try {
+      const { data: updateConfirm, error: errorConfirm } = await supabase
+        .from("donation")
+        .update({
+          confirmation_status: "Não Atendeu",
+          donation_day_contact: DataNow("noformated"),
+        })
+        .eq("receipt_donation_id", donationConfirmationOpen.id);
+
+      if (errorConfirm) throw errorConfirm;
+
+      // Registrar ação no histórico
+      if (operatorData?.operator_code_id) {
+        await logDonorActivity({
+          donor_id: donationConfirmationOpen.donor_id,
+          operator_code_id: operatorData.operator_code_id,
+          action_type: "donation_edit",
+          action_description: `Marcou doação de R$ ${donationConfirmationOpen.value} como 'Não Atendeu'`,
+          old_values: {
+            confirmation_status: donationConfirmationOpen.confirmation_status || null,
+          },
+          new_values: {
+            confirmation_status: "Não Atendeu",
+          },
+          related_donation_id: null,
+        });
+      }
+      
+      setStatus("Update OK")
+      onClose();
+      
+    } catch (errorConfirm) {
+      console.error("Error updating donation:", errorConfirm);
+    }
+  };
+
+  const handleSchedule = async () => {
+    if (!scheduleDate) {
+      window.alert("Por favor, selecione uma data para o agendamento.");
+      return;
+    }
+    
+    if (!window.confirm(`Você deseja agendar esta doação para ${scheduleDate}?`)) {
+      return;
+    }
+    
+    try {
+      const { data: updateConfirm, error: errorConfirm } = await supabase
+        .from("donation")
+        .update({
+          confirmation_scheduled: scheduleDate,
+          confirmation_status: "Agendado",
+          donation_day_contact: DataNow("noformated"),
+        })
+        .eq("receipt_donation_id", donationConfirmationOpen.id);
+
+      if (errorConfirm) throw errorConfirm;
+
+      // Registrar ação no histórico
+      if (operatorData?.operator_code_id) {
+        await logDonorActivity({
+          donor_id: donationConfirmationOpen.donor_id,
+          operator_code_id: operatorData.operator_code_id,
+          action_type: "donation_edit",
+          action_description: `Agendou doação de R$ ${donationConfirmationOpen.value} para ${scheduleDate}`,
+          old_values: {
+            confirmation_scheduled: donationConfirmationOpen.confirmation_scheduled || null,
+            confirmation_status: donationConfirmationOpen.confirmation_status || null,
+          },
+          new_values: {
+            confirmation_scheduled: scheduleDate,
+            confirmation_status: "Agendado",
           },
           related_donation_id: null,
         });
@@ -302,7 +401,7 @@ const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) =>
               </div>
             </div>
 
-            {!isConfirmation && (
+            {!isConfirmation && !isScheduling && (
               <div className={styles.modalConfirmationsFooter}>
                 <button className={styles.btnOpenDonor} onClick={() => navigate(`/donor/${donationConfirmationOpen.donor_id}`)}>
                   <FaEye />
@@ -315,6 +414,20 @@ const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) =>
                 >
                   <FaCalendarAlt />
                   Reagendar Ficha
+                </button>
+                <button 
+                  onClick={() => setIsScheduling(true)}
+                  className={styles.btnSchedule}
+                >
+                  <FaCalendarCheck />
+                  Agendar
+                </button>
+                <button 
+                  onClick={handleNotAttended}
+                  className={styles.btnNotAttended}
+                >
+                  <FaPhoneSlash />
+                  Não Atendeu
                 </button>
                 <button onClick={handleCancel} className={styles.btnCancel}>
                   <FaTimes />
@@ -364,6 +477,43 @@ const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) =>
                   <button onClick={handleConfirm} className={styles.btnConfirm}>
                     <FaCheck />
                     Confirmar Reagendamento
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {isScheduling && (
+              <div className={styles.rescheduleFormSection}>
+                <h3>Agendar Doação</h3>
+                <div className={styles.formGrid}>
+                  <div className={styles.inputGroup}>
+                    <label>
+                      <FaCalendarCheck />
+                      Data do Agendamento
+                    </label>
+                    <input
+                      value={scheduleDate}
+                      type="date"
+                      onChange={(e) => setScheduleDate(e.target.value)}
+                      placeholder="Selecione a data para ligar novamente"
+                    />
+                  </div>
+                </div>
+
+                <div className={styles.formActions}>
+                  <button
+                    onClick={() => {
+                      setIsScheduling(false);
+                      setScheduleDate("");
+                    }}
+                    className={styles.btnBack}
+                  >
+                    <FaArrowLeft />
+                    Voltar
+                  </button>
+                  <button onClick={handleSchedule} className={styles.btnConfirm}>
+                    <FaCheck />
+                    Confirmar Agendamento
                   </button>
                 </div>
               </div>

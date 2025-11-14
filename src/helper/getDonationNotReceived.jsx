@@ -39,6 +39,8 @@ const getDonationNotReceived = (
       collector_code_id: item.collector_code_id,
       donor_confirmation_reason:
         item.donor_confirmation_reason?.donor_confirmation_reason,
+      confirmation_scheduled: item.confirmation_scheduled,
+      confirmation_status: item.confirmation_status,
     });
   };
 
@@ -66,7 +68,7 @@ const getDonationNotReceived = (
     const { data: operatorValue } = await supabase
       .from("donation")
       .select(
-        `receipt_donation_id, donor_id, donation_description, donor(donor_name, donor_address, donor_tel_1, donor_tel_2(donor_tel_2), donor_tel_3(donor_tel_3)), donation_value, donation_extra, donation_day_contact, donation_day_to_receive, donation_print, donation_received, donation_monthref, operator_code_id, operator_name: operator_code_id(operator_name), collector_code_id, donor_confirmation_reason(donor_confirmation_reason), collector: collector_code_id (collector_name)`
+        `receipt_donation_id, donor_id, donation_description, donor(donor_name, donor_address, donor_tel_1, donor_tel_2(donor_tel_2), donor_tel_3(donor_tel_3)), donation_value, donation_extra, donation_day_contact, donation_day_to_receive, donation_print, donation_received, donation_monthref, operator_code_id, operator_name: operator_code_id(operator_name), collector_code_id, donor_confirmation_reason(donor_confirmation_reason), collector: collector_code_id (collector_name), confirmation_scheduled, confirmation_status`
       )
       .eq("donation_received", "Não")
       .order("donation_day_to_receive", { ascending: false });
