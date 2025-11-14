@@ -22,6 +22,7 @@ export const useDonation = () => {
                   collector_code_id,
                   donation_worklist,
                   donor_id,
+                  operator_code_id,
                   donor:donor_id (donor_name)`
         )
         .eq("receipt_donation_id", search);
@@ -29,7 +30,7 @@ export const useDonation = () => {
       if (error) throw error;
 
       if (data.length > 0) {
-        const { donation_value, donor, donation_received, collector_code_id, donation_worklist, donor_id } =
+        const { donation_value, donor, donation_received, collector_code_id, donation_worklist, donor_id, operator_code_id } =
           data[0];
         const name = donor?.donor_name;
         const value = donation_value;
@@ -48,7 +49,7 @@ export const useDonation = () => {
                     search,
                     name,
                     value,
-                  }, donation_worklist, donor_id).then(resolve);
+                  }, donation_worklist, donor_id, operator_code_id).then(resolve);
                   setModalOpen(false);
                 },
               });
@@ -59,7 +60,7 @@ export const useDonation = () => {
               search,
               name,
               value,
-            }, donation_worklist, donor_id);
+            }, donation_worklist, donor_id, operator_code_id);
           }
         } else {
           return "received";
@@ -83,7 +84,8 @@ export const useDonation = () => {
     setTableReceipt,
     newItem,
     donation_worklist,
-    donor_id
+    donor_id,
+    operator_code_id
   ) => {
     try {
       const { error: updateError } = await supabase
@@ -99,7 +101,8 @@ export const useDonation = () => {
       if (updateError) throw updateError;
 
       // Atualiza o request_status se donation_worklist existir
-      if (donation_worklist) {
+      // Apenas se o operador NÃO for 521 (Mensal)
+      if (donation_worklist && operator_code_id !== 521) {
         const { error: requestUpdateError } = await supabase
           .from("request")
           .update({

@@ -72,7 +72,8 @@ export const insertDonation = async (
     if(error) throw error;
 
     // Se encontrou um request ativo, atualizar o status para "Sucesso"
-    if(requestId){
+    // Apenas se o operador NÃO for 521 (Mensal)
+    if(requestId && operator !== 521){
       const { error: updateError } = await supabase
         .from("request")
         .update({ request_status: "Sucesso" })
