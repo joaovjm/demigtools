@@ -14,12 +14,33 @@ const TableScheduled = ({
   // Combinar dados de ambas as fontes
   const allScheduled = [
     ...scheduled.map(item => ({ ...item, source: 'legacy' })),
-    ...scheduledDonations.map(item => ({ ...item, source: 'scheduled_donations' }))
+    ...scheduledDonations.map(item => ({ ...item, source: item.source || 'scheduled_donations' }))
   ];
   
   const handleClick = (e) => {
-    // Se é da nova tabela scheduled_donations
-    if (e.source === 'scheduled_donations') {
+    // Se é doação agendada da tabela donation
+    if (e.source === 'donation_agendada') {
+      setScheduledOpen({
+        id: e.donation_id || e.id,
+        donor_id: e.donor_id,
+        name: e.donor?.donor_name,
+        address: e.donor?.donor_address,
+        city: e.donor?.donor_city,
+        neighborhood: e.donor?.donor_neighborhood,
+        phone: e.donor?.donor_tel_1,
+        phone2: null,
+        phone3: null,
+        phone4: null,
+        phone5: null,
+        phone6: null,
+        observation: e.scheduled_observation,
+        scheduling_date: e.scheduled_date,
+        operator_code_id: e.operator_code_id,
+        typeScheduled: "donation_agendada",
+        donationId: e.donation_id || e.id,
+        scheduledDonationData: e,
+      });
+    } else if (e.source === 'scheduled_donations') {
       setScheduledOpen({
         id: e.id,
         donor_id: e.donor_id,
@@ -105,7 +126,7 @@ const TableScheduled = ({
                 <tbody>
                   {dataToShow.map((item) => {
                     // Determinar os valores baseado na fonte
-                    const isScheduledDonation = item.source === 'scheduled_donations';
+                    const isScheduledDonation = item.source === 'scheduled_donations' || item.source === 'donation_agendada';
                     const itemKey = item.leads_id || item.id;
                     const itemName = isScheduledDonation 
                       ? item.donor?.donor_name 

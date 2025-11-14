@@ -9,6 +9,7 @@ import updateRequestSelected from "../../helper/updateRequestSelected";
 import { insertDonation } from "../../helper/insertDonation";
 import { fetchMaxAndMedDonations } from "../../services/worklistService";
 import { useNavigate } from "react-router";
+import supabase from "../../helper/superBaseClient";
 import {
   FaUser,
   FaMapMarkerAlt,
@@ -102,6 +103,27 @@ const ModalScheduled = ({
         if (response) {
           toast.success("Agendamento marcado como 'Não pode ajudar'");
           onClose();
+        }
+      } else if (scheduledOpen.typeScheduled === "donation_agendada") {
+        // Processar cancelamento de doação agendada da tabela donation
+        try {
+          const { error } = await supabase
+            .from("donation")
+            .update({
+              confirmation_status: null,
+              confirmation_scheduled: null,
+              confirmation_observation: null,
+            })
+            .eq("receipt_donation_id", scheduledOpen.donationId || scheduledOpen.id);
+          
+          if (error) throw error;
+          
+          toast.success("Agendamento cancelado com sucesso");
+          if (setStatus) setStatus("Update OK");
+          onClose();
+        } catch (error) {
+          console.error("Error canceling scheduled donation:", error);
+          toast.error("Erro ao cancelar agendamento");
         }
       } else {
         const response = await updateRequestSelected(
@@ -206,29 +228,52 @@ const ModalScheduled = ({
     }
 
     try {
-      // Criar a doação
-      const donationResponse = await insertDonation(
-        scheduledOpen.donor_id,
-        scheduledOpen.operator_code_id,
-        valueDonation,
-        null,
-        DataNow("noformated"),
-        dateScheduling,
-        false,
-        false,
-        observation,
-        null,
-        campain
-      );
-
-      if (donationResponse && donationResponse.length > 0) {
-        // Marcar agendamento como concluído e vincular à doação criada
-        await completeScheduledDonation(
-          scheduledOpen.id,
-          donationResponse[0].receipt_donation_id
-        );
-        toast.success("Doação criada e agendamento concluído com sucesso!");
+      // Se for doação agendada da tabela donation, atualizar a doação existente
+      if (scheduledOpen.typeScheduled === "donation_agendada") {
+        const { error } = await supabase
+          .from("donation")
+          .update({
+            donation_value: valueDonation,
+            donation_day_to_receive: dateScheduling,
+            donation_description: observation || null,
+            donation_campain: campain,
+            confirmation_status: null,
+            confirmation_scheduled: null,
+            confirmation_observation: null,
+            donation_day_contact: DataNow("noformated"),
+          })
+          .eq("receipt_donation_id", scheduledOpen.donationId || scheduledOpen.id);
+        
+        if (error) throw error;
+        
+        toast.success("Doação atualizada e agendamento concluído com sucesso!");
+        if (setStatus) setStatus("Update OK");
         onClose();
+      } else {
+        // Criar a doação (para scheduled_donations)
+        const donationResponse = await insertDonation(
+          scheduledOpen.donor_id,
+          scheduledOpen.operator_code_id,
+          valueDonation,
+          null,
+          DataNow("noformated"),
+          dateScheduling,
+          false,
+          false,
+          observation,
+          null,
+          campain
+        );
+
+        if (donationResponse && donationResponse.length > 0) {
+          // Marcar agendamento como concluído e vincular à doação criada
+          await completeScheduledDonation(
+            scheduledOpen.id,
+            donationResponse[0].receipt_donation_id
+          );
+          toast.success("Doação criada e agendamento concluído com sucesso!");
+          onClose();
+        }
       }
     } catch (error) {
       toast.error("Erro ao processar doação: " + error.message);
@@ -605,7 +650,7 @@ const ModalScheduled = ({
                     onClick={
                       scheduledOpen.typeScheduled === "lead"
                         ? handleNewDonorAndDonation
-                        : scheduledOpen.typeScheduled === "scheduled_donation"
+                        : scheduledOpen.typeScheduled === "scheduled_donation" || scheduledOpen.typeScheduled === "donation_agendada"
                         ? handleNewScheduledDonation
                         : handleNewRequestDonation
                     }

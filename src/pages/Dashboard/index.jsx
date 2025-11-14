@@ -19,6 +19,7 @@ import MotivationalPhrases from "../../components/MotivationalPhrases";
 import getOperatorMeta from "../../helper/getOperatorMeta";
 import getDonationReceived from "../../helper/getDonationReceived";
 import { getSchedulingRequest } from "../../helper/getSchedulingRequest";
+import getScheduledDonations from "../../helper/getScheduledDonations";
 import TableReceived from "../../components/TableReceived";
 
 const Dashboard = () => {
@@ -99,6 +100,12 @@ const Dashboard = () => {
           setScheduling: setScheduling
         });
       }
+      
+      // Buscar doações agendadas da tabela donation
+      await getScheduledDonations(
+        operatorData.operator_code_id,
+        setScheduledDonations
+      );
     } catch (error) {
       console.error("Error fetching donations:", error);
     }
@@ -157,7 +164,7 @@ const Dashboard = () => {
               <h3 className="h3Header">Agendados</h3>
             </div>
             <div className="divBody">
-              <p>{scheduled.length}</p>
+              <p>{scheduled.length + scheduledDonations.length}</p>
             </div>
           </div>
           {/* Card 1 */}
