@@ -1,4 +1,4 @@
-.modal-overlay{
+.modalOverlay{
     position: fixed;
     top: 0;
     left: 0;
@@ -12,7 +12,7 @@
 
 }
 
-.modal-content{
+.modalContent{
     background-color: #1F1D1D;
     padding: 20px;
     border-radius: 6px;
@@ -22,7 +22,7 @@
     gap: 12px;
 }
 
-.modal-actions{
+.modalActions{
     display: flex;
     justify-content: flex-end;
     gap: 10px;
@@ -30,7 +30,7 @@
 
 }
 
-.cancel-button{
+.cancelButton{
     padding: 8px 16px;
     background-color: #f0f0f0;
     border: 1px solid #ccc;
@@ -43,7 +43,7 @@
 
 }
 
-.confirm-button{
+.confirmButton{
     padding: 8px 16px;
     background-color: #940000;
     color: #FAF5E9;
@@ -56,3 +56,4 @@
     }
 
 }
+

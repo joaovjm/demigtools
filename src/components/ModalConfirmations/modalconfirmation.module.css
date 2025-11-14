@@ -133,7 +133,10 @@
 
 /* Info Sections */
 .donationInfoSection,
-.donorInfoSection {
+.donorInfoSection,
+.mensalInfoSection,
+.notReceivedSection,
+.recentDonationsSection {
   background-color: rgba(56, 91, 173, 0.05);
   border: 1px solid rgba(56, 91, 173, 0.2);
   border-radius: 8px;
@@ -141,7 +144,10 @@
 }
 
 .donationInfoSection h3,
-.donorInfoSection h3 {
+.donorInfoSection h3,
+.mensalInfoSection h3,
+.notReceivedSection h3,
+.recentDonationsSection h3 {
   color: #faf5e9;
   font-size: 16px;
   margin: 0 0 12px 0;
@@ -158,6 +164,21 @@
 
 .donorInfoSection h3::before {
   content: "👤";
+  font-size: 18px;
+}
+
+.mensalInfoSection h3::before {
+  content: "📅";
+  font-size: 18px;
+}
+
+.notReceivedSection h3::before {
+  content: "⚠️";
+  font-size: 18px;
+}
+
+.recentDonationsSection h3::before {
+  content: "📋";
   font-size: 18px;
 }
 
@@ -205,6 +226,82 @@
   border-color: rgba(199, 0, 0, 0.3);
   color: #ff6b6b;
   font-weight: 600;
+}
+
+.infoValue.warning {
+  background-color: rgba(255, 193, 7, 0.1);
+  border-color: rgba(255, 193, 7, 0.3);
+  color: #ffc107;
+  font-weight: 600;
+}
+
+/* Donations Cards Grid */
+.donationsCardsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.donationCard {
+  background-color: rgba(42, 40, 40, 0.8);
+  border: 1px solid #383838;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.donationCard:hover {
+  border-color: #faa01c;
+  box-shadow: 0 4px 12px rgba(250, 160, 28, 0.2);
+  transform: translateY(-2px);
+}
+
+.donationCardHeader {
+  background: linear-gradient(135deg, #385bad 0%, #2a4580 100%);
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.donationNumber {
+  font-size: 12px;
+  font-weight: 600;
+  color: #faf5e9;
+  background-color: rgba(250, 245, 233, 0.2);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.donationValue {
+  font-size: 14px;
+  font-weight: 700;
+  color: #faa01c;
+}
+
+.donationCardBody {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.donationInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.donationLabel {
+  font-size: 11px;
+  color: #faa01c;
+  font-weight: 600;
+}
+
+.donationText {
+  font-size: 12px;
+  color: #faf5e9;
+  word-break: break-word;
 }
 
 /* Footer */
@@ -393,6 +490,10 @@
   .infoGrid {
     grid-template-columns: 1fr 1fr;
   }
+  
+  .donationsCardsGrid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 768px) {
@@ -419,8 +520,15 @@
   
   .donationInfoSection,
   .donorInfoSection,
+  .mensalInfoSection,
+  .notReceivedSection,
+  .recentDonationsSection,
   .rescheduleFormSection {
     padding: 12px;
+  }
+  
+  .donationsCardsGrid {
+    grid-template-columns: 1fr;
   }
   
   .modalConfirmationsFooter,

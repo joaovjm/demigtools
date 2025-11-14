@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import "./index.css"
+import styles from "./modalconfirm.module.css"
 
 export const ModalConfirm = ({isOpen, onClose, onConfirm, title, message}) => {
     useEffect(() => {
@@ -21,13 +21,13 @@ export const ModalConfirm = ({isOpen, onClose, onConfirm, title, message}) => {
     if(!isOpen) return null;
 
     return (
-        <div className="modal-overlay">
-            <div className="modal-content">
+        <div className={styles.modalOverlay}>
+            <div className={styles.modalContent}>
                 <h4>{title}</h4>
                 <p>{message}</p>
-                <div className="modal-actions">
-                    <button onClick={onClose} className="cancel-button">Cancelar</button>
-                    <button onClick={onConfirm} className="confirm-button">Confirmar</button>
+                <div className={styles.modalActions}>
+                    <button onClick={onClose} className={styles.cancelButton}>Cancelar</button>
+                    <button onClick={onConfirm} className={styles.confirmButton}>Confirmar</button>
                 </div>
             </div>
         </div>

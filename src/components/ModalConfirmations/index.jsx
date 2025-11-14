@@ -8,14 +8,33 @@ import {useNavigate} from "react-router"
 import { FaUser, FaMapMarkerAlt, FaPhone, FaDollarSign, FaExclamationTriangle, FaCalendarAlt, FaEdit, FaTimes, FaCheck, FaArrowLeft, FaClock, FaEye } from "react-icons/fa";
 import { UserContext } from "../../context/UserContext";
 import { logDonorActivity } from "../../helper/logDonorActivity";
+import { getDonorConfirmationData } from "../../helper/getDonorConfirmationData";
 
 const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) => {
   const [isConfirmation, setIsConfirmation] = useState(false);
   const [dateConfirm, setDateConfirm] = useState("");
   const [observation, setObservation] = useState("");
   const { operatorData } = useContext(UserContext);
+  const [donorMensalDay, setDonorMensalDay] = useState(null);
+  const [donorMonthlyFee, setDonorMonthlyFee] = useState(null);
+  const [countNotReceived, setCountNotReceived] = useState(0);
+  const [lastThreeDonations, setLastThreeDonations] = useState([]);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchDonorData = async () => {
+      if (operatorData?.operator_code_id === 521 && donationConfirmationOpen?.donor_id) {
+        const data = await getDonorConfirmationData(donationConfirmationOpen.donor_id);
+        setDonorMensalDay(data.donorMensalDay);
+        setDonorMonthlyFee(data.donorMonthlyFee);
+        setCountNotReceived(data.countNotReceived);
+        setLastThreeDonations(data.lastThreeDonations);
+      }
+    };
+    
+    fetchDonorData();
+  }, [donationConfirmationOpen, operatorData])
 
   const handleCancel = async () => {
     if (!window.confirm("Você tem certeza que deseja cancelar a ficha?")) {
@@ -140,6 +159,97 @@ const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) =>
                 </div>
               </div>
             </div>
+
+            {operatorData?.operator_code_id === 521 && (donorMensalDay || donorMonthlyFee) && (
+              <div className={styles.mensalInfoSection}>
+                <h3>Informações do Mensal</h3>
+                <div className={styles.infoGrid}>
+                  {donorMensalDay && (
+                    <div className={styles.infoItem}>
+                      <div className={styles.infoLabel}>
+                        <FaCalendarAlt />
+                        Dia do Mensal
+                      </div>
+                      <div className={styles.infoValue}>
+                        Dia {donorMensalDay}
+                      </div>
+                    </div>
+                  )}
+                  {donorMonthlyFee && (
+                    <div className={styles.infoItem}>
+                      <div className={styles.infoLabel}>
+                        <FaDollarSign />
+                        Valor Mensal
+                      </div>
+                      <div className={styles.infoValue}>
+                        {donorMonthlyFee.toLocaleString("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {operatorData?.operator_code_id === 521 && countNotReceived > 0 && (
+              <div className={styles.notReceivedSection}>
+                <h3>Status de Recebimento</h3>
+                <div className={styles.infoGrid}>
+                  <div className={`${styles.infoItem} ${styles.fullWidth}`}>
+                    <div className={styles.infoLabel}>
+                      <FaExclamationTriangle />
+                      Doações Não Recebidas
+                    </div>
+                    <div className={`${styles.infoValue} ${styles.warning}`}>
+                      {countNotReceived} {countNotReceived === 1 ? "mês" : "meses"} sem receber
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {operatorData?.operator_code_id === 521 && lastThreeDonations.length > 0 && (
+              <div className={styles.recentDonationsSection}>
+                <h3>Últimas 3 Doações Recebidas</h3>
+                <div className={styles.donationsCardsGrid}>
+                  {lastThreeDonations.map((donation, index) => (
+                    <div key={index} className={styles.donationCard}>
+                      <div className={styles.donationCardHeader}>
+                        <span className={styles.donationNumber}>
+                          #{index + 1}
+                        </span>
+                        <span className={styles.donationValue}>
+                          {donation.value.toLocaleString("pt-BR", {
+                            style: "currency",
+                            currency: "BRL",
+                          })}
+                        </span>
+                      </div>
+                      <div className={styles.donationCardBody}>
+                        <div className={styles.donationInfo}>
+                          <span className={styles.donationLabel}>📅 Data:</span>
+                          <span className={styles.donationText}>
+                            {new Date(donation.day).toLocaleDateString("pt-BR", {
+                              timeZone: "UTC",
+                            })}
+                          </span>
+                        </div>
+                        <div className={styles.donationInfo}>
+                          <span className={styles.donationLabel}>
+                            📝 Observação:
+                          </span>
+                          <span className={styles.donationText}>
+                            {donation.description || "Sem observação"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className={styles.donorInfoSection}>
               <h3>Dados do Doador</h3>
