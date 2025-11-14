@@ -16,6 +16,7 @@ const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) =>
   const [observation, setObservation] = useState("");
   const [isScheduling, setIsScheduling] = useState(false);
   const [scheduleDate, setScheduleDate] = useState("");
+  const [scheduleObservation, setScheduleObservation] = useState("");
   const { operatorData } = useContext(UserContext);
   const [donorMensalDay, setDonorMensalDay] = useState(null);
   const [donorMonthlyFee, setDonorMonthlyFee] = useState(null);
@@ -31,6 +32,7 @@ const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) =>
     setDateConfirm("");
     setScheduleDate("");
     setObservation("");
+    setScheduleObservation("");
 
     const fetchDonorData = async () => {
       if (operatorData?.operator_code_id === 521 && donationConfirmationOpen?.donor_id) {
@@ -180,6 +182,7 @@ const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) =>
           confirmation_scheduled: scheduleDate,
           confirmation_status: "Agendado",
           donation_day_contact: DataNow("noformated"),
+          confirmation_observation: scheduleObservation || null,
         })
         .eq("receipt_donation_id", donationConfirmationOpen.id);
 
@@ -498,6 +501,18 @@ const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) =>
                       placeholder="Selecione a data para ligar novamente"
                     />
                   </div>
+                  <div className={styles.inputGroup}>
+                    <label>
+                      <FaEdit />
+                      Observação
+                    </label>
+                    <input
+                      value={scheduleObservation}
+                      type="text"
+                      onChange={(e) => setScheduleObservation(e.target.value)}
+                      placeholder="Observações sobre o agendamento..."
+                    />
+                  </div>
                 </div>
 
                 <div className={styles.formActions}>
@@ -505,6 +520,7 @@ const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) =>
                     onClick={() => {
                       setIsScheduling(false);
                       setScheduleDate("");
+                      setScheduleObservation("");
                     }}
                     className={styles.btnBack}
                   >

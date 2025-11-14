@@ -13,7 +13,7 @@ const updateRequestSelected = async (status, id, setModalOpen, setActive) => {
       if (error) console.error(error);
       if (!error) {
         toast.success("Processo concluído com sucesso");
-        setModalOpen(false);
+        if (setModalOpen) setModalOpen(false);
         if (setActive) setActive("");
 
         return data;

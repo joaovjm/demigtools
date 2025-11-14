@@ -15,6 +15,7 @@ const ModalWorklist = ({
   workListSelected,
   setActive,
   workSelect,
+  updateWorklistItem,
 }) => {
   console.log(workSelect);
   const { operatorData } = useContext(UserContext);
@@ -77,24 +78,43 @@ const ModalWorklist = ({
     fetchCampains();
   }, []);
 
-  const handleClose = () => {
+  const handleClose = async () => {
+    // Atualizar o item na lista para refletir possíveis mudanças (como request_date_accessed)
+    if (updateWorklistItem) {
+      await updateWorklistItem(id);
+    }
     setModalOpen(false);
     setActive("");
     navigate(`?pkg=${workSelect}`);
   };
 
   const handleNP = async () => {
-    updateRequestSelected("NP", id, setModalOpen, setActive);
+    const result = await updateRequestSelected("NP", id, null, null);
+    if (result && updateWorklistItem) {
+      await updateWorklistItem(id);
+    }
+    setModalOpen(false);
+    setActive("");
     navigate(`?pkg=${workSelect}`);
   };
 
-  const handleNA = () => {
-    updateRequestSelected("NA", id, setModalOpen, setActive);
+  const handleNA = async () => {
+    const result = await updateRequestSelected("NA", id, null, null);
+    if (result && updateWorklistItem) {
+      await updateWorklistItem(id);
+    }
+    setModalOpen(false);
+    setActive("");
     navigate(`?pkg=${workSelect}`);
   };
 
-  const handleWhatsapp = () => {
-    updateRequestSelected("Whatsapp", id, setModalOpen, setActive);
+  const handleWhatsapp = async () => {
+    const result = await updateRequestSelected("Whatsapp", id, null, null);
+    if (result && updateWorklistItem) {
+      await updateWorklistItem(id);
+    }
+    setModalOpen(false);
+    setActive("");
     navigate(`?pkg=${workSelect}`);
   };
 
@@ -110,12 +130,12 @@ const ModalWorklist = ({
     setNewSchedulingOpen(true);
   };
 
-  const handleSchedulingClick = () => {
+  const handleSchedulingClick = async () => {
     if (!telScheduling) {
       toast.warning("Escolha o telefone de contato usado...");
       return;
     }
-    const response = updateRequestList({
+    const response = await updateRequestList({
       id: id,
       observationScheduling: observationScheduling,
       dateScheduling: dateScheduling,
@@ -123,7 +143,12 @@ const ModalWorklist = ({
     });
     if (response) {
       toast.success("Agendado com sucesso!");
+      if (updateWorklistItem) {
+        await updateWorklistItem(id);
+      }
       setModalOpen(false);
+      setActive("");
+      navigate(`?pkg=${workSelect}`);
     } else {
       toast.error("Erro ao agendar!");
     }
@@ -151,7 +176,12 @@ const ModalWorklist = ({
     );
 
     if (response.length > 0) {
-      updateRequestSelected("Sucesso", id, setModalOpen, setActive);
+      const result = await updateRequestSelected("Sucesso", id, null, null);
+      if (result && updateWorklistItem) {
+        await updateWorklistItem(id);
+      }
+      setModalOpen(false);
+      setActive("");
       navigate(`?pkg=${workSelect}`);
     }
   };

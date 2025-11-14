@@ -11,6 +11,7 @@ import ModalWorklist from "../../components/ModalWorklist";
 import { useLocation, useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import supabase from "../../helper/superBaseClient";
+import getWorklistRequestById from "../../helper/getWorklistRequestById";
 
 const WorkList = () => {
   const { operatorData, setOperatorData } = useContext(UserContext);
@@ -92,7 +93,7 @@ const WorkList = () => {
 
   useEffect(() => {
     request();
-  }, [modalOpen, workSelect]);
+  }, [workSelect]);
 
   const handleChange = async (e) => {
     const selected = e.target.value;
@@ -129,6 +130,30 @@ const WorkList = () => {
       direction = 'desc';
     }
     setSortConfig({ key, direction });
+  };
+
+  // Função para atualizar apenas um item específico na lista sem recarregar tudo
+  const updateWorklistItem = async (requestId) => {
+    if (!workSelect || !requestId) return;
+    
+    try {
+      const updatedItem = await getWorklistRequestById(
+        operatorData.operator_code_id,
+        workSelect,
+        requestId
+      );
+      
+      if (updatedItem) {
+        setWorklistRequest((prevList) => {
+          if (!prevList) return prevList;
+          return prevList.map((item) =>
+            item.id === requestId ? updatedItem : item
+          );
+        });
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar item da lista:", error);
+    }
   };
 
   const getFilteredAndSortedData = () => {
@@ -370,6 +395,7 @@ const WorkList = () => {
           workListSelected={workListSelected}
           setActive={setActive}
           workSelect={workSelect}
+          updateWorklistItem={updateWorklistItem}
         />
       )}
     </main>
