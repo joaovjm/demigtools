@@ -82,7 +82,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
         const { data, error } = await supabase
           .from("request")
           .select("*, operator: operator_code_id(operator_name)")
-          .eq("receipt_donation_id", donation.receipt_donation_id)
+          .eq("donor_id", idDonor)
           .limit(1);
         if (error) throw error;
         if (data) {

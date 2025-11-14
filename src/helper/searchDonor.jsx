@@ -3,56 +3,48 @@ import supabase from "./superBaseClient";
 const searchDonor = async (params, donor_type) => {
   try {
     let query;
+    let searchType = "name"; // Para rastreamento do tipo de busca
+    
     // Determina se deve buscar na tabela leads ou donor
     const isLeadSearch = donor_type === "Lead" || donor_type === "Leads";
-    const tableName = isLeadSearch ? "leads" : "donor";
 
     if (params) {
-      // Remove tudo que não for número
-      const cleanParam = params.replace(/\D/g, "");
+      const trimmedParams = params.trim();
+      
+      // Remove tudo que não for número para análise
+      const cleanParam = trimmedParams.replace(/\D/g, "");
 
-      // Detecta padrões de CPF e CNPJ completos
-      const isFullCpf = /^\d{11}$/.test(cleanParam);
-      const isFullCnpj = /^\d{14}$/.test(cleanParam);
-
-      // Detecta CNPJ parcial: começa com 2 dígitos e ponto (ex: "12.")
-      const isCnpjStart = /^\d{2}\./.test(params);
-
-      // Detecta padrões parciais de CPF e CNPJ
-      const isCpfLike =
-        /^\d{3,11}$/.test(cleanParam) ||
-        /^\d{1,3}(\.\d{1,3}){0,2}(-\d{0,2})?$/.test(params);
-
-      const isCnpjLike =
-        isCnpjStart ||
-        (/^\d{5,14}$/.test(cleanParam) && params.includes("/")) ||
-        /^\d{2}\.?\d{3}\.?\d{3}\/?\d{0,4}-?\d{0,2}$/.test(params);
-
-      // Detecta telefone (8–11 dígitos, sem barra e sem ponto/traço de CPF)
-      const isPhoneLike =
-        /^\d{8,11}$/.test(cleanParam) &&
-        !params.includes("/") &&
-        !params.includes("-") &&
-        !params.includes(".");
-
-      // 🧩 Ordem: telefone primeiro, depois CPF/CNPJ
-      if (isPhoneLike) {
-        // Busca por telefone
-        if (isLeadSearch) {
+      // 1. BUSCA POR RECIBO: Começa com R/r seguido de números
+      if (/^r\d+$/i.test(trimmedParams)) {
+        searchType = "receipt";
+        
+        if (!isLeadSearch) {
+          const receiptNumber = Number(cleanParam);
           query = supabase
-            .from("leads")
+            .from("donation")
             .select(
-              `leads_id, leads_name, leads_address, leads_tel_1, leads_neighborhood, leads_icpf, operator: operator_code_id(operator_code_id, operator_name)`
+              `
+              donor: donation_donor_id_fkey(
+                donor_id,
+                donor_name,
+                donor_address,
+                donor_tel_1,
+                donor_neighborhood,
+                donor_type
+              )
+            `
             )
-            .or(`leads_tel_1.ilike.%${params}%,leads_tel_2.ilike.%${params}%`);
-        } else {
-          query = supabase.rpc("search_donor_by_phone", {
-            phone_search: params,
-            donor_type_filter: donor_type.trim() || "Todos",
-          });
+            .eq("receipt_donation_id", receiptNumber);
         }
-      } else if (isFullCpf || isCpfLike || isFullCnpj || isCnpjLike) {
-        // Busca por CPF ou CNPJ no mesmo campo
+      }
+      // 2. BUSCA POR CNPJ: 14 dígitos ou padrão com pontos, barras e hífen
+      else if (
+        /^\d{14}$/.test(cleanParam) || // CNPJ completo: 14 dígitos
+        (cleanParam.length >= 12 && trimmedParams.includes("/")) || // Padrão com /
+        /^\d{2}\./.test(trimmedParams) // Começa com XX.
+      ) {
+        searchType = "cnpj";
+        
         if (isLeadSearch) {
           query = supabase
             .from("leads")
@@ -68,75 +60,115 @@ const searchDonor = async (params, donor_type) => {
             )
             .ilike("donor_cpf.donor_cpf", `%${cleanParam}%`);
         }
-      } else if (/^\d{1,9}$/.test(params)) {
-        // Busca por telefone
+      }
+      // 3. BUSCA POR CPF: 11 dígitos ou padrão com pontos e hífen (sem barra)
+      else if (
+        /^\d{11}$/.test(cleanParam) || // CPF completo: 11 dígitos
+        (cleanParam.length >= 9 && cleanParam.length <= 11 && 
+         (trimmedParams.includes(".") || trimmedParams.includes("-")) &&
+         !trimmedParams.includes("/")) // Padrão com . ou - mas sem /
+      ) {
+        searchType = "cpf";
+        
         if (isLeadSearch) {
-          // Busca na tabela leads por telefone
           query = supabase
             .from("leads")
             .select(
               `leads_id, leads_name, leads_address, leads_tel_1, leads_neighborhood, leads_icpf, operator: operator_code_id(operator_code_id, operator_name)`
             )
-            .or(`leads_tel_1.ilike.%${params}%,leads_tel_2.ilike.%${params}%`);
+            .ilike("leads_icpf", `%${cleanParam}%`);
         } else {
-          console.log("caiu no Telefone");
+          query = supabase
+            .from("donor")
+            .select(
+              `donor_id, donor_name, donor_address, donor_tel_1, donor_neighborhood, donor_type, donor_cpf!inner(donor_cpf)`
+            )
+            .ilike("donor_cpf.donor_cpf", `%${cleanParam}%`);
+        }
+      }
+      // 4. BUSCA POR TELEFONE: Somente números sem formatação especial de CPF/CNPJ
+      else if (
+        /^\d+$/.test(cleanParam) &&
+        cleanParam.length >= 8 &&
+        cleanParam.length <= 11 &&
+        !trimmedParams.includes(".") &&
+        !trimmedParams.includes("-") &&
+        !trimmedParams.includes("/")
+      ) {
+        searchType = "phone";
+        
+        if (isLeadSearch) {
+          query = supabase
+            .from("leads")
+            .select(
+              `leads_id, leads_name, leads_address, leads_tel_1, leads_neighborhood, leads_icpf, operator: operator_code_id(operator_code_id, operator_name)`
+            )
+            .or(`leads_tel_1.ilike.%${cleanParam}%,leads_tel_2.ilike.%${cleanParam}%`);
+        } else {
           query = supabase.rpc("search_donor_by_phone", {
-            phone_search: params,
+            phone_search: cleanParam,
             donor_type_filter: donor_type.trim() || "Todos",
           });
         }
-      } else if (/^r\d+$/i.test(params)) {
-        // Busca por recibo (apenas para donors, não para leads)
-        if (!isLeadSearch) {
-          query = supabase
-            .from("donation")
-            .select(
-              `
-            donor: donation_donor_id_fkey(
-            donor_id,
-              donor_name,
-              donor_address,
-              donor_tel_1,
-              donor_neighborhood,
-              donor_type
-            )
-          `
-            )
-            .eq("receipt_donation_id", Number(params.replace(/\D/g, "")));
-        }
-      } else {
-        // Busca por nome
+      }
+      // 5. BUSCA POR TELEFONE PARCIAL: Números curtos que podem ser parte de telefone
+      else if (/^\d+$/.test(cleanParam) && cleanParam.length < 8) {
+        searchType = "phone";
+        
         if (isLeadSearch) {
           query = supabase
             .from("leads")
             .select(
               `leads_id, leads_name, leads_address, leads_tel_1, leads_neighborhood, leads_icpf, operator: operator_code_id(operator_code_id, operator_name)`
             )
-            .ilike("leads_name", `%${params}%`);
+            .or(`leads_tel_1.ilike.%${cleanParam}%,leads_tel_2.ilike.%${cleanParam}%`);
+        } else {
+          query = supabase.rpc("search_donor_by_phone", {
+            phone_search: cleanParam,
+            donor_type_filter: donor_type.trim() || "Todos",
+          });
+        }
+      }
+      // 6. BUSCA POR NOME: Tudo que não se encaixa nos padrões acima
+      else {
+        searchType = "name";
+        
+        if (isLeadSearch) {
+          query = supabase
+            .from("leads")
+            .select(
+              `leads_id, leads_name, leads_address, leads_tel_1, leads_neighborhood, leads_icpf, operator: operator_code_id(operator_code_id, operator_name)`
+            )
+            .ilike("leads_name", `%${trimmedParams}%`);
         } else {
           query = supabase
             .from("donor")
             .select(
               `donor_id, donor_name, donor_address, donor_tel_1, donor_neighborhood, donor_type`
             )
-            .ilike("donor_name", `%${params}%`);
+            .ilike("donor_name", `%${trimmedParams}%`);
         }
       }
     }
 
-    // Filtros adicionais (apenas para donors)
-    if (
-      query &&
-      donor_type !== "" &&
-      !/^\d{1,9}$/.test(params) &&
-      !isLeadSearch
-    ) {
-      if (/^r\d+$/i.test(params) && donor_type === "Todos") {
-        query = query.neq("donor.donor_type", "Excluso");
-      } else if (/^r\d+$/i.test(params) && donor_type !== "Todos") {
-        query = query.eq("donor.donor_type", donor_type);
+    // Aplica filtros de tipo de doador (apenas para donors, não para leads)
+    if (query && !isLeadSearch && donor_type !== "" && searchType !== "phone") {
+      const trimmedDonorType = donor_type.trim();
+      
+      if (searchType === "receipt") {
+        // Para busca por recibo
+        if (trimmedDonorType === "Todos") {
+          query = query.in("donor.donor_type", ["Avulso", "Mensal", "Lista"]);
+        } else if (["Avulso", "Mensal", "Lista", "Excluso"].includes(trimmedDonorType)) {
+          query = query.eq("donor.donor_type", trimmedDonorType);
+        }
       } else {
-        query = query.neq("donor_type", "Excluso");
+        // Para outras buscas (nome, cpf, cnpj)
+        if (trimmedDonorType === "Todos") {
+          query = query.in("donor_type", ["Avulso", "Mensal", "Lista"]);
+        } else if (["Avulso", "Mensal", "Lista", "Excluso"].includes(trimmedDonorType)) {
+          query = query.eq("donor_type", trimmedDonorType);
+        }
       }
     }
 
@@ -146,9 +178,8 @@ const searchDonor = async (params, donor_type) => {
 
     // Normaliza os dados para manter consistência na interface
     if (data) {
-      if (/^r\d+$/i.test(params) && !isLeadSearch) {
+      if (searchType === "receipt" && !isLeadSearch) {
         const dataDonor = data[0]?.donor;
-
         return dataDonor ? [dataDonor] : [];
       } else if (isLeadSearch && data.length > 0) {
         // Mapeia os campos de leads para o formato esperado pelo componente
@@ -160,14 +191,13 @@ const searchDonor = async (params, donor_type) => {
           donor_neighborhood: lead.leads_neighborhood,
           donor_type: "Lead",
           donor_cpf: lead.leads_icpf,
-          operator_code_id: lead.operator.operator_code_id,
-          operator_name: lead.operator.operator_name,
+          operator_code_id: lead.operator?.operator_code_id,
+          operator_name: lead.operator?.operator_name,
           isLead: true, // Flag para identificar que é um lead
         }));
 
         return normalizedData;
       } else {
-        console.log("data", data);
         return data;
       }
     }
@@ -178,4 +208,5 @@ const searchDonor = async (params, donor_type) => {
     return null;
   }
 };
+
 export default searchDonor;
