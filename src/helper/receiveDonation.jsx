@@ -101,8 +101,8 @@ export const useDonation = () => {
       if (updateError) throw updateError;
 
       // Atualiza o request_status se donation_worklist existir
-      // Apenas se o operador NÃO for 521 (Mensal)
-      if (donation_worklist && operator_code_id !== 521) {
+
+      if (donation_worklist) {
         const { error: requestUpdateError } = await supabase
           .from("request")
           .update({

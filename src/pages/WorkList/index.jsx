@@ -22,8 +22,8 @@ const WorkList = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [workListSelected, setWorkListSelected] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
-  const [statusFilter, setStatusFilter] = useState('');
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+  const [statusFilter, setStatusFilter] = useState("");
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -110,24 +110,23 @@ const WorkList = () => {
         .select();
 
       if (error) throw error;
-     
     } catch (error) {
       console.error(error);
     }
-    
+
     navigate(
       `?pkg=${workSelect}&active=${list.receipt_donation_id}&modal=true`
     );
-    
+
     setActive(list.receipt_donation_id);
     setWorkListSelected(list);
     setModalOpen(!modalOpen);
   };
 
   const handleSort = (key) => {
-    let direction = 'asc';
-    if (sortConfig.key === key && sortConfig.direction === 'asc') {
-      direction = 'desc';
+    let direction = "asc";
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc";
     }
     setSortConfig({ key, direction });
   };
@@ -135,14 +134,14 @@ const WorkList = () => {
   // Função para atualizar apenas um item específico na lista sem recarregar tudo
   const updateWorklistItem = async (requestId) => {
     if (!workSelect || !requestId) return;
-    
+
     try {
       const updatedItem = await getWorklistRequestById(
         operatorData.operator_code_id,
         workSelect,
         requestId
       );
-      
+
       if (updatedItem) {
         setWorklistRequest((prevList) => {
           if (!prevList) return prevList;
@@ -166,8 +165,8 @@ const WorkList = () => {
     if (statusFilter) {
       filteredData = filteredData.filter((item) => {
         const status = item.request_status;
-        if (statusFilter === 'Não visitado') {
-          return !status || status === '';
+        if (statusFilter === "Não visitado") {
+          return !status || status === "";
         }
         return status === statusFilter;
       });
@@ -181,19 +180,19 @@ const WorkList = () => {
     return filteredData.sort((a, b) => {
       let aValue, bValue;
 
-      if (sortConfig.key === 'mensal_day') {
+      if (sortConfig.key === "mensal_day") {
         aValue = a?.donor_mensal?.donor_mensal?.donor_mensal_day || 0;
         bValue = b?.donor_mensal?.donor_mensal?.donor_mensal_day || 0;
-      } else if (sortConfig.key === 'value') {
+      } else if (sortConfig.key === "value") {
         aValue = a.donation.donation_value || 0;
         bValue = b.donation.donation_value || 0;
       }
 
       if (aValue < bValue) {
-        return sortConfig.direction === 'asc' ? -1 : 1;
+        return sortConfig.direction === "asc" ? -1 : 1;
       }
       if (aValue > bValue) {
-        return sortConfig.direction === 'asc' ? 1 : -1;
+        return sortConfig.direction === "asc" ? 1 : -1;
       }
       return 0;
     });
@@ -207,9 +206,11 @@ const WorkList = () => {
           <h2 className={styles.worklistTitle}>📋 Lista de Trabalho</h2>
           <div className={styles.worklistActions}>
             <div className={styles.worklistSelectContainer}>
-              <label className={styles.worklistSelectLabel}>Selecionar Lista</label>
-              <select 
-                value={workSelect} 
+              <label className={styles.worklistSelectLabel}>
+                Selecionar Lista
+              </label>
+              <select
+                value={workSelect}
                 onChange={handleChange}
                 className={styles.worklistSelect}
                 disabled={loading}
@@ -226,9 +227,11 @@ const WorkList = () => {
               </select>
             </div>
             <div className={styles.worklistSelectContainer}>
-              <label className={styles.worklistSelectLabel}>Filtrar por Status</label>
-              <select 
-                value={statusFilter} 
+              <label className={styles.worklistSelectLabel}>
+                Filtrar por Status
+              </label>
+              <select
+                value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
                 className={styles.worklistSelect}
                 disabled={loading || !workSelect}
@@ -258,16 +261,24 @@ const WorkList = () => {
               <div className={styles.worklistTableHeader}>
                 <div className={styles.worklistTableStats}>
                   <span className={styles.statsItem}>
-                    <strong>{getFilteredAndSortedData()?.length || 0}</strong> {getFilteredAndSortedData()?.length === 1 ? 'item' : 'itens'}
+                    <strong>{getFilteredAndSortedData()?.length || 0}</strong>{" "}
+                    {getFilteredAndSortedData()?.length === 1
+                      ? "item"
+                      : "itens"}
                     {statusFilter && ` (filtrado por: ${statusFilter})`}
                   </span>
                   <span className={styles.statsItem}>
                     Lista: <strong>{workSelect}</strong>
                   </span>
                   <span className={styles.statsItem}>
-                    Total: <strong>
+                    Total:{" "}
+                    <strong>
                       {(getFilteredAndSortedData() || [])
-                        .reduce((sum, item) => sum + (item.donation.donation_value || 0), 0)
+                        .reduce(
+                          (sum, item) =>
+                            sum + (item.donation.donation_value || 0),
+                          0
+                        )
                         .toLocaleString("pt-BR", {
                           style: "currency",
                           currency: "BRL",
@@ -282,31 +293,39 @@ const WorkList = () => {
                   <thead>
                     <tr className={styles.worklistTableHeadRow}>
                       <th className={styles.worklistTableHead}>Doador</th>
-                      <th 
+                      <th
                         className={`${styles.worklistTableHead} ${styles.sortable}`}
-                        onClick={() => handleSort('mensal_day')}
+                        onClick={() => handleSort("mensal_day")}
                       >
                         Dia do Mensal
                         <span className={styles.sortArrow}>
-                          {sortConfig.key === 'mensal_day' ? (
-                            sortConfig.direction === 'asc' ? '↑' : '↓'
-                          ) : '↕'}
+                          {sortConfig.key === "mensal_day"
+                            ? sortConfig.direction === "asc"
+                              ? "↑"
+                              : "↓"
+                            : "↕"}
                         </span>
                       </th>
-                      <th 
+                      <th
                         className={`${styles.worklistTableHead} ${styles.sortable}`}
-                        onClick={() => handleSort('value')}
+                        onClick={() => handleSort("value")}
                       >
                         Valor
                         <span className={styles.sortArrow}>
-                          {sortConfig.key === 'value' ? (
-                            sortConfig.direction === 'asc' ? '↑' : '↓'
-                          ) : '↕'}
+                          {sortConfig.key === "value"
+                            ? sortConfig.direction === "asc"
+                              ? "↑"
+                              : "↓"
+                            : "↕"}
                         </span>
                       </th>
-                      <th className={styles.worklistTableHead}>Data Recebida</th>
+                      <th className={styles.worklistTableHead}>
+                        Data Recebida
+                      </th>
                       <th className={styles.worklistTableHead}>Status</th>
-                      <th className={styles.worklistTableHead}>Data Abertura</th>
+                      <th className={styles.worklistTableHead}>
+                        Data Abertura
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -334,20 +353,30 @@ const WorkList = () => {
                       >
                         <td className={styles.worklistTableCell}>
                           <div className={styles.donorInfo}>
-                            <span className={styles.donorName}>{list.donor.donor_name}</span>
+                            <span className={styles.donorName}>
+                              {list.donor.donor_name}
+                            </span>
                           </div>
                         </td>
                         <td className={styles.worklistTableCell}>
                           <div className={styles.donorInfo}>
-                            <span className={styles.donorName}>{list?.donor_mensal?.donor_mensal?.donor_mensal_day}</span>
+                            <span className={styles.donorName}>
+                              {
+                                list?.donor_mensal?.donor_mensal
+                                  ?.donor_mensal_day
+                              }
+                            </span>
                           </div>
                         </td>
                         <td className={styles.worklistTableCell}>
                           <span className={styles.valueAmount}>
-                            {list.donation.donation_value.toLocaleString("pt-BR", {
-                              style: "currency",
-                              currency: "BRL",
-                            })}
+                            {list.donation.donation_value.toLocaleString(
+                              "pt-BR",
+                              {
+                                style: "currency",
+                                currency: "BRL",
+                              }
+                            )}
                           </span>
                         </td>
                         <td className={styles.worklistTableCell}>
@@ -356,14 +385,31 @@ const WorkList = () => {
                           </span>
                         </td>
                         <td className={styles.worklistTableCell}>
-                          <span className={`${styles.statusBadge} ${styles[`status${list?.request_status?.charAt(0).toUpperCase() + list?.request_status?.slice(1).toLowerCase()}`]}`}>
+                          <span
+                            className={`${styles.statusBadge} ${
+                              styles[
+                                `status${
+                                  list?.request_status
+                                    ?.charAt(0)
+                                    .toUpperCase() +
+                                  list?.request_status?.slice(1).toLowerCase()
+                                }`
+                              ]
+                            }`}
+                          >
                             {list.request_status}
+                            {list?.donation?.operator_code_id === 521 &&
+                              ` (${list.donation.operator_code_id})`}
                           </span>
                         </td>
                         <td className={styles.worklistTableCell}>
                           <span className={styles.dateInfo}>
                             {list?.request_date_accessed
-                              ? `${new Date(list?.request_date_accessed).toLocaleDateString("pt-BR")} - ${new Date(list?.request_date_accessed).toLocaleTimeString("pt-BR")}`
+                              ? `${new Date(
+                                  list?.request_date_accessed
+                                ).toLocaleDateString("pt-BR")} - ${new Date(
+                                  list?.request_date_accessed
+                                ).toLocaleTimeString("pt-BR")}`
                               : "—"}
                           </span>
                         </td>
