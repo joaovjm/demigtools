@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import styles from "./worklist.module.css";
 import {
   fetchWorklist,
@@ -24,6 +24,9 @@ const WorkList = () => {
   const [loading, setLoading] = useState(false);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [statusFilter, setStatusFilter] = useState("");
+  const scrollContainerRef = useRef(null);
+  const scrollTimeoutRef = useRef(null);
+  const isRestoringScrollRef = useRef(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -33,6 +36,14 @@ const WorkList = () => {
     const pkg = params.get("pkg");
     const activeID = params.get("active");
     const modalFlag = params.get("modal");
+    const sortKey = params.get("sortKey");
+    const sortDirection = params.get("sortDirection");
+    const scrollPosition = params.get("scroll");
+
+    // Restaurar configuração de ordenação da URL
+    if (sortKey && sortDirection) {
+      setSortConfig({ key: sortKey, direction: sortDirection });
+    }
 
     if (pkg) {
       setWorkSelect(pkg);
@@ -95,9 +106,93 @@ const WorkList = () => {
     request();
   }, [workSelect]);
 
+  // Efeito para restaurar scroll quando os dados são carregados
+  useEffect(() => {
+    if (!worklistRequest || !scrollContainerRef.current) return;
+
+    const params = new URLSearchParams(location.search);
+    const scrollPosition = params.get("scroll");
+
+    if (scrollPosition) {
+      // Marcar que estamos restaurando o scroll para evitar atualizar a URL
+      isRestoringScrollRef.current = true;
+      
+      // Aguardar um pouco para garantir que o DOM está totalmente renderizado
+      const timer = setTimeout(() => {
+        if (scrollContainerRef.current) {
+          scrollContainerRef.current.scrollTop = Number(scrollPosition);
+          // Resetar a flag após um pequeno delay
+          setTimeout(() => {
+            isRestoringScrollRef.current = false;
+          }, 100);
+        }
+      }, 200);
+
+      return () => {
+        clearTimeout(timer);
+        isRestoringScrollRef.current = false;
+      };
+    }
+  }, [worklistRequest, location.search]);
+
+  // Efeito para gerenciar o scroll e salvar na URL
+  useEffect(() => {
+    const scrollContainer = scrollContainerRef.current;
+    if (!scrollContainer) return;
+
+    const handleScroll = () => {
+      // Ignorar eventos de scroll durante a restauração
+      if (isRestoringScrollRef.current) return;
+
+      // Limpar timeout anterior
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+
+      // Aguardar um pouco antes de atualizar a URL (debounce)
+      scrollTimeoutRef.current = setTimeout(() => {
+        const scrollTop = scrollContainer.scrollTop;
+        // Usar window.location.search para sempre pegar o valor atual
+        const params = new URLSearchParams(window.location.search);
+        
+        if (scrollTop > 0) {
+          params.set("scroll", scrollTop.toString());
+        } else {
+          params.delete("scroll");
+        }
+        
+        navigate(`?${params.toString()}`, { replace: true });
+      }, 150);
+    };
+
+    scrollContainer.addEventListener("scroll", handleScroll);
+
+    return () => {
+      scrollContainer.removeEventListener("scroll", handleScroll);
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    };
+  }, [navigate]);
+
   const handleChange = async (e) => {
     const selected = e.target.value;
     setWorkSelect(selected);
+    
+    // Atualizar URL com o novo pkg, preservando ordenação
+    const params = new URLSearchParams(location.search);
+    if (selected) {
+      params.set("pkg", selected);
+    } else {
+      params.delete("pkg");
+    }
+    // Remover active e modal ao trocar de lista
+    params.delete("active");
+    params.delete("modal");
+    // Remover scroll ao trocar de lista (resetar posição)
+    params.delete("scroll");
+    // Manter sortKey e sortDirection
+    navigate(`?${params.toString()}`, { replace: true });
   };
 
   const handleRequest = async (list) => {
@@ -114,9 +209,13 @@ const WorkList = () => {
       console.error(error);
     }
 
-    navigate(
-      `?pkg=${workSelect}&active=${list.receipt_donation_id}&modal=true`
-    );
+    // Preservar parâmetros de ordenação e scroll na URL ao abrir modal
+    const params = new URLSearchParams(location.search);
+    params.set("pkg", workSelect);
+    params.set("active", list.receipt_donation_id);
+    params.set("modal", "true");
+    // Manter sortKey, sortDirection e scroll se existirem
+    navigate(`?${params.toString()}`);
 
     setActive(list.receipt_donation_id);
     setWorkListSelected(list);
@@ -128,7 +227,20 @@ const WorkList = () => {
     if (sortConfig.key === key && sortConfig.direction === "asc") {
       direction = "desc";
     }
-    setSortConfig({ key, direction });
+    const newSortConfig = { key, direction };
+    setSortConfig(newSortConfig);
+
+    // Atualizar URL com os parâmetros de ordenação
+    const params = new URLSearchParams(location.search);
+    if (key) {
+      params.set("sortKey", key);
+      params.set("sortDirection", direction);
+    } else {
+      params.delete("sortKey");
+      params.delete("sortDirection");
+    }
+    // Manter scroll se existir
+    navigate(`?${params.toString()}`, { replace: true });
   };
 
   // Função para atualizar apenas um item específico na lista sem recarregar tudo
@@ -288,7 +400,10 @@ const WorkList = () => {
                 </div>
               </div>
 
-              <div className={styles.worklistTableScroll}>
+              <div 
+                className={styles.worklistTableScroll}
+                ref={scrollContainerRef}
+              >
                 <table className={styles.worklistTable}>
                   <thead>
                     <tr className={styles.worklistTableHeadRow}>
