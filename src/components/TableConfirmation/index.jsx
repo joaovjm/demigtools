@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./index.css";
+import styles from "./tableconfirmation.module.css";
 import { DataSelect } from "../DataTime";
 
 const TableConfirmation = ({
@@ -50,7 +50,7 @@ const TableConfirmation = ({
 
   const getFilteredAndSortedData = () => {
     const filtered = donationFilterPerId ? filterDonationConfirmation : donationConfirmation;
-    
+
     if (!sortConfig.key) {
       return filtered;
     }
@@ -61,6 +61,11 @@ const TableConfirmation = ({
       if (sortConfig.key === 'date') {
         aValue = new Date(a.donation_day_to_receive || 0).getTime();
         bValue = new Date(b.donation_day_to_receive || 0).getTime();
+      }
+
+      if (sortConfig.key === 'day') {
+        aValue = a.donor_mensal_day || 0;
+        bValue = b.donor_mensal_day || 0;
       }
 
       if (aValue < bValue) {
@@ -76,16 +81,16 @@ const TableConfirmation = ({
   const dataToShow = getFilteredAndSortedData();
 
   return (
-    <div className="table-confirmation-container">
-      <div className="table-confirmation-content">
+    <div className={styles.tableConfirmationContainer}>
+      <div className={styles.tableConfirmationContent}>
         {dataToShow.length > 0 ? (
-          <div className="table-confirmation-wrapper">
-            <div className="table-confirmation-header">
-              <div className="table-confirmation-stats">
-                <span className="stats-item">
+          <div className={styles.tableConfirmationWrapper}>
+            <div className={styles.tableConfirmationHeader}>
+              <div className={styles.tableConfirmationStats}>
+                <span className={styles.statsItem}>
                   <strong>{dataToShow.length}</strong> {dataToShow.length === 1 ? 'confirmação' : 'confirmações'} pendente{dataToShow.length === 1 ? '' : 's'}
                 </span>
-                <span className="stats-item">
+                <span className={styles.statsItem}>
                   Total: <strong>
                     {dataToShow.reduce((acc, item) => acc + (parseFloat(item.donation_value) || 0), 0).toLocaleString("pt-BR", {
                       style: "currency",
@@ -96,66 +101,83 @@ const TableConfirmation = ({
               </div>
             </div>
 
-            <div className="table-confirmation-scroll">
-              <table className="table-confirmation">
+            <div className={styles.tableConfirmationScroll}>
+              <table className={styles.tableConfirmation}>
                 <thead>
-                  <tr className="table-confirmation-head-row">
-                    <th 
-                      className="table-confirmation-head sortable"
+                  <tr className={styles.tableConfirmationHeadRow}>
+                    <th
+                      className={`${styles.tableConfirmationHead} ${styles.sortable}`}
                       onClick={() => handleSort('date')}
                       style={{ cursor: 'pointer' }}
                     >
                       Data
-                      <span className="sort-arrow">
+                      <span className={styles.sortArrow}>
                         {sortConfig.key === 'date' ? (
                           sortConfig.direction === 'asc' ? ' ↑' : ' ↓'
                         ) : ' ↕'}
                       </span>
                     </th>
-                    <th className="table-confirmation-head">Nome</th>
-                    <th className="table-confirmation-head">Valor</th>
-                    <th className="table-confirmation-head">Motivo</th>
-                    <th className="table-confirmation-head">Status</th>
-                    <th className="table-confirmation-head">Agendado</th>
+                    <th
+                      className={`${styles.tableConfirmationHead} ${styles.sortable}`}
+                      onClick={() => handleSort('day')}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      Dia
+                      <span className={styles.sortArrow}>
+                        {sortConfig.key === 'day' ? (
+                          sortConfig.direction === 'asc' ? ' ↑' : ' ↓'
+                        ) : ' ↕'}
+                      </span>
+                    </th>
+                    <th className={styles.tableConfirmationHead}>Nome</th>
+                    <th className={styles.tableConfirmationHead}>Valor</th>
+                    <th className={styles.tableConfirmationHead}>Motivo</th>
+                    <th className={styles.tableConfirmationHead}>Status</th>
+                    <th className={styles.tableConfirmationHead}>Agendado</th>
                   </tr>
                 </thead>
                 <tbody>
                   {dataToShow.map((donation) => (
                     <tr
-                      className="table-confirmation-row"
+                      className={styles.tableConfirmationRow}
                       key={donation.receipt_donation_id}
                       onClick={() => handleClick(donation)}
                     >
-                      <td className="table-confirmation-cell">
-                        <span className="date-info">
+                      <td className={styles.tableConfirmationCell}>
+                        <span className={styles.dateInfo}>
                           {DataSelect(donation.donation_day_to_receive)}
                         </span>
                       </td>
-                      <td className="table-confirmation-cell">
-                        <span className="donor-name">
+                      <td className={styles.tableConfirmationCell}>
+                        <span className={styles.dayInfo}>
+                          {donation.donor_mensal_day ? `Dia ${donation.donor_mensal_day}` : '-'}
+                        </span>
+                      </td>
+                      <td className={styles.tableConfirmationCell}>
+                        <span className={styles.donorName}>
                           {donation.donor_name}
                         </span>
                       </td>
-                      <td className="table-confirmation-cell">
-                        <span className="value-amount">
+                      <td className={styles.tableConfirmationCell}>
+                        <span className={styles.valueAmount}>
                           {parseFloat(donation.donation_value || 0).toLocaleString("pt-BR", {
                             style: "currency",
                             currency: "BRL",
                           })}
                         </span>
                       </td>
-                      <td className="table-confirmation-cell">
-                        <span className="reason-text">
+                      <td className={styles.tableConfirmationCell}>
+                        <span className={styles.reasonText}>
                           {donation.donor_confirmation_reason}
                         </span>
                       </td>
-                      <td className="table-confirmation-cell">
-                        <span className={`status-badge ${donation.confirmation_status === 'Agendado' ? 'status-scheduled' : donation.confirmation_status === 'Não Atendeu' ? 'status-not-attended' : 'status-none'}`}>
+                      <td className={styles.tableConfirmationCell}>
+                        <span className={`${styles.statusBadge} ${donation.confirmation_status === 'Agendado' ? styles.statusScheduled : donation.confirmation_status === 'Não Atendeu' ? styles.statusNotAttended : styles.statusNone}`}>
                           {donation.confirmation_status || '-'}
                         </span>
                       </td>
-                      <td className="table-confirmation-cell">
-                        <span className="schedule-date">
+                      <td className={styles.tableConfirmationCell}>
+                        <span className={styles.scheduleDate}>
                           {donation.confirmation_scheduled ? DataSelect(donation.confirmation_scheduled) : '-'}
                         </span>
                       </td>
@@ -166,8 +188,8 @@ const TableConfirmation = ({
             </div>
           </div>
         ) : (
-          <div className="table-confirmation-empty">
-            <div className="empty-icon">✅</div>
+          <div className={styles.tableConfirmationEmpty}>
+            <div className={styles.emptyIcon}>✅</div>
             <h4>Nenhuma confirmação pendente</h4>
             <p>Não há fichas a serem confirmadas no momento.</p>
           </div>

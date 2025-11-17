@@ -1,13 +1,13 @@
 @import url("../tables/base.css");
 
 /* Table Confirmation Container */
-.table-confirmation-container {
+.tableConfirmationContainer {
   display: flex;
   flex-direction: column;
   width: 100%;
 }
 
-.table-confirmation-content {
+.tableConfirmationContent {
   flex: 1;
   border: 3px double #363a3d;
   border-radius: 6px;
@@ -15,7 +15,7 @@
   overflow: hidden;
 }
 
-.table-confirmation-title {
+.tableConfirmationTitle {
   color: #faa01c;
   margin: 0 0 16px 0;
   font-size: 18px;
@@ -26,7 +26,7 @@
 }
 
 /* Table Header with Stats */
-.table-confirmation-header {
+.tableConfirmationHeader {
   background-color: #363a3d;
   border: 2px solid #2f2d2d;
   border-radius: 6px;
@@ -34,7 +34,7 @@
   margin-bottom: 16px;
 }
 
-.table-confirmation-stats {
+.tableConfirmationStats {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -42,25 +42,25 @@
   gap: 12px;
 }
 
-.stats-item {
+.statsItem {
   color: #faf5e9;
   font-size: 14px;
 }
 
-.stats-item strong {
+.statsItem strong {
   color: #faa01c;
   font-weight: 600;
 }
 
 /* Table Wrapper */
-.table-confirmation-wrapper {
+.tableConfirmationWrapper {
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100%;
 }
 
-.table-confirmation-scroll {
+.tableConfirmationScroll {
   overflow-x: auto;
   overflow-y: auto;
   max-height: 500px;
@@ -70,7 +70,7 @@
 }
 
 /* Table Styles */
-.table-confirmation {
+.tableConfirmation {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
@@ -78,14 +78,14 @@
   background-color: transparent;
 }
 
-.table-confirmation-head-row {
+.tableConfirmationHeadRow {
   background-color: #2f2d2d;
   position: sticky;
   top: 0;
   z-index: 10;
 }
 
-.table-confirmation-head {
+.tableConfirmationHead {
   padding: 12px 8px;
   color: #faa01c;
   font-weight: 600;
@@ -100,47 +100,47 @@
   min-width: 100px;
 }
 
-.table-confirmation-head:last-child {
+.tableConfirmationHead:last-child {
   border-right: none;
 }
 
-.table-confirmation-head.sortable {
+.sortable {
   cursor: pointer;
   user-select: none;
   transition: background-color 0.2s ease;
 }
 
-.table-confirmation-head.sortable:hover {
+.sortable:hover {
   background-color: #3a3e41;
 }
 
-.sort-arrow {
+.sortArrow {
   margin-left: 4px;
   font-size: 11px;
   opacity: 0.7;
 }
 
-.table-confirmation-row {
+.tableConfirmationRow {
   background-color: #363a3d;
   transition: all 0.2s ease;
   cursor: pointer;
   border-bottom: 1px solid #2f2d2d;
 }
 
-.table-confirmation-row:hover {
+.tableConfirmationRow:hover {
   background-color: #404548;
   box-shadow: inset 0 0 0 1px #faa01c;
 }
 
-.table-confirmation-row:nth-child(even) {
+.tableConfirmationRow:nth-child(even) {
   background-color: #3a3e41;
 }
 
-.table-confirmation-row:nth-child(even):hover {
+.tableConfirmationRow:nth-child(even):hover {
   background-color: #464a4d;
 }
 
-.table-confirmation-cell {
+.tableConfirmationCell {
   padding: 10px 8px;
   color: #faf5e9;
   border-right: 1px solid #464a4d;
@@ -150,36 +150,36 @@
   min-width: 100px;
 }
 
-.table-confirmation-cell:last-child {
+.tableConfirmationCell:last-child {
   border-right: none;
 }
 
 /* Cell Content Styles */
-.date-info {
+.dateInfo {
   color: #faf5e9;
   font-size: 11px;
 }
 
-.donor-name {
+.donorName {
   color: #faf5e9;
   font-weight: 500;
   font-size: 13px;
 }
 
-.value-amount {
+.valueAmount {
   color: #4caf50;
   font-weight: 600;
   font-size: 12px;
 }
 
-.reason-text {
+.reasonText {
   color: #ff9800;
   font-weight: 500;
   font-size: 12px;
   font-style: italic;
 }
 
-.status-badge {
+.statusBadge {
   display: inline-block;
   padding: 4px 8px;
   border-radius: 4px;
@@ -189,31 +189,31 @@
   letter-spacing: 0.5px;
 }
 
-.status-scheduled {
+.statusScheduled {
   background-color: rgba(23, 162, 184, 0.2);
   color: #17a2b8;
   border: 1px solid rgba(23, 162, 184, 0.4);
 }
 
-.status-not-attended {
+.statusNotAttended {
   background-color: rgba(220, 53, 69, 0.2);
   color: #dc3545;
   border: 1px solid rgba(220, 53, 69, 0.4);
 }
 
-.status-none {
+.statusNone {
   color: #9e9e9e;
   font-style: italic;
 }
 
-.schedule-date {
+.scheduleDate {
   color: #faf5e9;
   font-size: 11px;
   font-weight: 500;
 }
 
 /* Empty State */
-.table-confirmation-empty {
+.tableConfirmationEmpty {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -226,175 +226,176 @@
   border-radius: 6px;
 }
 
-.empty-icon {
+.emptyIcon {
   font-size: 48px;
   margin-bottom: 16px;
   opacity: 0.5;
 }
 
-.table-confirmation-empty h4 {
+.tableConfirmationEmpty h4 {
   color: #faa01c;
   margin: 0 0 8px 0;
   font-size: 16px;
 }
 
-.table-confirmation-empty p {
+.tableConfirmationEmpty p {
   color: #c0c0c0;
   margin: 0;
   font-size: 14px;
 }
 
 /* Scrollbar Styles */
-.table-confirmation-scroll::-webkit-scrollbar {
+.tableConfirmationScroll::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
-.table-confirmation-scroll::-webkit-scrollbar-track {
+.tableConfirmationScroll::-webkit-scrollbar-track {
   background-color: #2f2d2d;
   border-radius: 4px;
 }
 
-.table-confirmation-scroll::-webkit-scrollbar-thumb {
+.tableConfirmationScroll::-webkit-scrollbar-thumb {
   background-color: #464a4d;
   border-radius: 4px;
   transition: background-color 0.3s ease;
 }
 
-.table-confirmation-scroll::-webkit-scrollbar-thumb:hover {
+.tableConfirmationScroll::-webkit-scrollbar-thumb:hover {
   background-color: #faa01c;
 }
 
-.table-confirmation-scroll::-webkit-scrollbar-corner {
+.tableConfirmationScroll::-webkit-scrollbar-corner {
   background-color: #2f2d2d;
 }
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
-  .table-confirmation-content {
+  .tableConfirmationContent {
     padding: 12px;
   }
   
-  .table-confirmation-title {
+  .tableConfirmationTitle {
     font-size: 16px;
     margin-bottom: 12px;
   }
   
-  .table-confirmation-header {
+  .tableConfirmationHeader {
     padding: 8px 12px;
     margin-bottom: 12px;
   }
   
-  .table-confirmation-stats {
+  .tableConfirmationStats {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
   }
   
-  .stats-item {
+  .statsItem {
     font-size: 13px;
   }
   
-  .table-confirmation-scroll {
+  .tableConfirmationScroll {
     max-height: 400px;
   }
   
-  .table-confirmation-head,
-  .table-confirmation-cell {
+  .tableConfirmationHead,
+  .tableConfirmationCell {
     padding: 8px 6px;
     font-size: 11px;
     min-width: 80px;
   }
   
-  .table-confirmation-head {
+  .tableConfirmationHead {
     font-size: 10px;
   }
   
-  .table-confirmation-empty {
+  .tableConfirmationEmpty {
     padding: 30px 15px;
   }
   
-  .empty-icon {
+  .emptyIcon {
     font-size: 36px;
     margin-bottom: 12px;
   }
   
-  .table-confirmation-empty h4 {
+  .tableConfirmationEmpty h4 {
     font-size: 14px;
   }
   
-  .table-confirmation-empty p {
+  .tableConfirmationEmpty p {
     font-size: 12px;
   }
 }
 
 @media (max-width: 480px) {
-  .table-confirmation-content {
+  .tableConfirmationContent {
     padding: 8px;
   }
   
-  .table-confirmation-title {
+  .tableConfirmationTitle {
     font-size: 14px;
   }
   
-  .table-confirmation-scroll {
+  .tableConfirmationScroll {
     max-height: 300px;
   }
   
-  .table-confirmation-head,
-  .table-confirmation-cell {
+  .tableConfirmationHead,
+  .tableConfirmationCell {
     padding: 6px 4px;
     font-size: 10px;
     min-width: 70px;
   }
   
-  .table-confirmation-head {
+  .tableConfirmationHead {
     font-size: 9px;
   }
   
-  .value-amount {
+  .valueAmount {
     font-size: 10px;
   }
   
-  .date-info {
+  .dateInfo {
     font-size: 9px;
   }
   
-  .reason-text {
+  .reasonText {
     font-size: 10px;
   }
 }
 
 /* High contrast mode for better accessibility */
 @media (prefers-contrast: high) {
-  .table-confirmation-row {
+  .tableConfirmationRow {
     border-bottom: 2px solid #faa01c;
   }
   
-  .table-confirmation-cell {
+  .tableConfirmationCell {
     border-right: 2px solid #faa01c;
   }
 }
 
 /* Print styles */
 @media print {
-  .table-confirmation-content {
+  .tableConfirmationContent {
     border: 1px solid #000;
     background-color: #fff;
   }
   
-  .table-confirmation-title {
+  .tableConfirmationTitle {
     color: #000;
   }
   
-  .table-confirmation-row,
-  .table-confirmation-cell {
+  .tableConfirmationRow,
+  .tableConfirmationCell {
     background-color: #fff !important;
     color: #000 !important;
   }
   
-  .table-confirmation-head {
+  .tableConfirmationHead {
     background-color: #f0f0f0 !important;
     color: #000 !important;
   }
 }
+
