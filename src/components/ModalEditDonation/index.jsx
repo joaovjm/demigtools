@@ -250,7 +250,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
   };
 
   const handleDownloadPDFDeposit = async () => {
-    const donoAndDonationData = { ...donation, donor_name: donorData.nome };
+    const donoAndDonationData = { ...donation, donor_name: donorData.nome, cpf: donorData.cpf };
 
     try {
       await GenerateDepositPDF({

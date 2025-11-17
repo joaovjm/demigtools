@@ -124,18 +124,21 @@ const GenerateDepositPDF = async ({ data, config }) => {
               text: "Recebemos de",
               fontSize: 16,
               margin: [0, 0, 0, 16],
+              width: "auto",
             },
             {
               text: data.donor_name.normalize("NFD").toUpperCase(),
               fontSize: 20,
-              margin: [-240, -2, 0, 0],
+              margin: [8, -2, 8, 0],
               decoration: "underline",
+              width: "auto",
             },
-            /*{
-                text: `| CPF: ${data[0].cpf}` || "___________",
-                fontSize: 18,
-                margin: [-70, 0, 0, 0],
-              },*/
+            {
+              text: `| CPF: ${data.cpf || "___________"}`,
+              fontSize: 18,
+              margin: [0, -2, 0, 0],
+              width: "auto",
+            },
           ],
         },
 
@@ -221,8 +224,8 @@ const GenerateDepositPDF = async ({ data, config }) => {
   const fileName = `${data.receipt_donation_id} - ${data.donor_name
     .normalize("NFD")
     .toUpperCase()}.pdf`.replace(/[\/\\:*?"<>|]/g, "");
-  
-  
+
+
   pdfMake.createPdf(docDefinition).download(fileName);
 
 };
