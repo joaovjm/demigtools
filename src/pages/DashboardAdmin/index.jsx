@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import styles from "./dashboardadmin.module.css";
 import getDonationReceived from "../../helper/getDonationReceived";
 import getDonationNotReceived from "../../helper/getDonationNotReceived";
@@ -24,6 +24,7 @@ import { leadsHistoryService } from "../../services/leadsHistoryService";
 import TableLeadHistory from "../../components/TableLeadHistory";
 import getOperatorMeta from "../../helper/getOperatorMeta";
 import TableReceived from "../../components/TableReceived";
+import DateRangePicker from "../../components/DateRangePicker";
 
 const Dashboard = () => {
   const caracterOperator = JSON.parse(localStorage.getItem("operatorData"));
@@ -32,7 +33,12 @@ const Dashboard = () => {
   const [openDonations, setOpenDonations] = useState(null); //Quantidades de fichas em aberto
   const [valueOpenDonations, setValueOpenDonations] = useState(null); //Total valor de fichas em aberto
   const [scheduling, setScheduling] = useState(0); //Total de leads agendadas
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const [active, setActive] = useState(false);
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const [datePickerPosition, setDatePickerPosition] = useState({ top: 0, left: 0 });
+  const receivedCardRef = useRef(null);
   const [nowScheduled, setNowScheduled] = useState(null);
   const { operatorData, setOperatorData } = useContext(UserContext);
 
@@ -84,7 +90,7 @@ const Dashboard = () => {
       );
 
       // Buscar doações recebidas de todos os operadores
-      const receivedData = await getAllDonationsReceived();
+      const receivedData = await getAllDonationsReceived({ startDate, endDate });
       setValueReceived(receivedData.totalValue);
       setDonationsReceived(receivedData.donation);
 
@@ -152,7 +158,7 @@ const Dashboard = () => {
   useEffect(() => {
     donations();
     lead();
-  }, [active, modalOpen, status, operatorData, meta]);
+  }, [active, modalOpen, status, operatorData, meta, startDate, endDate]);
 
   const handleClickCard = (e) => {
     setActive(e.currentTarget.id);
@@ -165,15 +171,56 @@ const Dashboard = () => {
     setDonationFilterPerId(null); // Reset filter when changing view type
   };
 
+  const handleReceivedCardContextMenu = (e) => {
+    e.preventDefault();
+    if (receivedCardRef.current) {
+      const rect = receivedCardRef.current.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const pickerWidth = 280; // min-width do DateRangePicker
+      const pickerHeight = 250; // altura estimada do DateRangePicker
+      
+      let left = rect.left;
+      let top = rect.bottom + 10;
+      
+      // Ajustar se o calendário sair da tela à direita
+      if (left + pickerWidth > viewportWidth) {
+        left = viewportWidth - pickerWidth - 10;
+      }
+      
+      // Ajustar se o calendário sair da tela abaixo
+      if (top + pickerHeight > viewportHeight) {
+        top = rect.top - pickerHeight - 10;
+      }
+      
+      // Garantir que não saia da tela à esquerda ou acima
+      if (left < 10) left = 10;
+      if (top < 10) top = 10;
+      
+      setDatePickerPosition({
+        top,
+        left,
+      });
+      setIsDatePickerOpen(true);
+    }
+  };
+
+  const handleDateSelect = (start, end) => {
+    setStartDate(start || null);
+    setEndDate(end || null);
+  };
+
   return (
     <main className={styles.mainDashboard}>
       <>
         <section className={styles.sectionHeader}>
           <div className={styles.sectionHeaderItem}>
             <div
+              ref={receivedCardRef}
               id="received"
               className={`${styles.divCard} ${active === "received" ? styles.active : ""}`}
               onClick={handleClickCard}
+              onContextMenu={handleReceivedCardContextMenu}
             >
               <div className={styles.divHeader}>
                 <h3 className={styles.h3Header}>Recebido</h3>
@@ -182,6 +229,16 @@ const Dashboard = () => {
                 <p>R$ {valueReceived?.toFixed(2)}</p>
               </div>
             </div>
+            {isDatePickerOpen && (
+              <DateRangePicker
+                isOpen={isDatePickerOpen}
+                onClose={() => setIsDatePickerOpen(false)}
+                onDateSelect={handleDateSelect}
+                startDate={startDate}
+                endDate={endDate}
+                position={datePickerPosition}
+              />
+            )}
             {/* <div
               id="inScheduled"
               className={`${styles.divCard} ${active === "inScheduled" ? styles.active : ""}`}
