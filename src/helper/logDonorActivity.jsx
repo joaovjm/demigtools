@@ -53,6 +53,7 @@ export async function logDonorActivity({
  */
 export async function getDonorActivityLog(donor_id, limit = 100) {
   try {
+    // Buscar atividades
     const { data, error } = await supabase
       .from("donor_activity_log")
       .select("*")
@@ -61,7 +62,42 @@ export async function getDonorActivityLog(donor_id, limit = 100) {
       .limit(limit);
 
     if (error) throw error;
-    return data || [];
+    if (!data || data.length === 0) return [];
+
+    // Buscar códigos únicos de operadores
+    const operatorCodes = [...new Set(data.map(activity => activity.operator_code_id).filter(Boolean))];
+    
+    if (operatorCodes.length === 0) return data;
+
+    // Buscar nomes dos operadores
+    const { data: operators, error: operatorsError } = await supabase
+      .from("operator")
+      .select("operator_code_id, operator_name")
+      .in("operator_code_id", operatorCodes);
+
+    if (operatorsError) {
+      console.error("Erro ao buscar operadores:", operatorsError.message);
+      return data; // Retorna dados mesmo sem nomes dos operadores
+    }
+
+    // Criar mapa de código -> nome
+    const operatorMap = {};
+    if (operators) {
+      operators.forEach(op => {
+        operatorMap[op.operator_code_id] = op.operator_name;
+      });
+    }
+
+    // Adicionar nomes dos operadores às atividades
+    const dataWithOperators = data.map(activity => ({
+      ...activity,
+      operator: activity.operator_code_id ? {
+        operator_code_id: activity.operator_code_id,
+        operator_name: operatorMap[activity.operator_code_id] || null
+      } : null
+    }));
+
+    return dataWithOperators;
   } catch (error) {
     console.error("Erro ao buscar histórico do doador:", error.message);
     return [];

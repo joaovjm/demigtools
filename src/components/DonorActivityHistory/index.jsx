@@ -203,6 +203,7 @@ const DonorActivityHistory = ({ donorId }) => {
                   <span className={styles.metaItem}>
                     <FaUser size={12} />
                     <strong>Operador:</strong> {activity.operator_code_id}
+                    {activity.operator?.operator_name && ` - ${activity.operator.operator_name}`}
                   </span>
                   <span className={styles.metaItem}>
                     <FaClock size={12} />
