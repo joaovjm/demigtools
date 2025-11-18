@@ -1,233 +1,56 @@
-import React from "react";
-import { FaPaperPlane } from "react-icons/fa";
-import { barCodeGenerator } from "../../services/barCodeGenerator";
-import pdfMake from "pdfmake/build/pdfmake";
-import extenso from "extenso";
-import { receiptInBase64 } from "../../assets/receiptInBase64";
-
+/**
+ * Gera o PDF de depósito chamando a API do backend
+ * A geração do PDF agora é feita no servidor Node.js, usando arquivos PNG
+ * ao invés de base64, removendo a responsabilidade do frontend
+ */
 const GenerateDepositPDF = async ({ data, config }) => {
-  console.log(data)
-  console.log(data.donation_monthref)
-  const barcode = await barCodeGenerator(data.receipt_donation_id);
-  const depositReceipt = [
-    {
-      columns: [
-        {},
-        {
-          width: 204,
-          margin: [0, 13],
-          table: {
-            widths: [58, 116],
-            heights: [40, 8, 40],
-            body: [
-              [
-                {
-                  text: "RECIBO:",
-                  margin: [3, 15],
-                  fontSize: 13,
-                  fillColor: "#000000",
-                  color: "#ffffff",
-                  bold: true,
-                },
-                {
-                  text: data.receipt_donation_id,
-                  alignment: "center",
-                  margin: [0, 15],
-                  fontSize: 18,
-                  bold: true,
-                },
-              ],
-              [
-                {
-                  text: "", // Ajuste a altura para controlar o espaçamento
-                  border: [false, true, false, false], // Borda apenas no topo
-                  margin: [0, 0, 0, 0],
-                },
-                {
-                  text: "",
-                  border: [false, true, false, false], // Borda apenas no topo
-                  margin: [0, 0, 0, 0],
-                },
-              ],
-
-              [
-                {
-                  text: "VALOR:",
-                  style: "tableReceipt",
-                  margin: [4, 15],
-                  fontSize: 13,
-                  fillColor: "#000000",
-                  color: "#ffffff",
-                  bold: true,
-                },
-                {
-                  text: data.donation_value?.toLocaleString("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  }),
-                  alignment: "center",
-                  margin: [0, 15],
-                  fontSize: 18,
-                  bold: true,
-                },
-              ],
-            ],
-          },
-
-          layout: {
-            hLineWidth: function (i, node) {
-              return 3;
-            },
-            vLineWidth: function (i, node) {
-              return 3;
-            },
-            hLineColor: function (i, node) {
-              return "#000000";
-            },
-            vLineColor: function (i, node) {
-              return "#000000";
-            },
-          },
-        },
-        {
-          width: 181,
-          table: {
-            widths: [190],
-            heights: [136],
-            body: [
-              [
-                {
-                  image: barcode,
-                  width: 150,
-                  height: 60,
-                  margin: [-5, 42],
-                  alignment: "center",
-                },
-              ],
-            ],
-          },
-        },
-      ],
-      margin: [0, -4],
-    },
-    {
-      text: "",
-      margin: [0, 19],
-    },
-
-    {
-      margin: [36, 0, 0, 0],
-      stack: [
-        {
-          columns: [
-            {
-              text: "Recebemos de",
-              fontSize: 16,
-              margin: [0, 0, 0, 16],
-              width: "auto",
-            },
-            {
-              text: data.donor_name.normalize("NFD").toUpperCase(),
-              fontSize: 20,
-              margin: [8, -2, 8, 0],
-              decoration: "underline",
-              width: "auto",
-            },
-            {
-              text: `| CPF: ${data.cpf || "___________"}`,
-              fontSize: 18,
-              margin: [0, -2, 0, 0],
-              width: "auto",
-            },
-          ],
-        },
-
-        {
-          columns: [
-            {
-              text: "a importância de",
-              fontSize: 16,
-              margin: [0, 0, 0, 16],
-            },
-            {
-              text: `${extenso(Number(data.donation_value), {
-                mode: "currency",
-              }).toUpperCase()}`,
-              fontSize: 16,
-              margin: [-224, 0, 0, 16],
-              decoration: "underline",
-            },
-          ],
-        },
-        {
-          text: `que será destinada à campanha ${data.donation_campain?.toUpperCase()}`,
-          fontSize: 16,
-          margin: [0, 0, 0, 24],
-        },
-        {
-          text: `Rio de Janeiro,     ${new Date(data.donation_monthref || data.donation_day_to_receive).toLocaleDateString("pt-BR", {
-            timeZone: "UTC",
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          })}`,
-          fontSize: 16,
-          margin: [0, 0, 0, 36],
-        },
-        "\n",
-        {
-          text: config.backOfReceipt,
-          alignment: "center",
-          fontSize: 20,
-        },
-      ],
-    },
-  ];
-
-  const docDefinition = {
-    pageSize: "A4",
-    pageOrientation: "landscape",
-    pageMargin: [0, 0, 0, 0],
-    content: depositReceipt,
-    style: {
-      values: {
-        fontSize: 12,
-        bold: true,
-        fillColor: "#000000",
-        color: "#ffffff",
-      },
-      label: { fontSize: 9, bold: false, fonts: "Courier" },
-      title: { fontSize: 12, bold: true, margin: [0, 0, 0, 10] },
-      rodape: { fontSize: 10, bold: true },
-    },
-    background: function (currentPage, pageSize) {
-      return {
-        image: receiptInBase64.receipt,
-        width: pageSize.width,
-        height: pageSize.height,
-      };
-    },
-  };
-
-  /*pdfMake.createPdf(docDefinition).getBase64(async (dt) => {
-    await fetch("/api/send-pdf", {
+  try {
+    const response = await fetch("/api/generate-deposit-pdf", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        pdf: dt,
-        filename: `${data.receipt_donation_id}`,
-        phone: data.donor?.donor_tel_1,
-      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ data, config }),
     });
-  });*/
 
-  const fileName = `${data.receipt_donation_id} - ${data.donor_name
-    .normalize("NFD")
-    .toUpperCase()}.pdf`.replace(/[\/\\:*?"<>|]/g, "");
+    if (!response.ok) {
+      let errorMessage = "Erro ao gerar PDF";
+      try {
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const error = await response.json();
+          errorMessage = error.error || error.message || errorMessage;
+        } else {
+          const text = await response.text();
+          errorMessage = text || `Erro ${response.status}: ${response.statusText}`;
+        }
+      } catch (parseError) {
+        errorMessage = `Erro ${response.status}: ${response.statusText}`;
+      }
+      throw new Error(errorMessage);
+    }
 
-
-  pdfMake.createPdf(docDefinition).download(fileName);
-
+    // Obter o blob do PDF
+    const blob = await response.blob();
+    
+    // Criar URL temporária e fazer download
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    
+    const fileName = `${data.receipt_donation_id} - ${data.donor_name
+      .normalize("NFD")
+      .toUpperCase()}.pdf`.replace(/[\/\\:*?"<>|]/g, "");
+    
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("Erro ao gerar PDF:", error);
+    throw error;
+  }
 };
 
 export default GenerateDepositPDF;
