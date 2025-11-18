@@ -9,6 +9,8 @@ import { FaUser, FaMapMarkerAlt, FaPhone, FaDollarSign, FaExclamationTriangle, F
 import { UserContext } from "../../context/UserContext";
 import { logDonorActivity } from "../../helper/logDonorActivity";
 import { getDonorConfirmationData } from "../../helper/getDonorConfirmationData";
+import { insertDonation } from "../../helper/insertDonation";
+import { updateCollectorForDonor } from "../../helper/updateCollectorForDonor";
 
 const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) => {
   const [isConfirmation, setIsConfirmation] = useState(false);
@@ -75,44 +77,63 @@ const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) =>
   };
 
   const handleConfirm = async () => {
-    if (!window.confirm("Você deseja reagendar a ficha?")) {
+    if (!dateConfirm) {
+      window.alert("Por favor, selecione uma data para a nova doação.");
+      return;
+    }
+    
+    if (!window.confirm("Você deseja recriar a doação?")) {
       return;
     }
     
     try {
-      const oldValues = {
-        donation_day_to_receive: donationConfirmationOpen.day_to_receive,
-        donation_description: donationConfirmationOpen.description,
-        collector_code_id: donationConfirmationOpen.collector_code_id,
-      };
+      // Criar nova doação
+      const newDonation = await insertDonation(
+        donationConfirmationOpen.donor_id,
+        donationConfirmationOpen.operator_code_id || operatorData?.operator_code_id,
+        donationConfirmationOpen.value,
+        donationConfirmationOpen.extra || null,
+        DataNow("noformated"),
+        dateConfirm,
+        false,
+        false,
+        observation || donationConfirmationOpen.description || null,
+        donationConfirmationOpen.monthref || null,
+        null, // campain
+        null, // collector
+        null  // request_name
+      );
 
-      const { data: updateConfirm, error: errorConfirm } = await supabase
-        .from("donation")
-        .update({
-          donation_day_contact: DataNow("noformated"),
-          donation_day_to_receive: dateConfirm,
-          donation_description: observation,
-          donation_received: "Não",
-          collector_code_id: null,
-        })
-        .eq("receipt_donation_id", donationConfirmationOpen.id);
+      if (!newDonation || newDonation.length === 0) {
+        throw new Error("Erro ao criar nova doação");
+      }
 
-      if (errorConfirm) throw errorConfirm;
+      // Atualizar todas as outras doações na confirmação (collector_code_id = 10) para collector_code_id = 11
+      const updateResult = await updateCollectorForDonor(
+        donationConfirmationOpen.donor_id,
+        10,
+        11
+      );
 
-      // Registrar reagendamento no histórico
+      if (updateResult.success && updateResult.count > 0) {
+        console.log(`${updateResult.count} doação(ões) atualizada(s) do coletor 10 para 11`);
+      }
+
+      // Registrar criação de nova doação no histórico
       if (operatorData?.operator_code_id) {
         await logDonorActivity({
           donor_id: donationConfirmationOpen.donor_id,
           operator_code_id: operatorData.operator_code_id,
-          action_type: "donation_edit",
-          action_description: `Reagendou doação de R$ ${donationConfirmationOpen.value} para ${dateConfirm}`,
-          old_values: oldValues,
+          action_type: "donation_create",
+          action_description: `Recriou doação de R$ ${donationConfirmationOpen.value} para ${dateConfirm}`,
           new_values: {
+            donation_value: donationConfirmationOpen.value,
+            donation_extra: donationConfirmationOpen.extra || null,
             donation_day_to_receive: dateConfirm,
-            donation_description: observation,
-            collector_code_id: null,
+            donation_description: observation || donationConfirmationOpen.description || null,
+            receipt_donation_id: newDonation[0].receipt_donation_id,
           },
-          related_donation_id: null,
+          related_donation_id: donationConfirmationOpen.id,
         });
       }
       
@@ -120,7 +141,8 @@ const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) =>
       onClose();
       
     } catch (errorConfirm) {
-      console.error("Error updating donation:", errorConfirm);
+      console.error("Error creating donation:", errorConfirm);
+      window.alert("Erro ao criar nova doação. Por favor, tente novamente.");
     }
   };
 
@@ -416,7 +438,7 @@ const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) =>
                   className={styles.btnReschedule}
                 >
                   <FaCalendarAlt />
-                  Reagendar Ficha
+                  Recriar Doação
                 </button>
                 <button 
                   onClick={() => setIsScheduling(true)}
@@ -441,18 +463,18 @@ const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) =>
 
             {isConfirmation && (
               <div className={styles.rescheduleFormSection}>
-                <h3>Reagendar Doação</h3>
+                <h3>Recriar Doação</h3>
                 <div className={styles.formGrid}>
                   <div className={styles.inputGroup}>
                     <label>
                       <FaCalendarAlt />
-                      Nova Data
+                      Data para Receber
                     </label>
                     <input
                       value={dateConfirm}
                       type="date"
                       onChange={(e) => setDateConfirm(e.target.value)}
-                      placeholder="Selecione a nova data"
+                      placeholder="Selecione a data"
                     />
                   </div>
                   <div className={`${styles.inputGroup} ${styles.fullWidth}`}>
@@ -463,7 +485,7 @@ const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) =>
                     <textarea
                       value={observation}
                       onChange={(e) => setObservation(e.target.value)}
-                      placeholder="Observações sobre o reagendamento..."
+                      placeholder="Observações sobre a nova doação..."
                       rows="3"
                     />
                   </div>
@@ -479,7 +501,7 @@ const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) =>
                   </button>
                   <button onClick={handleConfirm} className={styles.btnConfirm}>
                     <FaCheck />
-                    Confirmar Reagendamento
+                    Confirmar Recriação
                   </button>
                 </div>
               </div>
