@@ -38,6 +38,9 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
   const [receiptConfig, setReceiptConfig] = useState([]);
   const [extraValue, setExtraValue] = useState(donation.donation_extra);
   const [request, setRequest] = useState([]);
+  const [loadingDeposit, setLoadingDeposit] = useState(false);
+  const [loadingPDF, setLoadingPDF] = useState(false);
+  const [loadingSave, setLoadingSave] = useState(false);
   // Armazenar valores originais para comparação
   const [originalValues] = useState({
     donation_value: donation.donation_value,
@@ -129,6 +132,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
       return;
     }
 
+    setLoadingSave(true);
     try {
       const { data, error } = await supabase
         .from("donation")
@@ -178,6 +182,8 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
       }
     } catch (error) {
       toast.error("Erro ao atualizar doação: ", error.message);
+    } finally {
+      setLoadingSave(false);
     }
   };
 
@@ -216,6 +222,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
   };
 
   const handleDownloadPDF = async () => {
+    setLoadingPDF(true);
     try {
       // Prepara os dados no formato esperado pelo GenerateReceiptPDF
       const donationData = {
@@ -246,10 +253,13 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
     } catch (error) {
       console.error("Erro ao gerar PDF:", error);
       toast.error("Erro ao gerar PDF");
+    } finally {
+      setLoadingPDF(false);
     }
   };
 
   const handleDownloadPDFDeposit = async () => {
+    setLoadingDeposit(true);
     const donoAndDonationData = { ...donation, donor_name: donorData.nome, cpf: donorData.cpf };
 
     try {
@@ -261,6 +271,8 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
     } catch (error) {
       console.error("Erro ao gerar PDF:", error);
       toast.error("Erro ao gerar PDF para deposito");
+    } finally {
+      setLoadingDeposit(false);
     }
   };
 
@@ -496,45 +508,61 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
                   {donation.donation_received === "Sim" && (
                     <button
                       onClick={handleDownloadPDFDeposit}
+                      disabled={loadingDeposit || loadingPDF || loadingSave}
                       style={{
                         padding: "8px 16px",
                         border: "none",
                         borderRadius: "6px",
                         fontSize: "14px",
                         fontWeight: "500",
-                        cursor: "pointer",
-                        backgroundColor: "#faa01c",
+                        cursor: loadingDeposit ? "not-allowed" : "pointer",
+                        backgroundColor: loadingDeposit ? "#666" : "#faa01c",
                         color: "#fff",
                         display: "flex",
                         alignItems: "center",
                         gap: "4px",
                         transition: "all 0.3s ease",
+                        opacity: loadingDeposit ? 0.7 : 1,
                       }}
                       title="Baixar PDF do Recibo"
                     >
-                      📄 Recibo para Deposito
+                      {loadingDeposit ? (
+                        <>
+                          <span className={styles["button-spinner"]}></span> Gerando...
+                        </>
+                      ) : (
+                        "📄 Recibo para Deposito"
+                      )}
                     </button>
                   )}
 
                   <button
                     onClick={handleDownloadPDF}
+                    disabled={loadingDeposit || loadingPDF || loadingSave}
                     style={{
                       padding: "8px 16px",
                       border: "none",
                       borderRadius: "6px",
                       fontSize: "14px",
                       fontWeight: "500",
-                      cursor: "pointer",
-                      backgroundColor: "#28a745",
+                      cursor: loadingPDF ? "not-allowed" : "pointer",
+                      backgroundColor: loadingPDF ? "#666" : "#28a745",
                       color: "#fff",
                       display: "flex",
                       alignItems: "center",
                       gap: "4px",
                       transition: "all 0.3s ease",
+                      opacity: loadingPDF ? 0.7 : 1,
                     }}
                     title="Baixar PDF do Recibo"
                   >
-                    📄 Baixar PDF
+                    {loadingPDF ? (
+                      <>
+                        <span className={styles["button-spinner"]}></span> Gerando...
+                      </>
+                    ) : (
+                      "📄 Baixar PDF"
+                    )}
                   </button>
                 </>
               )}
@@ -560,10 +588,17 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
               </button>
               <button
                 onClick={handleConfirm}
+                disabled={loadingDeposit || loadingPDF || loadingSave}
                 className={styles["btn-create-donation"]}
                 style={{ minWidth: "auto" }}
               >
-                💰 Salvar Alterações
+                {loadingSave ? (
+                  <>
+                    <span className={styles["button-spinner"]}></span> Salvando...
+                  </>
+                ) : (
+                  "💰 Salvar Alterações"
+                )}
               </button>
             </div>
           </div>

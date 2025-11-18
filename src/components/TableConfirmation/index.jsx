@@ -68,6 +68,11 @@ const TableConfirmation = ({
         bValue = b.donor_mensal_day || 0;
       }
 
+      if (sortConfig.key === 'value') {
+        aValue = parseFloat(a.donation_value || 0);
+        bValue = parseFloat(b.donation_value || 0);
+      }
+
       if (aValue < bValue) {
         return sortConfig.direction === 'asc' ? -1 : 1;
       }
@@ -130,7 +135,18 @@ const TableConfirmation = ({
                       </span>
                     </th>
                     <th className={styles.tableConfirmationHead}>Nome</th>
-                    <th className={styles.tableConfirmationHead}>Valor</th>
+                    <th
+                      className={`${styles.tableConfirmationHead} ${styles.sortable}`}
+                      onClick={() => handleSort('value')}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      Valor
+                      <span className={styles.sortArrow}>
+                        {sortConfig.key === 'value' ? (
+                          sortConfig.direction === 'asc' ? ' ↑' : ' ↓'
+                        ) : ' ↕'}
+                      </span>
+                    </th>
                     <th className={styles.tableConfirmationHead}>Motivo</th>
                     <th className={styles.tableConfirmationHead}>Status</th>
                     <th className={styles.tableConfirmationHead}>Agendado</th>
