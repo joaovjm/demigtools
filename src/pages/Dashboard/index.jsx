@@ -118,7 +118,7 @@ const Dashboard = () => {
         draggable: true,
       });
     } else if (status === "Update OK") {
-      toast.success("Ficha reagendada com sucesso!", {
+      toast.success("Ficha recriada com sucesso!", {
         position: "top-right",
         autoClose: 1000,
         closeOnClick: true,
