@@ -8,7 +8,9 @@ const getDonationNotReceived = (
   setDonationConfirmation,
   setFullNotReceivedDonations,
   operatorID,
-  operatorType
+  operatorType,
+  startDate = null,
+  endDate = null
 ) => {
   let confirmations = 0;
   let valueConfirmations = 0;
@@ -68,13 +70,23 @@ const getDonationNotReceived = (
   };
 
   const getValueDonation = async () => {
-    const { data: operatorValue } = await supabase
+    let query = supabase
       .from("donation")
       .select(
         `receipt_donation_id, donor_id, donation_description, donor(donor_name, donor_address, donor_tel_1, donor_tel_2(donor_tel_2), donor_tel_3(donor_tel_3), donor_mensal(donor_mensal_day)), donation_value, donation_extra, donation_day_contact, donation_day_to_receive, donation_print, donation_received, donation_monthref, operator_code_id, operator_name: operator_code_id(operator_name), collector_code_id, donor_confirmation_reason(donor_confirmation_reason), collector: collector_code_id (collector_name), confirmation_scheduled, confirmation_status`
       )
       .eq("donation_received", "Não")
       .order("donation_day_to_receive", { ascending: false });
+
+    // Aplicar filtros de data se fornecidos
+    if (startDate) {
+      query = query.gte("donation_day_to_receive", startDate);
+    }
+    if (endDate) {
+      query = query.lte("donation_day_to_receive", endDate);
+    }
+
+    const { data: operatorValue } = await query;
 
     for (let i = 0; i < operatorValue.length; i++) {
       const item = operatorValue[i];

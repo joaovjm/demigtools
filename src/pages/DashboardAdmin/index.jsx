@@ -86,7 +86,9 @@ const Dashboard = () => {
         setDonationConfirmation,
         setFullNotReceivedDonations,
         caracterOperator.operator_code_id,
-        caracterOperator.operator_type
+        caracterOperator.operator_type,
+        startDate,
+        endDate
       );
 
       // Buscar doações recebidas de todos os operadores
@@ -239,6 +241,7 @@ const Dashboard = () => {
                 position={datePickerPosition}
               />
             )}
+            {/* Card Agendados */}
             {/* <div
               id="inScheduled"
               className={`${styles.divCard} ${active === "inScheduled" ? styles.active : ""}`}
