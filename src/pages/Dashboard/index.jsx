@@ -155,6 +155,7 @@ const Dashboard = () => {
     <main className="mainDashboard">
       <>
         <section className="sectionHeader">
+          {/* Card Agendados */}
           <div
             id="inScheduled"
             className={`divCard ${active === "inScheduled" ? "active" : ""}`}
@@ -167,7 +168,8 @@ const Dashboard = () => {
               <p>{scheduled.length + scheduledDonations.length}</p>
             </div>
           </div>
-          {/* Card 1 */}
+          
+          {/* Card Em Confirmação */}
           <div
             id="inConfirmation"
             className={`divCard ${active === "inConfirmation" ? "active" : ""}`}
@@ -182,6 +184,7 @@ const Dashboard = () => {
             </div>
           </div>
 
+          {/* Card Em Aberto */}
           <div
             id="inOpen"
             className={`divCard ${active === "inOpen" ? "active" : ""}`}
@@ -196,7 +199,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Card 4 */}
+          {/* Card Recebida / Falta */}
           <div
             id="received"
             className={`divCard ${active === "received" ? "active" : ""}`}
