@@ -73,6 +73,11 @@ const TableConfirmation = ({
         bValue = parseFloat(b.donation_value || 0);
       }
 
+      if (sortConfig.key === 'name') {
+        aValue = (a.donor_name || '').toLowerCase();
+        bValue = (b.donor_name || '').toLowerCase();
+      }
+
       if (aValue < bValue) {
         return sortConfig.direction === 'asc' ? -1 : 1;
       }
@@ -134,7 +139,18 @@ const TableConfirmation = ({
                         ) : ' ↕'}
                       </span>
                     </th>
-                    <th className={styles.tableConfirmationHead}>Nome</th>
+                    <th
+                      className={`${styles.tableConfirmationHead} ${styles.sortable}`}
+                      onClick={() => handleSort('name')}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      Nome
+                      <span className={styles.sortArrow}>
+                        {sortConfig.key === 'name' ? (
+                          sortConfig.direction === 'asc' ? ' ↑' : ' ↓'
+                        ) : ' ↕'}
+                      </span>
+                    </th>
                     <th
                       className={`${styles.tableConfirmationHead} ${styles.sortable}`}
                       onClick={() => handleSort('value')}
