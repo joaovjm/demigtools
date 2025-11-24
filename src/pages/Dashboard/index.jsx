@@ -20,6 +20,7 @@ import getOperatorMeta from "../../helper/getOperatorMeta";
 import getDonationReceived from "../../helper/getDonationReceived";
 import { getSchedulingRequest } from "../../helper/getSchedulingRequest";
 import getScheduledDonations from "../../helper/getScheduledDonations";
+import getScheduledFromTable from "../../helper/getScheduledFromTable";
 import TableReceived from "../../components/TableReceived";
 
 const Dashboard = () => {
@@ -40,6 +41,7 @@ const Dashboard = () => {
   const [fullNotReceivedDonations, setFullNotReceivedDonations] = useState([]);
   const [scheduled, setScheduled] = useState([]);
   const [scheduledDonations, setScheduledDonations] = useState([]);
+  const [scheduledFromTable, setScheduledFromTable] = useState([]);
   const [donationFilterPerId, setDonationFilterPerId] = useState("");
   const [donationsOperator, setDonationsOperator] = useState()
   const [meta, setMeta] = useState([]);
@@ -106,6 +108,12 @@ const Dashboard = () => {
         operatorData.operator_code_id,
         setScheduledDonations
       );
+      
+      // Buscar agendados da tabela scheduled
+      await getScheduledFromTable(
+        operatorData.operator_code_id,
+        setScheduledFromTable
+      );
     } catch (error) {
       console.error("Error fetching donations:", error);
     }
@@ -165,7 +173,7 @@ const Dashboard = () => {
               <h3 className="h3Header">Agendados</h3>
             </div>
             <div className="divBody">
-              <p>{scheduled.length + scheduledDonations.length}</p>
+              <p>{scheduled.length + scheduledDonations.length + scheduledFromTable.length}</p>
             </div>
           </div>
           
@@ -239,6 +247,7 @@ const Dashboard = () => {
             <TableScheduled
               scheduled={scheduled}
               scheduledDonations={scheduledDonations}
+              scheduledFromTable={scheduledFromTable}
               setModalOpen={setModalOpen}
               setScheduledOpen={setScheduledOpen}
               setNowScheduled={setNowScheduled}

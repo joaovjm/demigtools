@@ -25,6 +25,8 @@ import ModalSendEmail from "../../components/ModalSendEmail";
 import TabNavigation from "../../components/TabNavigation";
 import DonorActivityHistory from "../../components/DonorActivityHistory";
 import { logDonorActivity } from "../../helper/logDonorActivity";
+import ActionDropdown from "../../components/ActionDropdown";
+import ModalScheduleDonor from "../../components/ModalScheduleDonor";
 
 const Donor = () => {
   const { id } = useParams();
@@ -56,6 +58,7 @@ const Donor = () => {
     loading: false,
     modalEdit: false,
     modalSendEmail: false,
+    modalSchedule: false,
   });
   
   const [activeTab, setActiveTab] = useState("donations");
@@ -203,27 +206,20 @@ const Donor = () => {
             <button onClick={handleBack} className={`${styles.donorBtn} ${styles.secondary}`}>
               {ICONS.BACK} {BUTTON_TEXTS.BACK}
             </button>
-            <button onClick={() => setUiState((prev) => ({ ...prev, modalSendEmail: true }))} className={`${styles.donorBtn} ${styles.secondary}`}>
-              {<FaEnvelope/>} Envio de Email
-            </button>
-            <button
-              onClick={handleEditDonor}
-              className={`${styles.donorBtn} ${styles.primary}`}
-              disabled={uiState.loading}
-            >
-              {uiState.loading ? <Loader /> : uiState.btnEdit}
-            </button>
-            {uiState.showBtn && (
-              <button
-                onClick={() =>
-                  setUiState((prev) => ({ ...prev, modalShow: true }))
-                }
-                type="submit"
-                className={`${styles.donorBtn} ${styles.primary}`}
-              >
-                {BUTTON_TEXTS.CREATE_MOVIMENT}
-              </button>
-            )}
+            <ActionDropdown
+              onCriarMovimento={() =>
+                setUiState((prev) => ({ ...prev, modalShow: true }))
+              }
+              onEditar={handleEditDonor}
+              onEnviarEmail={() =>
+                setUiState((prev) => ({ ...prev, modalSendEmail: true }))
+              }
+              onAgendar={() =>
+                setUiState((prev) => ({ ...prev, modalSchedule: true }))
+              }
+              showBtnCriarMovimento={uiState.showBtn}
+              isLoading={uiState.loading}
+            />
           </div>
         </header>
 
@@ -459,6 +455,15 @@ const Donor = () => {
           setModalSendEmail={(show) =>
             setUiState((prev) => ({ ...prev, modalSendEmail: show }))
           }
+        />
+      )}
+      {uiState.modalSchedule && (
+        <ModalScheduleDonor
+          isOpen={uiState.modalSchedule}
+          onClose={() =>
+            setUiState((prev) => ({ ...prev, modalSchedule: false }))
+          }
+          donorId={id}
         />
       )}
     </main>

@@ -5,16 +5,18 @@ import { DataSelect } from "../DataTime";
 const TableScheduled = ({
   scheduled,
   scheduledDonations = [],
+  scheduledFromTable = [],
   setModalOpen,
   setScheduledOpen,
   setNowScheduled,
   donationFilterPerId,
 }) => {
-  
-  // Combinar dados de ambas as fontes
+  console.log(scheduledFromTable);
+  // Combinar dados de todas as fontes
   const allScheduled = [
     ...scheduled.map(item => ({ ...item, source: 'legacy' })),
-    ...scheduledDonations.map(item => ({ ...item, source: item.source || 'scheduled_donations' }))
+    ...scheduledDonations.map(item => ({ ...item, source: item.source || 'scheduled_donations' })),
+    ...scheduledFromTable.map(item => ({ ...item, source: item.source || 'scheduled_table' }))
   ];
   
   const handleClick = (e) => {
@@ -59,6 +61,28 @@ const TableScheduled = ({
         operator_code_id: e.operator_code_id,
         typeScheduled: "scheduled_donation",
         scheduledDonationData: e, // Dados completos do agendamento
+      });
+    } else if (e.source === 'scheduled_table') {
+      setScheduledOpen({
+        id: e.id,
+        donor_id: e.donor_id,
+        name: e.donor?.donor_name,
+        address: e.donor?.donor_address,
+        city: e.donor?.donor_city,
+        neighborhood: e.donor?.donor_neighborhood,
+        phone: e.donor?.donor_tel_1,
+        phone2: null,
+        phone3: null,
+        phone4: null,
+        phone5: null,
+        phone6: null,
+        observation: e.scheduled_observation,
+        scheduling_date: e.scheduled_date,
+        operator_code_id: e.operator_code_id,
+        typeScheduled: "scheduled_table",
+        entity_type: e.entity_type,
+        entity_id: e.entity_id,
+        scheduledTableData: e, // Dados completos do agendamento da tabela scheduled
       });
     } else {
       // Lógica existente para leads/requests
@@ -126,7 +150,7 @@ const TableScheduled = ({
                 <tbody>
                   {dataToShow.map((item) => {
                     // Determinar os valores baseado na fonte
-                    const isScheduledDonation = item.source === 'scheduled_donations' || item.source === 'donation_agendada';
+                    const isScheduledDonation = item.source === 'scheduled_donations' || item.source === 'donation_agendada' || item.source === 'scheduled_table';
                     const itemKey = item.leads_id || item.id;
                     const itemName = isScheduledDonation 
                       ? item.donor?.donor_name 
