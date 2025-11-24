@@ -172,15 +172,37 @@ const Navbar = () => {
   const signOut = async () => {
     if (window.confirm("Tem certeza que deseja sair?")) {
       setLoading(true);
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-      localStorage.removeItem("operatorData");
-      setOperatorData(null);
-      navigate("/");
-      setIsAuthenticated(false);
-      setShowDropdown(null);
-      setMobileMenuOpen(false);
-      setLoading(false);
+      try {
+        const { error } = await supabase.auth.signOut();
+        
+        // Se houver erro, mas for relacionado a sessão já inválida, continuamos com o logout local
+        if (error) {
+          // Se o erro for 403 ou AuthSessionMissingError, a sessão já está inválida
+          // então podemos continuar com a limpeza local
+          const isSessionError = 
+            error.message?.includes("Auth session missing") ||
+            error.message?.includes("session") ||
+            error.status === 403;
+          
+          if (!isSessionError) {
+            console.error("Erro ao fazer logout:", error);
+            // Para outros erros, ainda tentamos limpar localmente
+          }
+        }
+      } catch (err) {
+        // Captura qualquer exceção não tratada
+        console.error("Exceção ao fazer logout:", err);
+        // Mesmo com erro, continuamos com a limpeza local
+      } finally {
+        // Sempre limpar o estado local, mesmo se o logout do Supabase falhar
+        localStorage.removeItem("operatorData");
+        setOperatorData(null);
+        setIsAuthenticated(false);
+        setShowDropdown(null);
+        setMobileMenuOpen(false);
+        navigate("/");
+        setLoading(false);
+      }
     }
   };
 
