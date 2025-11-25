@@ -2,7 +2,7 @@ import supabase from "./superBaseClient";
 
 export const getCollector = async () => {
   try {
-    const { data, error } = await supabase.from("collector").select(`*`);
+    const { data, error } = await supabase.from("collector").select(`*`).neq("collector_name", "???");
 
     if (error) throw error;
 

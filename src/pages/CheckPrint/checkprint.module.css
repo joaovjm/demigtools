@@ -1,5 +1,5 @@
 /* CheckPrint Container */
-.checkprint-container {
+.checkprintContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -11,7 +11,7 @@
   box-sizing: border-box;
 }
 
-.checkprint-content {
+.checkprintContent {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -20,7 +20,7 @@
 }
 
 /* Header Section */
-.checkprint-header {
+.checkprintHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -30,7 +30,7 @@
   gap: 16px;
 }
 
-.checkprint-title {
+.checkprintTitle {
   color: #faa01c;
   font-size: 24px;
   font-weight: 600;
@@ -39,14 +39,14 @@
   letter-spacing: 1px;
 }
 
-.checkprint-actions {
+.checkprintActions {
   display: flex;
   gap: 12px;
   align-items: center;
   flex-wrap: wrap;
 }
 
-.checkprint-stats-card {
+.checkprintStatsCard {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -59,25 +59,25 @@
   min-width: 180px;
 }
 
-.checkprint-stats-card:hover {
+.checkprintStatsCard:hover {
   background-color: #2a2828;
   border-color: #faa01c;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(250, 160, 28, 0.2);
 }
 
-.stats-icon {
+.statsIcon {
   font-size: 24px;
   opacity: 0.8;
 }
 
-.stats-content {
+.statsContent {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.stats-label {
+.statsLabel {
   color: #c0c0c0;
   font-size: 12px;
   font-weight: 500;
@@ -85,14 +85,14 @@
   letter-spacing: 0.5px;
 }
 
-.stats-value {
+.statsValue {
   color: #faa01c;
   font-size: 18px;
   font-weight: 700;
 }
 
 /* Search Section */
-.checkprint-search-section {
+.checkprintSearchSection {
   width: 100%;
   background-color: #1f1d1d;
   border: 3px double #363a3d;
@@ -100,25 +100,25 @@
   padding: 20px;
 }
 
-.checkprint-search-form {
+.checkprintSearchForm {
   width: 100%;
 }
 
-.form-row {
+.formRow {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 16px;
   align-items: end;
 }
 
-.form-group {
+.formGroup {
   display: flex;
   flex-direction: column;
   gap: 6px;
   min-width: 0;
 }
 
-.form-group label {
+.formGroup label {
   color: #faf5e9;
   font-size: 12px;
   font-weight: 600;
@@ -127,8 +127,8 @@
   margin-bottom: 4px;
 }
 
-.checkprint-input,
-.checkprint-select {
+.checkprintInput,
+.checkprintSelect {
   width: 100%;
   padding: 10px 12px;
   background-color: #2f2d2d;
@@ -142,20 +142,20 @@
   height: 40px;
 }
 
-.checkprint-input:focus,
-.checkprint-select:focus {
+.checkprintInput:focus,
+.checkprintSelect:focus {
   border-color: #faa01c;
   box-shadow: 0 0 0 2px rgba(250, 160, 28, 0.2);
 }
 
-.checkprint-input:disabled,
-.checkprint-select:disabled {
+.checkprintInput:disabled,
+.checkprintSelect:disabled {
   opacity: 0.6;
   background-color: #262626;
   cursor: not-allowed;
 }
 
-.checkprint-btn {
+.checkprintBtn {
   padding: 10px 16px;
   border: none;
   border-radius: 6px;
@@ -173,35 +173,35 @@
   letter-spacing: 0.5px;
 }
 
-.checkprint-btn.primary {
+.checkprintBtn.primary {
   background-color: #faa01c;
   color: #1f1d1d;
 }
 
-.checkprint-btn.primary:hover:not(:disabled) {
+.checkprintBtn.primary:hover:not(:disabled) {
   background-color: #e8901a;
   box-shadow: 0 4px 12px rgba(250, 160, 28, 0.4);
   transform: translateY(-1px);
 }
 
-.checkprint-btn.success {
+.checkprintBtn.success {
   background-color: #4caf50;
   color: #fff;
 }
 
-.checkprint-btn.success:hover:not(:disabled) {
+.checkprintBtn.success:hover:not(:disabled) {
   background-color: #45a049;
   box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
 }
 
-.checkprint-btn:disabled {
+.checkprintBtn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
 }
 
 /* Results Section */
-.checkprint-results-section {
+.checkprintResultsSection {
   width: 100%;
   background-color: #1f1d1d;
   border: 3px double #363a3d;
@@ -212,7 +212,7 @@
   gap: 16px;
 }
 
-.checkprint-results-header {
+.checkprintResultsHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -222,19 +222,19 @@
   border-bottom: 2px solid #363a3d;
 }
 
-.results-stats {
+.resultsStats {
   display: flex;
   gap: 16px;
   align-items: center;
 }
 
-.results-stats .stats-item {
+.resultsStats .statsItem {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.results-stats .stats-label {
+.resultsStats .statsLabel {
   color: #c0c0c0;
   font-size: 12px;
   font-weight: 500;
@@ -242,19 +242,19 @@
   letter-spacing: 0.5px;
 }
 
-.results-stats .stats-value {
+.resultsStats .statsValue {
   color: #faa01c;
   font-size: 20px;
   font-weight: 700;
 }
 
-.results-actions {
+.resultsActions {
   display: flex;
   gap: 12px;
   align-items: center;
 }
 
-.checkprint-toggle-btn {
+.checkprintToggleBtn {
   background: transparent;
   border: 2px solid #464a4d;
   color: #faf5e9;
@@ -269,23 +269,23 @@
   transition: all 0.3s ease;
 }
 
-.checkprint-toggle-btn:hover {
+.checkprintToggleBtn:hover {
   border-color: #faa01c;
   color: #faa01c;
 }
 
-.checkprint-toggle-btn.open {
+.checkprintToggleBtn.open {
   transform: rotate(90deg);
   border-color: #faa01c;
   color: #faa01c;
 }
 
 /* Results Content */
-.checkprint-results-content {
+.checkprintResultsContent {
   width: 100%;
 }
 
-.checkprint-cards-grid {
+.checkprintCardsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 16px;
@@ -295,7 +295,7 @@
 }
 
 /* Card Styles */
-.checkprint-card {
+.checkprintCard {
   background-color: #363a3d;
   border: 2px solid #2f2d2d;
   border-radius: 6px;
@@ -306,13 +306,13 @@
   gap: 12px;
 }
 
-.checkprint-card:hover {
+.checkprintCard:hover {
   border-color: #faa01c;
   box-shadow: 0 4px 12px rgba(250, 160, 28, 0.2);
   transform: translateY(-2px);
 }
 
-.card-header {
+.cardHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -320,7 +320,7 @@
   border-bottom: 1px solid #464a4d;
 }
 
-.receipt-badge {
+.receiptBadge {
   background-color: #faa01c;
   color: #1f1d1d;
   padding: 4px 8px;
@@ -331,25 +331,25 @@
   letter-spacing: 0.5px;
 }
 
-.value-amount {
+.valueAmount {
   color: #4caf50;
   font-weight: 700;
   font-size: 16px;
 }
 
-.card-content {
+.cardContent {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.card-section {
+.cardSection {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.card-section h4 {
+.cardSection h4 {
   color: #faa01c;
   font-size: 12px;
   font-weight: 600;
@@ -358,25 +358,25 @@
   margin: 0;
 }
 
-.donor-info {
+.donorInfo {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.donor-name {
+.donorName {
   color: #faf5e9;
   font-weight: 600;
   font-size: 14px;
 }
 
-.donor-address,
-.donor-neighborhood {
+.donorAddress,
+.donorNeighborhood {
   color: #c0c0c0;
   font-size: 12px;
 }
 
-.donation-description {
+.donationDescription {
   color: #faf5e9;
   font-size: 12px;
   line-height: 1.4;
@@ -388,93 +388,93 @@
 }
 
 /* Scrollbar Styles */
-.checkprint-cards-grid::-webkit-scrollbar {
+.checkprintCardsGrid::-webkit-scrollbar {
   width: 8px;
 }
 
-.checkprint-cards-grid::-webkit-scrollbar-track {
+.checkprintCardsGrid::-webkit-scrollbar-track {
   background-color: #2f2d2d;
   border-radius: 4px;
 }
 
-.checkprint-cards-grid::-webkit-scrollbar-thumb {
+.checkprintCardsGrid::-webkit-scrollbar-thumb {
   background-color: #464a4d;
   border-radius: 4px;
   transition: background-color 0.3s ease;
 }
 
-.checkprint-cards-grid::-webkit-scrollbar-thumb:hover {
+.checkprintCardsGrid::-webkit-scrollbar-thumb:hover {
   background-color: #faa01c;
 }
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
-  .checkprint-container {
+  .checkprintContainer {
     padding: 12px;
   }
   
-  .checkprint-content {
+  .checkprintContent {
     gap: 16px;
   }
   
-  .checkprint-header {
+  .checkprintHeader {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
   }
   
-  .checkprint-title {
+  .checkprintTitle {
     font-size: 20px;
   }
   
-  .checkprint-stats-card {
+  .checkprintStatsCard {
     min-width: 160px;
     padding: 10px 12px;
   }
   
-  .stats-icon {
+  .statsIcon {
     font-size: 20px;
   }
   
-  .stats-value {
+  .statsValue {
     font-size: 16px;
   }
   
-  .checkprint-search-section {
+  .checkprintSearchSection {
     padding: 16px;
   }
   
-  .form-row {
+  .formRow {
     grid-template-columns: 1fr;
     gap: 12px;
   }
   
-  .checkprint-results-section {
+  .checkprintResultsSection {
     padding: 16px;
   }
   
-  .checkprint-results-header {
+  .checkprintResultsHeader {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
   }
   
-  .results-actions {
+  .resultsActions {
     width: 100%;
     justify-content: space-between;
   }
   
-  .checkprint-cards-grid {
+  .checkprintCardsGrid {
     grid-template-columns: 1fr;
     gap: 12px;
     max-height: 400px;
   }
   
-  .checkprint-card {
+  .checkprintCard {
     padding: 12px;
   }
   
-  .card-header {
+  .cardHeader {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
@@ -482,66 +482,66 @@
 }
 
 @media (max-width: 480px) {
-  .checkprint-container {
+  .checkprintContainer {
     padding: 8px;
   }
   
-  .checkprint-title {
+  .checkprintTitle {
     font-size: 18px;
   }
   
-  .checkprint-stats-card {
+  .checkprintStatsCard {
     min-width: 140px;
     padding: 8px 10px;
   }
   
-  .stats-icon {
+  .statsIcon {
     font-size: 18px;
   }
   
-  .stats-value {
+  .statsValue {
     font-size: 14px;
   }
   
-  .checkprint-search-section,
-  .checkprint-results-section {
+  .checkprintSearchSection,
+  .checkprintResultsSection {
     padding: 12px;
   }
   
-  .checkprint-btn {
+  .checkprintBtn {
     min-width: 120px;
     height: 36px;
     font-size: 12px;
     padding: 8px 12px;
   }
   
-  .checkprint-cards-grid {
+  .checkprintCardsGrid {
     max-height: 300px;
   }
   
-  .checkprint-card {
+  .checkprintCard {
     padding: 10px;
   }
   
-  .receipt-badge {
+  .receiptBadge {
     font-size: 10px;
     padding: 2px 6px;
   }
   
-  .value-amount {
+  .valueAmount {
     font-size: 14px;
   }
   
-  .donor-name {
+  .donorName {
     font-size: 13px;
   }
   
-  .donor-address,
-  .donor-neighborhood {
+  .donorAddress,
+  .donorNeighborhood {
     font-size: 11px;
   }
   
-  .donation-description {
+  .donationDescription {
     font-size: 11px;
     padding: 6px;
   }
@@ -549,16 +549,16 @@
 
 /* High contrast mode for better accessibility */
 @media (prefers-contrast: high) {
-  .checkprint-card {
+  .checkprintCard {
     border: 2px solid #faa01c;
   }
   
-  .checkprint-btn.primary {
+  .checkprintBtn.primary {
     background-color: #faa01c;
     border: 2px solid #000;
   }
   
-  .receipt-badge {
+  .receiptBadge {
     background-color: #faa01c;
     color: #000;
     border: 1px solid #000;
@@ -567,23 +567,23 @@
 
 /* Print styles */
 @media print {
-  .checkprint-container {
+  .checkprintContainer {
     background-color: #fff;
     color: #000;
   }
   
-  .checkprint-card {
+  .checkprintCard {
     border: 1px solid #000;
     background-color: #fff;
     color: #000;
   }
   
-  .receipt-badge {
+  .receiptBadge {
     background-color: #000;
     color: #fff;
   }
   
-  .value-amount {
+  .valueAmount {
     color: #000;
   }
 }
