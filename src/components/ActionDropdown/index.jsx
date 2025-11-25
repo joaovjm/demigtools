@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import styles from "./actiondropdown.module.css";
-import { FaCog, FaEnvelope, FaEdit, FaPlus, FaCalendarAlt } from "react-icons/fa";
+import { FaCog, FaEnvelope, FaEdit, FaPlus, FaCalendarAlt, FaSave } from "react-icons/fa";
 
 const ActionDropdown = ({
   onCriarMovimento,
@@ -9,6 +9,8 @@ const ActionDropdown = ({
   onAgendar,
   showBtnCriarMovimento = true,
   isLoading = false,
+  isEditMode = false,
+  editButtonText = "Salvar",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -42,6 +44,21 @@ const ActionDropdown = ({
       onAgendar();
     }
   };
+
+  // Se estiver em modo de edição, mostrar botão Salvar diretamente
+  if (isEditMode) {
+    return (
+      <div className={styles.dropdownContainer} ref={dropdownRef}>
+        <button
+          className={`${styles.actionButton} ${styles.primary}`}
+          onClick={() => onEditar && onEditar()}
+          disabled={isLoading}
+        >
+          <FaSave /> {editButtonText}
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.dropdownContainer} ref={dropdownRef}>

@@ -219,6 +219,8 @@ const Donor = () => {
               }
               showBtnCriarMovimento={uiState.showBtn}
               isLoading={uiState.loading}
+              isEditMode={uiState.btnEdit === BUTTON_TEXTS.SAVE}
+              editButtonText={uiState.btnEdit}
             />
           </div>
         </header>
