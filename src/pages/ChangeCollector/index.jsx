@@ -8,6 +8,7 @@ import { ALERT_TYPES, ICONS, MESSAGES } from "../../constants/constants";
 import FormSelect from "../../components/forms/FormSelect";
 import FormInput from "../../components/forms/FormInput";
 import MessageStatus from "../../components/MessageStatus";
+import supabase from "../../helper/superBaseClient";
 
 const ChangeCollector = () => {
   const [formData, setFormData] = useState({
@@ -19,6 +20,7 @@ const ChangeCollector = () => {
   const [alert, setAlert] = useState({ message: "", type: "" });
   const [openReason, setOpenReason] = useState(false);
   const [reason, setReason] = useState("");
+  const [donorName, setDonorName] = useState("");
 
   useEffect(() => {
     const fetchCollectors = async () => {
@@ -35,6 +37,30 @@ const ChangeCollector = () => {
     };
     fetchCollectors();
   }, []);
+
+  useEffect(() => {
+    const fetchDonorName = async () => {
+      if (openReason && formData.search) {
+        try {
+          const { data, error } = await supabase
+            .from("donation")
+            .select("donor:donor_id (donor_name)")
+            .eq("receipt_donation_id", formData.search)
+            .single();
+
+          if (error) throw error;
+
+          if (data && data.donor) {
+            setDonorName(data.donor.donor_name || "");
+          }
+        } catch (error) {
+          console.error("Erro ao buscar nome do doador: ", error.message);
+          setDonorName("");
+        }
+      }
+    };
+    fetchDonorName();
+  }, [openReason, formData.search]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -170,6 +196,12 @@ const ChangeCollector = () => {
           <div className={styles.changeCollectorReason}>
             <div className={styles.reasonSection}>
               <h4>Motivo da Alteração</h4>
+              {donorName && (
+                <div className={styles.formGroup}>
+                  <label>Doador</label>
+                  <p className={styles.donorName}>{donorName}</p>
+                </div>
+              )}
               <div className={styles.formGroup}>
                 <label>Descreva o motivo da alteração</label>
                 <input 
@@ -182,6 +214,16 @@ const ChangeCollector = () => {
                 />
               </div>
               <div className={styles.reasonActions}>
+                <button 
+                  onClick={() => {
+                    setOpenReason(false);
+                    setReason("");
+                    setDonorName("");
+                  }}
+                  className={`${styles.changeCollectorBtn} ${styles.secondary}`}
+                >
+                  {ICONS.CANCEL} Fechar
+                </button>
                 <button 
                   onClick={() => handleReasonButtonPressed(reason)} 
                   className={`${styles.changeCollectorBtn} ${styles.primary}`}

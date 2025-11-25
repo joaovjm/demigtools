@@ -126,6 +126,17 @@
   transform: translateY(-1px);
 }
 
+.changeCollectorBtn.secondary {
+  background-color: #464a4d;
+  color: #faf5e9;
+}
+
+.changeCollectorBtn.secondary:hover:not(:disabled) {
+  background-color: #565a5d;
+  box-shadow: 0 4px 12px rgba(70, 74, 77, 0.4);
+  transform: translateY(-1px);
+}
+
 .changeCollectorBtn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
@@ -191,9 +202,21 @@
 .reasonActions {
   display: flex;
   justify-content: flex-end;
+  gap: 12px;
   margin-top: 20px;
   padding-top: 16px;
   border-top: 2px solid #2f2d2d;
+}
+
+.donorName {
+  color: #faa01c;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  padding: 8px 12px;
+  background-color: #363a3d;
+  border: 2px solid #464a4d;
+  border-radius: 6px;
 }
 
 /* Responsive Design */
