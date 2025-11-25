@@ -10,6 +10,7 @@ import { UserContext } from "../../context/UserContext";
 import { getOperators } from "../../helper/getOperators";
 import { logDonorActivity } from "../../helper/logDonorActivity";
 import { updateCollectorForDonor } from "../../helper/updateCollectorForDonor";
+import supabase from "../../helper/superBaseClient";
 
 const ModalDonation = ({
   modalShow,
@@ -38,6 +39,7 @@ const ModalDonation = ({
   const [campainSelected, setCampainSelect] = useState("");
   const [operators, setOperators] = useState([]);
   const [extra, setExtra] = useState(false);
+  const [request, setRequest] = useState([]);
   const data_contato = DataNow("noformated");
 
   const fetchCampains = async () => {
@@ -58,6 +60,27 @@ const ModalDonation = ({
     fetchCampains();
     fetchOperators();
   }, []);
+
+  useEffect(() => {
+    const fetchRequest = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("request")
+          .select("*, operator: operator_code_id(operator_name)")
+          .eq("donor_id", donor_id)
+          .limit(1);
+        if (error) throw error;
+        if (data) {
+          setRequest(data);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar requisição:", error.message);
+      }
+    };
+    if (donor_id) {
+      fetchRequest();
+    }
+  }, [donor_id]);
 
   useEffect(() => {
     if (extra) {
@@ -176,6 +199,44 @@ const ModalDonation = ({
                 Nova Doação
               </h2>
             </div>
+            {request.length > 0 && (
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "10px" }}
+              >
+                <span
+                  style={{
+                    color: "#faa01c",
+                    fontSize: "12px",
+                    fontWeight: "500",
+                    padding: "3px 8px",
+                    backgroundColor: "rgba(250, 160, 28, 0.1)",
+                    borderRadius: "12px",
+                    border: "1px solid rgba(250, 160, 28, 0.3)",
+                  }}
+                >
+                  Lista de trabalho: {request[0].request_name}
+                </span>
+              </div>
+            )}
+            {operator && (
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "10px" }}
+              >
+                <span
+                  style={{
+                    color: "#28a745",
+                    fontSize: "12px",
+                    fontWeight: "500",
+                    padding: "3px 8px",
+                    backgroundColor: "rgba(40, 167, 69, 0.1)",
+                    borderRadius: "12px",
+                    border: "1px solid rgba(40, 167, 69, 0.3)",
+                  }}
+                >
+                  Operador: {request?.[0]?.operator?.operator_name || operators.find(op => op.operator_code_id === operator)?.operator_name}
+                </span>
+              </div>
+            )}
             {tipo === "Mensal" && operatorData.operator_type === "Admin" && (
               <div style={{ display: "flex", alignItems: "center", gap: "10px"}}>
                 <label>Somente Extra?</label>

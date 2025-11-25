@@ -70,6 +70,7 @@ const RequestCard = ({
   }, [selection, operatorID]);
 
   const addSingle = () => {
+
     if (!selected) {
       toast.warning("Selecione uma doação!");
       return;

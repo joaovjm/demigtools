@@ -25,6 +25,22 @@ export const insertScheduled = async ({
       return null;
     }
 
+    // Verificar se existe um request ativo para este donor_id (quando entity_type é "doação")
+    let requestId = null;
+    if (entity_type === "doação") {
+      const { data: requestData, error: requestError } = await supabase
+        .from("request")
+        .select("id, request_name")
+        .eq("donor_id", entity_id)
+        .eq("request_active", "True")
+        .limit(1)
+        .single();
+
+      if (!requestError && requestData) {
+        requestId = requestData.id;
+      }
+    }
+
     // Inserir na tabela scheduled
     // scheduled_date pode ser uma string ISO ou timestamp
     const { data, error } = await supabase
@@ -45,6 +61,18 @@ export const insertScheduled = async ({
       console.error("Erro ao criar agendamento:", error);
       toast.error("Erro ao criar agendamento: " + error.message);
       return null;
+    }
+
+    // Se encontrou um request ativo, atualizar o status para "Agendado"
+    if (requestId) {
+      const { error: updateError } = await supabase
+        .from("request")
+        .update({ request_status: "Agendado" })
+        .eq("id", requestId);
+      
+      if (updateError) {
+        console.log("Erro ao atualizar status do request", updateError.message);
+      }
     }
 
     toast.success("Agendamento criado com sucesso!");

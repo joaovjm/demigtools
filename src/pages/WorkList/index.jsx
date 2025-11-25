@@ -515,6 +515,12 @@ const WorkList = () => {
                             {list.request_status}
                             {list?.donation?.operator_code_id === 521 &&
                               ` (${list.donation.operator_code_id})`}
+                            {list?.operator_code_id === 1100 &&
+                              list?.donation?.operator_code_id === 1098 &&
+                              ` (${list.donation.operator_code_id})`}
+                            {list?.operator_code_id === 1098 &&
+                              list?.donation?.operator_code_id === 1100 &&
+                              ` (${list.donation.operator_code_id})`}
                           </span>
                         </td>
                         <td className={styles.worklistTableCell}>

@@ -63,11 +63,14 @@ export function assignPackage(
   createPackage,
   setCreatePackage
 ) {
+  console.log(operatorID)
+  console.log(selected)
+  console.log(createPackage)
   const update = createPackage?.map((pkg) => {
     if (pkg.receipt_donation_id === selected) {
       return {
         ...pkg,
-        operator_code_id: operatorID,
+        operator_code_id: Number(operatorID),
       };
     }
     return pkg;
@@ -111,7 +114,7 @@ export function assignAllPackage(
         count = count + pkg.donation_value;
         return {
           ...pkg,
-          operator_code_id: operatorID,
+          operator_code_id: Number(operatorID),
         };
       }
     }
