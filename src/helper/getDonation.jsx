@@ -17,6 +17,8 @@ export const getDonation = async (donor_id) => {
             donation_worklist,
             collector_code_id,
             operator_code_id,
+            ult_collector,
+            collector_ult: ult_collector(collector_name),
             collector:collector_code_id (collector_name),
             operator:operator_code_id (operator_name)
             donor: donor_id (donor_type)

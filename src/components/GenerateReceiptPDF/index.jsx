@@ -155,9 +155,7 @@ const GenerateReceiptPDF = async ({ cards, receiptConfig, setOk }) => {
                                   data?.collector_code_id
                                 } - ${data?.collector?.collector_name.toUpperCase()}`} | OP: ${
                                   data.operator_code_id
-                                } - ${data?.operator?.operator_name.toUpperCase()} | U: ${
-                                  data.dataUltima
-                                }`,
+                                } - ${data?.operator?.operator_name.toUpperCase()}`,
                                 style: "label",
                                 margin: [0, 0, 0, 2],
                                 width: 250,

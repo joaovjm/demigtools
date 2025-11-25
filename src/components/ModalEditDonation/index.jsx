@@ -238,6 +238,8 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
           donor_type: donorData.tipo,
           donor_reference: donorData.referencia,
           donor_observation: donorData.observacao,
+          ult_collector: donation.ult_collector,
+
         },
         donation_campain: donation.donation_campain || "Campanha Geral",
       };
