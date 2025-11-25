@@ -151,7 +151,7 @@ const GenerateReceiptPDF = async ({ cards, receiptConfig, setOk }) => {
                           {
                             columns: [
                               {
-                                text: `U.COL: ${data.ucol}${` | R.COL: ${
+                                text: `U.COL: ${data?.ult_collector} - ${data?.collector_ult?.collector_name}${` | R.COL: ${
                                   data?.collector_code_id
                                 } - ${data?.collector?.collector_name.toUpperCase()}`} | OP: ${
                                   data.operator_code_id

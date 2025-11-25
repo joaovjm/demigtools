@@ -466,7 +466,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
                 </div>
               </div>
 
-              {/*{operatorData.operator_type === "Admin" && (
+              {operatorData.operator_type === "Admin" && (
                 <div className={styles['status-section']}>
                   <h4>Status da Doação</h4>
                   <div className={styles['checkbox-group']}>
@@ -479,6 +479,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
                       <span className={styles['checkmark']}></span>
                       Impresso
                     </label>
+                    {/*
                     <label className={styles['checkbox-label']}>
                       <input
                         type="checkbox"
@@ -488,9 +489,10 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
                       <span className={styles['checkmark']}></span>
                       Recebido
                     </label>
+                    */}
                   </div>
                 </div>
-              )}*/}
+              )}
             </div>
           </div>
 
