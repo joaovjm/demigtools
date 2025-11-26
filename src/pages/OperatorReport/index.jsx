@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import styles from "./operatorreport.module.css";
 import { UserContext } from "../../context/UserContext";
-import { getOperators } from "../../helper/getOperators";
 import getOperatorDonationsReceived from "../../helper/getOperatorDonationsReceived";
 import { toast } from "react-toastify";
 import { FaSearch, FaDownload } from "react-icons/fa";
@@ -10,7 +9,7 @@ const OperatorReport = () => {
   const { operatorData } = useContext(UserContext);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [selectedOperator, setSelectedOperator] = useState("");
+  const [searchType, setSearchType] = useState("received");
   const [donations, setDonations] = useState([]);
   const [totalValue, setTotalValue] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -35,7 +34,8 @@ const OperatorReport = () => {
       const result = await getOperatorDonationsReceived({
         startDate,
         endDate,
-        operatorId: operatorData.operator_code_id
+        operatorId: operatorData.operator_code_id,
+        searchType
       });
       
       setDonations(result.donation);
@@ -55,6 +55,7 @@ const OperatorReport = () => {
   const handleClearFilters = () => {
     setStartDate("");
     setEndDate("");
+    setSearchType("received");
     setDonations([]);
     setTotalValue(0);
     setHasSearched(false);
@@ -73,6 +74,32 @@ const OperatorReport = () => {
     return date.toLocaleDateString("pt-BR");
   };
 
+  const getDateField = (donation) => {
+    switch (searchType) {
+      case "received":
+        return donation.donation_day_received;
+      case "open":
+        return donation.donation_day_to_receive;
+      case "created":
+        return donation.donation_day_contact;
+      default:
+        return donation.donation_day_received;
+    }
+  };
+
+  const getDateLabel = () => {
+    switch (searchType) {
+      case "received":
+        return "Data Recebimento";
+      case "open":
+        return "Data a Receber";
+      case "created":
+        return "Data Criada";
+      default:
+        return "Data Recebimento";
+    }
+  };
+
   const handleExport = () => {
     if (donations.length === 0) {
       toast.warning("Não há dados para exportar");
@@ -80,9 +107,9 @@ const OperatorReport = () => {
     }
 
     // Criar CSV
-    const headers = ["Data Recebimento", "Doador", "Valor", "Operador"];
+    const headers = [getDateLabel(), "Doador", "Valor", "Operador"];
     const rows = donations.map(donation => [
-      formatDate(donation.donation_day_received),
+      formatDate(getDateField(donation)),
       donation.donor?.donor_name || "N/A",
       donation.donation_value,
       donation.operator_name?.operator_name || "N/A"
@@ -110,11 +137,12 @@ const OperatorReport = () => {
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        <h3 className={styles.title}>Relatório de Doações Recebidas</h3>
+        <h3 className={styles.title}>Relatório de Doações</h3>
         
         {/* Filtros */}
         <div className={styles.filters}>
           <div className={styles.formRow}>
+            {/* Data de Início e Fim */}
             <div className={styles.formGroup}>
               <label>Data de Início</label>
               <input
@@ -134,7 +162,23 @@ const OperatorReport = () => {
                 className={styles.input}
               />
             </div>
-            <div className={styles.formActions}>
+            
+            {/* Tipo de Busca */}
+            <div className={styles.formGroup}>
+              <label>Tipo de Busca</label>
+              <select
+                value={searchType}
+                onChange={(e) => setSearchType(e.target.value)}
+                className={styles.input}
+              >
+                <option value="received">Recebido</option>
+                <option value="open">Em Aberto</option>
+                <option value="created">Data Criada</option>
+              </select>
+            </div>
+          </div>
+          
+          <div className={styles.formActions}>
             <button 
               onClick={handleSearch} 
               className={`${styles.btn} ${styles.btnPrimary}`}
@@ -150,10 +194,6 @@ const OperatorReport = () => {
               Limpar Filtros
             </button>
           </div>
-            
-          </div>
-          
-          
         </div>
 
         {/* Resumo */}
@@ -184,7 +224,7 @@ const OperatorReport = () => {
                 <table className={styles.table}>
                   <thead>
                     <tr>
-                      <th>Data Recebimento</th>
+                      <th>{getDateLabel()}</th>
                       <th>Doador</th>
                       <th>Valor</th>
                       <th>Operador</th>
@@ -193,7 +233,7 @@ const OperatorReport = () => {
                   <tbody>
                     {donations.map((donation, index) => (
                       <tr key={index}>
-                        <td>{formatDate(donation.donation_day_received)}</td>
+                        <td>{formatDate(getDateField(donation))}</td>
                         <td>{donation.donor?.donor_name || "N/A"}</td>
                         <td className={styles.valueCell}>
                           {formatCurrency(donation.donation_value)}
@@ -208,7 +248,7 @@ const OperatorReport = () => {
               <div className={styles.emptyState}>
                 <div className={styles.emptyIcon}>📊</div>
                 <h4>Nenhuma doação encontrada</h4>
-                <p>Não há doações recebidas para o período e filtros selecionados.</p>
+                <p>Não há doações para o período e filtros selecionados.</p>
               </div>
             )}
           </div>
