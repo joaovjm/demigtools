@@ -6,7 +6,6 @@ import { useParams } from "react-router";
 import { editDonor } from "../../helper/editDonor";
 import { getInfoDonor } from "../../helper/getDonor";
 import ModalDonation from "../../components/ModalDonation";
-import Loader from "../../components/Loader";
 import {
   BUTTON_TEXTS,
   DONOR_TYPES,
@@ -27,7 +26,7 @@ import DonorActivityHistory from "../../components/DonorActivityHistory";
 import { logDonorActivity } from "../../helper/logDonorActivity";
 import ActionDropdown from "../../components/ActionDropdown";
 import ModalScheduleDonor from "../../components/ModalScheduleDonor";
-
+import { CallComponent } from "../../components/CallComponent";
 const Donor = () => {
   const { id } = useParams();
   const { operatorData, setOperatorData } = useContext(UserContext);
@@ -390,7 +389,8 @@ const Donor = () => {
                 }
                 readOnly={uiState.edit}
                 name="referencia"
-              />
+                />
+                <CallComponent/>
               </div>
 
               
