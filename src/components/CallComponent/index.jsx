@@ -1,5 +1,8 @@
 import { Device } from "@twilio/voice-sdk";
 import { useState } from "react";
+import voipConfig from "../../../database/voipConfig.json";
+
+const voipActive = voipConfig.voipActive;
 
 export function CallComponent({ phoneNumber }) {
   const [device, setDevice] = useState(null);
@@ -26,10 +29,13 @@ export function CallComponent({ phoneNumber }) {
 
   return (
     <div>
-      <button type="button" onClick={initDevice}>Ativar Voz</button>
-      <button type="button" onClick={() => call("+5521983046033")}>
-        Ligar para doador
-      </button>
+      {voipActive && (
+        <>
+          <button type="button" onClick={initDevice}>Ativar Voz</button>
+          
+          <button disabled={!device} type="button" onClick={() => call("+5521983046033")}>Ligar para doador</button>
+        </>
+      )}
     </div>
   );
 }

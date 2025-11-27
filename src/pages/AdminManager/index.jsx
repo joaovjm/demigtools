@@ -7,6 +7,7 @@ import WhatsappManager from "../../components/AdminManager/WhatsappManager";
 import Campain from "../../components/AdminManager/Campain";
 import ReceiptConfig from "../../components/AdminManager/ReceiptConfig";
 import LeadsManager from "../../components/AdminManager/LeadsManager";
+import VoipConfig from "../../components/AdminManager/VoipConfig";
 import { DataNow } from "../../components/DataTime";
 
 const AdminManager = () => {
@@ -40,6 +41,7 @@ const AdminManager = () => {
     { id: "campain", label: "Campanha", icon: "📢" },
     { id: "receipt", label: "Config. Recibo", icon: "🧾" },
     { id: "leads", label: "Ger. Leads", icon: "👥" },
+    { id: "voip", label: "Configurações do Voip", icon: "📞" },
   ];
 
   return (
@@ -78,6 +80,8 @@ const AdminManager = () => {
           <ReceiptConfig />
         ) : active === "leads" ? (
           <LeadsManager />
+        ) : active === "voip" ? (
+          <VoipConfig />
         ) : (
           <div className={styles.welcomeScreen}>
             <div className={styles.welcomeContent}>
