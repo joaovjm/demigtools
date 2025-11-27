@@ -32,8 +32,7 @@ export function CallComponent({ phoneNumber }) {
       {voipActive && (
         <>
           <button type="button" onClick={initDevice}>Ativar Voz</button>
-          
-          <button disabled={!device} type="button" onClick={() => call("+5521983046033")}>Ligar para doador</button>
+          <button disabled type="button" onClick={() => call("+5521983046033")}>Ligar para doador</button>
         </>
       )}
     </div>
