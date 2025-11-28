@@ -27,6 +27,7 @@ import { logDonorActivity } from "../../helper/logDonorActivity";
 import ActionDropdown from "../../components/ActionDropdown";
 import ModalScheduleDonor from "../../components/ModalScheduleDonor";
 import { CallComponent } from "../../components/CallComponent";
+import supabase from "../../helper/superBaseClient";
 const Donor = () => {
   const { id } = useParams();
   const { operatorData, setOperatorData } = useContext(UserContext);
@@ -134,6 +135,8 @@ const Donor = () => {
       setUiState((prev) => ({ ...prev, loading: true }));
 
       try {
+        const previousDonorType = originalDonorData?.tipo;
+
         const success = await editDonor(
           id,
           donorData.nome,
@@ -153,6 +156,32 @@ const Donor = () => {
         );
 
         if (success) {
+          // Se o doador era Mensal e foi alterado para Avulso,
+          // remover o registro correspondente na tabela donor_mensal
+          if (
+            previousDonorType === DONOR_TYPES.MONTHLY &&
+            donorData.tipo === DONOR_TYPES.CASUAL
+          ) {
+            try {
+              const { error: deleteError } = await supabase
+                .from("donor_mensal")
+                .delete()
+                .eq("donor_id", id);
+
+              if (deleteError) {
+                console.error(
+                  "Erro ao remover dados de mensal do doador:",
+                  deleteError.message
+                );
+              }
+            } catch (error) {
+              console.error(
+                "Erro inesperado ao remover dados de mensal do doador:",
+                error.message
+              );
+            }
+          }
+
           setActivityHistoric({
             dbID: id,
             dataBase: "donor",
