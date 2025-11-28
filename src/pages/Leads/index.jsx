@@ -455,6 +455,17 @@ const Leads = () => {
                           <span className="location-label">Bairro:</span>
                           <span className="location-value">{currentLead.leads_neighborhood}</span>
                         </div>
+                        {selectedNeighborhood === "AACRECHE" && currentLead?.leads_value && (
+                          <div className="location-item">
+                            <span className="location-label">Valor da doação:</span>
+                            <span className="location-value">
+                              {Number(currentLead.leads_value).toLocaleString("pt-BR", {
+                                style: "currency",
+                                currency: "BRL",
+                              })}
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

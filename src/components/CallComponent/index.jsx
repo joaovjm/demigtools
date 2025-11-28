@@ -8,18 +8,21 @@ export function CallComponent({ phoneNumber }) {
   const [device, setDevice] = useState(null);
 
   const initDevice = async () => {
-    const res = await fetch("/api/token");
-    const { token } = await res.json();
+    try {
+      const res = await fetch("/api/token");
+      const { token } = await res.json();
 
-    const dev = new Device(token, {
-      codecPreferences: ["opus", "pcmu"],
-      fakeMicInput: false,
-    });
+      const dev = new Device(token, {
+        codecPreferences: ["opus", "pcmu"],
+        fakeMicInput: false,
+      });
+      dev.on("ready", () => console.log("Device online"));
+      dev.on("error", (e) => console.error("Twilio Error:", e));
 
-    dev.on("ready", () => console.log("Device online"));
-    dev.on("error", (e) => console.error("Twilio Error:", e));
-
-    setDevice(dev);
+      setDevice(dev);
+    } catch (error) {
+      console.error("Erro ao iniciar dispositivo:", error);
+    }
   };
 
   const call = (number) => {
@@ -32,7 +35,7 @@ export function CallComponent({ phoneNumber }) {
       {voipActive && (
         <>
           <button type="button" onClick={initDevice}>Ativar Voz</button>
-          <button disabled type="button" onClick={() => call("+5521983046033")}>Ligar para doador</button>
+          <button disabled={!device} type="button" onClick={() => call("+5521983046033")}>Ligar para doador</button>
         </>
       )}
     </div>
