@@ -36,6 +36,8 @@ const editLead = async (leadId, leadData, operatorType = null) => {
       leads_tel_4: leadData.tel4 || null,
       leads_tel_5: leadData.tel5 || null,
       leads_tel_6: leadData.tel6 || null,
+      leads_email: leadData.email || null,
+      leads_observation: leadData.observation || null,
     };
 
     const { data, error } = await supabase

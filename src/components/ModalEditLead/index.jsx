@@ -43,6 +43,8 @@ const ModalEditLead = ({
     tel4: "",
     tel5: "",
     tel6: "",
+    email: "",
+    observation: "",
   });
 
   useEffect(() => {
@@ -69,6 +71,8 @@ const ModalEditLead = ({
           tel4: lead.leads_tel_4 || "",
           tel5: lead.leads_tel_5 || "",
           tel6: lead.leads_tel_6 || "",
+          email: lead.leads_email || "",
+          observation: lead.leads_observation || "",
         });
       }
     } catch (error) {
@@ -451,6 +455,35 @@ const ModalEditLead = ({
                         onChange={(e) => handleInputChange("tel6", e.target.value)}
                         disabled={!isEditMode}
                         className={styles.modalInput}
+                      />
+                    </div>
+                  </div>
+                  <div className={styles.modalFormRow}>
+                    <div className={`${styles.modalFormGroup} ${styles.fullWidth}`}>
+                      <label>Email</label>
+                      <input
+                        type="email"
+                        value={leadData.email}
+                        onChange={(e) => handleInputChange("email", e.target.value)}
+                        disabled={!isEditMode}
+                        className={styles.modalInput}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className={styles.modalFormSection}>
+                  <h4>Observações</h4>
+                  <div className={styles.modalFormRow}>
+                    <div className={`${styles.modalFormGroup} ${styles.fullWidth}`}>
+                      <label>Observação</label>
+                      <textarea
+                        value={leadData.observation}
+                        onChange={(e) => handleInputChange("observation", e.target.value)}
+                        disabled={!isEditMode}
+                        className={styles.modalTextarea}
+                        rows={4}
+                        placeholder="Digite observações sobre o lead..."
                       />
                     </div>
                   </div>
