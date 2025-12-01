@@ -139,6 +139,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
         .update([
           {
             donation_value: value,
+            donation_extra: extraValue,
             donation_day_to_receive: date,
             donation_description: observation,
             operator_code_id: operator,
@@ -164,6 +165,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
           old_values: originalValues,
           new_values: {
             donation_value: value,
+            donation_extra: extraValue,
             donation_day_to_receive: date,
             donation_description: observation,
             operator_code_id: operator,
