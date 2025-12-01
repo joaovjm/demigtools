@@ -11,6 +11,7 @@ export const monthlyfeeGenerator = async ({ mesRefGenerator, campain }) => {
     const { data, error } = await supabase
       .from("donor_mensal")
       .select("*")
+      .eq("active", true)
       .eq("donor_mensal_day", Number(DataSelect(mesRefGenerator, "day")));
 
     const status = await insertMonthHistory(mesRefGenerator);

@@ -165,7 +165,9 @@ const Donor = () => {
             try {
               const { error: deleteError } = await supabase
                 .from("donor_mensal")
-                .delete()
+                .update({
+                  active: false,
+                })
                 .eq("donor_id", id);
 
               if (deleteError) {
