@@ -4,7 +4,6 @@ import GetLeadsWithPagination from "../../helper/getLeadsWithPagination";
 
 import { ICONS } from "../../constants/constants";
 import { toast, ToastContainer } from "react-toastify";
-import FormInput from "../../components/forms/FormInput";
 import supabase from "../../helper/superBaseClient";
 import { DataNow, DataSelect } from "../../components/DataTime";
 import {
@@ -20,6 +19,7 @@ import updateLeads from "../../helper/updateLeads";
 import ModalNewDonation from "../../components/ModalNewDonation";
 import ModalScheduling from "../../components/ModalScheduling";
 import ModalHistory from "../../components/ModalHistory";
+import ModalEditLead from "../../components/ModalEditLead";
 import { UserContext } from "../../context/UserContext";
 
 const Leads = () => {
@@ -31,6 +31,7 @@ const Leads = () => {
   const [isModalSchedulingOpen, setIsModalSchedulingOpen] = useState(false);
   const [idSession, setIdSession] = useState("");
   const [isModalHistoryOpen, setIsModalHistoryOpen] = useState(false);
+  const [isModalEditLeadOpen, setIsModalEditLeadOpen] = useState(false);
   const [selectedNeighborhood, setSelectedNeighborhood] = useState("");
   const [availableNeighborhoods, setAvailableNeighborhoods] = useState([]);
   const { operatorData } = useContext(UserContext);
@@ -500,6 +501,12 @@ const Leads = () => {
                     >
                       Não Atendeu
                     </button>
+                    <button 
+                      className="leads-btn secondary" 
+                      onClick={() => setIsModalEditLeadOpen(true)}
+                    >
+                      {ICONS.EDIT} Editar Lead
+                    </button>
                   </div>
                 </div>
               )}
@@ -533,6 +540,21 @@ const Leads = () => {
           operatorData={operatorData}
         />
       )}
+
+      <ModalEditLead
+        isOpen={isModalEditLeadOpen}
+        onClose={() => setIsModalEditLeadOpen(false)}
+        leadId={currentLead?.leads_id}
+        initialEditMode={true}
+        operatorType={operatorData.operator_type}
+        onSave={async (updatedLead) => {
+          // Atualiza o lead atual com os dados atualizados e recarrega
+          setCurrentLead(updatedLead);
+          setIsModalEditLeadOpen(false);
+          // Recarrega os dados do lead para garantir sincronização
+          await fetchLeads();
+        }}
+      />
     </main>
   );
 };

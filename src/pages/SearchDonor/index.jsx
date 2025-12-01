@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 //Components and Helpers
 import fetchDonors from "../../services/searchDonorService"
 import { DonorCard } from "../../components/cards/DonorCard";
+import ModalEditLead from "../../components/ModalEditLead";
 
 //Styles
 import styles from "./searchdonor.module.css";
@@ -15,6 +16,8 @@ const SearchDonor = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [donor, setDonor] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isModalEditLeadOpen, setIsModalEditLeadOpen] = useState(false);
+  const [selectedLeadId, setSelectedLeadId] = useState(null);
   const navigate = useNavigate();
 
   const handleSearchDonor = async (e) => {
@@ -24,7 +27,8 @@ const SearchDonor = () => {
 
   const handleDonorClick = (id, isLead = false) => {
     if (isLead) {
-      navigate(`/leads`); // Navega para a página de leads
+      setSelectedLeadId(id);
+      setIsModalEditLeadOpen(true);
     } else {
       navigate(`/donor/${id}`);
     }
@@ -92,6 +96,17 @@ const SearchDonor = () => {
           </button>
         </div>
       </div>
+
+      {/* Modal Edit Lead */}
+      <ModalEditLead
+        isOpen={isModalEditLeadOpen}
+        onClose={() => {
+          setIsModalEditLeadOpen(false);
+          setSelectedLeadId(null);
+        }}
+        leadId={selectedLeadId}
+        initialEditMode={false}
+      />
     </main>
   );
 };
