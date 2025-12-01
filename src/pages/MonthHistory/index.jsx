@@ -8,8 +8,11 @@ const MonthHistory = () => {
   const [loading, setLoading] = useState(false);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
   const [statusFilter, setStatusFilter] = useState(null); // null = todos, 'aberto', 'recebida', 'nao_gerado'
+  const [collectorFilter, setCollectorFilter] = useState(null); // null = todos ou nome do coletador
   const [showStatusPopup, setShowStatusPopup] = useState(false);
+  const [showCollectorPopup, setShowCollectorPopup] = useState(false);
   const statusPopupRef = useRef(null);
+  const collectorPopupRef = useRef(null);
 
   const fetchMonthHistory = async () => {
     if (!selectedMonth) {
@@ -49,7 +52,8 @@ const MonthHistory = () => {
           donation_print,
           donation_received,
           donation_value,
-          donation_monthref
+          donation_monthref,
+          collector: collector_code_id (collector_name)
         `)
         .gte("donation_monthref", startDate)
         .lt("donation_monthref", endDate);
@@ -70,6 +74,16 @@ const MonthHistory = () => {
 
       mensalData?.forEach((mensal) => {
         const donations = donationsMap[mensal.donor_id] || [];
+
+        // Obter o coletador (nome) da última doação com coletador deste doador no mês
+        let collectorName = null;
+        for (let i = donations.length - 1; i >= 0; i--) {
+          const currentCollectorName = donations[i]?.collector?.collector_name;
+          if (currentCollectorName) {
+            collectorName = currentCollectorName;
+            break;
+          }
+        }
         
         // Verificar se há alguma doação impressa para este doador no mês
         const hasPrintedDonation = donations.some(
@@ -92,6 +106,7 @@ const MonthHistory = () => {
           movements_count: donations.length,
           isPrinted: hasPrintedDonation,
           isReceived: hasReceivedDonation,
+          collector_name: collectorName,
         };
 
         donorsList.push(donorInfo);
@@ -117,22 +132,25 @@ const MonthHistory = () => {
     }).format(value);
   };
 
-  // Fechar popup ao clicar fora
+  // Fechar popups ao clicar fora
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (statusPopupRef.current && !statusPopupRef.current.contains(event.target)) {
         setShowStatusPopup(false);
       }
+      if (collectorPopupRef.current && !collectorPopupRef.current.contains(event.target)) {
+        setShowCollectorPopup(false);
+      }
     };
 
-    if (showStatusPopup) {
+    if (showStatusPopup || showCollectorPopup) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [showStatusPopup]);
+  }, [showStatusPopup, showCollectorPopup]);
 
   const handleSort = (key) => {
     let direction = 'asc';
@@ -145,6 +163,11 @@ const MonthHistory = () => {
   const handleStatusFilter = (status) => {
     setStatusFilter(status);
     setShowStatusPopup(false);
+  };
+
+  const handleCollectorFilter = (collectorName) => {
+    setCollectorFilter(collectorName);
+    setShowCollectorPopup(false);
   };
 
   const getStatusLabel = (donor) => {
@@ -163,6 +186,11 @@ const MonthHistory = () => {
         const donorStatus = getStatusLabel(donor);
         return donorStatus === statusFilter;
       });
+    }
+
+    // Aplicar filtro de coletador
+    if (collectorFilter) {
+      filtered = filtered.filter((donor) => donor.collector_name === collectorFilter);
     }
 
     // Aplicar ordenação
@@ -214,6 +242,13 @@ const MonthHistory = () => {
   };
 
   const dataToShow = getFilteredAndSortedData();
+  const collectorOptions = Array.from(
+    new Set(
+      allDonors
+        .map((donor) => donor.collector_name)
+        .filter((name) => !!name)
+    )
+  ).sort();
 
   return (
     <div className={styles.monthHistory}>
@@ -305,6 +340,42 @@ const MonthHistory = () => {
                     </span>
                   </th>
                   <th
+                    className={styles.statusHeader}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowCollectorPopup(!showCollectorPopup);
+                    }}
+                    style={{ cursor: 'pointer', position: 'relative' }}
+                  >
+                    Coletador
+                    {collectorFilter && (
+                      <span className={styles.filterIndicator}>●</span>
+                    )}
+                    {showCollectorPopup && (
+                      <div
+                        ref={collectorPopupRef}
+                        className={styles.statusPopup}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <div
+                          className={`${styles.popupOption} ${collectorFilter === null ? styles.popupOptionActive : ''}`}
+                          onClick={() => handleCollectorFilter(null)}
+                        >
+                          Todos
+                        </div>
+                        {collectorOptions.map((name) => (
+                          <div
+                            key={name}
+                            className={`${styles.popupOption} ${collectorFilter === name ? styles.popupOptionActive : ''}`}
+                            onClick={() => handleCollectorFilter(name)}
+                          >
+                            {name}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </th>
+                  <th
                     className={styles.sortable}
                     onClick={() => handleSort('value')}
                     style={{ cursor: 'pointer' }}
@@ -372,6 +443,7 @@ const MonthHistory = () => {
                       <td>{donor.donor_tel_1}</td>
                       <td>{formatCurrency(donor.donor_mensal_monthly_fee)}</td>
                       <td>{donor.movements_count}</td>
+                      <td>{donor.collector_name || "-"}</td>
                       <td>{formatCurrency(donor.total_value)}</td>
                       <td>
                         {donor.movements_count === 0 ? (
@@ -388,7 +460,7 @@ const MonthHistory = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="7" style={{ textAlign: "center" }}>
+                    <td colSpan="8" style={{ textAlign: "center" }}>
                       {loading
                         ? "Carregando..."
                         : "Nenhum doador encontrado"}
@@ -398,7 +470,7 @@ const MonthHistory = () => {
               </tbody>
               <tfoot>
                 <tr>
-                  <td colSpan="6" style={{ textAlign: "right", fontWeight: "bold" }}>
+                  <td colSpan="7" style={{ textAlign: "right", fontWeight: "bold" }}>
                     Total:
                   </td>
                   <td style={{ fontWeight: "bold" }}>
