@@ -66,32 +66,20 @@ const getCountLeads = (leads) => {
 }
 
 export const leadsHistoryService = async () => {
-  const { leads, leadsCasa } = await getLeadsHistory();
+  const { leads } = await getLeadsHistory();
   const operator = getNameOperator(leads);
-  const operatorCasa = getNameOperator(leadsCasa);
   const scheduled = getLeadsScheduling(leads);
-  const scheduledCasa = getLeadsScheduling(leadsCasa);
   const leadsNA = getLeadsNA(leads);
-  const leadsNACasa = getLeadsNA(leadsCasa);
   const leadsNP = getLeadsNP(leads);
-  const leadsNPCasa = getLeadsNP(leadsCasa);
   const leadsSuccess = getLeadsSuccess(leads);
-  const leadsSuccessCasa = getLeadsSuccess(leadsCasa);
   const countLeads = getCountLeads(leads);
-  const countLeadsCasa = getCountLeads(leadsCasa);
 
   return {
     operator,
-    operatorCasa,
     scheduled,
-    scheduledCasa,
     leadsNA,
-    leadsNACasa,
     leadsNP,
-    leadsNPCasa,
     leadsSuccess,
-    leadsSuccessCasa,
-    countLeads,
-    countLeadsCasa
+    countLeads
   };
 };

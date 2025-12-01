@@ -47,15 +47,8 @@ const Leads = () => {
 
   const fetchAvailableNeighborhoods = async () => {
     try {
-      let operatorType;
-      if (operatorData.operator_type === "Operador Casa") {
-        operatorType = "leads_casa";
-      } else {
-        operatorType = "leads";
-      }
-
       const { data, error } = await supabase
-        .from(operatorType)
+        .from("leads")
         .select("leads_neighborhood")
         .not("leads_neighborhood", "is", null)
         .neq("leads_neighborhood", "");
@@ -91,7 +84,6 @@ const Leads = () => {
       setItems,
       setCurrentLead,
       Number(operatorData.operator_code_id),
-      operatorData.operator_type,
       selectedNeighborhood
     );
 
@@ -100,8 +92,7 @@ const Leads = () => {
       await updateLeads(
         "Aberto",
         Number(operatorData.operator_code_id),
-        lead[0].leads_id,
-        operatorData.operator_type
+        lead[0].leads_id
       );
     }
 
@@ -141,30 +132,15 @@ const Leads = () => {
 
   const handleNext = async () => {
     if (window.confirm("Deseja passar para o proximo?")) {
-      if (operatorData.operator_type === "Operador Casa") {
-        if (currentLead?.leads_id) {
-          const data = await updateLeads(
-            "Não Atendeu",
-            Number(operatorData.operator_code_id),
-            currentLead.leads_id,
-            "Operador Casa"
-          );
-          if (data && data[0]?.leads_status === "Não Atendeu") {
-            // Recarregar leads após marcar como não atendeu
-            await reloadAfterProcess();
-          }
-        }
-      } else {
-        if (currentLead?.leads_id) {
-          const data = await updateLeads(
-            "Não Atendeu",
-            Number(operatorData.operator_code_id),
-            currentLead.leads_id
-          );
-          if (data && data[0]?.leads_status === "Não Atendeu") {
-            // Recarregar leads após marcar como não atendeu
-            await reloadAfterProcess();
-          }
+      if (currentLead?.leads_id) {
+        const data = await updateLeads(
+          "Não Atendeu",
+          Number(operatorData.operator_code_id),
+          currentLead.leads_id
+        );
+        if (data && data[0]?.leads_status === "Não Atendeu") {
+          // Recarregar leads após marcar como não atendeu
+          await reloadAfterProcess();
         }
       }
     }
@@ -172,27 +148,14 @@ const Leads = () => {
 
   const handleNoDonation = async () => {
     if (window.confirm("Confirma que o colaborador não poderá ajudar?")) {
-      if (operatorData.operator_type === "Operador Casa") {
-        const response = await updateLeads(
-          "Não pode ajudar",
-          Number(operatorData.operator_code_id),
-          currentLead.leads_id,
-          "Operador Casa"
-        );
-        if (response && response.length > 0) {
-          // Recarregar leads após processar
-          await reloadAfterProcess();
-        }
-      } else {
-        const response = await updateLeads(
-          "Não pode ajudar",
-          Number(operatorData.operator_code_id),
-          currentLead.leads_id
-        );
-        if (response && response.length > 0) {
-          // Recarregar leads após processar
-          await reloadAfterProcess();
-        }
+      const response = await updateLeads(
+        "Não pode ajudar",
+        Number(operatorData.operator_code_id),
+        currentLead.leads_id
+      );
+      if (response && response.length > 0) {
+        // Recarregar leads após processar
+        await reloadAfterProcess();
       }
     }
   };
@@ -209,19 +172,13 @@ const Leads = () => {
   };
 
   const handleSchedulingSave = async (formData) => {
-    let typeOperator;
     if(!formData.dateScheduling || !formData.telScheduling) {
       toast.warning("Preencha data e telefone usado para contato...")
       return;
     }
-    if (operatorData.operator_type === "Operador Casa") {
-      typeOperator = "leads_casa";
-    } else {
-      typeOperator = "leads";
-    }
     try {
       const { data, error } = await supabase
-        .from(typeOperator)
+        .from("leads")
         .update([
           {
             leads_date_accessed: DataNow("noformated"),
@@ -248,12 +205,6 @@ const Leads = () => {
   };
 
   const handleNewDonationSave = async (formData) => {
-    let type;
-    if (operatorData.operator_type === "Operador Casa") {
-      type = "leads_casa";
-    } else {
-      type = "leads";
-    }
     if (
       formData.address === "" ||
       formData.city === "" ||
@@ -320,7 +271,7 @@ const Leads = () => {
             }
 
             const { data: update, error } = await supabase
-              .from(type)
+              .from("leads")
               .update({ leads_status: "Sucesso" })
               .eq("leads_id", currentLead.leads_id);
             if (error) throw error;
@@ -546,7 +497,6 @@ const Leads = () => {
         onClose={() => setIsModalEditLeadOpen(false)}
         leadId={currentLead?.leads_id}
         initialEditMode={true}
-        operatorType={operatorData.operator_type}
         onSave={async (updatedLead) => {
           // Atualiza o lead atual com os dados atualizados e recarrega
           setCurrentLead(updatedLead);

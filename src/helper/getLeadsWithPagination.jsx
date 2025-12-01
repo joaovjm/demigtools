@@ -6,18 +6,11 @@ const GetLeadsWithPagination = async (
   setItems,
   setCurrentLead,
   operatorID,
-  operator_type,
   neighborhood = ""
 ) => {
-  let operatorType;
-  if (operator_type === "Operador Casa") {
-    operatorType = "leads_casa";
-  } else {
-    operatorType = "leads";
-  }
   try {
     let query = supabase
-      .from(operatorType)
+      .from("leads")
       .select("*", { count: "exact" })
       .or(
         `leads_status.eq.Nunca Ligado,and(leads_status.eq.Aberto,operator_code_id.eq.${operatorID})`
@@ -43,34 +36,6 @@ const GetLeadsWithPagination = async (
 
     setCurrentLead(data?.[0] || null);
     setItems(count || 0);
-
-    if (data.length === 0 && operator_type !== "Operador Casa") {
-      let queryContinue = supabase
-        .from("leads_casa")
-        .select("*", { count: "exact" })
-        .or(
-          `leads_status.eq.Nunca Ligado,and(leads_status.eq.Aberto,operator_code_id.eq.${operatorID})`
-        );
-
-      // Adicionar filtro por bairro se especificado
-      if (neighborhood && neighborhood.trim() !== "") {
-        queryContinue = queryContinue.eq("leads_neighborhood", neighborhood);
-      }
-
-      // Ordenar por date_received quando o bairro é AACRECHE
-      let orderBy = "leads_id";
-      let orderAscending = true;
-      if (neighborhood && neighborhood.trim() === "AACRECHE") {
-        orderBy = "date_received";
-        orderAscending = false; // Mais recentes primeiro
-      }
-
-      const { data: dataContinue } = await queryContinue
-        .range(start, end)
-        .order(orderBy, { ascending: orderAscending })
-        .limit(1);
-      return dataContinue;
-    }
 
     return data;
   } catch (error) {

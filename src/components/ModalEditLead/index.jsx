@@ -22,7 +22,6 @@ const ModalEditLead = ({
   onClose, 
   leadId,
   initialEditMode = false,
-  operatorType = null,
   onSave
 }) => {
   const { operatorData } = useContext(UserContext);
@@ -107,7 +106,7 @@ const ModalEditLead = ({
   const handleSave = async () => {
     try {
       setLoading(true);
-      const updatedLead = await editLead(leadId, leadData, operatorType);
+      const updatedLead = await editLead(leadId, leadData);
       if (updatedLead) {
         setFullLeadData(updatedLead);
         setIsEditMode(false);
@@ -136,19 +135,13 @@ const ModalEditLead = ({
   };
 
   const handleSchedulingSave = async (formData) => {
-    let typeOperator;
     if(!formData.dateScheduling || !formData.telScheduling) {
       toast.warning("Preencha data e telefone usado para contato...")
       return;
     }
-    if (operatorData?.operator_type === "Operador Casa") {
-      typeOperator = "leads_casa";
-    } else {
-      typeOperator = "leads";
-    }
     try {
       const { data, error } = await supabase
-        .from(typeOperator)
+        .from("leads")
         .update([
           {
             leads_date_accessed: DataNow("noformated"),
@@ -178,12 +171,6 @@ const ModalEditLead = ({
   };
 
   const handleNewDonationSave = async (formData) => {
-    let type;
-    if (operatorData?.operator_type === "Operador Casa") {
-      type = "leads_casa";
-    } else {
-      type = "leads";
-    }
     if (
       formData.address === "" ||
       formData.city === "" ||
@@ -248,7 +235,7 @@ const ModalEditLead = ({
             }
 
             const { data: update, error } = await supabase
-              .from(type)
+              .from("leads")
               .update({ leads_status: "Sucesso" })
               .eq("leads_id", leadId)
               .select();

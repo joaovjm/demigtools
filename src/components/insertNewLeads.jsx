@@ -2,12 +2,7 @@ import supabase from "../helper/superBaseClient";
 import { toast } from "react-toastify";
 
 const insertNewLeads = async (excelData, setInsertedCount, setTotalCount, typeLead) => {
-  let lead;
-  if(typeLead === "Lead Principal"){
-    lead = "leads";
-  } else if(typeLead === "Lead Casa"){
-    lead = "leads_casa";
-  }
+  let lead = "leads";
   return toast.promise(
     (async () => {
       try {

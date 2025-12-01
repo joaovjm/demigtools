@@ -50,17 +50,11 @@ const Dashboard = () => {
   const [scheduled, setScheduled] = useState([]);
   const [scheduledDonations, setScheduledDonations] = useState([]);
   const [operator, setOperator] = useState([]);
-  const [operatorCasa, setOperatorCasa] = useState([]);
   const [schedule, setSchedule] = useState([]);
-  const [scheduleCasa, setScheduleCasa] = useState([]);
   const [countLeads, setCountLeads] = useState([]);
-  const [countLeadsCasa, setCountLeadsCasa] = useState([]);
   const [leadsNA, setLeadsNA] = useState([]);
-  const [leadsNACasa, setLeadsNACasa] = useState([]);
   const [leadsNP, setLeadsNP] = useState([]);
-  const [leadsNPCasa, setLeadsNPCasa] = useState([]);
   const [leadsSuccess, setLeadsSuccess] = useState([]);
-  const [leadsSuccessCasa, setLeadsSuccessCasa] = useState([]);
 
   // Estados para doações recebidas
   const [valueReceived, setValueReceived] = useState(0); //Total valor recebido
@@ -123,30 +117,18 @@ const Dashboard = () => {
   const lead = async () => {
     const {
       operator,
-      operatorCasa,
       scheduled,
-      scheduledCasa,
       leadsNA,
-      leadsNACasa,
       leadsNP,
-      leadsNPCasa,
       leadsSuccess,
-      leadsSuccessCasa,
-      countLeads,
-      countLeadsCasa
+      countLeads
     } = await leadsHistoryService();
     setOperator(operator);
-    setOperatorCasa(operatorCasa);
     setSchedule(scheduled);
-    setScheduleCasa(scheduledCasa);
     setLeadsNA(leadsNA);
-    setLeadsNACasa(leadsNACasa);
     setLeadsNP(leadsNP);
-    setLeadsNPCasa(leadsNPCasa)
     setLeadsSuccess(leadsSuccess);
-    setLeadsSuccessCasa(leadsSuccessCasa)
     setCountLeads(countLeads);
-    setCountLeadsCasa(countLeadsCasa)
   };
 
   useEffect(() => {
@@ -399,17 +381,11 @@ const Dashboard = () => {
             <div className={styles.divLeads}>
               <TableLeadHistory
                 operator={operator}
-                operatorCasa={operatorCasa}
                 schedule={schedule}
-                scheduleCasa={scheduleCasa}
                 leadsNA={leadsNA}
-                leadsNACasa={leadsNACasa}
                 leadsNP={leadsNP}
-                leadsNPCasa={leadsNPCasa}
                 leadsSuccess={leadsSuccess}
-                leadsSuccessCasa={leadsSuccessCasa}
                 countLeads={countLeads}
-                countLeadsCasa={countLeadsCasa}
               />
             </div>
           </section>

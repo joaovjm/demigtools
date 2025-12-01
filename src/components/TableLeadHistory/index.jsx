@@ -3,17 +3,11 @@ import "./index.css";
 
 const TableLeadHistory = ({
   operator,
-  operatorCasa,
   schedule,
-  scheduleCasa,
   leadsNA,
-  leadsNACasa,
   leadsNP,
-  leadsNPCasa,
   leadsSuccess,
-  leadsSuccessCasa,
-  countLeads,
-  countLeadsCasa
+  countLeads
 }) => {
     
   return (
@@ -37,18 +31,6 @@ const TableLeadHistory = ({
             <td>{schedule?.[history.name] || 0}</td>
             <td>{leadsSuccess?.[history.name] || 0}</td>
             <td>{countLeads?.[history.name] || 0}</td>
-          </tr>
-        ))}
-      </tbody>
-      <tbody className="table-leadHistory-body">
-        {operatorCasa.map((history) => (
-          <tr className="table-leadsHistory-body-row" key={history.name}>
-            <td>{history.name}(Casa)</td>
-            <td>{leadsNACasa?.[history.name] || 0}</td>
-            <td>{leadsNPCasa?.[history.name] || 0}</td>
-            <td>{scheduleCasa?.[history.name] || 0}</td>
-            <td>{leadsSuccessCasa?.[history.name] || 0}</td>
-            <td>{countLeadsCasa?.[history.name] || 0}</td>
           </tr>
         ))}
       </tbody>

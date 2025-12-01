@@ -74,34 +74,18 @@ const Dashboard = () => {
       setValueMonthReceived(donationReceived.totalValue);
       setDonationsOperator(donationReceived.donation)
       
-      if (operatorData.operator_type === "Operador Casa") {
-        await getScheduledLeads(
-          operatorData.operator_code_id,
-          setScheduled,
-          setScheduling,
-          "Operador Casa"
-        );
-        await getSchedulingRequest({
-          operatorID: operatorData.operator_code_id,
-          setScheduled: setScheduled,
-          scheduled: scheduled,
-          scheduling: scheduling,
-          setScheduling: setScheduling
-        });
-      } else {
-        await getScheduledLeads(
-          operatorData.operator_code_id,
-          setScheduled,
-          setScheduling
-        );
-        await getSchedulingRequest({
-          operatorID: operatorData.operator_code_id,
-          setScheduled: setScheduled,
-          scheduled: scheduled,
-          scheduling: scheduling,
-          setScheduling: setScheduling
-        });
-      }
+      await getScheduledLeads(
+        operatorData.operator_code_id,
+        setScheduled,
+        setScheduling
+      );
+      await getSchedulingRequest({
+        operatorID: operatorData.operator_code_id,
+        setScheduled: setScheduled,
+        scheduled: scheduled,
+        scheduling: scheduling,
+        setScheduling: setScheduling
+      });
       
       // Buscar doações agendadas da tabela donation
       await getScheduledDonations(

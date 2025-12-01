@@ -1,29 +1,8 @@
 import supabase from "./superBaseClient";
 import { toast } from "react-toastify";
 
-const editLead = async (leadId, leadData, operatorType = null) => {
+const editLead = async (leadId, leadData) => {
   try {
-    // Determina a tabela baseado no tipo de operador ou tenta ambas
-    let tableName = "leads";
-    
-    // Se operatorType foi fornecido, usa ele
-    if (operatorType === "Operador Casa") {
-      tableName = "leads_casa";
-    } else if (operatorType) {
-      tableName = "leads";
-    } else {
-      // Se não foi fornecido, tenta descobrir verificando em qual tabela o lead existe
-      const { data: leadCheck } = await supabase
-        .from("leads")
-        .select("leads_id")
-        .eq("leads_id", leadId)
-        .single();
-
-      if (!leadCheck) {
-        tableName = "leads_casa";
-      }
-    }
-
     const updateData = {
       leads_name: leadData.name,
       leads_address: leadData.address,
@@ -41,7 +20,7 @@ const editLead = async (leadId, leadData, operatorType = null) => {
     };
 
     const { data, error } = await supabase
-      .from(tableName)
+      .from("leads")
       .update(updateData)
       .eq("leads_id", leadId)
       .select();

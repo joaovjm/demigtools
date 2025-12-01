@@ -147,7 +147,7 @@ const Operators = () => {
     }
   };
 
-  const typeOperator = ["Admin", "Operador", "Operador Casa", "Operador Extra", "Mensal", "Confirmação"];
+  const typeOperator = ["Admin", "Operador", "Operador Extra", "Mensal", "Confirmação"];
   return (
     <main className={styles.operatorsContainer}>
       <div className={styles.operatorsContent}>
