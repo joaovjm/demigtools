@@ -28,9 +28,17 @@ const GetLeadsWithPagination = async (
       query = query.eq("leads_neighborhood", neighborhood);
     }
 
+    // Ordenar por date_received quando o bairro é AACRECHE
+    let orderBy = "leads_id";
+    let orderAscending = true;
+    if (neighborhood && neighborhood.trim() === "AACRECHE") {
+      orderBy = "date_received";
+      orderAscending = false; // Mais recentes primeiro
+    }
+
     const { data, error, count } = await query
       .range(start, end)
-      .order("leads_id", { ascending: true })
+      .order(orderBy, { ascending: orderAscending })
       .limit(1);
 
     setCurrentLead(data?.[0] || null);
@@ -49,9 +57,17 @@ const GetLeadsWithPagination = async (
         queryContinue = queryContinue.eq("leads_neighborhood", neighborhood);
       }
 
+      // Ordenar por date_received quando o bairro é AACRECHE
+      let orderBy = "leads_id";
+      let orderAscending = true;
+      if (neighborhood && neighborhood.trim() === "AACRECHE") {
+        orderBy = "date_received";
+        orderAscending = false; // Mais recentes primeiro
+      }
+
       const { data: dataContinue } = await queryContinue
         .range(start, end)
-        .order("leads_id", { ascending: true })
+        .order(orderBy, { ascending: orderAscending })
         .limit(1);
       return dataContinue;
     }

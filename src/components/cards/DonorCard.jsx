@@ -19,6 +19,12 @@ export const DonorCard = ({ donor, onClick }) => (
       <p><strong>Tel.:</strong> {donor.donor_tel_1}</p>
       <p><strong>Bairro:</strong> {donor.donor_neighborhood}</p>
       <p><strong>Tipo:</strong> {donor.donor_type}</p>
+      {donor.isLead && donor.leads_value && (
+        <p><strong>Valor:</strong> {Number(donor.leads_value).toLocaleString("pt-BR", {
+          style: "currency",
+          currency: "BRL",
+        })}</p>
+      )}
     </div>
   </div>
 );

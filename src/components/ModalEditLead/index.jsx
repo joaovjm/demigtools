@@ -1,8 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { ICONS } from "../../constants/constants";
 import styles from "./modaleditlead.module.css";
 import getLeadById from "../../helper/getLeadById";
 import editLead from "../../helper/editLead";
+import ModalNewDonation from "../ModalNewDonation";
+import ModalScheduling from "../ModalScheduling";
+import { UserContext } from "../../context/UserContext";
+import { toast } from "react-toastify";
+import supabase from "../../helper/superBaseClient";
+import { DataNow } from "../../components/DataTime";
+import {
+  insertDonor,
+  insertDonor_cpf,
+  insertDonor_reference,
+  insertDonor_tel_2,
+  insertDonor_tel_3,
+} from "../../helper/insertDonor";
 
 const ModalEditLead = ({ 
   isOpen, 
@@ -12,8 +25,12 @@ const ModalEditLead = ({
   operatorType = null,
   onSave
 }) => {
+  const { operatorData } = useContext(UserContext);
   const [isEditMode, setIsEditMode] = useState(initialEditMode);
   const [loading, setLoading] = useState(false);
+  const [fullLeadData, setFullLeadData] = useState(null);
+  const [isModalNewDonationOpen, setIsModalNewDonationOpen] = useState(false);
+  const [isModalSchedulingOpen, setIsModalSchedulingOpen] = useState(false);
   const [leadData, setLeadData] = useState({
     name: "",
     address: "",
@@ -39,6 +56,7 @@ const ModalEditLead = ({
       setLoading(true);
       const lead = await getLeadById(leadId);
       if (lead) {
+        setFullLeadData(lead);
         setLeadData({
           name: lead.leads_name || "",
           address: lead.leads_address || "",
@@ -87,6 +105,7 @@ const ModalEditLead = ({
       setLoading(true);
       const updatedLead = await editLead(leadId, leadData, operatorType);
       if (updatedLead) {
+        setFullLeadData(updatedLead);
         setIsEditMode(false);
         if (onSave) {
           onSave(updatedLead);
@@ -99,6 +118,157 @@ const ModalEditLead = ({
       console.error("Erro ao salvar lead:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleScheduling = () => {
+    setIsModalNewDonationOpen(false);
+    setIsModalSchedulingOpen(true);
+  };
+
+  const handleNewDonation = () => {
+    setIsModalSchedulingOpen(false);
+    setIsModalNewDonationOpen(true);
+  };
+
+  const handleSchedulingSave = async (formData) => {
+    let typeOperator;
+    if(!formData.dateScheduling || !formData.telScheduling) {
+      toast.warning("Preencha data e telefone usado para contato...")
+      return;
+    }
+    if (operatorData?.operator_type === "Operador Casa") {
+      typeOperator = "leads_casa";
+    } else {
+      typeOperator = "leads";
+    }
+    try {
+      const { data, error } = await supabase
+        .from(typeOperator)
+        .update([
+          {
+            leads_date_accessed: DataNow("noformated"),
+            leads_scheduling_date: formData.dateScheduling,
+            leads_status: "agendado",
+            leads_observation: formData.observationScheduling,
+            leads_tel_success: formData.telScheduling
+          },
+        ])
+        .eq("leads_id", leadId)
+        .select();
+
+      if (error) throw error;
+
+      if (!error) {
+        toast.success("Agendado com sucesso!");
+        setIsModalSchedulingOpen(false);
+        if (onSave && data && data.length > 0) {
+          setFullLeadData(data[0]);
+          onSave(data[0]);
+        }
+      }
+    } catch (error) {
+      console.error("Erro: ", error.message);
+      toast.error("Erro ao agendar: " + error.message);
+    }
+  };
+
+  const handleNewDonationSave = async (formData) => {
+    let type;
+    if (operatorData?.operator_type === "Operador Casa") {
+      type = "leads_casa";
+    } else {
+      type = "leads";
+    }
+    if (
+      formData.address === "" ||
+      formData.city === "" ||
+      formData.neighborhood === "" ||
+      formData.telSuccess === "" ||
+      formData.valueDonation === "" ||
+      formData.dateDonation === "" ||
+      formData.campain === ""
+    ) {
+      toast.warning("Preencha todos os campos obrigatórios!");
+    } else {
+      toast.promise(
+        (async () => {
+          try {
+            const data = await insertDonor(
+              fullLeadData?.leads_name || leadData.name,
+              "Lista",
+              formData.address,
+              formData.city,
+              formData.neighborhood,
+              formData.telSuccess
+            );
+
+            if (data.length > 0) {
+              console.log("Doador Criado com Sucesso");
+            }
+
+            const cpf = await insertDonor_cpf(
+              data[0].donor_id,
+              fullLeadData?.leads_icpf || leadData.icpf
+            );
+
+            if (formData.newTel2 !== "") {
+              await insertDonor_tel_2(data[0].donor_id, formData.newTel2);
+            }
+            if (formData.newTel3 !== "") {
+              await insertDonor_tel_3(data[0].donor_id, formData.newTel3);
+            }
+            if (formData.reference !== "") {
+              await insertDonor_reference(data[0].donor_id, formData.reference);
+            }
+
+            if (formData.valueDonation !== "" && formData.dateDonation !== "") {
+              const { data: donation, error: donationError } = await supabase
+                .from("donation")
+                .insert([
+                  {
+                    donor_id: data[0].donor_id,
+                    operator_code_id: operatorData?.operator_code_id,
+                    donation_value: formData.valueDonation,
+                    donation_day_contact: DataNow("noformated"),
+                    donation_day_to_receive: formData.dateDonation,
+                    donation_print: "Não",
+                    donation_received: "Não",
+                    donation_description: formData.observation,
+                    donation_campain: formData.campain,
+                  },
+                ])
+                .select();
+
+              if (donationError) throw donationError;
+            }
+
+            const { data: update, error } = await supabase
+              .from(type)
+              .update({ leads_status: "Sucesso" })
+              .eq("leads_id", leadId)
+              .select();
+            if (error) throw error;
+
+            setIsModalNewDonationOpen(false);
+            
+            if (onSave && update && update.length > 0) {
+              setFullLeadData(update[0]);
+              onSave(update[0]);
+            }
+
+            return "Processo concluido com sucesso!";
+          } catch (error) {
+            console.error("Erro na operação:", error.message);
+            throw error;
+          }
+        })(),
+        {
+          pending: "Processando doação...",
+          success: (message) => message,
+          error: "Erro ao processar a operação",
+        }
+      );
     }
   };
 
@@ -200,6 +370,19 @@ const ModalEditLead = ({
                       />
                     </div>
                   </div>
+                  {!isEditMode && fullLeadData?.leads_value && (
+                    <div className={styles.modalFormRow}>
+                      <div className={styles.modalFormGroup}>
+                        <label>Valor da doação</label>
+                        <div className={styles.modalValueDisplay}>
+                          {Number(fullLeadData.leads_value).toLocaleString("pt-BR", {
+                            style: "currency",
+                            currency: "BRL",
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className={styles.modalFormSection}>
@@ -279,12 +462,30 @@ const ModalEditLead = ({
           {/* Footer */}
           <div className={styles.modalEditLeadFooter}>
             {!isEditMode ? (
-              <button
-                onClick={handleEdit}
-                className={`${styles.modalBtn} ${styles.primary}`}
-              >
-                {ICONS.EDIT} Editar
-              </button>
+              <>
+                <div className={styles.modalFooterActions}>
+                  <button
+                    onClick={handleScheduling}
+                    className={`${styles.modalBtn} ${styles.warning}`}
+                    disabled={!fullLeadData}
+                  >
+                    {ICONS.CALENDAR} Agendar
+                  </button>
+                  <button
+                    onClick={handleNewDonation}
+                    className={`${styles.modalBtn} ${styles.primary}`}
+                    disabled={!fullLeadData}
+                  >
+                    {ICONS.CIRCLEOUTLINE} Nova doação
+                  </button>
+                  <button
+                    onClick={handleEdit}
+                    className={`${styles.modalBtn} ${styles.secondary}`}
+                  >
+                    {ICONS.EDIT} Editar
+                  </button>
+                </div>
+              </>
             ) : (
               <>
                 <button
@@ -307,6 +508,22 @@ const ModalEditLead = ({
           </div>
         </div>
       </div>
+
+      {/* Modals */}
+      <ModalNewDonation
+        isOpen={isModalNewDonationOpen}
+        onClose={() => setIsModalNewDonationOpen(false)}
+        currentLead={fullLeadData}
+        onSave={handleNewDonationSave}
+        operatorID={operatorData?.operator_code_id}
+      />
+
+      <ModalScheduling
+        isOpen={isModalSchedulingOpen}
+        onClose={() => setIsModalSchedulingOpen(false)}
+        currentLead={fullLeadData}
+        onSave={handleSchedulingSave}
+      />
     </div>
   );
 };

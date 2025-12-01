@@ -456,7 +456,7 @@ const Leads = () => {
                           <span className="location-label">Bairro:</span>
                           <span className="location-value">{currentLead.leads_neighborhood}</span>
                         </div>
-                        {selectedNeighborhood === "AACRECHE" && currentLead?.leads_value && (
+                        {currentLead?.leads_value && (
                           <div className="location-item">
                             <span className="location-label">Valor da doação:</span>
                             <span className="location-value">
