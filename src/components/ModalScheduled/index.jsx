@@ -230,23 +230,32 @@ const ModalScheduled = ({
     try {
       // Se for doação agendada da tabela donation, atualizar a doação existente
       if (scheduledOpen.typeScheduled === "donation_agendada") {
+        console.log("caiu aqui!")
         const { error } = await supabase
           .from("donation")
-          .update({
+          .insert({
             donation_value: valueDonation,
             donation_day_to_receive: dateScheduling,
             donation_description: observation || null,
             donation_campain: campain,
-            confirmation_status: null,
-            confirmation_scheduled: null,
-            confirmation_observation: null,
             donation_day_contact: DataNow("noformated"),
+            operator_code_id: scheduledOpen.operator_code_id,
           })
           .eq("receipt_donation_id", scheduledOpen.donationId || scheduledOpen.id);
         
         if (error) throw error;
+
+        const { error: updateScheduled } = await supabase
+          .from("donation")
+          .update({
+            confirmation_status: "Concluído",
+            confirmation_scheduled: dateScheduling,
+            confirmation_observation: observation,
+          })
+          .eq("receipt_donation_id", scheduledOpen.donationId || scheduledOpen.id);
+        if (updateScheduled) throw updateScheduled;
         
-        toast.success("Doação atualizada e agendamento concluído com sucesso!");
+        toast.success("Criação de doação concluído com sucesso!");
         if (setStatus) setStatus("Update OK");
         onClose();
       } else {
@@ -284,6 +293,7 @@ const ModalScheduled = ({
     navigate(`/donor/${scheduledOpen.donor_id}`);
   };
 
+  console.log(scheduledOpen);
   return (
     <main className={styles.modalScheduledContainer}>
       <div className={styles.modalScheduled}>

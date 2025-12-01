@@ -87,6 +87,20 @@ export const insertDonation = async (
     
     if(error) throw error;
 
+    // Atualizar quaisquer doações agendadas deste doador para "Concluído"
+    const { error: updateScheduledDonationsError } = await supabase
+      .from("donation")
+      .update({ confirmation_status: "Concluído" })
+      .eq("donor_id", donor_id)
+      .eq("confirmation_status", "Agendado");
+
+    if (updateScheduledDonationsError) {
+      console.log(
+        "Erro ao atualizar status de doações agendadas para concluído",
+        updateScheduledDonationsError.message
+      );
+    }
+
     // Se encontrou um request ativo, atualizar o status para "Sucesso"
     if(requestId){
       const { error: updateError } = await supabase
