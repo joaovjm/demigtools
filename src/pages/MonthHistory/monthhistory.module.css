@@ -253,3 +253,70 @@
   color: #faa01c;
   font-weight: 600;
 }
+
+/* Expand Arrow */
+.expandArrow {
+  display: inline-block;
+  color: #faa01c;
+  font-size: 12px;
+  transition: transform 0.2s ease;
+  user-select: none;
+}
+
+/* Expanded Content */
+.expandedContent {
+  padding: 0 !important;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-top: 2px solid rgba(74, 144, 226, 0.3);
+}
+
+.donationsContainer {
+  padding: 20px;
+}
+
+.donationsTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #faa01c;
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(250, 245, 233, 0.2);
+}
+
+.donationsTable {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.donationsTable thead {
+  background-color: rgba(74, 144, 226, 0.2);
+}
+
+.donationsTable th {
+  padding: 8px 10px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #faf5e9;
+  border-bottom: 1px solid rgba(250, 245, 233, 0.1);
+}
+
+.donationsTable td {
+  padding: 8px 10px;
+  font-size: 11px;
+  color: #faf5e9;
+  border-bottom: 1px solid rgba(250, 245, 233, 0.05);
+}
+
+.donationsTable tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.donationsTable tbody tr:hover {
+  background-color: rgba(250, 245, 233, 0.03);
+}

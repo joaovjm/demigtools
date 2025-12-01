@@ -11,6 +11,7 @@ const MonthHistory = () => {
   const [collectorFilter, setCollectorFilter] = useState(null); // null = todos ou nome do coletador
   const [showStatusPopup, setShowStatusPopup] = useState(false);
   const [showCollectorPopup, setShowCollectorPopup] = useState(false);
+  const [expandedRows, setExpandedRows] = useState(new Set()); // Controla quais linhas estão expandidas
   const statusPopupRef = useRef(null);
   const collectorPopupRef = useRef(null);
 
@@ -48,11 +49,14 @@ const MonthHistory = () => {
       const { data: donationsData, error: donationsError } = await supabase
         .from("donation")
         .select(`
+          receipt_donation_id,
           donor_id,
           donation_print,
           donation_received,
           donation_value,
           donation_monthref,
+          donation_day_to_receive,
+          donation_day_received,
           collector: collector_code_id (collector_name)
         `)
         .gte("donation_monthref", startDate)
@@ -170,6 +174,16 @@ const MonthHistory = () => {
     setShowCollectorPopup(false);
   };
 
+  const toggleRowExpansion = (donorId) => {
+    const newExpandedRows = new Set(expandedRows);
+    if (newExpandedRows.has(donorId)) {
+      newExpandedRows.delete(donorId);
+    } else {
+      newExpandedRows.add(donorId);
+    }
+    setExpandedRows(newExpandedRows);
+  };
+
   const getStatusLabel = (donor) => {
     if (donor.movements_count === 0) {
       return 'nao_gerado';
@@ -279,6 +293,7 @@ const MonthHistory = () => {
             <table>
               <thead>
                 <tr>
+                  <th style={{ width: '40px' }}></th>
                   <th
                     className={styles.sortable}
                     onClick={() => handleSort('day')}
@@ -436,31 +451,121 @@ const MonthHistory = () => {
               </thead>
               <tbody>
                 {dataToShow.length > 0 ? (
-                  dataToShow.map((donor) => (
-                    <tr key={donor.donor_id}>
-                      <td>{donor.donor_mensal_day}</td>
-                      <td>{donor.donor_name}</td>
-                      <td>{donor.donor_tel_1}</td>
-                      <td>{formatCurrency(donor.donor_mensal_monthly_fee)}</td>
-                      <td>{donor.movements_count}</td>
-                      <td>{donor.collector_name || "-"}</td>
-                      <td>{formatCurrency(donor.total_value)}</td>
-                      <td>
-                        {donor.movements_count === 0 ? (
-                          <span className={`${styles.statusBadge} ${styles.statusNotGenerated}`}>
-                            ○ Não gerado
-                          </span>
-                        ) : (
-                          <span className={`${styles.statusBadge} ${donor.isReceived ? styles.statusSuccess : styles.statusPending}`}>
-                            {donor.isReceived ? "✓ Recebida" : "○ Aberto"}
-                          </span>
+                  dataToShow.map((donor) => {
+                    const isExpanded = expandedRows.has(donor.donor_id);
+                    return (
+                      <React.Fragment key={donor.donor_id}>
+                        <tr 
+                          onClick={() => toggleRowExpansion(donor.donor_id)}
+                          style={{ cursor: 'pointer' }}
+                        >
+                          <td style={{ textAlign: 'center', width: '40px' }}>
+                            <span className={styles.expandArrow}>
+                              {isExpanded ? '▼' : '▶'}
+                            </span>
+                          </td>
+                          <td>{donor.donor_mensal_day}</td>
+                          <td>{donor.donor_name}</td>
+                          <td>{donor.donor_tel_1}</td>
+                          <td>{formatCurrency(donor.donor_mensal_monthly_fee)}</td>
+                          <td>{donor.movements_count}</td>
+                          <td>{donor.collector_name || "-"}</td>
+                          <td>{formatCurrency(donor.total_value)}</td>
+                          <td>
+                            {donor.movements_count === 0 ? (
+                              <span className={`${styles.statusBadge} ${styles.statusNotGenerated}`}>
+                                ○ Não gerado
+                              </span>
+                            ) : (
+                              <span className={`${styles.statusBadge} ${donor.isReceived ? styles.statusSuccess : styles.statusPending}`}>
+                                {donor.isReceived ? "✓ Recebida" : "○ Aberto"}
+                              </span>
+                            )}
+                          </td>
+                        </tr>
+                        {isExpanded && donor.donations && donor.donations.length > 0 && (
+                          <tr>
+                            <td colSpan="9" className={styles.expandedContent}>
+                              <div className={styles.donationsContainer}>
+                                <h4 className={styles.donationsTitle}>Movimentos do Doador</h4>
+                                <table className={styles.donationsTable}>
+                                  <thead>
+                                    <tr>
+                                      <th>Recibo</th>
+                                      <th>Valor</th>
+                                      <th>Mês Ref.</th>
+                                      <th>Data Receber</th>
+                                      <th>Data Recebida</th>
+                                      <th>Coletador</th>
+                                      <th>Impresso</th>
+                                      <th>Recebido</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {donor.donations.map((donation) => (
+                                      <tr key={donation.receipt_donation_id || Math.random()}>
+                                        <td>{donation.receipt_donation_id || "-"}</td>
+                                        <td>{formatCurrency(donation.donation_value || 0)}</td>
+                                        <td>
+                                          {donation.donation_monthref
+                                            ? new Date(donation.donation_monthref).toLocaleDateString("pt-BR", {
+                                                month: "2-digit",
+                                                year: "numeric",
+                                                timeZone: "UTC"
+                                              })
+                                            : "-"}
+                                        </td>
+                                        <td>
+                                          {donation.donation_day_to_receive
+                                            ? new Date(donation.donation_day_to_receive).toLocaleDateString("pt-BR", {
+                                                timeZone: "UTC"
+                                              })
+                                            : "-"}
+                                        </td>
+                                        <td>
+                                          {donation.donation_day_received
+                                            ? new Date(donation.donation_day_received).toLocaleDateString("pt-BR", {
+                                                timeZone: "UTC"
+                                              })
+                                            : "-"}
+                                        </td>
+                                        <td>{donation.collector?.collector_name || "-"}</td>
+                                        <td>
+                                          {donation.donation_print === true || donation.donation_print === "Sim" ? (
+                                            <span className={`${styles.statusBadge} ${styles.statusSuccess}`}>
+                                              ✓ Sim
+                                            </span>
+                                          ) : (
+                                            <span className={`${styles.statusBadge} ${styles.statusPending}`}>
+                                              ○ Não
+                                            </span>
+                                          )}
+                                        </td>
+                                        <td>
+                                          {donation.donation_received === true || donation.donation_received === "Sim" ? (
+                                            <span className={`${styles.statusBadge} ${styles.statusSuccess}`}>
+                                              ✓ Sim
+                                            </span>
+                                          ) : (
+                                            <span className={`${styles.statusBadge} ${styles.statusPending}`}>
+                                              ○ Não
+                                            </span>
+                                          )}
+                                        </td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </td>
+                          </tr>
                         )}
-                      </td>
-                    </tr>
-                  ))
+                      </React.Fragment>
+                    );
+                  })
                 ) : (
                   <tr>
-                    <td colSpan="8" style={{ textAlign: "center" }}>
+                    <td colSpan="9" style={{ textAlign: "center" }}>
                       {loading
                         ? "Carregando..."
                         : "Nenhum doador encontrado"}
@@ -470,7 +575,7 @@ const MonthHistory = () => {
               </tbody>
               <tfoot>
                 <tr>
-                  <td colSpan="7" style={{ textAlign: "right", fontWeight: "bold" }}>
+                  <td colSpan="8" style={{ textAlign: "right", fontWeight: "bold" }}>
                     Total:
                   </td>
                   <td style={{ fontWeight: "bold" }}>
