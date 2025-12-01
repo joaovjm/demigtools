@@ -23,7 +23,7 @@ const CreatePackage = ({
   const [loading, setLoading] = useState(false);
 
   const handlePackageChange = (field, value) => {
-    setRequestPackage((prev) => ({ ...prev, [field]: value.trim() }));
+    setRequestPackage((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleAddData = async () => {
@@ -63,7 +63,7 @@ const CreatePackage = ({
     if (response) {
       const cPackage = response.map((item) => ({
         ...item,
-        request_name: requestPackage.name,
+        request_name: requestPackage.name.trim(),
       }));
       setCreatePackage((cp) => [...(cp || []), ...cPackage]);
       setDate((date) => [
