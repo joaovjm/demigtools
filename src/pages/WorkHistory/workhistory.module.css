@@ -1,12 +1,12 @@
 /* Work History Container */
-.work-history-container {
+.workHistoryContainer {
   display: flex;
   flex-direction: column;
   width: 100%;
   margin-top: 20px;
 }
 
-.work-history-content {
+.workHistoryContent {
   flex: 1;
   padding: 16px;
   border: 3px double #363a3d;
@@ -15,7 +15,7 @@
   overflow: hidden;
 }
 
-.work-history-title {
+.workHistoryTitle {
   color: #faa01c;
   margin: 0 0 20px 0;
   font-size: 18px;
@@ -26,7 +26,7 @@
 }
 
 /* Form Section */
-.work-history-form-section {
+.workHistoryFormSection {
   background-color: #363a3d;
   border: 2px solid #2f2d2d;
   border-radius: 6px;
@@ -34,7 +34,7 @@
   margin-bottom: 20px;
 }
 
-.work-history-form-section h4 {
+.workHistoryFormSection h4 {
   color: #faa01c;
   margin: 0 0 16px 0;
   font-size: 14px;
@@ -43,32 +43,32 @@
   letter-spacing: 0.5px;
 }
 
-.work-history-form {
+.workHistoryForm {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.form-row {
+.formRow {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
 
-.form-row-single {
+.formRowSingle {
   display: grid;
   grid-template-columns: 1fr 1fr 1.5fr 1.2fr auto;
   gap: 16px;
   align-items: end;
 }
 
-.form-group {
+.formGroup {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.form-group label {
+.formGroup label {
   color: #faf5e9;
   font-size: 12px;
   font-weight: 600;
@@ -76,8 +76,8 @@
   letter-spacing: 0.5px;
 }
 
-.work-history-input,
-.work-history-select {
+.workHistoryInput,
+.workHistorySelect {
   padding: 10px 12px;
   border: 2px solid #464a4d;
   border-radius: 4px;
@@ -87,29 +87,29 @@
   transition: all 0.3s ease;
 }
 
-.work-history-input:focus,
-.work-history-select:focus {
+.workHistoryInput:focus,
+.workHistorySelect:focus {
   outline: none;
   border-color: #faa01c;
   box-shadow: 0 0 0 2px rgba(250, 160, 28, 0.2);
 }
 
-.work-history-input::placeholder {
+.workHistoryInput::placeholder {
   color: #9e9e9e;
 }
 
-.work-history-select option {
+.workHistorySelect option {
   background-color: #2f2d2d;
   color: #faf5e9;
 }
 
-.form-actions {
+.formActions {
   display: flex;
   justify-content: center;
   margin-top: 8px;
 }
 
-.work-history-btn {
+.workHistoryBtn {
   padding: 12px 24px;
   border: none;
   border-radius: 4px;
@@ -122,45 +122,45 @@
   min-width: 140px;
 }
 
-.work-history-btn.primary {
+.workHistoryBtn.primary {
   background-color: #faa01c;
   color: #1f1d1d;
 }
 
-.work-history-btn.primary:hover:not(:disabled) {
+.workHistoryBtn.primary:hover:not(:disabled) {
   background-color: #e6910a;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(250, 160, 28, 0.3);
 }
 
-.work-history-btn:disabled {
+.workHistoryBtn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
 }
 
 /* Results Section */
-.work-history-results {
+.workHistoryResults {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
 /* Statistics Header */
-.work-history-stats {
+.workHistoryStats {
   background-color: #363a3d;
   border: 2px solid #2f2d2d;
   border-radius: 6px;
   padding: 16px;
 }
 
-.stats-grid {
+.statsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 16px;
 }
 
-.stat-item {
+.statItem {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -171,7 +171,7 @@
   border: 1px solid #464a4d;
 }
 
-.stat-label {
+.statLabel {
   color: #c0c0c0;
   font-size: 11px;
   font-weight: 500;
@@ -180,20 +180,20 @@
   margin-bottom: 4px;
 }
 
-.stat-value {
+.statValue {
   color: #faa01c;
   font-size: 16px;
   font-weight: 700;
 }
 
 /* Table Sections */
-.work-history-table-section {
+.workHistoryTableSection {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.work-history-table-section h4 {
+.workHistoryTableSection h4 {
   color: #faa01c;
   margin: 0;
   font-size: 14px;
@@ -202,14 +202,14 @@
   letter-spacing: 0.5px;
 }
 
-.work-history-table-wrapper {
+.workHistoryTableWrapper {
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100%;
 }
 
-.work-history-table-scroll {
+.workHistoryTableScroll {
   overflow-x: auto;
   overflow-y: auto;
   max-height: 500px;
@@ -219,7 +219,7 @@
 }
 
 /* Table Styles */
-.work-history-table {
+.workHistoryTable {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
@@ -227,14 +227,14 @@
   background-color: transparent;
 }
 
-.work-history-head-row {
+.workHistoryHeadRow {
   background-color: #2f2d2d;
   position: sticky;
   top: 0;
   z-index: 10;
 }
 
-.work-history-head {
+.workHistoryHead {
   padding: 12px 8px;
   color: #faa01c;
   font-weight: 600;
@@ -249,32 +249,32 @@
   min-width: 100px;
 }
 
-.work-history-head:last-child {
+.workHistoryHead:last-child {
   border-right: none;
 }
 
-.work-history-row {
+.workHistoryRow {
   background-color: #363a3d;
   transition: all 0.2s ease;
   border-bottom: 1px solid #2f2d2d;
 }
 
-.work-history-row:hover {
+.workHistoryRow:hover {
   background-color: #404548;
   box-shadow: inset 0 0 0 1px #faa01c;
 }
 
-.work-history-row:nth-child(4n+1),
-.work-history-row:nth-child(4n+2) {
+.workHistoryRow:nth-child(4n+1),
+.workHistoryRow:nth-child(4n+2) {
   background-color: #3a3e41;
 }
 
-.work-history-row:nth-child(4n+1):hover,
-.work-history-row:nth-child(4n+2):hover {
+.workHistoryRow:nth-child(4n+1):hover,
+.workHistoryRow:nth-child(4n+2):hover {
   background-color: #464a4d;
 }
 
-.work-history-cell {
+.workHistoryCell {
   padding: 10px 8px;
   color: #faf5e9;
   border-right: 1px solid #464a4d;
@@ -284,12 +284,12 @@
   min-width: 100px;
 }
 
-.work-history-cell:last-child {
+.workHistoryCell:last-child {
   border-right: none;
 }
 
 /* Cell Content Styles */
-.receipt-number {
+.receiptNumber {
   background-color: #faa01c;
   color: #1f1d1d;
   padding: 2px 6px;
@@ -298,63 +298,63 @@
   font-size: 11px;
 }
 
-.value-amount {
+.valueAmount {
   color: #4caf50;
   font-weight: 600;
   font-size: 12px;
 }
 
-.extra-amount {
+.extraAmount {
   color: #ff9800;
   font-weight: 600;
   font-size: 12px;
 }
 
-.worklist-info {
+.worklistInfo {
   color: #faf5e9;
   font-size: 12px;
   font-weight: 500;
 }
 
-.donor-name {
+.donorName {
   color: #faf5e9;
   font-size: 12px;
   font-weight: 500;
 }
 
-.contact-info {
+.contactInfo {
   color: #c0c0c0;
   font-size: 11px;
   font-family: monospace;
 }
 
 /* Last Donation Column */
-.last-donation-info {
+.lastDonationInfo {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.last-donation-date {
+.lastDonationDate {
   color: #c0c0c0;
   font-size: 11px;
   font-weight: 500;
 }
 
-.last-donation-value {
+.lastDonationValue {
   color: #2196f3;
   font-size: 11px;
   font-weight: 600;
 }
 
 /* Status Badges */
-.status-group {
+.statusGroup {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.status-badge {
+.statusBadge {
   display: inline-block;
   padding: 2px 6px;
   border-radius: 12px;
@@ -364,20 +364,20 @@
   white-space: nowrap;
 }
 
-.status-badge.status-success {
+.statusSuccess {
   background-color: rgba(76, 175, 80, 0.2);
   color: #4caf50;
   border: 1px solid #4caf50;
 }
 
-.status-badge.status-pending {
+.statusPending {
   background-color: rgba(255, 152, 0, 0.2);
   color: #ff9800;
   border: 1px solid #ff9800;
 }
 
 /* Empty State */
-.work-history-empty {
+.workHistoryEmpty {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -390,57 +390,57 @@
   border-radius: 6px;
 }
 
-.empty-icon {
+.emptyIcon {
   font-size: 48px;
   margin-bottom: 16px;
   opacity: 0.5;
 }
 
-.work-history-empty h4 {
+.workHistoryEmpty h4 {
   color: #faa01c;
   margin: 0 0 8px 0;
   font-size: 16px;
 }
 
-.work-history-empty p {
+.workHistoryEmpty p {
   color: #c0c0c0;
   margin: 0;
   font-size: 14px;
 }
 
 /* Scrollbar Styles */
-.work-history-table-scroll::-webkit-scrollbar {
+.workHistoryTableScroll::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
-.work-history-table-scroll::-webkit-scrollbar-track {
+.workHistoryTableScroll::-webkit-scrollbar-track {
   background-color: #2f2d2d;
   border-radius: 4px;
 }
 
-.work-history-table-scroll::-webkit-scrollbar-thumb {
+.workHistoryTableScroll::-webkit-scrollbar-thumb {
   background-color: #464a4d;
   border-radius: 4px;
   transition: background-color 0.3s ease;
 }
 
-.work-history-table-scroll::-webkit-scrollbar-thumb:hover {
+.workHistoryTableScroll::-webkit-scrollbar-thumb:hover {
   background-color: #faa01c;
 }
 
-.work-history-table-scroll::-webkit-scrollbar-corner {
+.workHistoryTableScroll::-webkit-scrollbar-corner {
   background-color: #2f2d2d;
 }
 
 /* Tablet Responsiveness */
 @media (max-width: 1024px) {
-  .form-row-single {
+  .formRowSingle {
     grid-template-columns: 1fr 1fr;
     gap: 12px;
   }
   
-  .form-row-single .form-group:last-child {
+  .formRowSingle .formGroup:last-child {
     grid-column: 1 / -1;
     display: flex;
     justify-content: center;
@@ -449,154 +449,154 @@
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
-  .work-history-content {
+  .workHistoryContent {
     padding: 12px;
   }
   
-  .work-history-title {
+  .workHistoryTitle {
     font-size: 16px;
     margin-bottom: 16px;
   }
   
-  .work-history-form-section {
+  .workHistoryFormSection {
     padding: 12px;
     margin-bottom: 16px;
   }
   
-  .form-row {
+  .formRow {
     grid-template-columns: 1fr;
     gap: 12px;
   }
   
-  .form-row-single {
+  .formRowSingle {
     grid-template-columns: 1fr;
     gap: 12px;
     align-items: stretch;
   }
   
-  .stats-grid {
+  .statsGrid {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   }
   
-  .stat-item {
+  .statItem {
     padding: 8px;
   }
   
-  .stat-label {
+  .statLabel {
     font-size: 10px;
   }
   
-  .stat-value {
+  .statValue {
     font-size: 14px;
   }
   
-  .work-history-table-scroll {
+  .workHistoryTableScroll {
     max-height: 400px;
   }
   
-  .work-history-head,
-  .work-history-cell {
+  .workHistoryHead,
+  .workHistoryCell {
     padding: 8px 6px;
     font-size: 11px;
     min-width: 80px;
   }
   
-  .work-history-head {
+  .workHistoryHead {
     font-size: 10px;
   }
   
-  .receipt-number {
+  .receiptNumber {
     font-size: 10px;
     padding: 1px 4px;
   }
   
-  .status-group {
+  .statusGroup {
     gap: 2px;
   }
   
-  .status-badge {
+  .statusBadge {
     font-size: 9px;
     padding: 1px 4px;
   }
   
-  .work-history-empty {
+  .workHistoryEmpty {
     padding: 30px 15px;
   }
   
-  .empty-icon {
+  .emptyIcon {
     font-size: 36px;
     margin-bottom: 12px;
   }
   
-  .work-history-empty h4 {
+  .workHistoryEmpty h4 {
     font-size: 14px;
   }
   
-  .work-history-empty p {
+  .workHistoryEmpty p {
     font-size: 12px;
   }
 }
 
 @media (max-width: 480px) {
-  .work-history-content {
+  .workHistoryContent {
     padding: 8px;
   }
   
-  .work-history-title {
+  .workHistoryTitle {
     font-size: 14px;
   }
   
-  .work-history-form-section {
+  .workHistoryFormSection {
     padding: 8px;
   }
   
-  .stats-grid {
+  .statsGrid {
     grid-template-columns: 1fr;
     gap: 8px;
   }
   
-  .work-history-table-scroll {
+  .workHistoryTableScroll {
     max-height: 300px;
   }
   
-  .work-history-head,
-  .work-history-cell {
+  .workHistoryHead,
+  .workHistoryCell {
     padding: 6px 4px;
     font-size: 10px;
     min-width: 70px;
   }
   
-  .work-history-head {
+  .workHistoryHead {
     font-size: 9px;
   }
   
-  .value-amount,
-  .extra-amount {
+  .valueAmount,
+  .extraAmount {
     font-size: 10px;
   }
   
-  .contact-info {
+  .contactInfo {
     font-size: 9px;
   }
 }
 
 /* High contrast mode for better accessibility */
 @media (prefers-contrast: high) {
-  .work-history-row {
+  .workHistoryRow {
     border-bottom: 2px solid #faa01c;
   }
   
-  .work-history-cell {
+  .workHistoryCell {
     border-right: 2px solid #faa01c;
   }
   
-  .status-badge.status-success {
+  .statusSuccess {
     background-color: #4caf50;
     color: #000;
   }
   
-  .status-badge.status-pending {
+  .statusPending {
     background-color: #ff9800;
     color: #000;
   }
@@ -604,29 +604,30 @@
 
 /* Print styles */
 @media print {
-  .work-history-content {
+  .workHistoryContent {
     border: 1px solid #000;
     background-color: #fff;
   }
   
-  .work-history-title {
+  .workHistoryTitle {
     color: #000;
   }
   
-  .work-history-row,
-  .work-history-cell {
+  .workHistoryRow,
+  .workHistoryCell {
     background-color: #fff !important;
     color: #000 !important;
   }
   
-  .work-history-head {
+  .workHistoryHead {
     background-color: #f0f0f0 !important;
     color: #000 !important;
   }
   
-  .status-badge {
+  .statusBadge {
     border: 1px solid #000;
     background-color: #f0f0f0;
     color: #000;
   }
 }
+

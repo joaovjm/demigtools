@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./index.css";
+import styles from "./workhistory.module.css";
 import supabase from "../../helper/superBaseClient";
 import { toast } from "react-toastify";
 
@@ -119,39 +119,39 @@ const WorkHistory = () => {
 
   console.log({ receivedSelected, operatorSelected, startDate, endDate });
   return (
-    <div className="work-history-container">
-      <div className="work-history-content">
-        <h3 className="work-history-title">📊 Histórico de Trabalho</h3>
+    <div className={styles.workHistoryContainer}>
+      <div className={styles.workHistoryContent}>
+        <h3 className={styles.workHistoryTitle}>📊 Histórico de Trabalho</h3>
 
         {/* Filter Form Section */}
-        <div className="work-history-form-section">
+        <div className={styles.workHistoryFormSection}>
           <h4>Filtros de Relatório</h4>
-          <div className="work-history-form">
-            <div className="form-row-single">
-              <div className="form-group">
+          <div className={styles.workHistoryForm}>
+            <div className={styles.formRowSingle}>
+              <div className={styles.formGroup}>
                 <label>Data de Início</label>
                 <input
                   type="date"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
-                  className="work-history-input"
+                  className={styles.workHistoryInput}
                 />
               </div>
-              <div className="form-group">
+              <div className={styles.formGroup}>
                 <label>Data de Fim</label>
                 <input
                   type="date"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
-                  className="work-history-input"
+                  className={styles.workHistoryInput}
                 />
               </div>
-              <div className="form-group">
+              <div className={styles.formGroup}>
                 <label>Operador</label>
                 <select
                   value={operatorSelected}
                   onChange={(e) => setOperatorSelected(e.target.value)}
-                  className="work-history-select"
+                  className={styles.workHistorySelect}
                 >
                   <option value="" disabled>
                     Selecione o operador
@@ -166,12 +166,12 @@ const WorkHistory = () => {
                   ))}
                 </select>
               </div>
-              <div className="form-group">
+              <div className={styles.formGroup}>
                 <label>Status de Recebimento</label>
                 <select
                   value={receivedSelected}
                   onChange={(e) => setReceivedSelected(e.target.value)}
-                  className="work-history-select"
+                  className={styles.workHistorySelect}
                 >
                   <option value="" disabled>
                     Selecione...
@@ -180,12 +180,12 @@ const WorkHistory = () => {
                   <option value="Não">Não Recebido</option>
                 </select>
               </div>
-              <div className="form-group">
+              <div className={styles.formGroup}>
                 <label>&nbsp;</label>
                 <button
                   onClick={handleGenerate}
                   disabled={loading}
-                  className="work-history-btn primary"
+                  className={`${styles.workHistoryBtn} ${styles.primary}`}
                 >
                   {loading ? "Gerando..." : "Gerar Relatório"}
                 </button>
@@ -196,97 +196,97 @@ const WorkHistory = () => {
 
         {/* Results Section */}
         {donationList.length > 0 && (
-          <div className="work-history-results">
+          <div className={styles.workHistoryResults}>
             {/* Statistics Header */}
-            <div className="work-history-stats">
-              <div className="stats-grid">
-                <div className="stat-item">
-                  <span className="stat-label">Total de Registros</span>
-                  <span className="stat-value">{donationList.length}</span>
+            <div className={styles.workHistoryStats}>
+              <div className={styles.statsGrid}>
+                <div className={styles.statItem}>
+                  <span className={styles.statLabel}>Total de Registros</span>
+                  <span className={styles.statValue}>{donationList.length}</span>
                 </div>
-                <div className="stat-item">
-                  <span className="stat-label">Valor Total</span>
-                  <span className="stat-value">
+                <div className={styles.statItem}>
+                  <span className={styles.statLabel}>Valor Total</span>
+                  <span className={styles.statValue}>
                     {totalValue.toLocaleString("pt-BR", {
                       style: "currency",
                       currency: "BRL",
                     })}
                   </span>
                 </div>
-                <div className="stat-item">
-                  <span className="stat-label">Total do Extra</span>
-                  <span className="stat-value">
+                <div className={styles.statItem}>
+                  <span className={styles.statLabel}>Total do Extra</span>
+                  <span className={styles.statValue}>
                     {totalExtra.toLocaleString("pt-BR", {
                       style: "currency",
                       currency: "BRL",
                     })}
                   </span>
                 </div>
-                <div className="stat-item">
-                  <span className="stat-label">Recebidos</span>
-                  <span className="stat-value">{receivedCount}</span>
+                <div className={styles.statItem}>
+                  <span className={styles.statLabel}>Recebidos</span>
+                  <span className={styles.statValue}>{receivedCount}</span>
                 </div>
-                <div className="stat-item">
-                  <span className="stat-label">Impressos</span>
-                  <span className="stat-value">{printedCount}</span>
+                <div className={styles.statItem}>
+                  <span className={styles.statLabel}>Impressos</span>
+                  <span className={styles.statValue}>{printedCount}</span>
                 </div>
               </div>
             </div>
 
             {/* Worklist Donations Table */}
             {worklistDonations.length > 0 && (
-              <div className="work-history-table-section">
+              <div className={styles.workHistoryTableSection}>
                 <h4>📋 Doações com Work List ({worklistDonations.length})</h4>
-                <div className="work-history-table-wrapper">
-                  <div className="work-history-table-scroll">
-                    <table className="work-history-table">
+                <div className={styles.workHistoryTableWrapper}>
+                  <div className={styles.workHistoryTableScroll}>
+                    <table className={styles.workHistoryTable}>
                       <thead>
-                        <tr className="work-history-head-row">
-                          <th className="work-history-head">Recibo</th>
-                          <th className="work-history-head">Valor</th>
-                          <th className="work-history-head">Extra</th>
-                          <th className="work-history-head">Ult. Doação</th>
-                          <th className="work-history-head">Work List</th>
-                          <th className="work-history-head">Doador</th>
-                          <th className="work-history-head">Contato</th>
-                          <th className="work-history-head">Status</th>
+                        <tr className={styles.workHistoryHeadRow}>
+                          <th className={styles.workHistoryHead}>Recibo</th>
+                          <th className={styles.workHistoryHead}>Valor</th>
+                          <th className={styles.workHistoryHead}>Extra</th>
+                          <th className={styles.workHistoryHead}>Ult. Doação</th>
+                          <th className={styles.workHistoryHead}>Work List</th>
+                          <th className={styles.workHistoryHead}>Doador</th>
+                          <th className={styles.workHistoryHead}>Contato</th>
+                          <th className={styles.workHistoryHead}>Status</th>
                         </tr>
                       </thead>
                       <tbody>
                         {worklistDonations.map((item) => (
                           <tr
                             key={item.receipt_donation_id}
-                            className="work-history-row"
+                            className={styles.workHistoryRow}
                           >
-                            <td className="work-history-cell">
-                              <span className="receipt-number">
+                            <td className={styles.workHistoryCell}>
+                              <span className={styles.receiptNumber}>
                                 {item.receipt_donation_id}
                               </span>
                             </td>
-                            <td className="work-history-cell">
-                              <span className="value-amount">
+                            <td className={styles.workHistoryCell}>
+                              <span className={styles.valueAmount}>
                                 {item.donation_value?.toLocaleString("pt-BR", {
                                   style: "currency",
                                   currency: "BRL",
                                 })}
                               </span>
                             </td>
-                            <td className="work-history-cell">
-                              <span className="extra-amount">
+                            <td className={styles.workHistoryCell}>
+                              <span className={styles.extraAmount}>
                                 {item.donation_extra?.toLocaleString("pt-BR", {
                                   style: "currency",
                                   currency: "BRL",
                                 }) || "R$ 0,00"}
                               </span>
                             </td>
-                            <td className="work-history-cell">
-                              <span className="last-donation-info">
+                            <td className={styles.workHistoryCell}>
+                              <span className={styles.lastDonationInfo}>
                                 {lastDonationsMap[item.donor_id] ? (
                                   <>
-                                    <span className="last-donation-date">
-                                      {new Date(lastDonationsMap[item.donor_id].donation_day_received).toLocaleDateString("pt-BR")}
+                                    <span className={styles.lastDonationDate}>
+                                      {new Date(lastDonationsMap[item.donor_id].donation_day_received).toLocaleDateString("pt-BR", {timeZone: "UTC"})}
                                     </span>
-                                    <span className="last-donation-value">
+                                    <span className={styles.lastDonationValue}>
                                       {lastDonationsMap[item.donor_id].donation_value?.toLocaleString("pt-BR", {
                                         style: "currency",
                                         currency: "BRL",
@@ -296,28 +296,28 @@ const WorkHistory = () => {
                                 ) : "N/A"}
                               </span>
                             </td>
-                            <td className="work-history-cell">
-                              <span className="worklist-info">
+                            <td className={styles.workHistoryCell}>
+                              <span className={styles.worklistInfo}>
                                 {item.donation_worklist || "N/A"}
                               </span>
                             </td>
-                            <td className="work-history-cell">
-                              <span className="donor-name">
+                            <td className={styles.workHistoryCell}>
+                              <span className={styles.donorName}>
                                 {item.donor?.donor_name || "N/A"}
                               </span>
                             </td>
-                            <td className="work-history-cell">
-                              <span className="contact-info">
+                            <td className={styles.workHistoryCell}>
+                              <span className={styles.contactInfo}>
                                 {item.donor?.donor_tel_1 || "N/A"}
                               </span>
                             </td>
-                            <td className="work-history-cell">
-                              <div className="status-group">
+                            <td className={styles.workHistoryCell}>
+                              <div className={styles.statusGroup}>
                                 <span
-                                  className={`status-badge ${
+                                  className={`${styles.statusBadge} ${
                                     item.donation_print === "Sim"
-                                      ? "status-success"
-                                      : "status-pending"
+                                      ? styles.statusSuccess
+                                      : styles.statusPending
                                   }`}
                                 >
                                   {item.donation_print === "Sim"
@@ -325,10 +325,10 @@ const WorkHistory = () => {
                                     : "○ Não impresso"}
                                 </span>
                                 <span
-                                  className={`status-badge ${
+                                  className={`${styles.statusBadge} ${
                                     item.donation_received === "Sim"
-                                      ? "status-success"
-                                      : "status-pending"
+                                      ? styles.statusSuccess
+                                      : styles.statusPending
                                   }`}
                                 >
                                   {item.donation_received === "Sim"
@@ -348,57 +348,57 @@ const WorkHistory = () => {
 
             {/* New Donations Table */}
             {newDonations.length > 0 && (
-              <div className="work-history-table-section">
+              <div className={styles.workHistoryTableSection}>
                 <h4>🆕 Novas Doações ({newDonations.length})</h4>
-                <div className="work-history-table-wrapper">
-                  <div className="work-history-table-scroll">
-                    <table className="work-history-table">
+                <div className={styles.workHistoryTableWrapper}>
+                  <div className={styles.workHistoryTableScroll}>
+                    <table className={styles.workHistoryTable}>
                       <thead>
-                        <tr className="work-history-head-row">
-                          <th className="work-history-head">Recibo</th>
-                          <th className="work-history-head">Valor</th>
-                          <th className="work-history-head">Extra</th>
-                          <th className="work-history-head">Ult. Doação</th>
-                          <th className="work-history-head">Doador</th>
-                          <th className="work-history-head">Contato</th>
-                          <th className="work-history-head">Status</th>
+                        <tr className={styles.workHistoryHeadRow}>
+                          <th className={styles.workHistoryHead}>Recibo</th>
+                          <th className={styles.workHistoryHead}>Valor</th>
+                          <th className={styles.workHistoryHead}>Extra</th>
+                          <th className={styles.workHistoryHead}>Ult. Doação</th>
+                          <th className={styles.workHistoryHead}>Doador</th>
+                          <th className={styles.workHistoryHead}>Contato</th>
+                          <th className={styles.workHistoryHead}>Status</th>
                         </tr>
                       </thead>
                       <tbody>
                         {newDonations.map((item) => (
                           <tr
                             key={item.receipt_donation_id}
-                            className="work-history-row"
+                            className={styles.workHistoryRow}
                           >
-                            <td className="work-history-cell">
-                              <span className="receipt-number">
+                            <td className={styles.workHistoryCell}>
+                              <span className={styles.receiptNumber}>
                                 {item.receipt_donation_id}
                               </span>
                             </td>
-                            <td className="work-history-cell">
-                              <span className="value-amount">
+                            <td className={styles.workHistoryCell}>
+                              <span className={styles.valueAmount}>
                                 {item.donation_value?.toLocaleString("pt-BR", {
                                   style: "currency",
                                   currency: "BRL",
                                 })}
                               </span>
                             </td>
-                            <td className="work-history-cell">
-                              <span className="extra-amount">
+                            <td className={styles.workHistoryCell}>
+                              <span className={styles.extraAmount}>
                                 {item.donation_extra?.toLocaleString("pt-BR", {
                                   style: "currency",
                                   currency: "BRL",
                                 }) || "R$ 0,00"}
                               </span>
                             </td>
-                            <td className="work-history-cell">
-                              <span className="last-donation-info">
+                            <td className={styles.workHistoryCell}>
+                              <span className={styles.lastDonationInfo}>
                                 {lastDonationsMap[item.donor_id] ? (
                                   <>
-                                    <span className="last-donation-date">
+                                    <span className={styles.lastDonationDate}>
                                       {new Date(lastDonationsMap[item.donor_id].donation_day_received).toLocaleDateString("pt-BR")}
                                     </span>
-                                    <span className="last-donation-value">
+                                    <span className={styles.lastDonationValue}>
                                       {lastDonationsMap[item.donor_id].donation_value?.toLocaleString("pt-BR", {
                                         style: "currency",
                                         currency: "BRL",
@@ -408,23 +408,23 @@ const WorkHistory = () => {
                                 ) : "N/A"}
                               </span>
                             </td>
-                            <td className="work-history-cell">
-                              <span className="donor-name">
+                            <td className={styles.workHistoryCell}>
+                              <span className={styles.donorName}>
                                 {item.donor?.donor_name || "N/A"}
                               </span>
                             </td>
-                            <td className="work-history-cell">
-                              <span className="contact-info">
+                            <td className={styles.workHistoryCell}>
+                              <span className={styles.contactInfo}>
                                 {item.donor?.donor_tel_1 || "N/A"}
                               </span>
                             </td>
-                            <td className="work-history-cell">
-                              <div className="status-group">
+                            <td className={styles.workHistoryCell}>
+                              <div className={styles.statusGroup}>
                                 <span
-                                  className={`status-badge ${
+                                  className={`${styles.statusBadge} ${
                                     item.donation_print === "Sim"
-                                      ? "status-success"
-                                      : "status-pending"
+                                      ? styles.statusSuccess
+                                      : styles.statusPending
                                   }`}
                                 >
                                   {item.donation_print === "Sim"
@@ -432,10 +432,10 @@ const WorkHistory = () => {
                                     : "○ Não impresso"}
                                 </span>
                                 <span
-                                  className={`status-badge ${
+                                  className={`${styles.statusBadge} ${
                                     item.donation_received === "Sim"
-                                      ? "status-success"
-                                      : "status-pending"
+                                      ? styles.statusSuccess
+                                      : styles.statusPending
                                   }`}
                                 >
                                   {item.donation_received === "Sim"
@@ -457,8 +457,8 @@ const WorkHistory = () => {
 
         {/* Empty State */}
         {donationList.length === 0 && !loading && (
-          <div className="work-history-empty">
-            <div className="empty-icon">📊</div>
+          <div className={styles.workHistoryEmpty}>
+            <div className={styles.emptyIcon}>📊</div>
             <h4>Nenhum registro encontrado</h4>
             <p>
               Selecione os filtros e gere um relatório para visualizar os dados.
