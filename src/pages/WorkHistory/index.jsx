@@ -130,9 +130,9 @@ const WorkHistory = () => {
   const valueDifference = totalValue - lastDonationsTotalValue;
   const comparisonStatus = valueDifference > 0 ? "greater" : valueDifference < 0 ? "lesser" : "equal";
   const comparisonText = valueDifference > 0 
-    ? `Este período foi ${Math.abs(valueDifference).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })} maior que a última doação`
+    ? `Este período foi ${Math.abs(valueDifference).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })} maior que a anterior`
     : valueDifference < 0 
-      ? `Este período foi ${Math.abs(valueDifference).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })} menor que a última doação`
+      ? `Este período foi ${Math.abs(valueDifference).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })} menor que a anterior`
       : "Este período foi igual à última doação";
 
   console.log({ receivedSelected, operatorSelected, startDate, endDate });
