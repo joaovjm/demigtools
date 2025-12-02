@@ -11,6 +11,7 @@ const WorkHistory = () => {
   const [receivedSelected, setReceivedSelected] = useState("");
   const [donationList, setDonationList] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [lastDonationsMap, setLastDonationsMap] = useState({});
 
   const fetchOperatorIndividualWork = async () => {
     try {
@@ -58,7 +59,32 @@ const WorkHistory = () => {
       }
       const { data, error } = await query;
       if (error) throw error;
-      if (data) setDonationList(data);
+      if (data) {
+        setDonationList(data);
+        
+        // Buscar última doação de cada doador
+        const donorIds = [...new Set(data.map(item => item.donor_id).filter(Boolean))];
+        if (donorIds.length > 0) {
+          const lastDonationsPromises = donorIds.map(async (donorId) => {
+            const { data: lastDonation } = await supabase
+              .from("donation")
+              .select("donation_day_received, donation_value")
+              .eq("donor_id", donorId)
+              .eq("donation_received", "Sim")
+              .order("donation_day_received", { ascending: false })
+              .limit(1)
+              .single();
+            return { donorId, lastDonation };
+          });
+          
+          const results = await Promise.all(lastDonationsPromises);
+          const donationsMap = {};
+          results.forEach(({ donorId, lastDonation }) => {
+            donationsMap[donorId] = lastDonation;
+          });
+          setLastDonationsMap(donationsMap);
+        }
+      }
     } catch (error) {
       console.log(error.message);
       toast.error("Erro ao carregar dados");
@@ -76,7 +102,12 @@ const WorkHistory = () => {
   );
   const totalValue = donationList.reduce(
     (acc, item) =>
-      acc + (item.donation_value || 0) + (item.donation_extra || 0),
+      acc + (item.donation_value || 0),
+    0
+  );
+  const totalExtra = donationList.reduce(
+    (acc, item) =>
+      acc + (item.donation_extra || 0),
     0
   );
   const receivedCount = donationList.filter(
@@ -183,6 +214,15 @@ const WorkHistory = () => {
                   </span>
                 </div>
                 <div className="stat-item">
+                  <span className="stat-label">Total do Extra</span>
+                  <span className="stat-value">
+                    {totalExtra.toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    })}
+                  </span>
+                </div>
+                <div className="stat-item">
                   <span className="stat-label">Recebidos</span>
                   <span className="stat-value">{receivedCount}</span>
                 </div>
@@ -205,6 +245,7 @@ const WorkHistory = () => {
                           <th className="work-history-head">Recibo</th>
                           <th className="work-history-head">Valor</th>
                           <th className="work-history-head">Extra</th>
+                          <th className="work-history-head">Ult. Doação</th>
                           <th className="work-history-head">Work List</th>
                           <th className="work-history-head">Doador</th>
                           <th className="work-history-head">Contato</th>
@@ -236,6 +277,23 @@ const WorkHistory = () => {
                                   style: "currency",
                                   currency: "BRL",
                                 }) || "R$ 0,00"}
+                              </span>
+                            </td>
+                            <td className="work-history-cell">
+                              <span className="last-donation-info">
+                                {lastDonationsMap[item.donor_id] ? (
+                                  <>
+                                    <span className="last-donation-date">
+                                      {new Date(lastDonationsMap[item.donor_id].donation_day_received).toLocaleDateString("pt-BR")}
+                                    </span>
+                                    <span className="last-donation-value">
+                                      {lastDonationsMap[item.donor_id].donation_value?.toLocaleString("pt-BR", {
+                                        style: "currency",
+                                        currency: "BRL",
+                                      })}
+                                    </span>
+                                  </>
+                                ) : "N/A"}
                               </span>
                             </td>
                             <td className="work-history-cell">
@@ -300,6 +358,7 @@ const WorkHistory = () => {
                           <th className="work-history-head">Recibo</th>
                           <th className="work-history-head">Valor</th>
                           <th className="work-history-head">Extra</th>
+                          <th className="work-history-head">Ult. Doação</th>
                           <th className="work-history-head">Doador</th>
                           <th className="work-history-head">Contato</th>
                           <th className="work-history-head">Status</th>
@@ -330,6 +389,23 @@ const WorkHistory = () => {
                                   style: "currency",
                                   currency: "BRL",
                                 }) || "R$ 0,00"}
+                              </span>
+                            </td>
+                            <td className="work-history-cell">
+                              <span className="last-donation-info">
+                                {lastDonationsMap[item.donor_id] ? (
+                                  <>
+                                    <span className="last-donation-date">
+                                      {new Date(lastDonationsMap[item.donor_id].donation_day_received).toLocaleDateString("pt-BR")}
+                                    </span>
+                                    <span className="last-donation-value">
+                                      {lastDonationsMap[item.donor_id].donation_value?.toLocaleString("pt-BR", {
+                                        style: "currency",
+                                        currency: "BRL",
+                                      })}
+                                    </span>
+                                  </>
+                                ) : "N/A"}
                               </span>
                             </td>
                             <td className="work-history-cell">

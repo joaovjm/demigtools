@@ -172,7 +172,6 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
             donation_monthref: monthReferent,
             collector_code_id: collector,
             donation_campain: campaign,
-            donation_extra: extraValue,
             receipt_donation_id: donation.receipt_donation_id,
           },
           related_donation_id: donation.donation_code_id || null,
