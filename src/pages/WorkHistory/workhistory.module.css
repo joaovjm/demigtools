@@ -186,6 +186,33 @@
   font-weight: 700;
 }
 
+/* Comparison Card Variants */
+.statItemComparison {
+  justify-content: center;
+}
+
+.statItemComparison .statValue {
+  font-size: 13px;
+}
+
+.statItemGreater {
+  background-color: rgba(76, 175, 80, 0.25);
+  border-color: #4caf50;
+}
+
+.statItemGreater .statValue {
+  color: #4caf50;
+}
+
+.statItemLesser {
+  background-color: rgba(244, 67, 54, 0.25);
+  border-color: #f44336;
+}
+
+.statItemLesser .statValue {
+  color: #f44336;
+}
+
 /* Table Sections */
 .workHistoryTableSection {
   display: flex;

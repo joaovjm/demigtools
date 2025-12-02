@@ -62,25 +62,28 @@ const WorkHistory = () => {
       if (data) {
         setDonationList(data);
         
-        // Buscar última doação de cada doador
-        const donorIds = [...new Set(data.map(item => item.donor_id).filter(Boolean))];
-        if (donorIds.length > 0) {
-          const lastDonationsPromises = donorIds.map(async (donorId) => {
-            const { data: lastDonation } = await supabase
+        // Buscar doação anterior a cada doação pesquisada
+        const donationsWithDonors = data.filter(item => item.donor_id);
+        if (donationsWithDonors.length > 0) {
+          const previousDonationsPromises = donationsWithDonors.map(async (donation) => {
+            const donationDate = donation.donation_day_received || donation.donation_day_to_receive;
+            const { data: previousDonation } = await supabase
               .from("donation")
               .select("donation_day_received, donation_value")
-              .eq("donor_id", donorId)
+              .eq("donor_id", donation.donor_id)
               .eq("donation_received", "Sim")
+              .neq("receipt_donation_id", donation.receipt_donation_id)
+              .lt("donation_day_received", donationDate)
               .order("donation_day_received", { ascending: false })
               .limit(1)
               .single();
-            return { donorId, lastDonation };
+            return { donationId: donation.receipt_donation_id, previousDonation };
           });
           
-          const results = await Promise.all(lastDonationsPromises);
+          const results = await Promise.all(previousDonationsPromises);
           const donationsMap = {};
-          results.forEach(({ donorId, lastDonation }) => {
-            donationsMap[donorId] = lastDonation;
+          results.forEach(({ donationId, previousDonation }) => {
+            donationsMap[donationId] = previousDonation;
           });
           setLastDonationsMap(donationsMap);
         }
@@ -116,6 +119,21 @@ const WorkHistory = () => {
   const printedCount = donationList.filter(
     (item) => item.donation_print === "Sim"
   ).length;
+
+  // Calculate total of last donations for comparison
+  const lastDonationsTotalValue = Object.values(lastDonationsMap).reduce(
+    (acc, item) => acc + (item?.donation_value || 0),
+    0
+  );
+  
+  // Calculate difference between current total and last donations total
+  const valueDifference = totalValue - lastDonationsTotalValue;
+  const comparisonStatus = valueDifference > 0 ? "greater" : valueDifference < 0 ? "lesser" : "equal";
+  const comparisonText = valueDifference > 0 
+    ? `Este período foi ${Math.abs(valueDifference).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })} maior que a última doação`
+    : valueDifference < 0 
+      ? `Este período foi ${Math.abs(valueDifference).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })} menor que a última doação`
+      : "Este período foi igual à última doação";
 
   console.log({ receivedSelected, operatorSelected, startDate, endDate });
   return (
@@ -200,9 +218,14 @@ const WorkHistory = () => {
             {/* Statistics Header */}
             <div className={styles.workHistoryStats}>
               <div className={styles.statsGrid}>
-                <div className={styles.statItem}>
-                  <span className={styles.statLabel}>Total de Registros</span>
-                  <span className={styles.statValue}>{donationList.length}</span>
+                <div className={`${styles.statItem} ${styles.statItemComparison} ${
+                  comparisonStatus === "greater" 
+                    ? styles.statItemGreater 
+                    : comparisonStatus === "lesser" 
+                      ? styles.statItemLesser 
+                      : ""
+                }`}>
+                  <span className={styles.statValue}>{comparisonText}</span>
                 </div>
                 <div className={styles.statItem}>
                   <span className={styles.statLabel}>Valor Total</span>
@@ -281,13 +304,13 @@ const WorkHistory = () => {
                             </td>
                             <td className={styles.workHistoryCell}>
                               <span className={styles.lastDonationInfo}>
-                                {lastDonationsMap[item.donor_id] ? (
+                                {lastDonationsMap[item.receipt_donation_id] ? (
                                   <>
                                     <span className={styles.lastDonationDate}>
-                                      {new Date(lastDonationsMap[item.donor_id].donation_day_received).toLocaleDateString("pt-BR", {timeZone: "UTC"})}
+                                      {new Date(lastDonationsMap[item.receipt_donation_id].donation_day_received).toLocaleDateString("pt-BR", {timeZone: "UTC"})}
                                     </span>
                                     <span className={styles.lastDonationValue}>
-                                      {lastDonationsMap[item.donor_id].donation_value?.toLocaleString("pt-BR", {
+                                      {lastDonationsMap[item.receipt_donation_id].donation_value?.toLocaleString("pt-BR", {
                                         style: "currency",
                                         currency: "BRL",
                                       })}
@@ -393,13 +416,13 @@ const WorkHistory = () => {
                             </td>
                             <td className={styles.workHistoryCell}>
                               <span className={styles.lastDonationInfo}>
-                                {lastDonationsMap[item.donor_id] ? (
+                                {lastDonationsMap[item.receipt_donation_id] ? (
                                   <>
                                     <span className={styles.lastDonationDate}>
-                                      {new Date(lastDonationsMap[item.donor_id].donation_day_received).toLocaleDateString("pt-BR")}
+                                      {new Date(lastDonationsMap[item.receipt_donation_id].donation_day_received).toLocaleDateString("pt-BR", {timeZone: "UTC"})}
                                     </span>
                                     <span className={styles.lastDonationValue}>
-                                      {lastDonationsMap[item.donor_id].donation_value?.toLocaleString("pt-BR", {
+                                      {lastDonationsMap[item.receipt_donation_id].donation_value?.toLocaleString("pt-BR", {
                                         style: "currency",
                                         currency: "BRL",
                                       })}
