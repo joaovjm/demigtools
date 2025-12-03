@@ -120,18 +120,17 @@ const GenerateReceiptPDF = async ({ cards, receiptConfig, setOk }) => {
                             text: `VALOR: ${data.donation_value.toLocaleString(
                               "pt-BR",
                               { style: "currency", currency: "BRL" }
-                            )} - TIPO: ${data.donor.donor_type.toUpperCase()}`,
+                            )} - TIPO: ${data.donor.donor_type.toUpperCase()} ${data.donor.donor_mensal?.active === true ? `DIA: ${data.donor.donor_mensal?.donor_mensal_monthly_fee}` : ""} `,
                             style: "title",
                             margin: [0, 0, 0, 2],
                           },
                           {
-                            text: `RECIBO: ${
-                              data.receipt_donation_id
-                            } | DT.REC: ${new Date(
-                              data.donation_day_to_receive
-                            ).toLocaleDateString("pt-BR", {
-                              timeZone: "UTC",
-                            })}`,
+                            text: `RECIBO: ${data.receipt_donation_id
+                              } | DT.REC: ${new Date(
+                                data.donation_day_to_receive
+                              ).toLocaleDateString("pt-BR", {
+                                timeZone: "UTC",
+                              })}`,
                             style: "label",
                             margin: [0, 0, 0, 2],
                           },
@@ -151,11 +150,9 @@ const GenerateReceiptPDF = async ({ cards, receiptConfig, setOk }) => {
                           {
                             columns: [
                               {
-                                text: `U.COL: ${data?.ult_collector} - ${data?.collector_ult?.collector_name}${` | R.COL: ${
-                                  data?.collector_code_id
-                                } - ${data?.collector?.collector_name.toUpperCase()}`} | OP: ${
-                                  data.operator_code_id
-                                } - ${data?.operator?.operator_name.toUpperCase()}`,
+                                text: `U.COL: ${data?.ult_collector} - ${data?.collector_ult?.collector_name}${` | R.COL: ${data?.collector_code_id
+                                  } - ${data?.collector?.collector_name.toUpperCase()}`} | OP: ${data.operator_code_id
+                                  } - ${data?.operator?.operator_name.toUpperCase()}`,
                                 style: "label",
                                 margin: [0, 0, 0, 2],
                                 width: 250,
@@ -376,9 +373,8 @@ const GenerateReceiptPDF = async ({ cards, receiptConfig, setOk }) => {
           {
             stack: [
               {
-                text: `Recebemos de ${data.donor.donor_name.toUpperCase()} | CPF: ${
-                  data.cpf || "___________"
-                }.`,
+                text: `Recebemos de ${data.donor.donor_name.toUpperCase()} | CPF: ${data.cpf || "___________"
+                  }.`,
                 style: "label",
                 margin: [0, 5],
               },
@@ -462,10 +458,9 @@ const GenerateReceiptPDF = async ({ cards, receiptConfig, setOk }) => {
       const { data: uploadData, error } = await supabase.storage
         .from("receiptPdfToPrint")
         .upload(
-          `Print Checked/${
-            cards.length === 1
-              ? cards[0].donor?.donor_name.replace(/[^a-zA-Z0-9]/g) + "-"
-              : cards[0].receipt_donation_id
+          `Print Checked/${cards.length === 1
+            ? cards[0].donor?.donor_name.replace(/[^a-zA-Z0-9]/g) + "-"
+            : cards[0].receipt_donation_id
           } ${cards[0].donation_day_to_receive}.pdf`,
           blob,
           {
@@ -491,11 +486,10 @@ const GenerateReceiptPDF = async ({ cards, receiptConfig, setOk }) => {
           const url = URL.createObjectURL(blob);
           const link = document.createElement("a");
           link.href = url;
-          link.download = `${
-            cards[0].donor?.donor_name
+          link.download = `${cards[0].donor?.donor_name
               ? cards[0].donor?.donor_name + "-"
               : cards[0]?.receipt_donation_id
-          } ${cards[0].donation_day_to_receive}.pdf`;
+            } ${cards[0].donation_day_to_receive}.pdf`;
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);

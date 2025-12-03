@@ -7,7 +7,7 @@ export async function getDonationsPrint(startDate, endDate) {
     const { data: dateDonations, error } = await supabase
       .from("donation")
       .select(
-        `*, ult_collector, collector_ult: ult_collector(collector_name), collector: collector_code_id(collector_name), donor: donor_id(donor_id, donor_name, donor_address, donor_city, donor_neighborhood, donor_tel_1, donor_type, donor_observation: donor_observation_donor_id_fkey(donor_observation), donor_reference:donor_reference_donor_id_fkey(donor_reference)), operator: operator_code_id(operator_name)`
+        `*, ult_collector, collector_ult: ult_collector(collector_name), collector: collector_code_id(collector_name), donor: donor_id(donor_id, donor_name, donor_address, donor_city, donor_neighborhood, donor_tel_1, donor_type, donor_observation: donor_observation_donor_id_fkey(donor_observation), donor_reference:donor_reference_donor_id_fkey(donor_reference), donor_mensal(donor_mensal_monthly_fee, active)), operator: operator_code_id(operator_name)`
       )
       .eq("donation_print", "Não")
       .eq("donation_received", "Não")

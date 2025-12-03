@@ -23,6 +23,7 @@ const CheckPrint = () => {
   const [donationsPrinted, setDonationsPrinted] = useState([]);
   const [printedPackagesModalOpen, setPrintedPackagesModalOpen] = useState(false);
   const [originalDonations, setOriginalDonations] = useState([]);
+  const [generating, setGenerating] = useState(false);
   const fetchCollectors = async () => {
     const response = await getCollector();
     setCollectors(response);
@@ -65,16 +66,20 @@ const CheckPrint = () => {
     const response = await getDonationsPrint(startDate, endDate);
     setPrinters(response);
     // Armazenar os dados originais para comparação posterior
-    setOriginalDonations(response.map(item => ({
-      receipt_donation_id: item.receipt_donation_id,
-      collector_code_id: item.collector_code_id
-    })));
-    const { data, error } = await supabase.from("receipt_config").select();
-    if (error) throw error;
-    if (!error) {
-      setConfig(data[0]);
+    if (response?.length > 0) {
+      setOriginalDonations(response?.map(item => ({
+        receipt_donation_id: item.receipt_donation_id,
+        collector_code_id: item.collector_code_id
+      })));
+      const { data, error } = await supabase.from("receipt_config").select();
+      if (error) throw error;
+      if (!error) {
+        setConfig(data[0]);
+      }
+      
     }
     setLoading("");
+
   };
 
   const selected = (id, collector) => {
@@ -85,10 +90,10 @@ const CheckPrint = () => {
       prev.map((item) =>
         item.receipt_donation_id === id
           ? {
-              ...item,
-              collector_code_id: collector,
-              collector: { collector_name: collectorName.collector_name },
-            }
+            ...item,
+            collector_code_id: collector,
+            collector: { collector_name: collectorName.collector_name },
+          }
           : item
       )
     );
@@ -101,8 +106,9 @@ const CheckPrint = () => {
     }
     setIsOpen(true);
   };
-  
+
   const handleGenerateReceiptPDF = async () => {
+    setGenerating(true);
     // Verificar quais doações tiveram o coletador alterado
     const donationsToUpdate = printers.filter(print => {
       const original = originalDonations.find(
@@ -119,7 +125,7 @@ const CheckPrint = () => {
     // Atualizar as doações que tiveram o coletador alterado
     if (donationsToUpdate.length > 0) {
       try {
-        const updatePromises = donationsToUpdate.map(donation => 
+        const updatePromises = donationsToUpdate.map(donation =>
           supabase
             .from("donation")
             .update({ collector_code_id: donation.collector_code_id })
@@ -128,7 +134,7 @@ const CheckPrint = () => {
 
         const results = await Promise.all(updatePromises);
         const errors = results.filter(result => result.error);
-        
+
         if (errors.length > 0) {
           toast.error(`Erro ao atualizar ${errors.length} doação(ões)`);
         } else {
@@ -145,7 +151,7 @@ const CheckPrint = () => {
       receiptConfig: config,
       setOk: setOk,
     });
-    
+    setGenerating(false);
   };
 
   return (
@@ -155,8 +161,8 @@ const CheckPrint = () => {
         <header className={styles.checkprintHeader}>
           <h2 className={styles.checkprintTitle}>🖨️ Verificação de Impressão</h2>
           <div className={styles.checkprintActions}>
-            <div 
-              className={styles.checkprintStatsCard} 
+            <div
+              className={styles.checkprintStatsCard}
               onClick={() => setPrintedPackagesModalOpen(true)}
             >
               <div className={styles.statsIcon}>📦</div>
@@ -203,8 +209,8 @@ const CheckPrint = () => {
                 </select>
               </div>
               <div className={styles.formGroup}>
-                <button 
-                  onClick={fetchDonationsNoPrint} 
+                <button
+                  onClick={fetchDonationsNoPrint}
                   disabled={loading}
                   className={`${styles.checkprintBtn} ${styles.primary}`}
                 >
@@ -229,7 +235,7 @@ const CheckPrint = () => {
                 <button
                   className={`${styles.checkprintBtn} ${ok ? styles.success : styles.primary}`}
                   onClick={handleGenerateReceiptPDF}
-                  disabled={ok}
+                  disabled={ok || generating}
                 >
                   {ok ? "✅ Impresso" : "🖨️ Gerar e Imprimir"}
                 </button>
@@ -264,7 +270,7 @@ const CheckPrint = () => {
                           })}
                         </div>
                       </div>
-                      
+
                       <div className={styles.cardContent}>
                         <div className={styles.cardSection}>
                           <h4>Doador</h4>
