@@ -33,21 +33,6 @@ export const insertDonation = async (
 
   try{
     let requestId = null;
-    let ult_collector = null;
-    
-    // Buscar a última doação do mesmo donor_id para obter o collector_code_id
-    const { data: lastDonation, error: lastDonationError } = await supabase
-      .from("donation")
-      .select("collector_code_id")
-      .eq("donor_id", donor_id)
-      .order("receipt_donation_id", { ascending: false })
-      .limit(1)
-      .single();
-
-    
-    if(!lastDonationError && lastDonation && lastDonation.collector_code_id){
-      ult_collector = lastDonation.collector_code_id;
-    }
     
     // Verificar se existe um request ativo para este donor_id
     if(request_name === null || request_name === undefined || request_name === ""){
@@ -79,9 +64,8 @@ export const insertDonation = async (
         donation_received: received,
         donation_monthref: mesref ? mesref : null,
         donation_campain: campain ? campain : null,
-        collector_code_id: collector ? collector : ult_collector ? ult_collector : null,
+        collector_code_id: collector ? collector : null,
         donation_worklist: request_name ? request_name : request_name_searched ? request_name_searched : null,
-        ult_collector: ult_collector ? ult_collector : null,
       },
     ]).select();
     

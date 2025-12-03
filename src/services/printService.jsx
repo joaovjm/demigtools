@@ -21,6 +21,7 @@ export async function getDonationsPrint(startDate, endDate) {
       //Verificar se o doador já tem uma doação recebida e retorna
       if (donor_id.length > 0) {
         for (let id of donor_id) {
+          // Busca as últimas doações recebidas para encontrar um coletador válido (diferente de 10 e 11)
           const { data: donationData, error: donationDataError } =
             await supabase
               .from("donation")
@@ -30,24 +31,38 @@ export async function getDonationsPrint(startDate, endDate) {
               .eq("donor_id", id)
               .eq("donation_received", "Sim")
               .order("donation_day_received", { ascending: false })
-              .limit(1);
+              .limit(10);
 
           if (donationDataError) {
           } else {
             if (donationData?.length > 0) {
-              newCollectorInDonation = newCollectorInDonation.map((item) =>
-                item.donor.donor_id === donationData[0].donor_id
-                  ? {
-                      ...item,
-                      collector_code_id:
-                        donationData[0].collector.collector_code_id,
-                      collector: {
-                        collector_name:
-                          donationData[0].collector.collector_name,
-                      },
-                    }
-                  : item
+              // Busca o primeiro coletador que não seja 10 ou 11
+              const validCollector = donationData.find(
+                (donation) => 
+                  donation.collector?.collector_code_id !== 10 && 
+                  donation.collector?.collector_code_id !== 11
               );
+
+              if (validCollector) {
+                newCollectorInDonation = newCollectorInDonation.map((item) =>
+                  item.donor.donor_id === validCollector.donor_id
+                    ? {
+                        ...item,
+                        collector_code_id:
+                          validCollector.collector.collector_code_id,
+                        collector: {
+                          collector_name:
+                            validCollector.collector.collector_name,
+                        },
+                        ult_collector: validCollector.collector.collector_code_id,
+                        collector_ult: {
+                          collector_name:
+                            validCollector.collector.collector_name,
+                        },
+                      }
+                    : item
+                );
+              }
             }
           }
         }
