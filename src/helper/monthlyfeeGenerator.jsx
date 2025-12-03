@@ -23,7 +23,7 @@ export const monthlyfeeGenerator = async ({ mesRefGenerator, campain }) => {
       const mesRefYearMonth = mesRefGenerator.substring(0, 7); // Ex: "2025-11-02" -> "2025-11"
 
       //Verifica se esse doador já tem ficha naquele mês
-      data.map(async (item) => {
+      await Promise.all(data.map(async (item) => {
         const donation = await getDonation(item.donor_id);
         
         // Verifica se já existe uma doação para o mês de referência (comparando apenas ano-mês)
@@ -65,7 +65,7 @@ export const monthlyfeeGenerator = async ({ mesRefGenerator, campain }) => {
         } else {
           console.log(`Doação já existe para o doador ${item.donor_id} no mês ${mesRefYearMonth} - pulando`);
         }
-      });
+      }));
     }
 
     if (status) {
