@@ -23,7 +23,9 @@ export const getDonation = async (donor_id) => {
             operator:operator_code_id (operator_name)
             donor: donor_id (donor_type)
             donor_cpf: donor_id (donor_cpf)
-        `).eq("donor_id", donor_id).order("donation_day_to_receive", {ascending: false} )
+        `).eq("donor_id", donor_id)
+        .order("donation_day_to_receive", {ascending: false})
+        .order("receipt_donation_id", {ascending: false})
 
         if (error) throw error
         return data
