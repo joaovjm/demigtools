@@ -1,6 +1,6 @@
 import supabase from "../helper/superBaseClient";
 
-export async function getDonationsPrint(startDate, endDate) {
+export async function getDonationsPrint(startDate, endDate, donationType = "Todos") {
   let newCollectorInDonation = [];
   try {
     //pega as doações que não foram impressas e não foram recebidas
@@ -16,8 +16,15 @@ export async function getDonationsPrint(startDate, endDate) {
 
     if (error) {
     } else {
-      newCollectorInDonation = dateDonations;
-      const donor_id = dateDonations.map((item) => item?.donor?.donor_id);
+      // Filtra por tipo de doador (donor_type) se não for "Todos"
+      let filteredDonations = dateDonations;
+      if (donationType !== "Todos") {
+        filteredDonations = dateDonations.filter(
+          (donation) => donation.donor?.donor_type === donationType
+        );
+      }
+      newCollectorInDonation = filteredDonations;
+      const donor_id = filteredDonations.map((item) => item?.donor?.donor_id);
       //Verificar se o doador já tem uma doação recebida e retorna
       if (donor_id.length > 0) {
         for (let id of donor_id) {

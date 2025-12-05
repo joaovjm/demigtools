@@ -63,7 +63,7 @@ const CheckPrint = () => {
       return;
     }
     setPrinters([]);
-    const response = await getDonationsPrint(startDate, endDate);
+    const response = await getDonationsPrint(startDate, endDate, selectType);
     setPrinters(response);
     // Armazenar os dados originais para comparação posterior
     if (response?.length > 0) {
