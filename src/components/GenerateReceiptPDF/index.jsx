@@ -120,7 +120,7 @@ const GenerateReceiptPDF = async ({ cards, receiptConfig, setOk }) => {
                             text: `VALOR: ${data.donation_value.toLocaleString(
                               "pt-BR",
                               { style: "currency", currency: "BRL" }
-                            )} - TIPO: ${data.donor.donor_type.toUpperCase()} ${data.donor.donor_mensal?.active === true ? `DIA: ${data.donor.donor_mensal?.donor_mensal_monthly_fee}` : ""} `,
+                            )} - TIPO: ${data.donor.donor_type.toUpperCase()} ${data.donor.donor_mensal?.active === true ? `DIA: ${data.donor.donor_mensal?.donor_mensal_day}` : ""} `,
                             style: "title",
                             margin: [0, 0, 0, 2],
                           },
