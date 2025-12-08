@@ -41,6 +41,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
   const [loadingDeposit, setLoadingDeposit] = useState(false);
   const [loadingPDF, setLoadingPDF] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
+  const [donorConfirmationReason, setDonorConfirmationReason] = useState("");
   // Armazenar valores originais para comparação
   const [originalValues] = useState({
     donation_value: donation.donation_value,
@@ -117,6 +118,20 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
       setMonthReferent(monthYear);
     }
   }, []);
+
+  useEffect(() => {
+    const fetchDonationConfirmationReason = async () => {
+      const { data, error } = await supabase
+        .from("donor_confirmation_reason")
+        .select("donor_confirmation_reason")
+        .eq("receipt_donation_id", donation.receipt_donation_id);
+      if (error) throw error;
+      if (data) {
+        setDonorConfirmationReason(data[0].donor_confirmation_reason);
+      }
+    }
+    fetchDonationConfirmationReason();
+  }, [])
   const handleConfirm = async () => {
     if (operator === "") {
       toast.warning("Operador deve ser preenchido!");
@@ -461,7 +476,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
                 >
                   <label>Observação</label>
                   <textarea
-                    value={observation}
+                    value={donorConfirmationReason || observation}
                     onChange={(e) => setObservation(e.target.value)}
                     placeholder="Observações sobre a doação..."
                     rows="3"
