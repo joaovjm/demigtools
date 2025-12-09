@@ -6,12 +6,12 @@ import {
 } from "../../services/worklistService";
 import { UserContext } from "../../context/UserContext";
 import { DataSelect } from "../../components/DataTime";
-//
 import ModalWorklist from "../../components/ModalWorklist";
 import { useLocation, useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import supabase from "../../helper/superBaseClient";
 import getWorklistRequestById from "../../helper/getWorklistRequestById";
+import { registerOperatorActivity, ACTIVITY_TYPES } from "../../services/operatorActivityService";
 
 const WorkList = () => {
   const { operatorData, setOperatorData } = useContext(UserContext);
@@ -205,6 +205,16 @@ const WorkList = () => {
         .select();
 
       if (error) throw error;
+      
+      // Registrar atividade de clique no item da worklist
+      await registerOperatorActivity({
+        operatorId: operatorData.operator_code_id,
+        operatorName: operatorData.operator_name,
+        activityType: ACTIVITY_TYPES.WORKLIST_CLICK,
+        donorId: list.donor_id,
+        donorName: list.donor?.donor_name,
+        requestName: workSelect,
+      });
     } catch (error) {
       console.error(error);
     }

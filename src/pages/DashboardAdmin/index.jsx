@@ -1,76 +1,83 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import { useContext, useEffect, useState, useRef, useCallback } from "react";
+import { toast, ToastContainer } from "react-toastify";
 import styles from "./dashboardadmin.module.css";
-import getDonationReceived from "../../helper/getDonationReceived";
+
+// Context
+import { UserContext } from "../../context/UserContext";
+
+// Components
+import DateRangePicker from "../../components/DateRangePicker";
+import { DashboardCards, DashboardContent, DashboardModals } from "./components";
+
+// Helpers & Services
 import getDonationNotReceived from "../../helper/getDonationNotReceived";
 import getAllDonationsReceived from "../../helper/getAllDonationsReceived";
-// import getDonationPerMonthReceived from "../../helper/getDonationPerMonthReceived";
-import { DataNow } from "../../components/DataTime";
-import TableConfirmation from "../../components/TableConfirmation";
-import TableInOpen from "../../components/TableInOpen";
-import ModalConfirmations from "../../components/ModalConfirmations";
-import { toast, ToastContainer } from "react-toastify";
-import TableScheduled from "../../components/TableScheduled";
 import getScheduledLeads from "../../helper/getScheduledLeads";
-import ModalScheduled from "../../components/ModalScheduled";
-import { UserContext } from "../../context/UserContext";
-import ModalDonationInOpen from "../../components/ModalDonationInOpen";
-import OperatorCard from "../../components/cards/OperatorCard";
-import CollectorCard from "../../components/cards/CollectorCard";
-import ConfirmationCard from "../../components/cards/ConfirmationCard";
-import SchedulingCard from "../../components/cards/SchedulingCard";
-import ReceivedCard from "../../components/cards/ReceivedCard";
-import { getLeadsHistory } from "../../helper/getLeadsHistory";
-import { leadsHistoryService } from "../../services/leadsHistoryService";
-import TableLeadHistory from "../../components/TableLeadHistory";
 import getOperatorMeta from "../../helper/getOperatorMeta";
-import TableReceived from "../../components/TableReceived";
-import DateRangePicker from "../../components/DateRangePicker";
+import { getOperatorActivities } from "../../services/operatorActivityService";
 
+// Constants
+import { CARD_IDS, VIEW_TYPES, STATUS_MESSAGES, TOAST_CONFIG } from "./constants";
+
+/**
+ * Dashboard Admin - Página principal do administrador
+ */
 const Dashboard = () => {
   const caracterOperator = JSON.parse(localStorage.getItem("operatorData"));
-  const [confirmations, setConfirmations] = useState(null); //Quantidade de fichas na confirmação
-  const [valueConfirmations, setValueConfirmations] = useState(null); //Total valor na confirmação
-  const [openDonations, setOpenDonations] = useState(null); //Quantidades de fichas em aberto
-  const [valueOpenDonations, setValueOpenDonations] = useState(null); //Total valor de fichas em aberto
-  const [scheduling, setScheduling] = useState(0); //Total de leads agendadas
+  const { operatorData } = useContext(UserContext);
+  const receivedCardRef = useRef(null);
+
+  // Estados de UI
+  const [active, setActive] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [viewType, setViewType] = useState(VIEW_TYPES.OPERATOR);
+  const [donationFilterPerId, setDonationFilterPerId] = useState("");
+  const [status, setStatus] = useState();
+
+  // Estados do DateRangePicker
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [active, setActive] = useState(false);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [datePickerPosition, setDatePickerPosition] = useState({ top: 0, left: 0 });
-  const receivedCardRef = useRef(null);
-  const [nowScheduled, setNowScheduled] = useState(null);
-  const { operatorData, setOperatorData } = useContext(UserContext);
 
+  // Estados de dados de doações
+  const [confirmations, setConfirmations] = useState(null);
+  const [valueConfirmations, setValueConfirmations] = useState(null);
+  const [openDonations, setOpenDonations] = useState(null);
+  const [valueOpenDonations, setValueOpenDonations] = useState(null);
+  const [donationConfirmation, setDonationConfirmation] = useState([]);
+  const [fullNotReceivedDonations, setFullNotReceivedDonations] = useState([]);
+
+  // Estados de doações recebidas
+  const [valueReceived, setValueReceived] = useState(0);
+  const [donationsReceived, setDonationsReceived] = useState([]);
+
+  // Estados de agendamentos
+  const [scheduling, setScheduling] = useState(0);
+  const [scheduled, setScheduled] = useState([]);
+  const [scheduledDonations, setScheduledDonations] = useState([]);
+  const [nowScheduled, setNowScheduled] = useState(null);
+
+  // Estados de modais
   const [donationConfirmationOpen, setDonationConfirmationOpen] = useState([]);
   const [donationOpen, setDonationOpen] = useState([]);
   const [scheduledOpen, setScheduledOpen] = useState([]);
-  const [donationConfirmation, setDonationConfirmation] = useState([]);
-  const [fullNotReceivedDonations, setFullNotReceivedDonations] = useState([]);
-  const [scheduled, setScheduled] = useState([]);
-  const [scheduledDonations, setScheduledDonations] = useState([]);
-  const [operator, setOperator] = useState([]);
-  const [schedule, setSchedule] = useState([]);
-  const [countLeads, setCountLeads] = useState([]);
-  const [leadsNA, setLeadsNA] = useState([]);
-  const [leadsNP, setLeadsNP] = useState([]);
-  const [leadsSuccess, setLeadsSuccess] = useState([]);
 
-  // Estados para doações recebidas
-  const [valueReceived, setValueReceived] = useState(0); //Total valor recebido
-  const [donationsReceived, setDonationsReceived] = useState([]); //Todas as doações recebidas
-  const [meta, setMeta] = useState([]); //Meta dos operadores
+  // Estado de atividades das operadoras
+  const [operatorActivities, setOperatorActivities] = useState({
+    activities: [],
+    grouped: {},
+  });
 
-  const [modalOpen, setModalOpen] = useState(false);
+  // Estado de meta
+  const [meta, setMeta] = useState([]);
 
-  const monthref = DataNow("mesref");
+  /**
+   * Busca dados de doações
+   */
+  const fetchDonations = useCallback(async () => {
+    if (!caracterOperator) return;
 
-  const [status, setStatus] = useState();
-
-  const [donationFilterPerId, setDonationFilterPerId] = useState("");
-  const [viewType, setViewType] = useState("operator"); // "operator" or "collector"
-
-  const donations = async () => {
     try {
       await getDonationNotReceived(
         setConfirmations,
@@ -85,334 +92,198 @@ const Dashboard = () => {
         endDate
       );
 
-      // Buscar doações recebidas de todos os operadores
       const receivedData = await getAllDonationsReceived({ startDate, endDate });
       setValueReceived(receivedData.totalValue);
       setDonationsReceived(receivedData.donation);
 
       await getScheduledLeads(null, setScheduled, setScheduling);
     } catch (error) {
-      console.error("Error fetching donations:", error);
+      console.error("Erro ao buscar doações:", error);
     }
-    if (status === "OK") {
-      toast.success("Ficha cancelada com sucesso!", {
-        position: "top-right",
-        autoClose: 1000,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
-    } else if (status === "Update OK") {
-      toast.success("Ficha reagendada com sucesso!", {
-        position: "top-right",
-        autoClose: 1000,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+  }, [caracterOperator?.operator_code_id, startDate, endDate]);
+
+  /**
+   * Busca atividades das operadoras
+   */
+  const fetchOperatorActivities = useCallback(async () => {
+    try {
+      const activities = await getOperatorActivities({ startDate, endDate });
+      setOperatorActivities(activities);
+    } catch (error) {
+      console.error("Erro ao buscar atividades:", error);
     }
-    setStatus(null);
-  };
+  }, [startDate, endDate]);
 
-  const lead = async () => {
-    const {
-      operator,
-      scheduled,
-      leadsNA,
-      leadsNP,
-      leadsSuccess,
-      countLeads
-    } = await leadsHistoryService();
-    setOperator(operator);
-    setSchedule(scheduled);
-    setLeadsNA(leadsNA);
-    setLeadsNP(leadsNP);
-    setLeadsSuccess(leadsSuccess);
-    setCountLeads(countLeads);
-  };
-
-  useEffect(() => {
-    const getMeta = async () => {
+  /**
+   * Busca meta dos operadores
+   */
+  const fetchMeta = useCallback(async () => {
+    try {
       const metaInfo = await getOperatorMeta();
       setMeta(metaInfo);
-    };
-    getMeta();
+    } catch (error) {
+      console.error("Erro ao buscar meta:", error);
+    }
   }, []);
 
+  /**
+   * Exibe toast de status
+   */
+  const showStatusToast = useCallback(() => {
+    if (status === "OK") {
+      toast.success(STATUS_MESSAGES.OK, TOAST_CONFIG);
+    } else if (status === "Update OK") {
+      toast.success(STATUS_MESSAGES.UPDATE_OK, TOAST_CONFIG);
+    }
+    setStatus(null);
+  }, [status]);
+
+  // Efeito para buscar meta inicial
   useEffect(() => {
-    donations();
-    lead();
+    fetchMeta();
+  }, [fetchMeta]);
+
+  // Efeito para buscar dados quando dependências mudam
+  useEffect(() => {
+    fetchDonations();
+    fetchOperatorActivities();
+    showStatusToast();
   }, [active, modalOpen, status, operatorData, meta, startDate, endDate]);
 
-  const handleClickCard = (e) => {
+  /**
+   * Handler para clique no card
+   */
+  const handleClickCard = useCallback((e) => {
     setActive(e.currentTarget.id);
     setDonationFilterPerId(null);
-    setViewType("operator"); // Reset to operator view when changing card
-  };
+    setViewType(VIEW_TYPES.OPERATOR);
+  }, []);
 
-  const handleViewTypeChange = (type) => {
+  /**
+   * Handler para mudança de tipo de visualização
+   */
+  const handleViewTypeChange = useCallback((type) => {
     setViewType(type);
-    setDonationFilterPerId(null); // Reset filter when changing view type
-  };
+    setDonationFilterPerId(null);
+  }, []);
 
-  const handleReceivedCardContextMenu = (e) => {
+  /**
+   * Handler para menu de contexto do card Recebido
+   */
+  const handleReceivedCardContextMenu = useCallback((e) => {
     e.preventDefault();
-    if (receivedCardRef.current) {
-      const rect = receivedCardRef.current.getBoundingClientRect();
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
-      const pickerWidth = 280; // min-width do DateRangePicker
-      const pickerHeight = 250; // altura estimada do DateRangePicker
-      
-      let left = rect.left;
-      let top = rect.bottom + 10;
-      
-      // Ajustar se o calendário sair da tela à direita
-      if (left + pickerWidth > viewportWidth) {
-        left = viewportWidth - pickerWidth - 10;
-      }
-      
-      // Ajustar se o calendário sair da tela abaixo
-      if (top + pickerHeight > viewportHeight) {
-        top = rect.top - pickerHeight - 10;
-      }
-      
-      // Garantir que não saia da tela à esquerda ou acima
-      if (left < 10) left = 10;
-      if (top < 10) top = 10;
-      
-      setDatePickerPosition({
-        top,
-        left,
-      });
-      setIsDatePickerOpen(true);
-    }
-  };
+    if (!receivedCardRef.current) return;
 
-  const handleDateSelect = (start, end) => {
+    const rect = receivedCardRef.current.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const pickerWidth = 280;
+    const pickerHeight = 250;
+
+    let left = rect.left;
+    let top = rect.bottom + 10;
+
+    // Ajustes de posição para não sair da tela
+    if (left + pickerWidth > viewportWidth) {
+      left = viewportWidth - pickerWidth - 10;
+    }
+    if (top + pickerHeight > viewportHeight) {
+      top = rect.top - pickerHeight - 10;
+    }
+    if (left < 10) left = 10;
+    if (top < 10) top = 10;
+
+    setDatePickerPosition({ top, left });
+    setIsDatePickerOpen(true);
+  }, []);
+
+  /**
+   * Handler para seleção de data
+   */
+  const handleDateSelect = useCallback((start, end) => {
     setStartDate(start || null);
     setEndDate(end || null);
+  }, []);
+
+  /**
+   * Handler para fechar modal
+   */
+  const handleCloseModal = useCallback(() => {
+    setModalOpen(false);
+  }, []);
+
+  // Dados agregados para os componentes
+  const cardData = {
+    valueReceived,
+    confirmations,
+    valueConfirmations,
+    openDonations,
+    valueOpenDonations,
+  };
+
+  const contentData = {
+    donationsReceived,
+    donationConfirmation,
+    fullNotReceivedDonations,
+    scheduled,
+    scheduledDonations,
+  };
+
+  const modalHandlers = {
+    setModalOpen,
+    setDonationConfirmationOpen,
+    setDonationOpen,
+    setScheduledOpen,
+    setNowScheduled,
+    setDonationFilterPerId,
   };
 
   return (
     <main className={styles.mainDashboard}>
-      <>
-        <section className={styles.sectionHeader}>
-          <div className={styles.sectionHeaderItem}>
-            <div
-              ref={receivedCardRef}
-              id="received"
-              className={`${styles.divCard} ${active === "received" ? styles.active : ""}`}
-              onClick={handleClickCard}
-              onContextMenu={handleReceivedCardContextMenu}
-            >
-              <div className={styles.divHeader}>
-                <h3 className={styles.h3Header}>Recebido</h3>
-              </div>
-              <div className={styles.divBody}>
-                <p>R$ {valueReceived?.toFixed(2)}</p>
-              </div>
-            </div>
-            {isDatePickerOpen && (
-              <DateRangePicker
-                isOpen={isDatePickerOpen}
-                onClose={() => setIsDatePickerOpen(false)}
-                onDateSelect={handleDateSelect}
-                startDate={startDate}
-                endDate={endDate}
-                position={datePickerPosition}
-              />
-            )}
-            {/* Card Agendados */}
-            {/* <div
-              id="inScheduled"
-              className={`${styles.divCard} ${active === "inScheduled" ? styles.active : ""}`}
-              onClick={handleClickCard}
-            >
-              <div className={styles.divHeader}>
-                <h3 className={styles.h3Header}>Agendados</h3>
-              </div>
-              <div className={styles.divBody}>
-                <p>{scheduling}</p>
-              </div>
-            </div>*/}
-            {/* Card 1 */}
-            <div
-              id="inConfirmation"
-              className={`${styles.divCard} ${
-                active === "inConfirmation" ? styles.active : ""
-              }`}
-              onClick={handleClickCard}
-            >
-              <div className={styles.divHeader}>
-                <h3 className={styles.h3Header}>Em Confirmação</h3>
-              </div>
-              <div className={styles.divBody}>
-                <p>{confirmations}</p>
-                <p>R$ {valueConfirmations}</p>
-              </div>
-            </div>
+      {/* Cards do Dashboard */}
+      <DashboardCards
+        active={active}
+        onCardClick={handleClickCard}
+        receivedCardRef={receivedCardRef}
+        onReceivedContextMenu={handleReceivedCardContextMenu}
+        data={cardData}
+      />
 
-            <div
-              id="inOpen"
-              className={`${styles.divCard} ${active === "inOpen" ? styles.active : ""}`}
-              onClick={handleClickCard}
-            >
-              <div className={styles.divHeader}>
-                <h3 className={styles.h3Header}>Em Aberto</h3>
-              </div>
-              <div className={styles.divBody}>
-                <p>{openDonations}</p>
-                <p>R$ {valueOpenDonations}</p>
-              </div>
-            </div>
-            <div
-              id="leads"
-              className={`${styles.divCard} ${active === "leads" ? styles.active : ""}`}
-              onClick={handleClickCard}
-            >
-              <div className={styles.divHeader}>
-                <h3 className={styles.h3Header}>Leads</h3>
-              </div>
-              <div
-                className={styles.divBody}
-                style={{ display: "flex", justifyContent: "center" }}
-              >
-                <p>{confirmations}</p>
-              </div>
-            </div>
-          </div>
-        </section>
+      {/* DateRangePicker para filtro de datas */}
+      {isDatePickerOpen && (
+        <DateRangePicker
+          isOpen={isDatePickerOpen}
+          onClose={() => setIsDatePickerOpen(false)}
+          onDateSelect={handleDateSelect}
+          startDate={startDate}
+          endDate={endDate}
+          position={datePickerPosition}
+        />
+      )}
 
-        {active && active !== "leads" ? (
-          <section className={styles.sectionGrafic}>
-            {active === "inOpen" && (
-              <div className={styles.viewTypeSelector}>
-                <button
-                  className={`${styles.viewTypeButton} ${viewType === "operator" ? styles.active : ""}`}
-                  onClick={() => handleViewTypeChange("operator")}
-                >
-                  Por Operadora
-                </button>
-                <button
-                  className={`${styles.viewTypeButton} ${viewType === "collector" ? styles.active : ""}`}
-                  onClick={() => handleViewTypeChange("collector")}
-                >
-                  Por Coletor
-                </button>
-              </div>
-            )}
-            
-            <div className={styles.sectionTableAndInfo}>
-              <div className={styles.sectionOperators}>
-                {active === "received" ? (
-                  <ReceivedCard
-                    operatorCount={donationsReceived}
-                    setDonationFilterPerId={setDonationFilterPerId}
-                  />
-                ) : active === "inConfirmation" ? (
-                  <ConfirmationCard
-                    operatorCount={donationConfirmation}
-                    setDonationFilterPerId={setDonationFilterPerId}
-                  />
-                ) : active === "inOpen" ? (
-                  viewType === "operator" ? (
-                    <OperatorCard
-                      operatorCount={fullNotReceivedDonations}
-                      setDonationFilterPerId={setDonationFilterPerId}
-                    />
-                  ) : (
-                    <CollectorCard
-                      operatorCount={fullNotReceivedDonations}
-                      setDonationFilterPerId={setDonationFilterPerId}
-                    />
-                  )
-                ) : (
-                  active === "inScheduled" && (
-                    <SchedulingCard
-                      operatorCount={scheduled}
-                      setDonationFilterPerId={setDonationFilterPerId}
-                    />
-                  )
-                )}
-              </div>
+      {/* Conteúdo Principal */}
+      <DashboardContent
+        active={active}
+        viewType={viewType}
+        onViewTypeChange={handleViewTypeChange}
+        donationFilterPerId={donationFilterPerId}
+        data={contentData}
+        handlers={modalHandlers}
+        operatorActivities={operatorActivities}
+        dateFilter={{ startDate, endDate }}
+      />
 
-              <div className={styles.sectionTable}>
-                {active === "received" ? (
-                  <TableReceived
-                    donationsOperator={
-                      donationFilterPerId
-                        ? donationsReceived.filter(
-                            (d) => d.operator_code_id === donationFilterPerId
-                          )
-                        : donationsReceived
-                    }
-                  />
-                ) : active === "inConfirmation" ? (
-                  <TableConfirmation
-                    donationConfirmation={donationConfirmation}
-                    setModalOpen={setModalOpen}
-                    setDonationConfirmationOpen={setDonationConfirmationOpen}
-                    donationFilterPerId={donationFilterPerId}
-                  />
-                ) : active === "inOpen" ? (
-                  <TableInOpen
-                    fullNotReceivedDonations={fullNotReceivedDonations}
-                    setDonationOpen={setDonationOpen}
-                    setModalOpen={setModalOpen}
-                    donationFilterPerId={donationFilterPerId}
-                    filterType={viewType}
-                  />
-                ) : active === "inScheduled" ? (
-                  <TableScheduled
-                    scheduled={scheduled}
-                    scheduledDonations={scheduledDonations}
-                    setModalOpen={setModalOpen}
-                    setScheduledOpen={setScheduledOpen}
-                    setNowScheduled={setNowScheduled}
-                    donationFilterPerId={donationFilterPerId}
-                  />
-                ) : null}
-              </div>
-            </div>
-          </section>
-        ) : (
-          <section className={styles.sectionGrafic}>
-            <div className={styles.divLeads}>
-              <TableLeadHistory
-                operator={operator}
-                schedule={schedule}
-                leadsNA={leadsNA}
-                leadsNP={leadsNP}
-                leadsSuccess={leadsSuccess}
-                countLeads={countLeads}
-              />
-            </div>
-          </section>
-        )}
-
-        {modalOpen && active === "inConfirmation" && (
-          <ModalConfirmations
-            donationConfirmationOpen={donationConfirmationOpen}
-            onClose={() => setModalOpen(false)}
-            setStatus={setStatus}
-          />
-        )}
-        {modalOpen && active === "inScheduled" && (
-          <ModalScheduled
-            scheduledOpen={scheduledOpen}
-            onClose={() => setModalOpen(false)}
-            setStatus={setStatus}
-            nowScheduled={nowScheduled}
-          />
-        )}
-        {modalOpen && active === "inOpen" && (
-          <ModalDonationInOpen
-            donationOpen={donationOpen}
-            onClose={() => setModalOpen(false)}
-          />
-        )}
-      </>
+      {/* Modais */}
+      <DashboardModals
+        modalOpen={modalOpen}
+        active={active}
+        donationConfirmationOpen={donationConfirmationOpen}
+        scheduledOpen={scheduledOpen}
+        donationOpen={donationOpen}
+        nowScheduled={nowScheduled}
+        setStatus={setStatus}
+        onClose={handleCloseModal}
+      />
     </main>
   );
 };

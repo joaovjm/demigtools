@@ -9,6 +9,7 @@ import { UserContext } from "../../context/UserContext";
 import { toast } from "react-toastify";
 import { insertDonation } from "../../helper/insertDonation";
 import { updateRequestList } from "../../helper/updateRequestList";
+import { registerOperatorActivity, ACTIVITY_TYPES } from "../../services/operatorActivityService";
 
 const ModalWorklist = ({
   setModalOpen,
@@ -93,6 +94,17 @@ const ModalWorklist = ({
     if (result && updateWorklistItem) {
       await updateWorklistItem(id);
     }
+    
+    // Registrar atividade
+    await registerOperatorActivity({
+      operatorId: operatorData.operator_code_id,
+      operatorName: operatorData.operator_name,
+      activityType: ACTIVITY_TYPES.CANNOT_HELP,
+      donorId: donor_id,
+      donorName: donor_name,
+      requestName: request_name,
+    });
+    
     setModalOpen(false);
     setActive("");
     navigate(`?pkg=${workSelect}`);
@@ -103,6 +115,17 @@ const ModalWorklist = ({
     if (result && updateWorklistItem) {
       await updateWorklistItem(id);
     }
+    
+    // Registrar atividade
+    await registerOperatorActivity({
+      operatorId: operatorData.operator_code_id,
+      operatorName: operatorData.operator_name,
+      activityType: ACTIVITY_TYPES.NOT_ANSWERED,
+      donorId: donor_id,
+      donorName: donor_name,
+      requestName: request_name,
+    });
+    
     setModalOpen(false);
     setActive("");
     navigate(`?pkg=${workSelect}`);
@@ -113,6 +136,17 @@ const ModalWorklist = ({
     if (result && updateWorklistItem) {
       await updateWorklistItem(id);
     }
+    
+    // Registrar atividade
+    await registerOperatorActivity({
+      operatorId: operatorData.operator_code_id,
+      operatorName: operatorData.operator_name,
+      activityType: ACTIVITY_TYPES.WHATSAPP,
+      donorId: donor_id,
+      donorName: donor_name,
+      requestName: request_name,
+    });
+    
     setModalOpen(false);
     setActive("");
     navigate(`?pkg=${workSelect}`);
@@ -146,6 +180,22 @@ const ModalWorklist = ({
       if (updateWorklistItem) {
         await updateWorklistItem(id);
       }
+      
+      // Registrar atividade de agendamento
+      await registerOperatorActivity({
+        operatorId: operatorData.operator_code_id,
+        operatorName: operatorData.operator_name,
+        activityType: ACTIVITY_TYPES.SCHEDULED,
+        donorId: donor_id,
+        donorName: donor_name,
+        requestName: request_name,
+        metadata: {
+          date: dateScheduling,
+          phone: telScheduling,
+          observation: observationScheduling,
+        },
+      });
+      
       setModalOpen(false);
       setActive("");
       navigate(`?pkg=${workSelect}`);
@@ -180,6 +230,24 @@ const ModalWorklist = ({
       if (result && updateWorklistItem) {
         await updateWorklistItem(id);
       }
+      
+      // Registrar atividade de nova doação
+      await registerOperatorActivity({
+        operatorId: operatorData.operator_code_id,
+        operatorName: operatorData.operator_name,
+        activityType: ACTIVITY_TYPES.NEW_DONATION,
+        donorId: donor_id,
+        donorName: donor_name,
+        requestName: request_name,
+        metadata: {
+          value: value,
+          extraValue: extraValue,
+          date: date,
+          campaign: campainSelected,
+          observation: observation,
+        },
+      });
+      
       setModalOpen(false);
       setActive("");
       navigate(`?pkg=${workSelect}`);
