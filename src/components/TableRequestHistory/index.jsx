@@ -2,53 +2,65 @@ import { useState, useMemo } from "react";
 import styles from "./tablerequesthistory.module.css";
 import ModalOperatorActivity from "../ModalOperatorActivity";
 import { ACTIVITY_TYPES } from "../../services/operatorActivityService";
-import { LEADS_STATUS_TYPES } from "../../helper/getLeadsHistory";
 
 const TableRequestHistory = ({
   operatorActivities = { grouped: {} },
-  leadsActivities = { grouped: {} },
   dateFilter = {},
 }) => {
   const [selectedOperator, setSelectedOperator] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
-  // Combina dados de atividades das operadoras e leads
-  const combinedData = useMemo(() => {
-    const allOperators = new Set([
-      ...Object.keys(operatorActivities.grouped || {}),
-      ...Object.keys(leadsActivities.grouped || {}),
-    ]);
+  // Calcula as contagens de leads a partir das atividades
+  const calculateLeadsCounts = (counts) => {
+    const leadsNA = (counts?.[ACTIVITY_TYPES.LEAD_NOT_ANSWERED] || 0);
+    const leadsNP = (counts?.[ACTIVITY_TYPES.LEAD_CANNOT_HELP] || 0);
+    const leadsScheduled = (counts?.[ACTIVITY_TYPES.LEAD_SCHEDULED] || 0);
+    const leadsSuccess = (counts?.[ACTIVITY_TYPES.LEAD_SUCCESS] || 0) + 
+                         (counts?.[ACTIVITY_TYPES.LEAD_DONATION_FROM_SCHEDULED] || 0);
+    const totalLeads = leadsNA + leadsNP + leadsScheduled + leadsSuccess;
+    
+    return { leadsNA, leadsNP, leadsScheduled, leadsSuccess, totalLeads };
+  };
 
-    return Array.from(allOperators).map((name) => {
+  // Calcula as contagens de requisição (excluindo leads)
+  const calculateRequisicaoCounts = (counts) => {
+    const reqNA = counts?.[ACTIVITY_TYPES.NOT_ANSWERED] || 0;
+    const reqNP = counts?.[ACTIVITY_TYPES.CANNOT_HELP] || 0;
+    const reqScheduled = counts?.[ACTIVITY_TYPES.SCHEDULED] || 0;
+    const newDonation = counts?.[ACTIVITY_TYPES.NEW_DONATION] || 0;
+    const worklistClicks = counts?.[ACTIVITY_TYPES.WORKLIST_CLICK] || 0;
+    const whatsapp = counts?.[ACTIVITY_TYPES.WHATSAPP] || 0;
+    const totalRequisicao = reqNA + reqNP + reqScheduled + newDonation + worklistClicks + whatsapp;
+    
+    return { reqNA, reqNP, reqScheduled, newDonation, worklistClicks, whatsapp, totalRequisicao };
+  };
+
+  // Processa dados de atividades das operadoras
+  const combinedData = useMemo(() => {
+    const allOperators = Object.keys(operatorActivities.grouped || {});
+
+    return allOperators.map((name) => {
       const activityData = operatorActivities.grouped?.[name] || {};
-      const leadsData = leadsActivities.grouped?.[name] || {};
+      const counts = activityData.counts || {};
+      
+      const requisicaoCounts = calculateRequisicaoCounts(counts);
+      const leadsCounts = calculateLeadsCounts(counts);
 
       return {
         operatorName: name,
-        operatorId: activityData.operatorId || leadsData.operatorId,
+        operatorId: activityData.operatorId,
         // Atividades de Requisição
-        reqNA: activityData.counts?.[ACTIVITY_TYPES.NOT_ANSWERED] || 0,
-        reqNP: activityData.counts?.[ACTIVITY_TYPES.CANNOT_HELP] || 0,
-        reqScheduled: activityData.counts?.[ACTIVITY_TYPES.SCHEDULED] || 0,
-        newDonation: activityData.counts?.[ACTIVITY_TYPES.NEW_DONATION] || 0,
-        worklistClicks: activityData.counts?.[ACTIVITY_TYPES.WORKLIST_CLICK] || 0,
-        whatsapp: activityData.counts?.[ACTIVITY_TYPES.WHATSAPP] || 0,
-        totalRequisicao: activityData.total || 0,
+        ...requisicaoCounts,
         // Atividades de Leads
-        leadsNA: leadsData.counts?.[LEADS_STATUS_TYPES.NOT_ANSWERED] || 0,
-        leadsNP: leadsData.counts?.[LEADS_STATUS_TYPES.CANNOT_HELP] || 0,
-        leadsScheduled: leadsData.counts?.[LEADS_STATUS_TYPES.SCHEDULED] || 0,
-        leadsSuccess: leadsData.counts?.[LEADS_STATUS_TYPES.SUCCESS] || 0,
-        totalLeads: leadsData.total || 0,
-        // Contagens
-        activityCounts: activityData.counts || {},
-        leadsCounts: leadsData.counts || {},
+        ...leadsCounts,
+        // Contagens originais para o modal
+        activityCounts: counts,
         // Total geral
-        totalGeral: (activityData.total || 0) + (leadsData.total || 0),
+        totalGeral: requisicaoCounts.totalRequisicao + leadsCounts.totalLeads,
       };
     });
-  }, [operatorActivities, leadsActivities]);
+  }, [operatorActivities]);
 
   // Ordenação
   const sortedData = useMemo(() => {
@@ -77,7 +89,6 @@ const TableRequestHistory = ({
       operatorId: operatorData.operatorId,
       operatorName: operatorData.operatorName,
       activityCounts: operatorData.activityCounts,
-      leadsCounts: operatorData.leadsCounts,
       totalRequisicao: operatorData.totalRequisicao,
       totalLeads: operatorData.totalLeads,
     });

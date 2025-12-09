@@ -15,7 +15,6 @@ import getAllDonationsReceived from "../../helper/getAllDonationsReceived";
 import getScheduledLeads from "../../helper/getScheduledLeads";
 import getOperatorMeta from "../../helper/getOperatorMeta";
 import { getOperatorActivities } from "../../services/operatorActivityService";
-import { getLeadsGroupedByOperator } from "../../helper/getLeadsHistory";
 
 // Constants
 import { CARD_IDS, VIEW_TYPES, STATUS_MESSAGES, TOAST_CONFIG } from "./constants";
@@ -64,15 +63,9 @@ const Dashboard = () => {
   const [donationOpen, setDonationOpen] = useState([]);
   const [scheduledOpen, setScheduledOpen] = useState([]);
 
-  // Estado de atividades das operadoras
+  // Estado de atividades das operadoras (inclui atividades de leads)
   const [operatorActivities, setOperatorActivities] = useState({
     activities: [],
-    grouped: {},
-  });
-
-  // Estado de leads agrupados
-  const [leadsActivities, setLeadsActivities] = useState({
-    leads: [],
     grouped: {},
   });
 
@@ -110,7 +103,7 @@ const Dashboard = () => {
   }, [caracterOperator?.operator_code_id, startDate, endDate]);
 
   /**
-   * Busca atividades das operadoras
+   * Busca atividades das operadoras (inclui atividades de leads)
    */
   const fetchOperatorActivities = useCallback(async () => {
     try {
@@ -118,18 +111,6 @@ const Dashboard = () => {
       setOperatorActivities(activities);
     } catch (error) {
       console.error("Erro ao buscar atividades:", error);
-    }
-  }, [startDate, endDate]);
-
-  /**
-   * Busca leads agrupados por operador
-   */
-  const fetchLeadsActivities = useCallback(async () => {
-    try {
-      const leadsData = await getLeadsGroupedByOperator(startDate, endDate);
-      setLeadsActivities(leadsData);
-    } catch (error) {
-      console.error("Erro ao buscar leads:", error);
     }
   }, [startDate, endDate]);
 
@@ -166,7 +147,6 @@ const Dashboard = () => {
   useEffect(() => {
     fetchDonations();
     fetchOperatorActivities();
-    fetchLeadsActivities();
     showStatusToast();
   }, [active, modalOpen, status, operatorData, meta, startDate, endDate]);
 
@@ -291,7 +271,6 @@ const Dashboard = () => {
         data={contentData}
         handlers={modalHandlers}
         operatorActivities={operatorActivities}
-        leadsActivities={leadsActivities}
         dateFilter={{ startDate, endDate }}
       />
 

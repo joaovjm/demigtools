@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import styles from "./modalscheduled.module.css";
 import { DataNow } from "../DataTime";
 import updateLeads from "../../helper/updateLeads";
@@ -10,6 +10,8 @@ import { insertDonation } from "../../helper/insertDonation";
 import { fetchMaxAndMedDonations } from "../../services/worklistService";
 import { useNavigate } from "react-router";
 import supabase from "../../helper/superBaseClient";
+import { UserContext } from "../../context/UserContext";
+import { registerOperatorActivity, ACTIVITY_TYPES } from "../../services/operatorActivityService";
 import {
   FaUser,
   FaMapMarkerAlt,
@@ -31,6 +33,7 @@ const ModalScheduled = ({
   nowScheduled,
 }) => {
   const navigate = useNavigate();
+  const { operatorData } = useContext(UserContext);
   const [isScheduling, setIsScheduling] = useState(false);
   const [dateScheduling, setDateScheduling] = useState("");
   const [observation, setObservation] = useState("");
@@ -94,6 +97,17 @@ const ModalScheduled = ({
           scheduledOpen.id
         );
         if (response) {
+          // Registra atividade de lead agendado que não pode ajudar
+          await registerOperatorActivity({
+            operatorId: operatorData?.operator_code_id || scheduledOpen.operator_code_id,
+            operatorName: operatorData?.operator_name,
+            activityType: ACTIVITY_TYPES.LEAD_CANNOT_HELP,
+            donorName: scheduledOpen.name,
+            metadata: { 
+              leadId: scheduledOpen.id, 
+              source: "leads_scheduled_cancelled",
+            },
+          });
           toast.success("Processo concluído com sucesso");
           onClose();
         }
@@ -180,6 +194,7 @@ const ModalScheduled = ({
       campain: campain || "",
       observation: observation || "",
       operatorID: scheduledOpen.operator_code_id,
+      operatorName: operatorData?.operator_name,
       nowScheduled: nowScheduled,
     });
     if (response) onClose();

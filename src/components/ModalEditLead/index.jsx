@@ -16,6 +16,7 @@ import {
   insertDonor_tel_2,
   insertDonor_tel_3,
 } from "../../helper/insertDonor";
+import { registerOperatorActivity, ACTIVITY_TYPES } from "../../services/operatorActivityService";
 
 const ModalEditLead = ({ 
   isOpen, 
@@ -157,6 +158,18 @@ const ModalEditLead = ({
       if (error) throw error;
 
       if (!error) {
+        // Registra atividade de lead agendado
+        await registerOperatorActivity({
+          operatorId: operatorData?.operator_code_id,
+          operatorName: operatorData?.operator_name,
+          activityType: ACTIVITY_TYPES.LEAD_SCHEDULED,
+          donorName: fullLeadData?.leads_name || leadData.name,
+          metadata: { 
+            leadId: leadId, 
+            source: "leads_scheduled",
+            scheduledDate: formData.dateScheduling,
+          },
+        });
         toast.success("Agendado com sucesso!");
         setIsModalSchedulingOpen(false);
         if (onSave && data && data.length > 0) {
@@ -185,8 +198,11 @@ const ModalEditLead = ({
       toast.promise(
         (async () => {
           try {
+            const leadName = fullLeadData?.leads_name || leadData.name;
+            const wasScheduled = fullLeadData?.leads_status === "agendado";
+            
             const data = await insertDonor(
-              fullLeadData?.leads_name || leadData.name,
+              leadName,
               "Lista",
               formData.address,
               formData.city,
@@ -240,6 +256,23 @@ const ModalEditLead = ({
               .eq("leads_id", leadId)
               .select();
             if (error) throw error;
+
+            // Registra atividade - usa tipo diferente se veio de agendado
+            await registerOperatorActivity({
+              operatorId: operatorData?.operator_code_id,
+              operatorName: operatorData?.operator_name,
+              activityType: wasScheduled 
+                ? ACTIVITY_TYPES.LEAD_DONATION_FROM_SCHEDULED 
+                : ACTIVITY_TYPES.LEAD_SUCCESS,
+              donorId: data[0].donor_id,
+              donorName: leadName,
+              metadata: { 
+                leadId: leadId, 
+                source: wasScheduled ? "leads_from_scheduled" : "leads",
+                donationValue: formData.valueDonation,
+                wasScheduled: wasScheduled,
+              },
+            });
 
             setIsModalNewDonationOpen(false);
             

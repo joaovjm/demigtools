@@ -21,6 +21,7 @@ import ModalScheduling from "../../components/ModalScheduling";
 import ModalHistory from "../../components/ModalHistory";
 import ModalEditLead from "../../components/ModalEditLead";
 import { UserContext } from "../../context/UserContext";
+import { registerOperatorActivity, ACTIVITY_TYPES } from "../../services/operatorActivityService";
 
 const Leads = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -139,6 +140,14 @@ const Leads = () => {
           currentLead.leads_id
         );
         if (data && data[0]?.leads_status === "Não Atendeu") {
+          // Registra atividade de lead não atendeu
+          await registerOperatorActivity({
+            operatorId: operatorData.operator_code_id,
+            operatorName: operatorData.operator_name,
+            activityType: ACTIVITY_TYPES.LEAD_NOT_ANSWERED,
+            donorName: currentLead.leads_name,
+            metadata: { leadId: currentLead.leads_id, source: "leads" },
+          });
           // Recarregar leads após marcar como não atendeu
           await reloadAfterProcess();
         }
@@ -154,6 +163,14 @@ const Leads = () => {
         currentLead.leads_id
       );
       if (response && response.length > 0) {
+        // Registra atividade de lead não pode ajudar
+        await registerOperatorActivity({
+          operatorId: operatorData.operator_code_id,
+          operatorName: operatorData.operator_name,
+          activityType: ACTIVITY_TYPES.LEAD_CANNOT_HELP,
+          donorName: currentLead.leads_name,
+          metadata: { leadId: currentLead.leads_id, source: "leads" },
+        });
         // Recarregar leads após processar
         await reloadAfterProcess();
       }
@@ -194,6 +211,18 @@ const Leads = () => {
       if (error) throw error;
 
       if (!error) {
+        // Registra atividade de lead agendado
+        await registerOperatorActivity({
+          operatorId: operatorData.operator_code_id,
+          operatorName: operatorData.operator_name,
+          activityType: ACTIVITY_TYPES.LEAD_SCHEDULED,
+          donorName: currentLead.leads_name,
+          metadata: { 
+            leadId: currentLead.leads_id, 
+            source: "leads",
+            scheduledDate: formData.dateScheduling,
+          },
+        });
         toast.success("Agendado com sucesso!");
         setIsModalSchedulingOpen(false);
         // Recarregar leads após processar
@@ -275,6 +304,20 @@ const Leads = () => {
               .update({ leads_status: "Sucesso" })
               .eq("leads_id", currentLead.leads_id);
             if (error) throw error;
+
+            // Registra atividade de lead sucesso (nova doação)
+            await registerOperatorActivity({
+              operatorId: operatorData.operator_code_id,
+              operatorName: operatorData.operator_name,
+              activityType: ACTIVITY_TYPES.LEAD_SUCCESS,
+              donorId: data[0].donor_id,
+              donorName: currentLead.leads_name,
+              metadata: { 
+                leadId: currentLead.leads_id, 
+                source: "leads",
+                donationValue: formData.valueDonation,
+              },
+            });
 
             setIsModalNewDonationOpen(false);
             

@@ -69,8 +69,11 @@ export const getLeadsGroupedByOperator = async (startDate, endDate) => {
   const leads = await getLeads(startDate, endDate);
 
   const grouped = leads.reduce((acc, lead) => {
-    const operatorName = lead.operator_name?.operator_name;
-    if (!operatorName) return acc;
+    // Usa o nome do operador ou fallback para o ID
+    const operatorName = lead.operator_name?.operator_name || `Operador ${lead.operator_code_id}`;
+    
+    // Se não tiver nem nome nem ID, ignora o lead
+    if (!operatorName || !lead.operator_code_id) return acc;
 
     if (!acc[operatorName]) {
       acc[operatorName] = {
@@ -88,11 +91,19 @@ export const getLeadsGroupedByOperator = async (startDate, endDate) => {
     }
 
     acc[operatorName].leads.push(lead);
+    
+    // Contabiliza o status do lead
     if (lead.leads_status) {
-      acc[operatorName].counts[lead.leads_status] = 
-        (acc[operatorName].counts[lead.leads_status] || 0) + 1;
+      // Verifica se o status existe nas chaves de counts
+      if (acc[operatorName].counts.hasOwnProperty(lead.leads_status)) {
+        acc[operatorName].counts[lead.leads_status] += 1;
+        // Incrementa o total apenas quando o status é reconhecido
+        acc[operatorName].total += 1;
+      } else {
+        // Log para debug caso apareça um status inesperado
+        console.warn(`Status de lead não reconhecido: "${lead.leads_status}"`);
+      }
     }
-    acc[operatorName].total += 1;
 
     return acc;
   }, {});

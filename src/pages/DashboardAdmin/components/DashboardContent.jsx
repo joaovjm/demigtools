@@ -152,7 +152,6 @@ const DashboardContent = ({
   data,
   handlers,
   operatorActivities,
-  leadsActivities,
   dateFilter,
 }) => {
   // Se nenhum card está ativo ou é o card de leads, mostra a tabela de leads
@@ -162,7 +161,6 @@ const DashboardContent = ({
         <div className={styles.divLeads}>
           <TableRequestHistory
             operatorActivities={operatorActivities}
-            leadsActivities={leadsActivities}
             dateFilter={dateFilter}
           />
         </div>

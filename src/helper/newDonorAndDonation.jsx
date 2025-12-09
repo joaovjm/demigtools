@@ -8,6 +8,7 @@ import {
   insertDonor_tel_3,
 } from "./insertDonor";
 import supabase from "./superBaseClient";
+import { registerOperatorActivity, ACTIVITY_TYPES } from "../services/operatorActivityService";
 
 const newDonorAndDonation = async ({
   id,
@@ -24,6 +25,7 @@ const newDonorAndDonation = async ({
   campain,
   observation,
   operatorID,
+  operatorName,
   nowScheduled,
 }) => {
   const handleDonorCreation = async () => {
@@ -104,6 +106,20 @@ const newDonorAndDonation = async ({
           const donor_id = await handleDonorCreation();
           const donation = await handleDonationCreation(donor_id);
           const leadStatus = await handleUpdateStatusLead();
+
+          // Registra atividade de doação criada a partir de lead agendado
+          await registerOperatorActivity({
+            operatorId: operatorID,
+            operatorName: operatorName,
+            activityType: ACTIVITY_TYPES.LEAD_DONATION_FROM_SCHEDULED,
+            donorId: donor_id,
+            donorName: name,
+            metadata: { 
+              leadId: id, 
+              source: "leads_from_scheduled",
+              donationValue: valueDonation,
+            },
+          });
 
           resolve("Operação completada com sucesso!");
         }

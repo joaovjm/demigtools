@@ -10,18 +10,30 @@ export const ACTIVITY_TYPES = {
   NOT_ANSWERED: "not_answered",
   CANNOT_HELP: "cannot_help",
   WHATSAPP: "whatsapp",
+  // Tipos específicos para Leads
+  LEAD_NOT_ANSWERED: "lead_not_answered",
+  LEAD_CANNOT_HELP: "lead_cannot_help",
+  LEAD_SCHEDULED: "lead_scheduled",
+  LEAD_SUCCESS: "lead_success",
+  LEAD_DONATION_FROM_SCHEDULED: "lead_donation_from_scheduled",
 };
 
 /**
  * Labels amigáveis para os tipos de atividades
  */
 export const ACTIVITY_LABELS = {
-  [ACTIVITY_TYPES.WORKLIST_CLICK]: "Acessou Lead",
+  [ACTIVITY_TYPES.WORKLIST_CLICK]: "Acessou Requisição",
   [ACTIVITY_TYPES.NEW_DONATION]: "Nova Doação",
   [ACTIVITY_TYPES.SCHEDULED]: "Agendamento",
   [ACTIVITY_TYPES.NOT_ANSWERED]: "Não Atendeu",
   [ACTIVITY_TYPES.CANNOT_HELP]: "Não Pode Ajudar",
   [ACTIVITY_TYPES.WHATSAPP]: "Whatsapp",
+  // Labels para Leads
+  [ACTIVITY_TYPES.LEAD_NOT_ANSWERED]: "Lead - Não Atendeu",
+  [ACTIVITY_TYPES.LEAD_CANNOT_HELP]: "Lead - Não Pode Ajudar",
+  [ACTIVITY_TYPES.LEAD_SCHEDULED]: "Lead - Agendado",
+  [ACTIVITY_TYPES.LEAD_SUCCESS]: "Lead - Sucesso",
+  [ACTIVITY_TYPES.LEAD_DONATION_FROM_SCHEDULED]: "Lead - Doação (Agendado)",
 };
 
 /**
@@ -118,6 +130,12 @@ export const getOperatorActivities = async ({ startDate, endDate } = {}) => {
             [ACTIVITY_TYPES.NOT_ANSWERED]: 0,
             [ACTIVITY_TYPES.CANNOT_HELP]: 0,
             [ACTIVITY_TYPES.WHATSAPP]: 0,
+            // Contagens para Leads
+            [ACTIVITY_TYPES.LEAD_NOT_ANSWERED]: 0,
+            [ACTIVITY_TYPES.LEAD_CANNOT_HELP]: 0,
+            [ACTIVITY_TYPES.LEAD_SCHEDULED]: 0,
+            [ACTIVITY_TYPES.LEAD_SUCCESS]: 0,
+            [ACTIVITY_TYPES.LEAD_DONATION_FROM_SCHEDULED]: 0,
           },
           total: 0,
         };
