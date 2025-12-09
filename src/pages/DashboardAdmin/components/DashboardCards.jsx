@@ -88,7 +88,7 @@ const DashboardCards = ({
         {/* Card Requisição */}
         <DashboardCard
           id={CARD_IDS.LEADS}
-          title="Requisição"
+          title="Requisição & Leads"
           active={active}
           onClick={onCardClick}
         >
