@@ -80,9 +80,77 @@
   color: #faa01c;
 }
 
+/* Tabs */
+.tabs {
+  display: flex;
+  background-color: #2a2828;
+  border-bottom: 2px solid #363a3d;
+}
+
+.tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.tab:hover {
+  color: #faf5e9;
+  background-color: rgba(250, 160, 28, 0.1);
+}
+
+.tab.activeTab {
+  color: #faa01c;
+  background-color: rgba(250, 160, 28, 0.15);
+}
+
+.tab.activeTab::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #faa01c;
+}
+
+.tabIcon {
+  font-size: 16px;
+}
+
+.tabBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  background-color: #464a4d;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #faf5e9;
+}
+
+.tab.activeTab .tabBadge {
+  background-color: #faa01c;
+  color: #1f1d1d;
+}
+
 /* Stats Bar */
 .statsBar {
   display: flex;
+  height: 50px;
   justify-content: space-around;
   padding: 10px 20px;
   background-color: #2a2828;
@@ -97,6 +165,7 @@
   align-items: center;
   gap: 0;
   min-width: 65px;
+  min-height: 20px;
 }
 
 .statIcon {
@@ -120,6 +189,7 @@
 /* Filters */
 .filters {
   display: flex;
+  height: 50px;
   gap: 6px;
   padding: 8px 20px;
   background-color: #1f1d1d;
@@ -162,7 +232,7 @@
 
 /* Body */
 .body {
-  flex: 1;
+  max-height: 300px;
   overflow-y: auto;
   padding: 16px 24px;
 }
@@ -270,6 +340,10 @@
 
 .activityItem.neutral {
   border-left-color: #6b7280;
+}
+
+.activityItem.successAlt {
+  border-left-color: #a855f7;
 }
 
 .activityIcon {

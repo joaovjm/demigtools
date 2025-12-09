@@ -13,7 +13,7 @@ import TableConfirmation from "../../../components/TableConfirmation";
 import TableInOpen from "../../../components/TableInOpen";
 import TableScheduled from "../../../components/TableScheduled";
 import TableReceived from "../../../components/TableReceived";
-import TableLeadHistory from "../../../components/TableLeadHistory";
+import TableRequestHistory from "../../../components/TableRequestHistory";
 
 // Componente auxiliar
 import ViewTypeSelector from "./ViewTypeSelector";
@@ -152,6 +152,7 @@ const DashboardContent = ({
   data,
   handlers,
   operatorActivities,
+  leadsActivities,
   dateFilter,
 }) => {
   // Se nenhum card está ativo ou é o card de leads, mostra a tabela de leads
@@ -159,8 +160,9 @@ const DashboardContent = ({
     return (
       <section className={styles.sectionGrafic}>
         <div className={styles.divLeads}>
-          <TableLeadHistory
+          <TableRequestHistory
             operatorActivities={operatorActivities}
+            leadsActivities={leadsActivities}
             dateFilter={dateFilter}
           />
         </div>

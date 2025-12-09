@@ -15,6 +15,7 @@ import getAllDonationsReceived from "../../helper/getAllDonationsReceived";
 import getScheduledLeads from "../../helper/getScheduledLeads";
 import getOperatorMeta from "../../helper/getOperatorMeta";
 import { getOperatorActivities } from "../../services/operatorActivityService";
+import { getLeadsGroupedByOperator } from "../../helper/getLeadsHistory";
 
 // Constants
 import { CARD_IDS, VIEW_TYPES, STATUS_MESSAGES, TOAST_CONFIG } from "./constants";
@@ -69,6 +70,12 @@ const Dashboard = () => {
     grouped: {},
   });
 
+  // Estado de leads agrupados
+  const [leadsActivities, setLeadsActivities] = useState({
+    leads: [],
+    grouped: {},
+  });
+
   // Estado de meta
   const [meta, setMeta] = useState([]);
 
@@ -115,6 +122,18 @@ const Dashboard = () => {
   }, [startDate, endDate]);
 
   /**
+   * Busca leads agrupados por operador
+   */
+  const fetchLeadsActivities = useCallback(async () => {
+    try {
+      const leadsData = await getLeadsGroupedByOperator(startDate, endDate);
+      setLeadsActivities(leadsData);
+    } catch (error) {
+      console.error("Erro ao buscar leads:", error);
+    }
+  }, [startDate, endDate]);
+
+  /**
    * Busca meta dos operadores
    */
   const fetchMeta = useCallback(async () => {
@@ -147,6 +166,7 @@ const Dashboard = () => {
   useEffect(() => {
     fetchDonations();
     fetchOperatorActivities();
+    fetchLeadsActivities();
     showStatusToast();
   }, [active, modalOpen, status, operatorData, meta, startDate, endDate]);
 
@@ -271,6 +291,7 @@ const Dashboard = () => {
         data={contentData}
         handlers={modalHandlers}
         operatorActivities={operatorActivities}
+        leadsActivities={leadsActivities}
         dateFilter={{ startDate, endDate }}
       />
 
