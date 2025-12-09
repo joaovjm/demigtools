@@ -39,6 +39,7 @@ const DashboardCards = ({
   onCardClick,
   receivedCardRef,
   onReceivedContextMenu,
+  totalActivities = 0,
   data: {
     valueReceived = 0,
     confirmations = 0,
@@ -84,15 +85,15 @@ const DashboardCards = ({
           <p>R$ {valueOpenDonations}</p>
         </DashboardCard>
 
-        {/* Card Leads */}
+        {/* Card Requisição */}
         <DashboardCard
           id={CARD_IDS.LEADS}
-          title="Leads"
+          title="Requisição"
           active={active}
           onClick={onCardClick}
         >
           <p style={{ display: "flex", justifyContent: "center" }}>
-            {confirmations}
+            {totalActivities}
           </p>
         </DashboardCard>
       </div>

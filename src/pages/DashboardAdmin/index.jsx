@@ -247,6 +247,7 @@ const Dashboard = () => {
         receivedCardRef={receivedCardRef}
         onReceivedContextMenu={handleReceivedCardContextMenu}
         data={cardData}
+        totalActivities={operatorActivities.activities?.length || 0}
       />
 
       {/* DateRangePicker para filtro de datas */}
