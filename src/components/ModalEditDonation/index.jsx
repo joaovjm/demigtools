@@ -9,13 +9,13 @@ import { getCollector } from "../../helper/getCollector";
 import { UserContext } from "../../context/UserContext";
 import GenerateReceiptPDF from "../GenerateReceiptPDF";
 import { getEditReceipt } from "../../helper/getEditReceipt";
-import { FaDollarSign } from "react-icons/fa";
+import { FaDollarSign, FaEdit } from "react-icons/fa";
 import GenerateDepositPDF from "../GenerateDepositPDF";
 import { DataSelect } from "../DataTime";
 import { logDonorActivity } from "../../helper/logDonorActivity";
 import { DONOR_TYPES } from "../../constants/constants";
 
-const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
+const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor, modalEdit }) => {
   const { operatorData } = useContext(UserContext);
   const [value, setValue] = useState(donation.donation_value);
   const [date, setDate] = useState(donation.donation_day_to_receive);
@@ -316,6 +316,8 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
     }
   };
 
+  console.log(donation)
+
   return (
     <main className={styles["modal-donation-container"]}>
       <div className={styles["modal-donation"]}>
@@ -476,7 +478,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
                 >
                   <label>Observação</label>
                   <textarea
-                    value={donorConfirmationReason || observation}
+                    value={donation.operator_code_id !== 10 ? observation : donorConfirmationReason}
                     onChange={(e) => setObservation(e.target.value)}
                     placeholder="Observações sobre a doação..."
                     rows="3"

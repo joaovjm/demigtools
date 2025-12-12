@@ -476,6 +476,7 @@ const Donor = () => {
           setModalEdit={(showEdit) =>
             setUiState((prev) => ({ ...prev, modalEdit: showEdit }))
           }
+          modalEdit={uiState.modalEdit}
           donation={donation}
           donorData={donorData}
           idDonor={id}
