@@ -28,9 +28,10 @@ export const insertDonor = async (
   };
 
 export const insertDonor_cpf = async (donor_id, cpf) => {
+  const cpfReplaced = cpf.replace(/[.-]/g, '');
     const {data, error} = await supabase.from("donor_cpf").insert([{
         donor_id: donor_id,
-        donor_cpf: cpf
+        donor_cpf: cpfReplaced
     }]).select()
 
     if (error) {

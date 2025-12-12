@@ -37,12 +37,13 @@ export const editDonor = async (
     window.alert("Erro ao atualizar dados do doador: ", error.message);
   }
   if (cpf !== undefined && cpf !== null){
+    const cpfReplaced = cpf.replace(/[.-]/g, '');
     try {
       const { data: cpfData, error: cpfError } = await supabase.from("donor_cpf").upsert(
         [
           {
             donor_id: id,
-            donor_cpf: cpf,
+            donor_cpf: cpfReplaced,
           },
         ],
         { onConflict: ["donor_id"] }
