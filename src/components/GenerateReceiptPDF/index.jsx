@@ -80,7 +80,7 @@ const GenerateReceiptPDF = async ({ cards, receiptConfig, setOk }) => {
                             ],
                           },
                           {
-                            text: `TEL: ${data.donor.donor_tel_1}`,
+                            text: `TEL: ${receiptConfig.isfake ? receiptConfig.phone_fake : data.donor.donor_tel_1}`,
                             style: "label",
                             fontSize: 9,
                             margin: [0, 0, 0, 2],

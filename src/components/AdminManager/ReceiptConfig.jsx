@@ -16,14 +16,36 @@ const ReceiptConfig = () => {
     facebook: "",
     email: "",
     backOfReceipt: "",
-    cpf_visible: false,
+    isfake: false,
+    phone_fake: "",
   });
 
   const fetchReceipt = async () => {
     const response = await getEditReceipt();
-    const { pixKey, pixName, pixCity, description, backOfReceipt, instagram, facebook, email, cpf_visible } =
-      response[0];
-    setEditReceipt({ pixKey, pixName, pixCity, description, backOfReceipt, instagram, facebook, email, cpf_visible });
+    const {
+      pixKey,
+      pixName,
+      pixCity,
+      description,
+      backOfReceipt,
+      instagram,
+      facebook,
+      email,
+      isfake,
+      phone_fake,
+    } = response[0];
+    setEditReceipt({
+      pixKey,
+      pixName,
+      pixCity,
+      description,
+      backOfReceipt,
+      instagram,
+      facebook,
+      email,
+      isfake,
+      phone_fake,
+    });
   };
   useEffect(() => {
     fetchReceipt();
@@ -32,6 +54,8 @@ const ReceiptConfig = () => {
   const editReceiptChange = (field, value) => {
     setEditReceipt((item) => ({ ...item, [field]: value }));
   };
+
+  console.log(editReceipt)
 
   const handleEditReceipt = async () => {
     if (inEdit) {
@@ -46,8 +70,7 @@ const ReceiptConfig = () => {
           toast.success("Recibo atualizado com sucesso!");
           setInEdit(!inEdit);
         }
-      } catch (error) {
-      }
+      } catch (error) {}
     } else {
       setInEdit(!inEdit);
     }
@@ -84,7 +107,7 @@ const ReceiptConfig = () => {
                 />
               </div>
             </div>
-            
+
             <div className={styles.formRow}>
               <div className={styles.formGroup}>
                 <label>Nome</label>
@@ -118,7 +141,9 @@ const ReceiptConfig = () => {
                 <input
                   type="text"
                   value={editReceipt.instagram}
-                  onChange={(e) => editReceiptChange("instagram", e.target.value)}
+                  onChange={(e) =>
+                    editReceiptChange("instagram", e.target.value)
+                  }
                   disabled={!inEdit}
                   className={styles.receiptConfigInput}
                 />
@@ -128,13 +153,15 @@ const ReceiptConfig = () => {
                 <input
                   type="text"
                   value={editReceipt.facebook}
-                  onChange={(e) => editReceiptChange("facebook", e.target.value)}
+                  onChange={(e) =>
+                    editReceiptChange("facebook", e.target.value)
+                  }
                   disabled={!inEdit}
                   className={styles.receiptConfigInput}
                 />
               </div>
             </div>
-            
+
             <div className={styles.formRow}>
               <div className={styles.formGroup}>
                 <label>Email</label>
@@ -145,6 +172,38 @@ const ReceiptConfig = () => {
                   disabled={!inEdit}
                   className={styles.receiptConfigInput}
                 />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "end",
+                  justifyContent: "space-between",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <input
+                    type="checkbox"
+                    checked={editReceipt.isfake}
+                    onChange={(e) =>
+                      editReceiptChange("isfake", e.target.checked)
+                    }
+                    disabled={!inEdit}
+                    className={styles.receiptConfigCheckbox}
+                  />
+                  <p style={{ fontSize: 12, color: "#faf5e9" }}>Ativar Telefone Fake</p>
+                </div>
+                <div className={styles.formGroup}>
+                  <label>Telefone Fake</label>
+                  <input
+                    type="text"
+                    value={editReceipt.phone_fake}
+                    onChange={(e) =>
+                      editReceiptChange("phone_fake", e.target.value)
+                    }
+                    disabled={!editReceipt.isfake || !inEdit}
+                    className={styles.receiptConfigInput}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -168,7 +227,7 @@ const ReceiptConfig = () => {
 
           {/* Botão de Ação */}
           <div className={styles.receiptConfigActions}>
-            <button 
+            <button
               onClick={handleEditReceipt}
               className={`${styles.receiptConfigBtn} ${styles.primary}`}
             >

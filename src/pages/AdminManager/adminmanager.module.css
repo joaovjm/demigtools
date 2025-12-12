@@ -102,6 +102,11 @@
   z-index: 1;
 }
 
+.receiptConfigCheckbox {
+  width: 20px;
+  height: 20px;
+}
+
 .adminManagerMenuItem.active {
   background-color: #faa01c;
   border-color: #e8901a;
