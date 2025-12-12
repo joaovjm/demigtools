@@ -3,14 +3,14 @@
  * A geração do PDF agora é feita no servidor Node.js, usando arquivos PNG
  * ao invés de base64, removendo a responsabilidade do frontend
  */
-const GenerateDepositPDF = async ({ data, config }) => {
+const GenerateDepositPDF = async ({ data, config, cpf_visible }) => {
   try {
     const response = await fetch("/api/generate-deposit-pdf", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ data, config }),
+      body: JSON.stringify({ data, config, cpf_visible }),
     });
 
     if (!response.ok) {

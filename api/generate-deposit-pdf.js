@@ -22,7 +22,7 @@ const __dirname = path.dirname(__filename);
  * @param {Object} config - Configurações do recibo
  * @returns {Promise<Buffer>} Buffer do PDF gerado
  */
-async function generateDepositPDFNode({ data, config }) {
+async function generateDepositPDFNode({ data, config, cpf_visible }) {
   // Gerar código de barras
   const barcodeBuffer = await barCodeGeneratorNode(data.receipt_donation_id);
 
@@ -169,7 +169,7 @@ async function generateDepositPDFNode({ data, config }) {
               width: "auto",
             },
             {
-              text: `| CPF: ${data.cpf || "___________"}`,
+              text: `${cpf_visible ? "| CPF:" + data.cpf : ""}`,
               fontSize: 18,
               margin: [0, -2, 0, 0],
               width: "auto",
@@ -276,7 +276,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { data, config } = req.body;
+    const { data, config, cpf_visible } = req.body;
 
     if (!data || !config) {
       return res.status(400).json({ error: "Dados ou configuração não fornecidos" });
@@ -296,7 +296,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "config.backOfReceipt é obrigatório" });
     }
 
-    const pdfBuffer = await generateDepositPDFNode({ data, config });
+    const pdfBuffer = await generateDepositPDFNode({ data, config, cpf_visible: cpf_visible || false });
 
     // Garantir que o buffer é válido
     if (!pdfBuffer || !Buffer.isBuffer(pdfBuffer)) {

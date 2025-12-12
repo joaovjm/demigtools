@@ -16,13 +16,14 @@ const ReceiptConfig = () => {
     facebook: "",
     email: "",
     backOfReceipt: "",
+    cpf_visible: false,
   });
 
   const fetchReceipt = async () => {
     const response = await getEditReceipt();
-    const { pixKey, pixName, pixCity, description, backOfReceipt, instagram, facebook, email } =
+    const { pixKey, pixName, pixCity, description, backOfReceipt, instagram, facebook, email, cpf_visible } =
       response[0];
-    setEditReceipt({ pixKey, pixName, pixCity, description, backOfReceipt, instagram, facebook, email });
+    setEditReceipt({ pixKey, pixName, pixCity, description, backOfReceipt, instagram, facebook, email, cpf_visible });
   };
   useEffect(() => {
     fetchReceipt();

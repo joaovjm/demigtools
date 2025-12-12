@@ -19,7 +19,6 @@ const TableDonor = ({
     if (idDonor) {
       getDonation(idDonor)
         .then((data) => {
-          console.log(data);
           setDados(data);
         })
         .catch((error) => {

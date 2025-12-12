@@ -1,7 +1,15 @@
 import { useEffect } from "react"
 import styles from "./modalconfirm.module.css"
 
-export const ModalConfirm = ({isOpen, onClose, onConfirm, title, message}) => {
+export const ModalConfirm = ({
+    isOpen, 
+    onClose, 
+    onConfirm, 
+    title, 
+    message,
+    confirmText = "Confirmar",
+    cancelText = "Cancelar"
+}) => {
     useEffect(() => {
         const handleKeyDown = (e) => {
             if (e.key === "Escape"){
@@ -26,8 +34,8 @@ export const ModalConfirm = ({isOpen, onClose, onConfirm, title, message}) => {
                 <h4>{title}</h4>
                 <p>{message}</p>
                 <div className={styles.modalActions}>
-                    <button onClick={onClose} className={styles.cancelButton}>Cancelar</button>
-                    <button onClick={onConfirm} className={styles.confirmButton}>Confirmar</button>
+                    <button onClick={onClose} className={styles.cancelButton}>{cancelText}</button>
+                    <button onClick={onConfirm} className={styles.confirmButton}>{confirmText}</button>
                 </div>
             </div>
         </div>

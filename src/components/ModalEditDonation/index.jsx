@@ -14,8 +14,9 @@ import GenerateDepositPDF from "../GenerateDepositPDF";
 import { DataSelect } from "../DataTime";
 import { logDonorActivity } from "../../helper/logDonorActivity";
 import { DONOR_TYPES } from "../../constants/constants";
+import { ModalConfirm } from "../ModalConfirm";
 
-const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor, modalEdit }) => {
+const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
   const { operatorData } = useContext(UserContext);
   const [value, setValue] = useState(donation.donation_value);
   const [date, setDate] = useState(donation.donation_day_to_receive);
@@ -42,6 +43,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor, modalEd
   const [loadingPDF, setLoadingPDF] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
   const [donorConfirmationReason, setDonorConfirmationReason] = useState("");
+  const [showCpfConfirmModal, setShowCpfConfirmModal] = useState(false);
   // Armazenar valores originais para comparação
   const [originalValues] = useState({
     donation_value: donation.donation_value,
@@ -276,7 +278,12 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor, modalEd
     }
   };
 
-  const handleDownloadPDFDeposit = async () => {
+  const handleOpenCpfConfirmModal = () => {
+    setShowCpfConfirmModal(true);
+  };
+
+  const handleDownloadPDFDeposit = async (cpfVisible) => {
+    setShowCpfConfirmModal(false);
     setLoadingDeposit(true);
     const donoAndDonationData = { ...donation, donor_name: donorData.nome, cpf: donorData.cpf };
 
@@ -284,6 +291,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor, modalEd
       await GenerateDepositPDF({
         data: donoAndDonationData,
         config: receiptConfig,
+        cpf_visible: cpfVisible,
       });
       toast.success("PDF para deposito gerado com sucesso!");
     } catch (error) {
@@ -320,6 +328,15 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor, modalEd
 
   return (
     <main className={styles["modal-donation-container"]}>
+      <ModalConfirm
+        isOpen={showCpfConfirmModal}
+        onClose={() => handleDownloadPDFDeposit(false)}
+        onConfirm={() => handleDownloadPDFDeposit(true)}
+        title="Exibir CPF no Recibo"
+        message="Você deseja usar o CPF no recibo?"
+        confirmText="Sim"
+        cancelText="Não"
+      />
       <div className={styles["modal-donation"]}>
         <div className={styles["modal-donation-content"]}>
           <div className={styles["modal-donation-header"]}>
@@ -529,7 +546,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor, modalEd
                 <>
                   {donation.donation_received === "Sim" && (
                     <button
-                      onClick={handleDownloadPDFDeposit}
+                      onClick={handleOpenCpfConfirmModal}
                       disabled={loadingDeposit || loadingPDF || loadingSave}
                       style={{
                         padding: "8px 16px",
