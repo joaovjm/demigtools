@@ -257,6 +257,33 @@ const ModalEditLead = ({
               .select();
             if (error) throw error;
 
+            // Verificar se o lead estava agendado e marcar na tabela scheduled como concluído
+            if (wasScheduled) {
+              // Buscar e atualizar agendamentos pendentes relacionados a este lead
+              const { error: scheduledError } = await supabase
+                .from("scheduled")
+                .update({ status: "concluído" })
+                .eq("entity_type", "lead")
+                .eq("entity_id", leadId)
+                .eq("status", "pendente");
+
+              if (scheduledError) {
+                console.log("Erro ao atualizar agendamento:", scheduledError.message);
+              }
+            }
+
+            // Verificar se existe doação agendada (confirmation_status = "Agendado") para o novo doador
+            // e marcar como Concluído
+            const { error: updateScheduledDonationsError } = await supabase
+              .from("donation")
+              .update({ confirmation_status: "Concluído" })
+              .eq("donor_id", data[0].donor_id)
+              .eq("confirmation_status", "Agendado");
+
+            if (updateScheduledDonationsError) {
+              console.log("Erro ao atualizar doações agendadas:", updateScheduledDonationsError.message);
+            }
+
             // Registra atividade - usa tipo diferente se veio de agendado
             await registerOperatorActivity({
               operatorId: operatorData?.operator_code_id,

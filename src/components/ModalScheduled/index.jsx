@@ -289,6 +289,7 @@ const ModalScheduled = ({
           campain
         );
 
+
         if (donationResponse && donationResponse.length > 0) {
           // Marcar agendamento como concluído e vincular à doação criada
           await completeScheduledDonation(
