@@ -324,8 +324,6 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
     }
   };
 
-  console.log(donation)
-
   return (
     <main className={styles["modal-donation-container"]}>
       <ModalConfirm
@@ -516,7 +514,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
                       <span className={styles['checkmark']}></span>
                       Impresso
                     </label>
-                    {/*
+                    {operatorData.operator_type === "Admin" && (
                     <label className={styles['checkbox-label']}>
                       <input
                         type="checkbox"
@@ -526,7 +524,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
                       <span className={styles['checkmark']}></span>
                       Recebido
                     </label>
-                    */}
+                    )}
                   </div>
                 </div>
               )}
