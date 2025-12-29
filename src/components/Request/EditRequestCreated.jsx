@@ -29,6 +29,10 @@ const EditRequestCreated = ({ requestId, onClose }) => {
   const [requestName, setRequestName] = useState("");
   const [showAddOperator, setShowAddOperator] = useState(false);
   const [selectedOperatorToAdd, setSelectedOperatorToAdd] = useState("");
+  // operatorsInView = operadores visíveis na tela (cards)
+  // activeForDistribution = operadores que recebem na distribuição aleatória
+  const [operatorsInView, setOperatorsInView] = useState([]);
+  const [activeForDistribution, setActiveForDistribution] = useState([]);
 
   // Carregar dados da requisição
   useEffect(() => {
@@ -92,7 +96,7 @@ const EditRequestCreated = ({ requestId, onClose }) => {
     }
   }, [createPackage]);
 
-  // Inicializar selection apenas com operadores que têm doações na requisição
+  // Inicializar operatorsInView e activeForDistribution com operadores que têm doações na requisição
   useEffect(() => {
     if (createPackage.length > 0) {
       const operatorsInRequest = [...new Set(
@@ -100,7 +104,9 @@ const EditRequestCreated = ({ requestId, onClose }) => {
           .filter(pkg => pkg.operator_code_id)
           .map(pkg => pkg.operator_code_id)
       )];
-      setSelection(operatorsInRequest);
+      setOperatorsInView(operatorsInRequest);
+      setActiveForDistribution(operatorsInRequest);
+      setSelection(operatorsInRequest); // Manter compatibilidade
     }
   }, [createPackage.length]);
 
@@ -172,12 +178,17 @@ const EditRequestCreated = ({ requestId, onClose }) => {
       return;
     }
     
-    if (selection.includes(selectedOperatorToAdd)) {
+    // Converter para número para manter consistência com os IDs existentes
+    const operatorToAdd = Number(selectedOperatorToAdd);
+    
+    if (operatorsInView.includes(operatorToAdd)) {
       toast.warning("Este operador já está na requisição");
       return;
     }
     
-    setSelection([...selection, selectedOperatorToAdd]);
+    setOperatorsInView([...operatorsInView, operatorToAdd]);
+    setActiveForDistribution([...activeForDistribution, operatorToAdd]);
+    setSelection([...selection, operatorToAdd]); // Manter compatibilidade
     setSelectedOperatorToAdd("");
     setShowAddOperator(false);
     toast.success("Operador adicionado à requisição!");
@@ -185,7 +196,7 @@ const EditRequestCreated = ({ requestId, onClose }) => {
 
   // Filtrar operadores disponíveis (que não estão na requisição)
   const availableOperators = operatorID.filter(
-    (op) => !selection.includes(op)
+    (op) => !operatorsInView.includes(op)
   );
 
   if (loading) {
@@ -221,7 +232,7 @@ const EditRequestCreated = ({ requestId, onClose }) => {
             createPackage={createPackage}
             setCreatePackage={setCreatePackage}
             operatorID={operatorID}
-            selection={selection}
+            selection={activeForDistribution}
             buttonTest={buttonTest}
             setButtonTest={setButtonTest}
           />
@@ -269,7 +280,7 @@ const EditRequestCreated = ({ requestId, onClose }) => {
             )}
           </div>
           <div className="request-step-4-right-body">
-            {selection?.map((cp) => {
+            {operatorsInView?.map((cp) => {
               return (
                 <RequestCard
                   perOperator={perOperator[cp] || []}
@@ -287,6 +298,10 @@ const EditRequestCreated = ({ requestId, onClose }) => {
                   setAllOperator={setOperatorID}
                   selection={selection}
                   setSelection={setSelection}
+                  operatorsInView={operatorsInView}
+                  setOperatorsInView={setOperatorsInView}
+                  activeForDistribution={activeForDistribution}
+                  setActiveForDistribution={setActiveForDistribution}
                 />
               );
             })}

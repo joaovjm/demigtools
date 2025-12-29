@@ -28,7 +28,11 @@ const RequestCard = ({
   allOperator,
   setAllOperator,
   selection,
-  setSelection
+  setSelection,
+  operatorsInView,
+  setOperatorsInView,
+  activeForDistribution,
+  setActiveForDistribution
 }) => {
   const [countValue, setCountValue] = useState(0);
   const [countQuant, setCountQuant] = useState(0);
@@ -66,8 +70,13 @@ const RequestCard = ({
   }, [perOperator]);
 
   useEffect(() => {
-    setIsSelected(selection.includes(operatorID));
-  }, [selection, operatorID]);
+    // Usa activeForDistribution se disponível (EditRequestCreated), senão usa selection
+    if (activeForDistribution) {
+      setIsSelected(activeForDistribution.includes(operatorID));
+    } else {
+      setIsSelected(selection.includes(operatorID));
+    }
+  }, [activeForDistribution, selection, operatorID]);
 
   const addSingle = () => {
 
@@ -100,7 +109,15 @@ const RequestCard = ({
   const removeOperatorInList = (e) => {
     e.stopPropagation();
     deleteOperatorInList(allOperator, setAllOperator, operatorID, createPackage, setCreatePackage);
-    setSelection(selection.filter(f => f !== operatorID))
+    
+    // Se estamos no EditRequestCreated, remove de operatorsInView e activeForDistribution
+    if (setOperatorsInView && operatorsInView) {
+      setOperatorsInView(operatorsInView.filter(f => f !== operatorID));
+    }
+    if (setActiveForDistribution && activeForDistribution) {
+      setActiveForDistribution(activeForDistribution.filter(f => f !== operatorID));
+    }
+    setSelection(selection.filter(f => f !== operatorID));
   }
 
   const removeAll = () => {
@@ -112,11 +129,22 @@ const RequestCard = ({
   };
 
   const handleCardClick = () => {
-    setSelection(prev => 
-      prev.includes(operatorID) 
-        ? prev.filter(id => id !== operatorID) 
-        : [...prev, operatorID]
-    );
+    // Se estamos no EditRequestCreated (tem activeForDistribution), alterna apenas nele
+    // Isso permite marcar/desmarcar sem remover o card da tela
+    if (setActiveForDistribution && activeForDistribution) {
+      setActiveForDistribution(prev => 
+        prev.includes(operatorID) 
+          ? prev.filter(id => id !== operatorID) 
+          : [...prev, operatorID]
+      );
+    } else {
+      // Comportamento padrão para criação de requisição
+      setSelection(prev => 
+        prev.includes(operatorID) 
+          ? prev.filter(id => id !== operatorID) 
+          : [...prev, operatorID]
+      );
+    }
   };
 
   
