@@ -5,6 +5,8 @@ import { UserContext } from '../../context/UserContext'
 import supabase from '../../helper/superBaseClient'
 import { FaTasks, FaBell, FaTimes, FaArrowRight } from 'react-icons/fa'
 
+const STORAGE_KEY = 'pendingTaskNotification'
+
 const TaskNotification = () => {
   const { operatorData } = useContext(UserContext)
   const navigate = useNavigate()
@@ -18,12 +20,30 @@ const TaskNotification = () => {
   // Só exibir para administradores
   const isAdmin = operatorData?.operator_type === 'Admin'
 
+  // Carregar notificação persistida ao iniciar
   useEffect(() => {
     if (!isAdmin) return
 
-    // Configurar subscription do Supabase Realtime
-    const channel = supabase
-      .channel('task_manager_changes')
+    const savedNotification = localStorage.getItem(STORAGE_KEY)
+    if (savedNotification) {
+      try {
+        const parsed = JSON.parse(savedNotification)
+        setNotification(parsed)
+        setIsVisible(true)
+        setIsMinimized(true)
+        setHasNewTask(true)
+      } catch (e) {
+        localStorage.removeItem(STORAGE_KEY)
+      }
+    }
+  }, [isAdmin])
+
+  useEffect(() => {
+    if (!isAdmin) return
+
+    // Configurar subscription do Supabase Realtime para INSERT
+    const insertChannel = supabase
+      .channel('task_manager_insert')
       .on(
         'postgres_changes',
         {
@@ -49,6 +69,9 @@ const TaskNotification = () => {
             })
           }
 
+          // Salvar no localStorage para persistir entre navegações
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(newNotification))
+
           setNotification(newNotification)
           setIsVisible(true)
           setIsMinimized(false)
@@ -67,14 +90,54 @@ const TaskNotification = () => {
       )
       .subscribe()
 
-    subscriptionRef.current = channel
+    // Configurar subscription para UPDATE - remover notificação quando status mudar de pendente
+    const updateChannel = supabase
+      .channel('task_manager_update')
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'task_manager'
+        },
+        (payload) => {
+          // Verificar se o status mudou de 'pendente' para outro
+          const oldStatus = payload.old?.status
+          const newStatus = payload.new?.status
+          const taskId = payload.new?.id
+
+          if (oldStatus === 'pendente' && newStatus !== 'pendente') {
+            // Verificar se é a tarefa da notificação atual
+            const savedNotification = localStorage.getItem(STORAGE_KEY)
+            if (savedNotification) {
+              try {
+                const parsed = JSON.parse(savedNotification)
+                if (parsed.id === taskId) {
+                  // Remover notificação
+                  localStorage.removeItem(STORAGE_KEY)
+                  setIsVisible(false)
+                  setIsMinimized(true)
+                  setHasNewTask(false)
+                  setNotification(null)
+                }
+              } catch (e) {
+                // Erro ao parsear, ignorar
+              }
+            }
+          }
+        }
+      )
+      .subscribe()
+
+    subscriptionRef.current = { insertChannel, updateChannel }
 
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
       }
       if (subscriptionRef.current) {
-        supabase.removeChannel(subscriptionRef.current)
+        supabase.removeChannel(subscriptionRef.current.insertChannel)
+        supabase.removeChannel(subscriptionRef.current.updateChannel)
       }
     }
   }, [isAdmin])
@@ -96,13 +159,16 @@ const TaskNotification = () => {
 
   const handleClose = () => {
     setIsMinimized(true)
-    setHasNewTask(false)
   }
 
   const handleViewTasks = () => {
+    // Remover do localStorage ao clicar em Ver Tarefas
+    localStorage.removeItem(STORAGE_KEY)
+    
     setIsMinimized(true)
     setIsVisible(false)
     setHasNewTask(false)
+    setNotification(null)
     navigate('/tasks')
   }
 
