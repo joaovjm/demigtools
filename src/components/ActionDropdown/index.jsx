@@ -1,13 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import styles from "./actiondropdown.module.css";
-import { FaCog, FaEnvelope, FaEdit, FaPlus, FaCalendarAlt, FaSave } from "react-icons/fa";
+import { FaCog, FaEnvelope, FaEdit, FaPlus, FaCalendarAlt, FaSave, FaTasks } from "react-icons/fa";
 
 const ActionDropdown = ({
   onCriarMovimento,
   onEditar,
   onEnviarEmail,
   onAgendar,
+  onCriarTarefa,
   showBtnCriarMovimento = true,
+  showBtnCriarTarefa = true,
   isLoading = false,
   isEditMode = false,
   editButtonText = "Salvar",
@@ -42,6 +44,8 @@ const ActionDropdown = ({
       onEnviarEmail();
     } else if (action === "agendar" && onAgendar) {
       onAgendar();
+    } else if (action === "criarTarefa" && onCriarTarefa) {
+      onCriarTarefa();
     }
   };
 
@@ -103,6 +107,14 @@ const ActionDropdown = ({
             >
               <FaCalendarAlt /> Agendar
             </button>
+            {showBtnCriarTarefa && onCriarTarefa && (
+              <button
+                className={styles.dropdownItem}
+                onClick={() => handleActionClick("criarTarefa")}
+              >
+                <FaTasks /> Criar Tarefa
+              </button>
+            )}
           </div>
         </>
       )}
@@ -111,4 +123,3 @@ const ActionDropdown = ({
 };
 
 export default ActionDropdown;
-

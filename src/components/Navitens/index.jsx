@@ -137,5 +137,11 @@ export const OperadorMenu = [
         title: "CHAT",
         path: "./chat",
         cName: "submenu-itens"
+    },
+    {
+        id: 6,
+        title: "Minhas Tarefas",
+        path: "./mytasks",
+        cName: "submenu-itens",
     }
 ];

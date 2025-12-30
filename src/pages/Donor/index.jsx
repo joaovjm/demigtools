@@ -26,6 +26,7 @@ import DonorActivityHistory from "../../components/DonorActivityHistory";
 import { logDonorActivity } from "../../helper/logDonorActivity";
 import ActionDropdown from "../../components/ActionDropdown";
 import ModalScheduleDonor from "../../components/ModalScheduleDonor";
+import ModalCreateTask from "../../components/ModalCreateTask";
 import { CallComponent } from "../../components/CallComponent";
 import supabase from "../../helper/superBaseClient";
 const Donor = () => {
@@ -59,6 +60,7 @@ const Donor = () => {
     modalEdit: false,
     modalSendEmail: false,
     modalSchedule: false,
+    modalCreateTask: false,
   });
   
   const [activeTab, setActiveTab] = useState("donations");
@@ -247,7 +249,11 @@ const Donor = () => {
               onAgendar={() =>
                 setUiState((prev) => ({ ...prev, modalSchedule: true }))
               }
+              onCriarTarefa={() =>
+                setUiState((prev) => ({ ...prev, modalCreateTask: true }))
+              }
               showBtnCriarMovimento={uiState.showBtn}
+              showBtnCriarTarefa={true}
               isLoading={uiState.loading}
               isEditMode={uiState.btnEdit === BUTTON_TEXTS.SAVE}
               editButtonText={uiState.btnEdit}
@@ -497,6 +503,16 @@ const Donor = () => {
             setUiState((prev) => ({ ...prev, modalSchedule: false }))
           }
           donorId={id}
+        />
+      )}
+      {uiState.modalCreateTask && (
+        <ModalCreateTask
+          isOpen={uiState.modalCreateTask}
+          onClose={() =>
+            setUiState((prev) => ({ ...prev, modalCreateTask: false }))
+          }
+          donorId={id}
+          donorName={donorData.nome}
         />
       )}
     </main>

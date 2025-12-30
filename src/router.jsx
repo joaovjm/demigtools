@@ -31,6 +31,7 @@ import DashboardAdmin from "./pages/DashboardAdmin";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Chat from "./pages/Chat";
 import Tasks from "./pages/Tasks";
+import MyTasks from "./pages/MyTasks";
 import MonthHistory from "./pages/MonthHistory";
 import BulkEmailSend from "./pages/BulkEmailSend";
 
@@ -113,6 +114,15 @@ const AppRoutesContent = () => {
           element={
             <Wrapper>
               <Chat />
+            </Wrapper>
+          }
+        />
+
+        <Route
+          path="/mytasks"
+          element={
+            <Wrapper>
+              <MyTasks />
             </Wrapper>
           }
         />
