@@ -198,6 +198,34 @@
   color: var(--container-color);
 }
 
+/* Task Badge */
+.task-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  margin-left: 8px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #fff;
+  background-color: #c70000;
+  border-radius: 10px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(199, 0, 0, 0.4);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 4px rgba(199, 0, 0, 0);
+  }
+}
+
 /* User Profile */
 .user-profile {
   position: relative;

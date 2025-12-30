@@ -19,6 +19,7 @@ const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeMobileDropdown, setActiveMobileDropdown] = useState(null);
   const [operatorMeta, setOperatorMeta] = useState([]);
+  const [pendingTasksCount, setPendingTasksCount] = useState(0);
 
   const dropdownRef = useRef(null);
   const mobileMenuRef = useRef(null);
@@ -70,6 +71,33 @@ const Navbar = () => {
       }
     };
     meta();
+  }, [operatorData]);
+
+  // Buscar contagem de tarefas pendentes para Admin
+  useEffect(() => {
+    const fetchPendingTasks = async () => {
+      if (operatorData?.operator_type === "Admin") {
+        try {
+          const { count, error } = await supabase
+            .from("task_manager")
+            .select("*", { count: "exact", head: true })
+            .eq("status", "pendente");
+
+          if (!error) {
+            setPendingTasksCount(count || 0);
+          }
+        } catch (error) {
+          console.error("Erro ao buscar tarefas pendentes:", error);
+        }
+      }
+    };
+
+    fetchPendingTasks();
+
+    // Atualizar a cada 30 segundos
+    const interval = setInterval(fetchPendingTasks, 30000);
+
+    return () => clearInterval(interval);
   }, [operatorData]);
 
   useEffect(() => {
@@ -283,6 +311,9 @@ const Navbar = () => {
                             onClick={() => navigate(admin.path)}
                           >
                             {admin.title}
+                            {admin.title === "Tarefas" && pendingTasksCount > 0 && (
+                              <span className="task-badge">{pendingTasksCount}</span>
+                            )}
                           </li>
                         ))}
                       </ul>
@@ -502,6 +533,9 @@ const Navbar = () => {
                               onClick={() => setMobileMenuOpen(false)}
                             >
                               {admin.title}
+                              {admin.title === "Tarefas" && pendingTasksCount > 0 && (
+                                <span className="task-badge">{pendingTasksCount}</span>
+                              )}
                             </Link>
                           </li>
                         ))}
