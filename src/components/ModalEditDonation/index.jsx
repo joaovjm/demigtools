@@ -44,6 +44,13 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
   const [loadingSave, setLoadingSave] = useState(false);
   const [donorConfirmationReason, setDonorConfirmationReason] = useState("");
   const [showCpfConfirmModal, setShowCpfConfirmModal] = useState(false);
+  const [dateReceived, setDateReceived] = useState(
+    donation.donation_day_received
+  );
+  const [initialDateReceived, setInitialDateReceived] = useState(
+    donation.donation_day_received
+  );
+
   // Armazenar valores originais para comparação
   const [originalValues] = useState({
     donation_value: donation.donation_value,
@@ -92,7 +99,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
           .limit(1);
         if (error) throw error;
         if (data) {
-          console.log(data)
+          console.log(data);
           setRequest(data);
         }
       } catch (error) {
@@ -129,11 +136,12 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
         .eq("receipt_donation_id", donation.receipt_donation_id);
       if (error) throw error;
       if (data) {
-        setDonorConfirmationReason(data[0].donor_confirmation_reason);
+        setDonorConfirmationReason(data[0]?.donor_confirmation_reason || "");
       }
-    }
+    };
     fetchDonationConfirmationReason();
-  }, [])
+  }, []);
+
   const handleConfirm = async () => {
     if (operator === "") {
       toast.warning("Operador deve ser preenchido!");
@@ -149,6 +157,20 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
       return;
     }
 
+    if (dateReceived !== initialDateReceived) {
+      if (
+        !window.confirm(
+          "A data de recebimento foi alterada. \n\n Data inicial: " +
+            new Date(initialDateReceived).toLocaleDateString("pt-BR", {timeZone: "UTC"}) +
+            "\n Data atual: " +
+            new Date(dateReceived).toLocaleDateString("pt-BR", {timeZone: "UTC"}) +
+            "\n\n Deseja continuar?"
+        )
+      ) {
+        return;
+      }
+    }
+
     setLoadingSave(true);
     try {
       const { data, error } = await supabase
@@ -158,6 +180,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
             donation_value: value,
             donation_extra: extraValue,
             donation_day_to_receive: date,
+            donation_day_received: dateReceived,
             donation_description: observation,
             operator_code_id: operator,
             donation_print: impresso ? "Sim" : "Não",
@@ -184,6 +207,7 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
             donation_value: value,
             donation_extra: extraValue,
             donation_day_to_receive: date,
+            donation_day_received: dateReceived,
             donation_description: observation,
             operator_code_id: operator,
             donation_monthref: monthReferent,
@@ -257,7 +281,6 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
           donor_reference: donorData.referencia,
           donor_observation: donorData.observacao,
           ult_collector: donation.ult_collector,
-
         },
         donation_campain: donation.donation_campain || "Campanha Geral",
       };
@@ -285,7 +308,11 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
   const handleDownloadPDFDeposit = async (cpfVisible) => {
     setShowCpfConfirmModal(false);
     setLoadingDeposit(true);
-    const donoAndDonationData = { ...donation, donor_name: donorData.nome, cpf: donorData.cpf };
+    const donoAndDonationData = {
+      ...donation,
+      donor_name: donorData.nome,
+      cpf: donorData.cpf,
+    };
 
     try {
       await GenerateDepositPDF({
@@ -313,6 +340,11 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
       )}-01`;
       setMonthReferent(monthYear);
     }
+  };
+
+  const handleDateReceived = (e) => {
+    const value = e.target.value;
+    setDateReceived(value);
   };
 
   const handleMesRefChange = (e) => {
@@ -415,21 +447,53 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
                     min="0"
                   />
                 </div>
-                <div style={{ display: "flex", gap: "10px" }}>
-                  <div className={styles["input-group"]}>
-                    <label>Data para Receber *</label>
-                    <input type="date" value={date} onChange={handleDate} />
-                  </div>
-                  {donation.donor_type === DONOR_TYPES.MONTHLY && (
+
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  {/* Data para Receber*/}
+                  <div style={{ display: "flex", gap: "10px" }}>
                     <div className={styles["input-group"]}>
-                      <label>Mês Referente</label>
-                      <input
-                        type="month"
-                        value={
-                          monthReferent ? monthReferent.substring(0, 7) : ""
-                        }
-                        onChange={handleMesRefChange}
-                      />
+                      <label>Data para Receber *</label>
+                      <input type="date" value={date} onChange={handleDate} />
+                    </div>
+                    {donation.donor_type === DONOR_TYPES.MONTHLY && (
+                      <div className={styles["input-group"]}>
+                        <label>Mês Referente</label>
+                        <input
+                          type="month"
+                          value={
+                            monthReferent ? monthReferent.substring(0, 7) : ""
+                          }
+                          onChange={handleMesRefChange}
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Data Recebida*/}
+                  {donation.donation_received === "Sim" && (
+                    <div style={{ display: "flex", gap: "10px" }}>
+                      <div className={styles["input-group"]}>
+                        <label>Data Recebida *</label>
+                        <input
+                          type="date"
+                          value={dateReceived}
+                          onChange={handleDateReceived}
+                        />
+                      </div>
+                      {donation.donor_type === DONOR_TYPES.MONTHLY && (
+                        <div className={styles["input-group"]}>
+                          <label>Mês Referente</label>
+                          <input
+                            type="month"
+                            value={
+                              monthReferent ? monthReferent.substring(0, 7) : ""
+                            }
+                            onChange={handleMesRefChange}
+                          />
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -493,7 +557,11 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
                 >
                   <label>Observação</label>
                   <textarea
-                    value={donation.operator_code_id !== 10 ? observation : donorConfirmationReason}
+                    value={
+                      donation.operator_code_id !== 10
+                        ? observation
+                        : donorConfirmationReason
+                    }
                     onChange={(e) => setObservation(e.target.value)}
                     placeholder="Observações sobre a doação..."
                     rows="3"
@@ -502,28 +570,28 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
               </div>
 
               {operatorData.operator_type === "Admin" && (
-                <div className={styles['status-section']}>
+                <div className={styles["status-section"]}>
                   <h4>Status da Doação</h4>
-                  <div className={styles['checkbox-group']}>
-                    <label className={styles['checkbox-label']}>
+                  <div className={styles["checkbox-group"]}>
+                    <label className={styles["checkbox-label"]}>
                       <input
                         type="checkbox"
                         checked={impresso}
                         onChange={(e) => setImpresso(e.target.checked)}
                       />
-                      <span className={styles['checkmark']}></span>
+                      <span className={styles["checkmark"]}></span>
                       Impresso
                     </label>
                     {operatorData.operator_type === "Admin" && (
-                    <label className={styles['checkbox-label']}>
-                      <input
-                        type="checkbox"
-                        checked={recebido}
-                        onChange={(e) => setRecebido(e.target.checked)}
-                      />
-                      <span className={styles['checkmark']}></span>
-                      Recebido
-                    </label>
+                      <label className={styles["checkbox-label"]}>
+                        <input
+                          type="checkbox"
+                          checked={recebido}
+                          onChange={(e) => setRecebido(e.target.checked)}
+                        />
+                        <span className={styles["checkmark"]}></span>
+                        Recebido
+                      </label>
                     )}
                   </div>
                 </div>
@@ -565,7 +633,8 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
                     >
                       {loadingDeposit ? (
                         <>
-                          <span className={styles["button-spinner"]}></span> Gerando...
+                          <span className={styles["button-spinner"]}></span>{" "}
+                          Gerando...
                         </>
                       ) : (
                         "📄 Recibo para Deposito"
@@ -595,7 +664,8 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
                   >
                     {loadingPDF ? (
                       <>
-                        <span className={styles["button-spinner"]}></span> Gerando...
+                        <span className={styles["button-spinner"]}></span>{" "}
+                        Gerando...
                       </>
                     ) : (
                       "📄 Baixar PDF"
@@ -631,7 +701,8 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
               >
                 {loadingSave ? (
                   <>
-                    <span className={styles["button-spinner"]}></span> Salvando...
+                    <span className={styles["button-spinner"]}></span>{" "}
+                    Salvando...
                   </>
                 ) : (
                   "💰 Salvar Alterações"
