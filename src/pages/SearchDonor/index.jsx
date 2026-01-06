@@ -10,6 +10,7 @@ import ModalEditLead from "../../components/ModalEditLead";
 //Styles
 import styles from "./searchdonor.module.css";
 import { SearchForm } from "../../components/forms/SearchForm";
+import { ModalMergeDonators } from "../../components/modals/ModalMergeDonators";
 
 const SearchDonor = () => {
   const [selectedValue, setSelectValue] = useState("Todos");
@@ -18,6 +19,7 @@ const SearchDonor = () => {
   const [loading, setLoading] = useState(false);
   const [isModalEditLeadOpen, setIsModalEditLeadOpen] = useState(false);
   const [selectedLeadId, setSelectedLeadId] = useState(null);
+  const [isModalMergeDonatorsOpen, setIsModalMergeDonatorsOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleSearchDonor = async (e) => {
@@ -36,6 +38,10 @@ const SearchDonor = () => {
 
   const handleAddDonorClick = () => {
     navigate("/newdonor");
+  };
+
+  const handleMergeDonatorsClick = () => {
+    setIsModalMergeDonatorsOpen(true);
   };
 
   return (
@@ -90,10 +96,15 @@ const SearchDonor = () => {
 
         {/* Add Donor Section */}
         <div className={styles.addDonorSection}>
-          <button className={styles.addDonorButton} onClick={handleAddDonorClick}>
-            <span className={styles.addDonorIcon}>➕</span>
+          {donor && donor.length > 1 ? (
+            <button className={styles.addDonorButton} onClick={handleMergeDonatorsClick}>Mesclar Dados de doadores</button>
+          ) : (
+            <button className={styles.addDonorButton} onClick={handleAddDonorClick}>
+              <span className={styles.addDonorIcon}>➕</span>
             Adicionar Novo Doador
-          </button>
+            </button>
+          )}
+          
         </div>
       </div>
 
@@ -106,6 +117,14 @@ const SearchDonor = () => {
         }}
         leadId={selectedLeadId}
         initialEditMode={false}
+      />
+
+      <ModalMergeDonators
+        isOpen={isModalMergeDonatorsOpen}
+        onClose={() => {
+          setIsModalMergeDonatorsOpen(false);
+        }}
+        donors={donor}
       />
     </main>
   );
