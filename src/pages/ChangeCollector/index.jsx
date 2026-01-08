@@ -21,6 +21,7 @@ const ChangeCollector = () => {
   const [openReason, setOpenReason] = useState(false);
   const [reason, setReason] = useState("");
   const [donorName, setDonorName] = useState("");
+  const [donationCount, setDonationCount] = useState(0);
 
   useEffect(() => {
     const fetchCollectors = async () => {
@@ -65,6 +66,11 @@ const ChangeCollector = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    
+    // Zera o contador ao trocar de coletador
+    if (name === "collector") {
+      setDonationCount(0);
+    }
   };
 
   const handleChangeCollector = async (e) => {
@@ -92,6 +98,7 @@ const ChangeCollector = () => {
       if (result === "Ok") {
         message = MESSAGES.COLLECTOR_SUCCESS;
         type = ALERT_TYPES.SUCCESS;
+        setDonationCount((prev) => prev + 1);
       } else if (result === "Yes") {
         (message = MESSAGES.DONATION_RECEIVED), (type = ALERT_TYPES.ERROR);
       } else {
@@ -122,6 +129,13 @@ const ChangeCollector = () => {
         <h3 className={styles.changeCollectorTitle}>
           {ICONS.EXCHANGE} Mudar Coletador
         </h3>
+        
+        {formData.collector && (
+          <div className={styles.donationCounter}>
+            <span className={styles.counterLabel}>Doações transferidas:</span>
+            <span className={styles.counterValue}>{donationCount}</span>
+          </div>
+        )}
         
         <form className={styles.changeCollectorForm} onSubmit={handleChangeCollector}>
           <div className={styles.changeCollectorSection}>
