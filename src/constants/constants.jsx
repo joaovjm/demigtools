@@ -47,7 +47,26 @@ export const DONOR_TYPES = {
   LIST: "Lista",
   EXCLUDE: "Excluso",
   OTHERS: "Outros"
-}
+};
+
+// Função para obter tipos de doador filtrados por permissão
+export const getDonorTypeOptions = (operatorData) => {
+  const baseTypes = {
+    CASUAL: "Avulso",
+    MONTHLY: "Mensal",
+    LIST: "Lista",
+  };
+  
+  if (operatorData === "Admin") {
+    return {
+      ...baseTypes,
+      EXCLUDE: "Excluso",
+      OTHERS: "Outros"
+    };
+  } else {
+    return baseTypes;
+  }
+};
 
 export const FORM_LABELS = {
   NAME: "Nome",

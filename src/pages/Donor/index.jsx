@@ -10,6 +10,7 @@ import {
   BUTTON_TEXTS,
   DONOR_TYPES,
   FORM_LABELS,
+  getDonorTypeOptions,
   ICONS,
 } from "../../constants/constants";
 
@@ -280,7 +281,7 @@ const Donor = () => {
                   value={donorData.tipo}
                   onChange={(e) => handleInputChange("tipo", e.target.value)}
                   disabled={(uiState.edit && operatorData?.operator_type !== "Admin" && operatorData?.operator_code_id !== 521) || uiState.edit}
-                  options={Object.values(DONOR_TYPES)}
+                  options={Object.values(getDonorTypeOptions(operatorData.operator_type))}
                 />
 
                 <FormDonorInput

@@ -1,91 +1,104 @@
-import React, { useState, useEffect, useContext } from 'react'
-import styles from './mytasks.module.css'
-import supabase from '../../helper/superBaseClient'
-import { toast } from 'react-toastify'
-import { UserContext } from '../../context/UserContext'
-import { FaTasks, FaUser, FaReceipt, FaSpinner, FaFilter, FaSearch, FaPlus, FaExternalLinkAlt } from 'react-icons/fa'
-import { useNavigate } from 'react-router'
+import React, { useState, useEffect, useContext } from "react";
+import styles from "./mytasks.module.css";
+import supabase from "../../helper/superBaseClient";
+import { toast } from "react-toastify";
+import { UserContext } from "../../context/UserContext";
+import {
+  FaTasks,
+  FaUser,
+  FaReceipt,
+  FaSpinner,
+  FaFilter,
+  FaSearch,
+  FaPlus,
+  FaExternalLinkAlt,
+} from "react-icons/fa";
+import { useNavigate } from "react-router";
 
 const MyTasks = () => {
-  const { operatorData } = useContext(UserContext)
-  const navigate = useNavigate()
-  const [tasks, setTasks] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [filterStatus, setFilterStatus] = useState('all')
-  const [searchTerm, setSearchTerm] = useState('')
+  const { operatorData } = useContext(UserContext);
+  const navigate = useNavigate();
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filterStatus, setFilterStatus] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const statusOptions = [
-    { value: 'pendente', label: 'Pendente', color: '#faa01c' },
-    { value: 'em_andamento', label: 'Em Andamento', color: '#385bad' },
-    { value: 'concluido', label: 'Concluído', color: '#28a745' },
-    { value: 'cancelado', label: 'Cancelado', color: '#c70000' }
-  ]
+    { value: "pendente", label: "Pendente", color: "#faa01c" },
+    { value: "em_andamento", label: "Em Andamento", color: "#385bad" },
+    { value: "concluido", label: "Concluído", color: "#28a745" },
+    { value: "cancelado", label: "Cancelado", color: "#c70000" },
+  ];
 
   const fetchMyTasks = async () => {
-    if (!operatorData?.operator_code_id) return
+    if (!operatorData?.operator_code_id) return;
 
     try {
-      setLoading(true)
+      setLoading(true);
       const { data, error } = await supabase
-        .from('task_manager')
-        .select(`
+        .from("task_manager")
+        .select(
+          `
           *,
           operator_required_info:operator_required(operator_name, operator_code_id),
           operator_conclude_info:operator_activity_conclude(operator_name, operator_code_id),
           donor:donor_id(donor_id, donor_name)
-        `)
-        .eq('operator_required', operatorData.operator_code_id)
-        .order('created_at', { ascending: false })
+        `
+        )
+        .eq("operator_required", operatorData.operator_code_id)
+        .order("created_at", { ascending: false });
 
-      if (error) throw error
-      setTasks(data || [])
+      if (error) throw error;
+      setTasks(data || []);
     } catch (error) {
-      console.error('Erro ao buscar tarefas:', error)
-      toast.error('Erro ao carregar suas tarefas')
+      console.error("Erro ao buscar tarefas:", error);
+      toast.error("Erro ao carregar suas tarefas");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchMyTasks()
-  }, [operatorData?.operator_code_id])
+    fetchMyTasks();
+  }, [operatorData?.operator_code_id]);
 
   const getStatusColor = (status) => {
-    const statusOption = statusOptions.find(s => s.value === status)
-    return statusOption?.color || '#666'
-  }
+    const statusOption = statusOptions.find((s) => s.value === status);
+    return statusOption?.color || "#666";
+  };
 
   const getStatusLabel = (status) => {
-    const statusOption = statusOptions.find(s => s.value === status)
-    return statusOption?.label || status
-  }
+    const statusOption = statusOptions.find((s) => s.value === status);
+    return statusOption?.label || status;
+  };
 
   const formatDate = (dateString) => {
-    if (!dateString) return '-'
-    const date = new Date(dateString)
-    return date.toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    })
-  }
+    if (!dateString) return "-";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   const handleOpenDonor = (donorId) => {
     if (donorId) {
-      navigate(`/donor/${donorId}`)
+      navigate(`/donor/${donorId}`);
     }
-  }
+  };
 
-  const filteredTasks = tasks.filter(task => {
-    const matchesStatus = filterStatus === 'all' || task.status === filterStatus
-    const matchesSearch = searchTerm === '' || 
+  const filteredTasks = tasks.filter((task) => {
+    const matchesStatus =
+      filterStatus === "all" || task.status === filterStatus;
+    const matchesSearch =
+      searchTerm === "" ||
       task.reason?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      task.donor?.donor_name?.toLowerCase().includes(searchTerm.toLowerCase())
-    return matchesStatus && matchesSearch
-  })
+      task.donor?.donor_name?.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesStatus && matchesSearch;
+  });
 
   if (loading) {
     return (
@@ -95,13 +108,15 @@ const MyTasks = () => {
           <p>Carregando suas tarefas...</p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <h1><FaTasks /> Minhas Solicitações</h1>
+        <h1>
+          <FaTasks /> Minhas Solicitações
+        </h1>
         <p className={styles.subtitle}>Acompanhe o status das suas tarefas</p>
       </header>
 
@@ -124,7 +139,7 @@ const MyTasks = () => {
             className={styles.filterSelect}
           >
             <option value="all">Todos os Status</option>
-            {statusOptions.map(status => (
+            {statusOptions.map((status) => (
               <option key={status.value} value={status.value}>
                 {status.label}
               </option>
@@ -138,21 +153,21 @@ const MyTasks = () => {
           <span className={styles.statNumber}>{tasks.length}</span>
           <span className={styles.statLabel}>Total</span>
         </div>
-        <div className={styles.statCard} style={{ borderColor: '#faa01c' }}>
-          <span className={styles.statNumber} style={{ color: '#faa01c' }}>
-            {tasks.filter(t => t.status === 'pendente').length}
+        <div className={styles.statCard} style={{ borderColor: "#faa01c" }}>
+          <span className={styles.statNumber} style={{ color: "#faa01c" }}>
+            {tasks.filter((t) => t.status === "pendente").length}
           </span>
           <span className={styles.statLabel}>Pendentes</span>
         </div>
-        <div className={styles.statCard} style={{ borderColor: '#385bad' }}>
-          <span className={styles.statNumber} style={{ color: '#385bad' }}>
-            {tasks.filter(t => t.status === 'em_andamento').length}
+        <div className={styles.statCard} style={{ borderColor: "#385bad" }}>
+          <span className={styles.statNumber} style={{ color: "#385bad" }}>
+            {tasks.filter((t) => t.status === "em_andamento").length}
           </span>
           <span className={styles.statLabel}>Em Andamento</span>
         </div>
-        <div className={styles.statCard} style={{ borderColor: '#28a745' }}>
-          <span className={styles.statNumber} style={{ color: '#28a745' }}>
-            {tasks.filter(t => t.status === 'concluido').length}
+        <div className={styles.statCard} style={{ borderColor: "#28a745" }}>
+          <span className={styles.statNumber} style={{ color: "#28a745" }}>
+            {tasks.filter((t) => t.status === "concluido").length}
           </span>
           <span className={styles.statLabel}>Concluídos</span>
         </div>
@@ -163,31 +178,37 @@ const MyTasks = () => {
           <div className={styles.emptyState}>
             <FaTasks className={styles.emptyIcon} />
             <p>Nenhuma solicitação encontrada</p>
-            <span>Você pode criar uma nova tarefa a partir da página do doador</span>
+            <span>
+              Você pode criar uma nova tarefa a partir da página do doador
+            </span>
           </div>
         ) : (
           filteredTasks.map((task) => (
-            <div 
-              key={task.id} 
+            <div
+              key={task.id}
               className={styles.taskCard}
               style={{ borderLeftColor: getStatusColor(task.status) }}
             >
               <div className={styles.taskHeader}>
                 <div className={styles.taskType}>
                   {task.donor_id ? (
-                    <><FaUser className={styles.typeIcon} /> Doador</>
+                    <>
+                      <FaUser className={styles.typeIcon} /> Doador
+                    </>
                   ) : task.receipt_donation_id ? (
-                    <><FaReceipt className={styles.typeIcon} /> Recibo</>
+                    <>
+                      <FaReceipt className={styles.typeIcon} /> Recibo
+                    </>
                   ) : (
-                    'Geral'
+                    "Geral"
                   )}
                 </div>
-                <div 
+                <div
                   className={styles.statusBadge}
-                  style={{ 
+                  style={{
                     backgroundColor: `${getStatusColor(task.status)}20`,
                     color: getStatusColor(task.status),
-                    borderColor: getStatusColor(task.status)
+                    borderColor: getStatusColor(task.status),
                   }}
                 >
                   {getStatusLabel(task.status)}
@@ -197,21 +218,26 @@ const MyTasks = () => {
               <div className={styles.taskBody}>
                 <div className={styles.taskReason}>
                   <label>Tarefa</label>
-                  <p>{task.reason || 'Sem descrição'}</p>
+                  <p>{task.reason || "Sem descrição"}</p>
                 </div>
 
                 <div className={styles.taskInfo}>
                   <div className={styles.infoItem}>
                     <label>Referência</label>
                     <span>
-                      {task.donor?.donor_name || 
-                       (task.receipt_donation_id ? `Recibo #${task.receipt_donation_id}` : '-')}
+                      {task.donor?.donor_name ||
+                        (task.receipt_donation_id
+                          ? `Recibo #${task.receipt_donation_id}`
+                          : "-")}
                     </span>
                   </div>
 
                   <div className={styles.infoItem}>
                     <label>Responsável</label>
-                    <span>{task.operator_conclude_info?.operator_name || 'Aguardando atribuição'}</span>
+                    <span>
+                      {task.operator_conclude_info?.operator_name ||
+                        "Aguardando atribuição"}
+                    </span>
                   </div>
 
                   <div className={styles.infoItem}>
@@ -226,23 +252,28 @@ const MyTasks = () => {
                 </div>
               </div>
 
-              {task.donor_id && (
-                <div className={styles.taskActions}>
-                  <button
-                    className={styles.btnOpenDonor}
-                    onClick={() => handleOpenDonor(task.donor_id)}
-                  >
-                    <FaExternalLinkAlt /> Ver Doador
-                  </button>
+              <div className={styles.taskFooter}>
+                <div className={styles.infoItem}>
+                  <label>Resultado</label>
+                  <span>{task.admin_reason || "Sem resultado"}</span>
                 </div>
-              )}
+                {task.donor_id && (
+                  <div className={styles.taskActions}>
+                    <button
+                      className={styles.btnOpenDonor}
+                      onClick={() => handleOpenDonor(task.donor_id)}
+                    >
+                      <FaExternalLinkAlt /> Ver Doador
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           ))
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default MyTasks
-
+export default MyTasks;

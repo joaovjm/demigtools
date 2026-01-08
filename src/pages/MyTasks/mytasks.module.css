@@ -272,13 +272,17 @@
   font-size: 13px;
 }
 
-.taskActions {
+.taskFooter {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   margin-top: 12px;
   padding-top: 12px;
   border-top: 1px solid #383838;
 }
+.taskActions {
+  display: flex;
+}
+
 
 .btnOpenDonor {
   display: flex;
