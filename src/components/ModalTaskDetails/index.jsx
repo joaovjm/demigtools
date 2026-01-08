@@ -280,6 +280,11 @@ const ModalTaskDetails = ({ task, onClose, onUpdate, statusOptions }) => {
   };
 
   const handleSaveStatus = async () => {
+    console.log(donorForm.admin_reason);
+    if (donorForm.admin_reason === "" || donorForm.admin_reason === null || donorForm.admin_reason === undefined) {
+      toast.error("Por favor, informe o resultado da tarefa");
+      return;
+    }
     try {
       setSaving(true);
       const updateData = {
