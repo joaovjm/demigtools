@@ -169,28 +169,47 @@ const Tasks = () => {
       </div>
 
       <div className={styles.statsContainer}>
-        <div className={styles.statCard}>
+        <button 
+          className={`${styles.statCard} ${filterStatus === 'all' ? styles.statCardActive : ''}`}
+          onClick={() => setFilterStatus('all')}
+          title="Mostrar todas as tarefas"
+        >
           <span className={styles.statNumber}>{tasks.length}</span>
           <span className={styles.statLabel}>Total</span>
-        </div>
-        <div className={styles.statCard} style={{ borderColor: '#faa01c' }}>
+        </button>
+        <button 
+          className={`${styles.statCard} ${filterStatus === 'pendente' ? styles.statCardActive : ''}`}
+          onClick={() => setFilterStatus('pendente')}
+          style={{ borderColor: '#faa01c' }}
+          title="Filtrar tarefas pendentes"
+        >
           <span className={styles.statNumber} style={{ color: '#faa01c' }}>
             {tasks.filter(t => t.status === 'pendente').length}
           </span>
           <span className={styles.statLabel}>Pendentes</span>
-        </div>
-        <div className={styles.statCard} style={{ borderColor: '#385bad' }}>
+        </button>
+        <button 
+          className={`${styles.statCard} ${filterStatus === 'em_andamento' ? styles.statCardActive : ''}`}
+          onClick={() => setFilterStatus('em_andamento')}
+          style={{ borderColor: '#385bad' }}
+          title="Filtrar tarefas em andamento"
+        >
           <span className={styles.statNumber} style={{ color: '#385bad' }}>
             {tasks.filter(t => t.status === 'em_andamento').length}
           </span>
           <span className={styles.statLabel}>Em Andamento</span>
-        </div>
-        <div className={styles.statCard} style={{ borderColor: '#28a745' }}>
+        </button>
+        <button 
+          className={`${styles.statCard} ${filterStatus === 'concluido' ? styles.statCardActive : ''}`}
+          onClick={() => setFilterStatus('concluido')}
+          style={{ borderColor: '#28a745' }}
+          title="Filtrar tarefas concluídas"
+        >
           <span className={styles.statNumber} style={{ color: '#28a745' }}>
             {tasks.filter(t => t.status === 'concluido').length}
           </span>
           <span className={styles.statLabel}>Concluídos</span>
-        </div>
+        </button>
       </div>
 
       <div className={styles.tasksList}>
