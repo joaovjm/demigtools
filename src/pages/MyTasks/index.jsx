@@ -259,7 +259,7 @@ const MyTasks = () => {
                     <FaCheckCircle
                       style={{ fontSize: "16px", color: "#28a745"}}
                     />{" "}
-                    {task.admin_reason || "Sem resultado"}
+                    {task.admin_reason || "Não declarado"}
                   </span>
                 </div>
                 {task.donor_id && (
