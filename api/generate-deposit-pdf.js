@@ -199,7 +199,7 @@ async function generateDepositPDFNode({ data, config, cpf_visible }) {
           margin: [0, 0, 0, 24],
         },
         {
-          text: `Rio de Janeiro,     ${new Date(data.donation_monthref || data.donation_day_to_receive).toLocaleDateString("pt-BR", {
+          text: `Rio de Janeiro,     ${new Date(data.donation_day_received).toLocaleDateString("pt-BR", {
             timeZone: "UTC",
             day: "numeric",
             month: "long",
