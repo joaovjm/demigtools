@@ -65,11 +65,14 @@ const CheckPrint = () => {
     setPrinters([]);
     const response = await getDonationsPrint(startDate, endDate, selectType);
     setPrinters(response);
-    // Armazenar os dados originais para comparação posterior
+    // Armazenar os dados originais do banco para comparação posterior
     if (response?.length > 0) {
       setOriginalDonations(response?.map(item => ({
         receipt_donation_id: item.receipt_donation_id,
-        collector_code_id: item.collector_code_id
+        // Usa o valor original do banco (antes da modificação pelo serviço)
+        collector_code_id: item.original_collector_code_id !== undefined 
+          ? item.original_collector_code_id 
+          : item.collector_code_id
       })));
       const { data, error } = await supabase.from("receipt_config").select();
       if (error) throw error;

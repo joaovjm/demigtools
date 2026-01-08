@@ -55,6 +55,7 @@ export async function getDonationsPrint(startDate, endDate, donationType = "Todo
                   item.donor.donor_id === validCollector.donor_id
                     ? {
                         ...item,
+                        original_collector_code_id: item.collector_code_id, // Preserva o valor original do banco
                         collector_code_id:
                           validCollector.collector.collector_code_id,
                         collector: {
