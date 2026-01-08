@@ -187,6 +187,60 @@
   box-shadow: 0 4px 12px rgba(56, 91, 173, 0.4);
 }
 
+/* Estilos para notificações de tarefas concluídas */
+.completedBtn {
+  background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+}
+
+.completedBtn:hover {
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.5);
+}
+
+.dotCompleted {
+  background-color: #28a745;
+}
+
+.notificationCompleted {
+  border-left: 4px solid #28a745;
+}
+
+.headerCompleted {
+  background-color: rgba(40, 167, 69, 0.1);
+}
+
+.titleCompleted {
+  color: #28a745;
+}
+
+.operatorNameCompleted {
+  background-color: rgba(40, 167, 69, 0.1);
+  border: 1px solid rgba(40, 167, 69, 0.2);
+}
+
+.viewTasksBtnCompleted {
+  background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+}
+
+.viewTasksBtnCompleted:hover {
+  background: linear-gradient(135deg, #1e7e34 0%, #155724 100%);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+}
+
+.adminReason {
+  margin: 0 0 10px 0;
+  padding: 8px 10px;
+  background-color: rgba(40, 167, 69, 0.08);
+  border-radius: 6px;
+  color: #9e9e9e;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.adminReason strong {
+  color: #28a745;
+}
+
 /* Responsive */
 @media (max-width: 480px) {
   .notificationContainer {

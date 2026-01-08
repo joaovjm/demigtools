@@ -10,8 +10,8 @@ import {
   FaSpinner,
   FaFilter,
   FaSearch,
-  FaPlus,
   FaExternalLinkAlt,
+  FaCheckCircle,
 } from "react-icons/fa";
 import { useNavigate } from "react-router";
 
@@ -255,7 +255,12 @@ const MyTasks = () => {
               <div className={styles.taskFooter}>
                 <div className={styles.infoItem}>
                   <label>Resultado</label>
-                  <span>{task.admin_reason || "Sem resultado"}</span>
+                  <span>
+                    <FaCheckCircle
+                      style={{ fontSize: "16px", color: "#28a745"}}
+                    />{" "}
+                    {task.admin_reason || "Sem resultado"}
+                  </span>
                 </div>
                 {task.donor_id && (
                   <div className={styles.taskActions}>
