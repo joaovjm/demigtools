@@ -17,7 +17,7 @@ const filterName = async (operatorWork) => {
 
 //Retorna a quantidade de fichas recebidas e o valor total
 const filterValueReceived = (operatorWork, metode) => {
-  const countDonation = operatorWork.reduce((acc, item) => {
+  const countDonation = operatorWork?.reduce((acc, item) => {
     const name = item.operator_name?.operator_name;
     if (item.donation_received === "Sim") {
       acc[name] =
