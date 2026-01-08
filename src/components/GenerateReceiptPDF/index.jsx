@@ -391,7 +391,7 @@ const GenerateReceiptPDF = async ({ cards, receiptConfig, setOk }) => {
                 margin: [0, 5],
               },
               {
-                text: `Rio de Janeiro,     ${new Date().toLocaleDateString(
+                text: `Rio de Janeiro,     ${new Date(data.donation_day_to_receive).toLocaleDateString(
                   "pt-BR",
                   {
                     timeZone: "UTC",
