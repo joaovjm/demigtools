@@ -37,53 +37,27 @@ const searchDonor = async (params, donor_type) => {
             .eq("receipt_donation_id", receiptNumber);
         }
       }
-      // 2. BUSCA POR CNPJ: 14 dígitos ou padrão com pontos, barras e hífen
-      else if (
-        /^\d{14}$/.test(cleanParam) || // CNPJ completo: 14 dígitos
-        (cleanParam.length >= 12 && trimmedParams.includes("/")) || // Padrão com /
-        /^\d{2}\./.test(trimmedParams) // Começa com XX.
-      ) {
-        searchType = "cnpj";
-        
-        if (isLeadSearch) {
-          query = supabase
-            .from("leads")
-            .select(
-              `leads_id, leads_name, leads_address, leads_tel_1, leads_neighborhood, leads_icpf, leads_value, operator: operator_code_id(operator_code_id, operator_name)`
-            )
-            .ilike("leads_icpf", `%${cleanParam}%`);
-        } else {
-          query = supabase
-            .from("donor")
-            .select(
-              `donor_id, donor_name, donor_address, donor_tel_1, donor_neighborhood, donor_type, donor_cpf!inner(donor_cpf)`
-            )
-            .ilike("donor_cpf.donor_cpf", `%${cleanParam}%`);
-        }
-      }
-      // 3. BUSCA POR CPF: 11 dígitos ou padrão com pontos e hífen (sem barra)
-      else if (
-        /^\d{11}$/.test(cleanParam) || // CPF completo: 11 dígitos
-        (cleanParam.length >= 9 && cleanParam.length <= 11 && 
-         (trimmedParams.includes(".") || trimmedParams.includes("-")) &&
-         !trimmedParams.includes("/")) // Padrão com . ou - mas sem /
-      ) {
+      // 2. BUSCA POR CPF/CNPJ: Começa com XX/xx seguido de números
+      else if (/^xx/i.test(trimmedParams)) {
         searchType = "cpf";
         
+        // Remove o prefixo "xx" e pega apenas os números
+        const cpfSearch = trimmedParams.substring(2).replace(/\D/g, "");
+        
         if (isLeadSearch) {
           query = supabase
             .from("leads")
             .select(
               `leads_id, leads_name, leads_address, leads_tel_1, leads_neighborhood, leads_icpf, leads_value, operator: operator_code_id(operator_code_id, operator_name)`
             )
-            .ilike("leads_icpf", `%${cleanParam}%`);
+            .ilike("leads_icpf", `%${cpfSearch}%`);
         } else {
           query = supabase
             .from("donor")
             .select(
               `donor_id, donor_name, donor_address, donor_tel_1, donor_neighborhood, donor_type, donor_cpf!inner(donor_cpf)`
             )
-            .ilike("donor_cpf.donor_cpf", `%${cleanParam}%`);
+            .ilike("donor_cpf.donor_cpf", `%${cpfSearch}%`);
         }
       }
       // 4. BUSCA POR TELEFONE: Somente números sem formatação especial de CPF/CNPJ

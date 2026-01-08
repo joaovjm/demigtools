@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from "react";
 import styles from "./modaleditdonation.module.css";
 import supabase from "../../helper/superBaseClient";
 import { toast } from "react-toastify";
-import { ICONS } from "../../constants/constants";
 import { getCampains } from "../../helper/getCampains";
 import { getOperators } from "../../helper/getOperators";
 import { getCollector } from "../../helper/getCollector";
