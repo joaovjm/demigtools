@@ -96,6 +96,8 @@ const ModalEditDonation = ({ donation, setModalEdit, donorData, idDonor }) => {
           .from("request")
           .select("*, operator: operator_code_id(operator_name)")
           .eq("donor_id", idDonor)
+          .eq("request_active", "True")
+          .order("request_start_date", { ascending: false })
           .limit(1);
         if (error) throw error;
         if (data) {

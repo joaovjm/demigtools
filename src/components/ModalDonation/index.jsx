@@ -68,7 +68,9 @@ const ModalDonation = ({
           .from("request")
           .select("*, operator: operator_code_id(operator_name)")
           .eq("donor_id", donor_id)
-          .limit(1);
+          .eq("request_active", "True")
+          .limit(1)
+          .order("request_start_date", { ascending: false });
         if (error) throw error;
         if (data) {
           setRequest(data);
