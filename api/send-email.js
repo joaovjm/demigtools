@@ -11,7 +11,7 @@ dotenv.config();
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: "10mb",
+      sizeLimit: "50mb", // Aumentado para suportar vídeos
     },
   },
 };
@@ -47,7 +47,7 @@ export default async function handler(req, res) {
       .json({ error: `Método ${req.method} não permitido` });
   }
 
-  const { emailTo, subject, text, image } = req.body;
+  const { emailTo, subject, text, image, video } = req.body;
 
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
     return res.status(500).json({
@@ -68,6 +68,7 @@ export default async function handler(req, res) {
   const imageId = 'embedded-image';
   let htmlContent = '';
   let textContent = text;
+  const attachments = [];
 
   const mailOptions = {
     from: `"Centro Geriátrico Manancial" <${process.env.EMAIL_USER}>`,
@@ -93,16 +94,47 @@ export default async function handler(req, res) {
       </div>`;
     }
     
-    // Define os anexos com CID para incorporar a imagem
-    mailOptions.attachments = [
-      {
-        filename: image.filename,
-        content: image.content,
-        encoding: 'base64',
-        contentType: image.contentType || 'image/jpeg',
-        cid: imageId, // Content-ID para referenciar no HTML
-      },
-    ];
+    // Adiciona imagem aos anexos com CID para incorporar no HTML
+    attachments.push({
+      filename: image.filename,
+      content: image.content,
+      encoding: 'base64',
+      contentType: image.contentType || 'image/jpeg',
+      cid: imageId, // Content-ID para referenciar no HTML
+    });
+  }
+
+  // Adiciona o vídeo como anexo se existir
+  if (video && video.content && video.filename) {
+    // Verifica se existe o marcador [VIDEO] no texto
+    if (textContent.includes('[VIDEO]')) {
+      // Substitui o marcador [VIDEO] por uma mensagem informando que há um vídeo anexado
+      const videoPlaceholder = `<div style="margin: 20px 0; padding: 20px; background-color: #f5f5f5; border-radius: 8px; text-align: center; border: 2px dashed #4a90d9;">
+        <p style="margin: 0; color: #333; font-size: 16px;">🎬 <strong>Vídeo em anexo:</strong> ${video.filename}</p>
+        <p style="margin: 8px 0 0 0; color: #666; font-size: 14px;">Faça o download do anexo para assistir ao vídeo.</p>
+      </div>`;
+      
+      textContent = textContent.replace('[VIDEO]', videoPlaceholder);
+    } else {
+      // Se não houver marcador, adiciona a mensagem no final
+      textContent += `\n\n<div style="margin-top: 20px; padding: 20px; background-color: #f5f5f5; border-radius: 8px; text-align: center; border: 2px dashed #4a90d9;">
+        <p style="margin: 0; color: #333; font-size: 16px;">🎬 <strong>Vídeo em anexo:</strong> ${video.filename}</p>
+        <p style="margin: 8px 0 0 0; color: #666; font-size: 14px;">Faça o download do anexo para assistir ao vídeo.</p>
+      </div>`;
+    }
+    
+    // Adiciona vídeo como anexo (não pode ser incorporado no HTML como imagens)
+    attachments.push({
+      filename: video.filename,
+      content: video.content,
+      encoding: 'base64',
+      contentType: video.contentType || 'video/mp4',
+    });
+  }
+
+  // Define os anexos se houver algum
+  if (attachments.length > 0) {
+    mailOptions.attachments = attachments;
   }
 
   htmlContent = `<div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">

@@ -8,9 +8,10 @@ import supabase from "./superBaseClient";
  * @param {string} textData.title - Título do texto
  * @param {string} textData.content - Conteúdo HTML do texto
  * @param {string} textData.image - Imagem em base64 (opcional)
+ * @param {string} textData.video - Vídeo em base64 (opcional)
  * @returns {Promise<Object>} Texto inserido
  */
-export const insertCampainText = async ({ campain_id, title, content, image }) => {
+export const insertCampainText = async ({ campain_id, title, content, image, video }) => {
   try {
     // Validação básica
     if (!campain_id || !title || !content) {
@@ -28,6 +29,11 @@ export const insertCampainText = async ({ campain_id, title, content, image }) =
     // Adicionar imagem apenas se existir
     if (image) {
       insertData.image = image;
+    }
+
+    // Adicionar vídeo apenas se existir
+    if (video) {
+      insertData.video = video;
     }
 
     const { data, error } = await supabase

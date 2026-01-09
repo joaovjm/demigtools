@@ -8,9 +8,10 @@ import supabase from "./superBaseClient";
  * @param {string} updateData.title - Título do texto
  * @param {string} updateData.content - Conteúdo HTML do texto
  * @param {string} updateData.image - Imagem em base64 (opcional)
+ * @param {string} updateData.video - Vídeo em base64 (opcional)
  * @returns {Promise<Object>} Texto atualizado
  */
-export const updateCampainText = async (id, { title, content, campain_id, image }) => {
+export const updateCampainText = async (id, { title, content, campain_id, image, video }) => {
   try {
     if (!id) {
       toast.error("ID do texto não fornecido!");
@@ -22,6 +23,7 @@ export const updateCampainText = async (id, { title, content, campain_id, image 
     if (content !== undefined) updateData.content = content;
     if (campain_id !== undefined) updateData.campain_id = campain_id;
     if (image !== undefined) updateData.image = image;
+    if (video !== undefined) updateData.video = video;
 
     const { data, error } = await supabase
       .from("campain_texts")

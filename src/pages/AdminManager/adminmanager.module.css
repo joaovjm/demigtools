@@ -2428,6 +2428,75 @@
   display: block;
 }
 
+/* Upload de Vídeo */
+.videoUploadLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background-color: #4a90d9;
+  border: 2px solid #3a7fc8;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  width: fit-content;
+}
+
+.videoUploadLabel:hover {
+  background-color: #3a7fc8;
+  border-color: #2a6fb8;
+  box-shadow: 0 4px 12px rgba(74, 144, 217, 0.4);
+}
+
+.videoPreviewContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background-color: #2f2d2d;
+  border-radius: 6px;
+  position: relative;
+}
+
+.videoPreview {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  border-radius: 6px;
+  border: 2px solid #363a3d;
+}
+
+.videoHint {
+  font-size: 12px;
+  color: #4a90d9;
+  padding: 8px 12px;
+  background-color: rgba(74, 144, 217, 0.1);
+  border-radius: 4px;
+  border-left: 3px solid #4a90d9;
+}
+
+.videoHint code {
+  background-color: #363a3d;
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: #faa01c;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+}
+
+/* Estilo para vídeos no preview e conteúdo */
+.textPreview video,
+.textCardContent video {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin: 12px 0;
+  display: block;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
   .campainContainer {
@@ -2474,6 +2543,10 @@
   }
 
   .imagePreview {
+    max-width: 100%;
+  }
+
+  .videoPreview {
     max-width: 100%;
   }
 

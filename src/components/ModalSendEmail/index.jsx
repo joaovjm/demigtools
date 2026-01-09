@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styles from './modalsendemail.module.css'
-import { FaEnvelope, FaTimes, FaPaperPlane, FaImage, FaTrash } from 'react-icons/fa';
+import { FaEnvelope, FaTimes, FaPaperPlane, FaImage, FaTrash, FaVideo } from 'react-icons/fa';
 import { getCampains } from '../../helper/getCampains';
 import { getCampainTexts } from '../../helper/getCampainTexts';
 
@@ -8,8 +8,9 @@ const ModalSendEmail = ({ donor_email, donor_name, setModalSendEmail }) => {
   const [emailTo, setEmailTo] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
-  const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [media, setMedia] = useState(null);
+  const [mediaPreview, setMediaPreview] = useState(null);
+  const [mediaType, setMediaType] = useState(null); // 'image' ou 'video'
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState({ type: '', message: '' });
   
@@ -76,44 +77,60 @@ const ModalSendEmail = ({ donor_email, donor_name, setModalSendEmail }) => {
       if (selectedText) {
         setSubject(selectedText.title);
         
-        // Substituir {{imagem}} por [IMAGEM] para compatibilidade
+        // Substituir {{imagem}} e {{video}} por marcadores para compatibilidade
         let content = selectedText.content.replace(/\{\{imagem\}\}/gi, '[IMAGEM]');
+        content = content.replace(/\{\{video\}\}/gi, '[VIDEO]');
         setMessage(content);
         
         // Se o texto tem imagem anexada, carregar a imagem
         if (selectedText.image) {
-          setImagePreview(selectedText.image);
-          // Criar um objeto File fictício para manter a compatibilidade
-          setImage({ name: 'imagem_campanha.jpg' });
+          setMediaPreview(selectedText.image);
+          setMediaType('image');
+          setMedia({ name: 'imagem_campanha.jpg', type: 'image/jpeg' });
+        }
+        // Se o texto tem vídeo anexado, carregar o vídeo
+        else if (selectedText.video) {
+          setMediaPreview(selectedText.video);
+          setMediaType('video');
+          setMedia({ name: 'video_campanha.mp4', type: 'video/mp4' });
         }
       }
     }
   }, [selectedTextId, campainTexts]);
 
-  // Função para lidar com seleção de imagem
-  const handleImageChange = (e) => {
+  // Função para lidar com seleção de mídia (imagem ou vídeo)
+  const handleMediaChange = (e) => {
     const file = e.target.files[0];
     
     if (file) {
+      const isImage = file.type.startsWith('image/');
+      const isVideo = file.type.startsWith('video/');
+      
       // Validar tipo de arquivo
-      if (!file.type.startsWith('image/')) {
-        setStatus({ type: 'error', message: 'Por favor, selecione apenas arquivos de imagem.' });
+      if (!isImage && !isVideo) {
+        setStatus({ type: 'error', message: 'Por favor, selecione apenas arquivos de imagem ou vídeo.' });
         return;
       }
       
-      // Validar tamanho (máximo 5MB)
-      const maxSize = 5 * 1024 * 1024; // 5MB em bytes
+      // Validar tamanho
+      const maxImageSize = 5 * 1024 * 1024; // 5MB para imagens
+      const maxVideoSize = 25 * 1024 * 1024; // 25MB para vídeos
+      const maxSize = isVideo ? maxVideoSize : maxImageSize;
+      
       if (file.size > maxSize) {
-        setStatus({ type: 'error', message: 'A imagem deve ter no máximo 5MB.' });
+        const sizeLabel = isVideo ? '25MB' : '5MB';
+        const typeLabel = isVideo ? 'vídeo' : 'imagem';
+        setStatus({ type: 'error', message: `O ${typeLabel} deve ter no máximo ${sizeLabel}.` });
         return;
       }
 
-      setImage(file);
+      setMedia(file);
+      setMediaType(isVideo ? 'video' : 'image');
       
       // Criar preview
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result);
+        setMediaPreview(reader.result);
       };
       reader.readAsDataURL(file);
       
@@ -121,10 +138,11 @@ const ModalSendEmail = ({ donor_email, donor_name, setModalSendEmail }) => {
     }
   };
 
-  // Função para remover imagem
-  const handleRemoveImage = () => {
-    setImage(null);
-    setImagePreview(null);
+  // Função para remover mídia
+  const handleRemoveMedia = () => {
+    setMedia(null);
+    setMediaPreview(null);
+    setMediaType(null);
   };
 
   const handleSendEmail = async (e) => {
@@ -149,20 +167,26 @@ const ModalSendEmail = ({ donor_email, donor_name, setModalSendEmail }) => {
         processedMessage = processedMessage.replace(/\{\{nome_doador\}\}/gi, donor_name);
       }
 
-      // Preparar o body com a imagem se existir
+      // Preparar o body com a mídia se existir
       const emailData = {
         emailTo,
         subject,
         text: processedMessage,
       };
 
-      // Se houver imagem, adicionar ao payload
-      if (image && imagePreview) {
-        emailData.image = {
-          filename: image.name,
-          content: imagePreview.split(',')[1], // Remove o prefixo "data:image/...;base64,"
-          contentType: image.type,
+      // Se houver mídia, adicionar ao payload
+      if (media && mediaPreview) {
+        const mediaData = {
+          filename: media.name,
+          content: mediaPreview.split(',')[1], // Remove o prefixo "data:...;base64,"
+          contentType: media.type,
         };
+        
+        if (mediaType === 'video') {
+          emailData.video = mediaData;
+        } else {
+          emailData.image = mediaData;
+        }
       }
 
       const response = await fetch(apiUrl, {
@@ -191,8 +215,9 @@ const ModalSendEmail = ({ donor_email, donor_name, setModalSendEmail }) => {
         setTimeout(() => {
           setSubject('');
           setMessage('');
-          setImage(null);
-          setImagePreview(null);
+          setMedia(null);
+          setMediaPreview(null);
+          setMediaType(null);
           setStatus({ type: '', message: '' });
         }, 2000);
       } else {
@@ -303,42 +328,57 @@ const ModalSendEmail = ({ donor_email, donor_name, setModalSendEmail }) => {
                             required
                         />
                         <small style={{ color: '#666', fontSize: '0.85em', marginTop: '5px', display: 'block' }}>
-                            💡 Dica: Use <strong>[IMAGEM]</strong> no texto para posicionar a imagem onde desejar
+                            💡 Dica: Use <strong>[IMAGEM]</strong> ou <strong>[VIDEO]</strong> no texto para posicionar a mídia onde desejar
                         </small>
                     </div>
 
                     <div className={styles.searchInputGroup}>
-                        <label>Anexar Imagem (opcional)</label>
+                        <label>Anexar Imagem ou Vídeo (opcional)</label>
                         <div className={styles.imageUploadContainer}>
                             <input 
                                 type="file" 
-                                id="image-upload"
-                                accept="image/*"
-                                onChange={handleImageChange}
+                                id="media-upload"
+                                accept="image/*,video/*"
+                                onChange={handleMediaChange}
                                 className={styles.imageInput}
                             />
-                            <label htmlFor="image-upload" className={styles.imageUploadLabel}>
-                                <FaImage /> Escolher Imagem
+                            <label htmlFor="media-upload" className={styles.imageUploadLabel}>
+                                <FaImage /> <FaVideo /> Escolher Mídia
                             </label>
-                            {imagePreview && (
+                            {mediaPreview && (
                                 <div className={styles.imagePreviewContainer}>
-                                    <img 
-                                        src={imagePreview} 
-                                        alt="Preview" 
-                                        className={styles.imagePreview}
-                                    />
+                                    {mediaType === 'video' ? (
+                                        <video 
+                                            src={mediaPreview} 
+                                            controls
+                                            className={styles.videoPreview}
+                                        >
+                                            Seu navegador não suporta vídeos.
+                                        </video>
+                                    ) : (
+                                        <img 
+                                            src={mediaPreview} 
+                                            alt="Preview" 
+                                            className={styles.imagePreview}
+                                        />
+                                    )}
                                     <button 
                                         type="button"
-                                        onClick={handleRemoveImage}
+                                        onClick={handleRemoveMedia}
                                         className={styles.removeImageButton}
-                                        title="Remover imagem"
+                                        title="Remover mídia"
                                     >
                                         <FaTrash />
                                     </button>
-                                    <span className={styles.imageName}>{image?.name}</span>
+                                    <span className={styles.imageName}>
+                                        {mediaType === 'video' ? '🎬' : '📷'} {media?.name}
+                                    </span>
                                 </div>
                             )}
                         </div>
+                        <small style={{ color: '#888', fontSize: '0.8em', marginTop: '5px', display: 'block' }}>
+                            📷 Imagens: máx. 5MB | 🎬 Vídeos: máx. 25MB
+                        </small>
                     </div>
 
                     {status.message && (

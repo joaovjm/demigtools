@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { getCampains } from "../../helper/getCampains";
 import { ICONS } from "../../constants/constants";
-import { FaImage, FaTrash } from "react-icons/fa";
+import { FaImage, FaTrash, FaVideo } from "react-icons/fa";
 import { updateCampains } from "../../helper/updateCampains";
 import { deleteCampain } from "../../helper/deleteCampain";
 import { insertNewCampain } from "../../helper/insertNewCampain";
@@ -30,6 +30,10 @@ const Campain = () => {
   // Estados para gerenciar imagens
   const [textImage, setTextImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  
+  // Estados para gerenciar vídeos
+  const [textVideo, setTextVideo] = useState(null);
+  const [videoPreview, setVideoPreview] = useState(null);
 
   // Configuração do Jodit Editor
   const editorConfig = useMemo(
@@ -55,6 +59,7 @@ const Campain = () => {
         "|",
         "link",
         "image",
+        "video",
         "|",
         "emoji",
         "|",
@@ -403,6 +408,41 @@ const Campain = () => {
     setImagePreview(null);
   };
 
+  // Função para lidar com seleção de vídeo
+  const handleVideoChange = (e) => {
+    const file = e.target.files[0];
+    
+    if (file) {
+      // Validar tipo de arquivo
+      if (!file.type.startsWith('video/')) {
+        toast.error('Por favor, selecione apenas arquivos de vídeo.');
+        return;
+      }
+      
+      // Validar tamanho (máximo 50MB)
+      const maxSize = 50 * 1024 * 1024; // 50MB em bytes
+      if (file.size > maxSize) {
+        toast.error('O vídeo deve ter no máximo 50MB.');
+        return;
+      }
+
+      setTextVideo(file);
+      
+      // Criar preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setVideoPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Função para remover vídeo
+  const handleRemoveVideo = () => {
+    setTextVideo(null);
+    setVideoPreview(null);
+  };
+
   // Funções para gerenciar textos das campanhas
   const handleSaveText = async () => {
     if (!selectedCampainId) {
@@ -430,6 +470,11 @@ const Campain = () => {
       textData.image = imagePreview; // base64
     }
 
+    // Adicionar vídeo se existir
+    if (videoPreview) {
+      textData.video = videoPreview; // base64
+    }
+
     if (editingTextId) {
       // Atualizar texto existente
       await updateCampainText(editingTextId, textData);
@@ -443,6 +488,8 @@ const Campain = () => {
     setTextContent("");
     setTextImage(null);
     setImagePreview(null);
+    setTextVideo(null);
+    setVideoPreview(null);
     setEditingTextId(null);
     setReloadTexts((prev) => !prev);
   };
@@ -457,6 +504,12 @@ const Campain = () => {
     if (text.image) {
       setImagePreview(text.image);
       setTextImage({ name: "imagem_salva.jpg" }); // Placeholder para indicar que há imagem
+    }
+    
+    // Carregar vídeo se existir
+    if (text.video) {
+      setVideoPreview(text.video);
+      setTextVideo({ name: "video_salvo.mp4" }); // Placeholder para indicar que há vídeo
     }
     
     // Scroll para o formulário
@@ -477,9 +530,11 @@ const Campain = () => {
     setSelectedCampainId("");
     setTextImage(null);
     setImagePreview(null);
+    setTextVideo(null);
+    setVideoPreview(null);
   };
 
-  // Função para gerar preview com imagem substituída
+  // Função para gerar preview com imagem e vídeo substituídos
   const getPreviewContent = () => {
     if (!textContent) return "";
     
@@ -492,6 +547,15 @@ const Campain = () => {
     } else {
       // Se não há imagem, mostrar placeholder
       preview = preview.replace(/\{\{imagem\}\}/gi, '<div style="padding: 20px; background: #2f2d2d; border: 2px dashed #faa01c; border-radius: 6px; text-align: center; color: #9e9e9e; margin: 12px 0;">📷 Imagem será inserida aqui</div>');
+    }
+    
+    // Substituir marcador {{video}} pelo vídeo real
+    if (videoPreview) {
+      const videoTag = `<video src="${videoPreview}" controls style="max-width: 100%; height: auto; border-radius: 6px; margin: 12px 0;">Seu navegador não suporta vídeos.</video>`;
+      preview = preview.replace(/\{\{video\}\}/gi, videoTag);
+    } else {
+      // Se não há vídeo, mostrar placeholder
+      preview = preview.replace(/\{\{video\}\}/gi, '<div style="padding: 20px; background: #2f2d2d; border: 2px dashed #4a90d9; border-radius: 6px; text-align: center; color: #9e9e9e; margin: 12px 0;">🎬 Vídeo será inserido aqui</div>');
     }
     
     return preview;
@@ -630,6 +694,7 @@ const Campain = () => {
               💡 Dicas: 
               <br />• Use variáveis como <code>{"{{nome_doador}}"}</code>, <code>{"{{valor_doacao}}"}</code> para personalização
               <br />• Use <code>{"{{imagem}}"}</code> para posicionar a imagem onde desejar no texto
+              <br />• Use <code>{"{{video}}"}</code> para posicionar o vídeo onde desejar no texto
             </div>
           </div>
 
@@ -672,6 +737,51 @@ const Campain = () => {
             {imagePreview && (
               <div className={styles.imageHint}>
                 ✅ Imagem carregada! Use <code>{"{{imagem}}"}</code> no texto para posicioná-la
+              </div>
+            )}
+          </div>
+
+          {/* Upload de Vídeo */}
+          <div className={styles.formGroup}>
+            <label>Anexar Vídeo (opcional)</label>
+            <div className={styles.imageUploadContainer}>
+              <input 
+                type="file" 
+                id="campain-video-upload"
+                accept="video/*"
+                onChange={handleVideoChange}
+                className={styles.imageInput}
+              />
+              <label htmlFor="campain-video-upload" className={styles.videoUploadLabel}>
+                <FaVideo /> Escolher Vídeo
+              </label>
+              
+              {videoPreview && (
+                <div className={styles.videoPreviewContainer}>
+                  <video 
+                    src={videoPreview} 
+                    controls
+                    className={styles.videoPreview}
+                  >
+                    Seu navegador não suporta vídeos.
+                  </video>
+                  <button 
+                    type="button"
+                    onClick={handleRemoveVideo}
+                    className={styles.removeImageButton}
+                    title="Remover vídeo"
+                  >
+                    <FaTrash />
+                  </button>
+                  {textVideo && (
+                    <span className={styles.imageName}>{textVideo.name}</span>
+                  )}
+                </div>
+              )}
+            </div>
+            {videoPreview && (
+              <div className={styles.videoHint}>
+                ✅ Vídeo carregado! Use <code>{"{{video}}"}</code> no texto para posicioná-lo
               </div>
             )}
           </div>
@@ -778,15 +888,37 @@ const Campain = () => {
                     <div
                       className={styles.textCardContent}
                       dangerouslySetInnerHTML={{ 
-                        __html: text.image 
-                          ? text.content.replace(
+                        __html: (() => {
+                          let content = text.content;
+                          
+                          // Substituir {{imagem}}
+                          if (text.image) {
+                            content = content.replace(
                               /\{\{imagem\}\}/gi, 
                               `<img src="${text.image}" alt="Imagem da campanha" style="max-width: 100%; height: auto; border-radius: 6px; margin: 12px 0;" />`
-                            )
-                          : text.content.replace(
+                            );
+                          } else {
+                            content = content.replace(
                               /\{\{imagem\}\}/gi, 
                               '<div style="padding: 20px; background: #2f2d2d; border: 2px dashed #faa01c; border-radius: 6px; text-align: center; color: #9e9e9e; margin: 12px 0;">📷 Imagem não anexada</div>'
-                            )
+                            );
+                          }
+                          
+                          // Substituir {{video}}
+                          if (text.video) {
+                            content = content.replace(
+                              /\{\{video\}\}/gi, 
+                              `<video src="${text.video}" controls style="max-width: 100%; height: auto; border-radius: 6px; margin: 12px 0;">Seu navegador não suporta vídeos.</video>`
+                            );
+                          } else {
+                            content = content.replace(
+                              /\{\{video\}\}/gi, 
+                              '<div style="padding: 20px; background: #2f2d2d; border: 2px dashed #4a90d9; border-radius: 6px; text-align: center; color: #9e9e9e; margin: 12px 0;">🎬 Vídeo não anexado</div>'
+                            );
+                          }
+                          
+                          return content;
+                        })()
                       }}
                     />
                   </div>

@@ -271,3 +271,13 @@
     font-weight: 500;
     word-break: break-all;
 }
+
+/* Video Preview Styles */
+.videoPreview {
+    width: 100%;
+    max-width: 400px;
+    max-height: 250px;
+    border-radius: 4px;
+    border: 1px solid #2f2d2d;
+    background-color: #000;
+}
