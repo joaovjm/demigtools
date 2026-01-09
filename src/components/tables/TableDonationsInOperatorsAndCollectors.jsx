@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import supabase from "../../helper/superBaseClient";
-import "./index.css"
+import styles from "./tableDonationsInOperatorsAndCollectors.module.css"
 import { useNavigate } from "react-router";
 import { DataSelect } from "../DataTime";
 
@@ -58,8 +58,8 @@ const TableDonationsInOperatorsAndCollectors = ({
   }
 
   return (
-    <table>
-      <thead className="table-doac-head">
+    <table className={styles.tableContainer}>
+      <thead className={styles.tableDoacHead}>
         <tr>
           <th>Recibo</th>
           <th>Valor</th>
@@ -72,9 +72,9 @@ const TableDonationsInOperatorsAndCollectors = ({
           <th>Status</th>
         </tr>
       </thead>
-      <tbody className="table-doac-body">
+      <tbody className={styles.tableDoacBody}>
         {donations.map((donation, index) => (
-          <tr key={index} onClick={() => handleClick(donation.donor_id)}>
+          <tr key={index} onDoubleClick={() => handleClick(donation.donor_id)}>
             <td>{donation.receipt_donation_id}</td>
             <td>{donation.donation_value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
             <td>{donation.donor.donor_name}</td>
