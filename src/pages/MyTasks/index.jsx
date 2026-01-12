@@ -14,6 +14,7 @@ import {
   FaCheckCircle,
 } from "react-icons/fa";
 import { useNavigate } from "react-router";
+import { navigateWithNewTab } from "../../utils/navigationUtils";
 
 const MyTasks = () => {
   const { operatorData } = useContext(UserContext);
@@ -84,9 +85,9 @@ const MyTasks = () => {
     });
   };
 
-  const handleOpenDonor = (donorId) => {
+  const handleOpenDonor = (donorId, event) => {
     if (donorId) {
-      navigate(`/donor/${donorId}`);
+      navigateWithNewTab(event, `/donor/${donorId}`, navigate);
     }
   };
 
@@ -266,7 +267,8 @@ const MyTasks = () => {
                   <div className={styles.taskActions}>
                     <button
                       className={styles.btnOpenDonor}
-                      onClick={() => handleOpenDonor(task.donor_id)}
+                      onClick={(e) => handleOpenDonor(task.donor_id, e)}
+                      title="Ctrl+Click para abrir em nova aba"
                     >
                       <FaExternalLinkAlt /> Ver Doador
                     </button>

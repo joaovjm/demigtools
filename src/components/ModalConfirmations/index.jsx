@@ -11,6 +11,7 @@ import { logDonorActivity } from "../../helper/logDonorActivity";
 import { getDonorConfirmationData } from "../../helper/getDonorConfirmationData";
 import { insertDonation } from "../../helper/insertDonation";
 import { updateCollectorForDonor } from "../../helper/updateCollectorForDonor";
+import { navigateWithNewTab } from "../../utils/navigationUtils";
 
 const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) => {
   const [isConfirmation, setIsConfirmation] = useState(false);
@@ -428,7 +429,7 @@ const ModalConfirmations = ({ donationConfirmationOpen, onClose, setStatus }) =>
 
             {!isConfirmation && !isScheduling && (
               <div className={styles.modalConfirmationsFooter}>
-                <button className={styles.btnOpenDonor} onClick={() => navigate(`/donor/${donationConfirmationOpen.donor_id}`)}>
+                <button className={styles.btnOpenDonor} onClick={(e) => navigateWithNewTab(e, `/donor/${donationConfirmationOpen.donor_id}`, navigate)} title="Ctrl+Click para abrir em nova aba">
                   <FaEye />
                   Abrir Doador
                 </button>

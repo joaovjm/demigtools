@@ -1,13 +1,11 @@
 import React, { useState } from "react";
-import FormInput from "../forms/FormInput";
-import FormListSelect from "../forms/FormListSelect";
 import "./index.css";
-import { BtnNewOperator } from "../buttons/ActionButtons";
 import UsersToOperators from "../../auth/UsersToOperators";
 import { toast, ToastContainer } from "react-toastify";
+import { FaCode } from "react-icons/fa";
 
-const ModalNewOperator = ({ setModalShow, setStatus }) => {
-  const typeOperator = ["Admin", "Operador", "Mensal"];
+const ModalNewOperator = ({ setModalShow }) => {
+  const typeOperator = ["Admin", "Operador", "Mensal" , "Developer"];
   const [newOperator, setNewOperator] = useState({
     cod: "",
     operator: "",
@@ -159,6 +157,10 @@ const ModalNewOperator = ({ setModalShow, setStatus }) => {
                   <div className="info-item">
                     <span className="info-icon">👤</span>
                     <span>Operador: Acesso limitado às funcionalidades</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-icon"><FaCode /></span>
+                    <span>Developer: Acesso a todas as funcionalidades</span>
                   </div>
                 </div>
               </div>

@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { insertDonation } from "../../helper/insertDonation";
 import { updateRequestList } from "../../helper/updateRequestList";
 import { registerOperatorActivity, ACTIVITY_TYPES } from "../../services/operatorActivityService";
+import { navigateWithNewTab } from "../../utils/navigationUtils";
 
 const ModalWorklist = ({
   setModalOpen,
@@ -254,8 +255,8 @@ const ModalWorklist = ({
     }
   };
 
-  const handleOpenDonator = () => {
-    navigate(`/donor/${workListSelected.donor_id}`);
+  const handleOpenDonator = (event) => {
+    navigateWithNewTab(event, `/donor/${workListSelected.donor_id}`, navigate);
   };
 
   console.log(workListSelected);
@@ -506,7 +507,8 @@ const ModalWorklist = ({
 
               <button
                 className={`${styles.actionBtn} ${styles.primary}`}
-                onClick={handleOpenDonator}
+                onClick={(e) => handleOpenDonator(e)}
+                title="Ctrl+Click para abrir em nova aba"
               >
                 <span className={styles.btnIcon}>👤</span>
                 <span className={styles.btnText}>Abrir Doador</span>

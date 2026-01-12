@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 import fetchDonors from "../../services/searchDonorService"
 import { DonorCard } from "../../components/cards/DonorCard";
 import ModalEditLead from "../../components/ModalEditLead";
+import { navigateWithNewTab } from "../../utils/navigationUtils";
 
 //Styles
 import styles from "./searchdonor.module.css";
@@ -27,17 +28,17 @@ const SearchDonor = () => {
     await fetchDonors(searchTerm, selectedValue, setLoading, setDonor);
   };
 
-  const handleDonorClick = (id, isLead = false) => {
+  const handleDonorClick = (id, isLead = false, event) => {
     if (isLead) {
       setSelectedLeadId(id);
       setIsModalEditLeadOpen(true);
     } else {
-      navigate(`/donor/${id}`);
+      navigateWithNewTab(event, `/donor/${id}`, navigate);
     }
   };
 
-  const handleAddDonorClick = () => {
-    navigate("/newdonor");
+  const handleAddDonorClick = (event) => {
+    navigateWithNewTab(event, "/newdonor", navigate);
   };
 
   const handleMergeDonatorsClick = () => {
@@ -79,7 +80,7 @@ const SearchDonor = () => {
               <div key={donors.donor_id} className={styles.fadeIn}>
                 <DonorCard
                   donor={donors}
-                  onClick={(id) => handleDonorClick(id, donors.isLead)}
+                  onClick={handleDonorClick}
                 />
               </div>
             ))
@@ -99,7 +100,7 @@ const SearchDonor = () => {
           {donor && donor.length > 1 ? (
             <button className={styles.addDonorButton} onClick={handleMergeDonatorsClick}>Mesclar Dados de doadores</button>
           ) : (
-            <button className={styles.addDonorButton} onClick={handleAddDonorClick}>
+            <button className={styles.addDonorButton} onClick={(e) => handleAddDonorClick(e)} title="Ctrl+Click para abrir em nova aba">
               <span className={styles.addDonorIcon}>➕</span>
             Adicionar Novo Doador
             </button>

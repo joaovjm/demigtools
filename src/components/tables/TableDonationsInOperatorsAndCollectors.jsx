@@ -3,6 +3,7 @@ import supabase from "../../helper/superBaseClient";
 import styles from "./tableDonationsInOperatorsAndCollectors.module.css"
 import { useNavigate } from "react-router";
 import { DataSelect } from "../DataTime";
+import { navigateWithNewTab } from "../../utils/navigationUtils";
 
 const TableDonationsInOperatorsAndCollectors = ({
   click,
@@ -53,8 +54,8 @@ const TableDonationsInOperatorsAndCollectors = ({
     setOc(filter)
   }, [click, statusFilter]);
 
-  const handleClick = (id) => {
-    navigate(`/donor/${id}`)
+  const handleClick = (id, event) => {
+    navigateWithNewTab(event, `/donor/${id}`, navigate);
   }
 
   return (
@@ -74,7 +75,7 @@ const TableDonationsInOperatorsAndCollectors = ({
       </thead>
       <tbody className={styles.tableDoacBody}>
         {donations.map((donation, index) => (
-          <tr key={index} onDoubleClick={() => handleClick(donation.donor_id)}>
+          <tr key={index} onDoubleClick={(e) => handleClick(donation.donor_id, e)} title="Duplo-clique para abrir (Ctrl+Click para nova aba)">
             <td>{donation.receipt_donation_id}</td>
             <td>{donation.donation_value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
             <td>{donation.donor.donor_name}</td>

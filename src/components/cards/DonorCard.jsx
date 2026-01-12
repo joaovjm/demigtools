@@ -5,7 +5,8 @@ export const DonorCard = ({ donor, onClick }) => (
   <div
     key={donor.donor_id}
     className={styles.donorCard}
-    onClick={() => onClick(donor.donor_id)}
+    onClick={(e) => onClick(donor.donor_id, donor.isLead, e)}
+    style={{ cursor: 'pointer' }}
   >
     <header className={styles.cardHeader}>
       <h3 className={styles.cardTitle}>

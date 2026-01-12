@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router";
 import { FaUser, FaMapMarkerAlt, FaPhone, FaDollarSign, FaExclamationTriangle, FaEye } from "react-icons/fa";
 import styles from "./modaldonationinopen.module.css";
+import { navigateWithNewTab } from "../../utils/navigationUtils";
 
 const ModalDonationInOpen = ({ donationOpen, onClose }) => {
   const navigate = useNavigate();
@@ -107,8 +108,9 @@ const ModalDonationInOpen = ({ donationOpen, onClose }) => {
 
           <div className={styles.modalDonationInOpenFooter}>
             <button
-              onClick={() => navigate(`/donor/${donationOpen.donor_id}`)}
+              onClick={(e) => navigateWithNewTab(e, `/donor/${donationOpen.donor_id}`, navigate)}
               className={styles.btnViewDonor}
+              title="Ctrl+Click para abrir em nova aba"
             >
               <FaEye />
               Abrir Doador

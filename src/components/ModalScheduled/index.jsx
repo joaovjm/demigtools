@@ -12,6 +12,7 @@ import { useNavigate } from "react-router";
 import supabase from "../../helper/superBaseClient";
 import { UserContext } from "../../context/UserContext";
 import { registerOperatorActivity, ACTIVITY_TYPES } from "../../services/operatorActivityService";
+import { navigateWithNewTab } from "../../utils/navigationUtils";
 import {
   FaUser,
   FaMapMarkerAlt,
@@ -305,8 +306,8 @@ const ModalScheduled = ({
     }
   };
 
-  const handleOpenDonor = () => {
-    navigate(`/donor/${scheduledOpen.donor_id}`);
+  const handleOpenDonor = (event) => {
+    navigateWithNewTab(event, `/donor/${scheduledOpen.donor_id}`, navigate);
   };
 
   console.log(scheduledOpen);
@@ -475,7 +476,7 @@ const ModalScheduled = ({
                   Não pode ajudar
                 </button>
                 {scheduledOpen.typeScheduled !== "lead" && scheduledOpen.donor_id && (
-                  <button onClick={handleOpenDonor} className={styles.btnOpenDonor}>
+                  <button onClick={(e) => handleOpenDonor(e)} className={styles.btnOpenDonor} title="Ctrl+Click para abrir em nova aba">
                     <FaUserCircle />
                     Abrir Doador
                   </button>

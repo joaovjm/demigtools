@@ -10,6 +10,7 @@ import { FaAngleDown } from "react-icons/fa";
 import { AdminMenu, Navitens, OperadorMenu, RelatórioMenu } from "../Navitens";
 import supabase from "../../helper/superBaseClient";
 import getOperatorMeta from "../../helper/getOperatorMeta";
+import { navigateWithNewTab } from "../../utils/navigationUtils";
 
 const Navbar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -234,12 +235,16 @@ const Navbar = () => {
     }
   };
 
-  const handleLogoClick = (e) => {
-    if (location.pathname === e) {
+  const handleLogoClick = (path, event) => {
+    if (location.pathname === path) {
       navigate(location.pathname);
     } else {
-      navigate(e);
+      navigateWithNewTab(event, path, navigate);
     }
+  };
+
+  const handleNavItemClick = (path, event) => {
+    navigateWithNewTab(event, path, navigate);
   };
 
   return (
@@ -250,14 +255,16 @@ const Navbar = () => {
             {isAuthenticated ? (
               operatorData ? (
                 <div
-                  onClick={() =>
+                  onClick={(e) =>
                     handleLogoClick(
                       operatorData.operator_type === "Admin"
                         ? "/dashboardAdmin"
-                        : "/dashboard"
+                        : "/dashboard",
+                      e
                     )
                   }
                   className="logo"
+                  title="Ctrl+Click para abrir em nova aba"
                 >
                   <span className="span-logo-1">DEMI</span>
                   <span className="span-logo-2">GT</span>
@@ -308,7 +315,8 @@ const Navbar = () => {
                           <li
                             key={admin.id}
                             className={admin.cName}
-                            onClick={() => navigate(admin.path)}
+                            onClick={(e) => handleNavItemClick(admin.path, e)}
+                            title="Ctrl+Click para abrir em nova aba"
                           >
                             {admin.title}
                             {admin.title === "Tarefas" && pendingTasksCount > 0 && (
@@ -330,7 +338,8 @@ const Navbar = () => {
                             <li
                               key={admin.id}
                               className={admin.cName}
-                              onClick={() => navigate(admin.path)}
+                              onClick={(e) => handleNavItemClick(admin.path, e)}
+                              title="Ctrl+Click para abrir em nova aba"
                             >
                               {admin.title}
                             </li>
@@ -349,7 +358,8 @@ const Navbar = () => {
                             <li
                               key={admin.id}
                               className={admin.cName}
-                              onClick={() => navigate(admin.path)}
+                              onClick={(e) => handleNavItemClick(admin.path, e)}
+                              title="Ctrl+Click para abrir em nova aba"
                             >
                               {admin.title}
                             </li>
@@ -419,7 +429,18 @@ const Navbar = () => {
                       >
                         {OperadorMenu.map((admin) => (
                           <li key={admin.id} className={admin.cName}>
-                            <Link to={admin.path}>{admin.title}</Link>
+                            <Link 
+                              to={admin.path}
+                              onClick={(e) => {
+                                if (e.ctrlKey || e.metaKey) {
+                                  e.preventDefault();
+                                  window.open(admin.path, '_blank');
+                                }
+                              }}
+                              title="Ctrl+Click para abrir em nova aba"
+                            >
+                              {admin.title}
+                            </Link>
                           </li>
                         ))}
                       </ul>
@@ -530,7 +551,14 @@ const Navbar = () => {
                           <li key={admin.id} className="mobile-dropdown-item">
                             <Link
                               to={admin.path}
-                              onClick={() => setMobileMenuOpen(false)}
+                              onClick={(e) => {
+                                if (e.ctrlKey || e.metaKey) {
+                                  e.preventDefault();
+                                  window.open(admin.path, '_blank');
+                                }
+                                setMobileMenuOpen(false);
+                              }}
+                              title="Ctrl+Click para abrir em nova aba"
                             >
                               {admin.title}
                               {admin.title === "Tarefas" && pendingTasksCount > 0 && (
@@ -549,7 +577,14 @@ const Navbar = () => {
                           <li key={admin.id} className="mobile-dropdown-item">
                             <Link
                               to={admin.path}
-                              onClick={() => setMobileMenuOpen(false)}
+                              onClick={(e) => {
+                                if (e.ctrlKey || e.metaKey) {
+                                  e.preventDefault();
+                                  window.open(admin.path, '_blank');
+                                }
+                                setMobileMenuOpen(false);
+                              }}
+                              title="Ctrl+Click para abrir em nova aba"
                             >
                               {admin.title}
                             </Link>
@@ -565,7 +600,14 @@ const Navbar = () => {
                           <li key={admin.id} className="mobile-dropdown-item">
                             <Link
                               to={admin.path}
-                              onClick={() => setMobileMenuOpen(false)}
+                              onClick={(e) => {
+                                if (e.ctrlKey || e.metaKey) {
+                                  e.preventDefault();
+                                  window.open(admin.path, '_blank');
+                                }
+                                setMobileMenuOpen(false);
+                              }}
+                              title="Ctrl+Click para abrir em nova aba"
                             >
                               {admin.title}
                             </Link>
@@ -620,7 +662,14 @@ const Navbar = () => {
                           <li key={admin.id} className="mobile-dropdown-item">
                             <Link
                               to={admin.path}
-                              onClick={() => setMobileMenuOpen(false)}
+                              onClick={(e) => {
+                                if (e.ctrlKey || e.metaKey) {
+                                  e.preventDefault();
+                                  window.open(admin.path, '_blank');
+                                }
+                                setMobileMenuOpen(false);
+                              }}
+                              title="Ctrl+Click para abrir em nova aba"
                             >
                               {admin.title}
                             </Link>

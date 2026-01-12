@@ -19,6 +19,7 @@ import { editDonor } from "../../helper/editDonor";
 import { getCollector } from "../../helper/getCollector";
 import { getOperators } from "../../helper/getOperators";
 import { useNavigate } from "react-router";
+import { navigateWithNewTab } from "../../utils/navigationUtils";
 
 const ModalTaskDetails = ({ task, onClose, onUpdate, statusOptions }) => {
   const navigate = useNavigate();
@@ -802,8 +803,9 @@ const ModalTaskDetails = ({ task, onClose, onUpdate, statusOptions }) => {
 
           <div className={styles.modalFooter}>
             <button
-              onClick={() => navigate(`/donor/${task.donor_id}`)}
+              onClick={(e) => navigateWithNewTab(e, `/donor/${task.donor_id}`, navigate)}
               className={styles.btnOpenDonor}
+              title="Ctrl+Click para abrir em nova aba"
             >
               <FaPersonBooth /> Abrir Doador
             </button>
