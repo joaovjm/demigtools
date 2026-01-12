@@ -3,7 +3,7 @@ import styles from './tasks.module.css'
 import supabase from '../../helper/superBaseClient'
 import { toast } from 'react-toastify'
 import { UserContext } from '../../context/UserContext'
-import { FaTasks, FaUser, FaReceipt, FaSpinner, FaFilter, FaSearch, FaExclamationTriangle } from 'react-icons/fa'
+import { FaTasks, FaSpinner, FaFilter, FaSearch, FaExclamationTriangle } from 'react-icons/fa'
 import ModalTaskDetails from '../../components/ModalTaskDetails'
 
 const Tasks = () => {
@@ -102,14 +102,40 @@ const Tasks = () => {
     })
   }
 
-  const filteredTasks = tasks.filter(task => {
-    const matchesStatus = filterStatus === 'all' || task.status === filterStatus
-    const matchesSearch = searchTerm === '' || 
-      task.reason?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      task.operator_required_info?.operator_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      task.donor?.donor_name?.toLowerCase().includes(searchTerm.toLowerCase())
-    return matchesStatus && matchesSearch
-  })
+  const filteredTasks = tasks
+    .filter(task => {
+      // Filtro por status/prioridade
+      let matchesFilter = true
+      if (filterStatus === 'prioridade_alta') {
+        matchesFilter = task.priority === 'alta'
+      } else if (filterStatus !== 'all') {
+        matchesFilter = task.status === filterStatus
+      }
+      
+      // Filtro por busca
+      const matchesSearch = searchTerm === '' || 
+        task.reason?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        task.operator_required_info?.operator_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        task.donor?.donor_name?.toLowerCase().includes(searchTerm.toLowerCase())
+      
+      return matchesFilter && matchesSearch
+    })
+    .sort((a, b) => {
+      // 1. Prioridade alta sempre primeiro
+      const aIsHighPriority = a.priority === 'alta'
+      const bIsHighPriority = b.priority === 'alta'
+      if (aIsHighPriority && !bIsHighPriority) return -1
+      if (!aIsHighPriority && bIsHighPriority) return 1
+
+      // 2. Concluídos sempre por último
+      const aIsConcluded = a.status === 'concluido'
+      const bIsConcluded = b.status === 'concluido'
+      if (aIsConcluded && !bIsConcluded) return 1
+      if (!aIsConcluded && bIsConcluded) return -1
+
+      // 3. Ordenar por data mais recente
+      return new Date(b.created_at) - new Date(a.created_at)
+    })
 
   if (loading) {
     return (
@@ -165,6 +191,17 @@ const Tasks = () => {
         >
           <span className={styles.statNumber}>{tasks.length}</span>
           <span className={styles.statLabel}>Total</span>
+        </button>
+        <button 
+          className={`${styles.statCard} ${filterStatus === 'prioridade_alta' ? styles.statCardActive : ''}`}
+          onClick={() => setFilterStatus('prioridade_alta')}
+          style={{ borderColor: '#c70000' }}
+          title="Filtrar tarefas com prioridade alta"
+        >
+          <span className={styles.statNumber} style={{ color: '#c70000' }}>
+            {tasks.filter(t => t.priority === 'alta').length}
+          </span>
+          <span className={styles.statLabel}>Prioridade Alta</span>
         </button>
         <button 
           className={`${styles.statCard} ${filterStatus === 'pendente' ? styles.statCardActive : ''}`}
