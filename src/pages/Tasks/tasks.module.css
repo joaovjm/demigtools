@@ -198,11 +198,57 @@
   border-radius: 8px;
   padding: 14px;
   transition: all 0.3s ease;
+  position: relative;
 }
 
 .taskItemsContainer:hover {
   border-color: #464a4d;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Priority Task Styles */
+.priorityTask {
+  background: linear-gradient(135deg, #3d1f1f 0%, #1f1d1d 60%);
+  border-color: #c70000;
+  border-left-color: #c70000;
+  box-shadow: 0 0 12px rgba(199, 0, 0, 0.15);
+}
+
+.priorityTask:hover {
+  border-color: #ff3333;
+  box-shadow: 0 4px 16px rgba(199, 0, 0, 0.25);
+}
+
+.priorityBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: linear-gradient(135deg, #c70000 0%, #a00000 100%);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  position: absolute;
+  top: -8px;
+  right: 12px;
+  box-shadow: 0 2px 8px rgba(199, 0, 0, 0.4);
+  animation: priorityPulse 2s ease-in-out infinite;
+}
+
+.priorityBadge svg {
+  font-size: 10px;
+}
+
+@keyframes priorityPulse {
+  0%, 100% {
+    box-shadow: 0 2px 8px rgba(199, 0, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 2px 16px rgba(199, 0, 0, 0.6);
+  }
 }
 
 .taskReasonRow {

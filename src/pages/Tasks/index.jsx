@@ -3,7 +3,7 @@ import styles from './tasks.module.css'
 import supabase from '../../helper/superBaseClient'
 import { toast } from 'react-toastify'
 import { UserContext } from '../../context/UserContext'
-import { FaTasks, FaUser, FaReceipt, FaSpinner, FaFilter, FaSearch } from 'react-icons/fa'
+import { FaTasks, FaUser, FaReceipt, FaSpinner, FaFilter, FaSearch, FaExclamationTriangle } from 'react-icons/fa'
 import ModalTaskDetails from '../../components/ModalTaskDetails'
 
 const Tasks = () => {
@@ -32,18 +32,7 @@ const Tasks = () => {
           *,
           operator_required_info:operator_required(operator_name, operator_code_id),
           operator_conclude_info:operator_activity_conclude(operator_name, operator_code_id),
-          donor:donor_id(donor_id, donor_name, donor_address, donor_city, donor_neighborhood, donor_tel_1),
-          donation:receipt_donation_id(
-            receipt_donation_id,
-            donation_value,
-            donation_day_to_receive,
-            donation_received,
-            donation_print,
-            collector_code_id,
-            operator_code_id,
-            donation_description,
-            donor_id
-          )
+          donor:donor_id(donor_id, donor_name, donor_address, donor_city, donor_neighborhood, donor_tel_1)
         `)
         .order('created_at', { ascending: false })
 
@@ -222,9 +211,14 @@ const Tasks = () => {
           filteredTasks.map((task) => (
             <div 
               key={task.id} 
-              className={styles.taskItemsContainer}
-              style={{ borderLeftColor: getStatusColor(task.status) }}
+              className={`${styles.taskItemsContainer} ${task.priority === "alta" ? styles.priorityTask : ''}`}
+              style={{ borderLeftColor: task.priority === "alta" ? '#c70000' : getStatusColor(task.status) }}
             >
+              {task.priority === "alta" && (
+                <span className={styles.priorityBadge}>
+                  <FaExclamationTriangle /> Prioridade
+                </span>
+              )}
               <div className={styles.taskReasonRow}>
                 <div className={styles.taskItemBlock}>
                   <label>Tarefa</label>
@@ -233,18 +227,6 @@ const Tasks = () => {
               </div>
 
               <div className={styles.taskMainContent}>
-                <div className={styles.taskItemBlock}>
-                  <label>Tipo</label>
-                  <span className={styles.taskType}>
-                    {task.donor_id ? (
-                      <><FaUser className={styles.typeIcon} /> Doador</>
-                    ) : task.receipt_donation_id ? (
-                      <><FaReceipt className={styles.typeIcon} /> Recibo</>
-                    ) : (
-                      'Geral'
-                    )}
-                  </span>
-                </div>
 
                 <div className={styles.taskItemBlock}>
                   <label>Referência</label>

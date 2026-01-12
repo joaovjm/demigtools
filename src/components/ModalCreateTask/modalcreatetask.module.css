@@ -232,6 +232,23 @@
   color: #385bad;
 }
 
+.infoboxPriority {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background-color: rgba(56, 91, 173, 0.1);
+  border: 1px solid rgba(56, 91, 173, 0.3);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 11px;
+}
+.infoboxPriority p {
+  margin: 0;
+  color: #9e9e9e;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
 /* Spinner */
 .spinner {
   animation: spin 1s linear infinite;
