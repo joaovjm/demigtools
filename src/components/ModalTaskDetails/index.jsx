@@ -281,7 +281,11 @@ const ModalTaskDetails = ({ task, onClose, onUpdate, statusOptions }) => {
 
   const handleSaveStatus = async () => {
     console.log(donorForm.admin_reason);
-    if (donorForm.admin_reason === "" || donorForm.admin_reason === null || donorForm.admin_reason === undefined) {
+    if (
+      donorForm.admin_reason === "" ||
+      donorForm.admin_reason === null ||
+      donorForm.admin_reason === undefined
+    ) {
       toast.error("Por favor, informe o resultado da tarefa");
       return;
     }
@@ -608,6 +612,7 @@ const ModalTaskDetails = ({ task, onClose, onUpdate, statusOptions }) => {
             )}
 
             {/* Donation Section */}
+            {/*
             {task?.receipt_donation_id && (
               <div className={styles.formSection}>
                 <h3>
@@ -774,6 +779,7 @@ const ModalTaskDetails = ({ task, onClose, onUpdate, statusOptions }) => {
                 )}
               </div>
             )}
+              */}
           </div>
 
           <div
