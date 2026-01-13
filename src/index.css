@@ -8,3 +8,12 @@
   text-transform: uppercase;
 }
 
+/* Permitir letras minúsculas no JoditEditor */
+.jodit-wysiwyg,
+.jodit-wysiwyg *,
+.jodit-container .jodit-workplace,
+.jodit-container .jodit-workplace *,
+.jodit * {
+  text-transform: none !important;
+}
+
