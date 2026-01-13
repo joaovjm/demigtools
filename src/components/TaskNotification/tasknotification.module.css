@@ -241,6 +241,69 @@
   color: #28a745;
 }
 
+/* Estilos para notificações de tarefas de desenvolvimento */
+.devBtn {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+}
+
+.devBtn:hover {
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.5);
+}
+
+.devCompletedBtn {
+  background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+  box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
+}
+
+.devCompletedBtn:hover {
+  box-shadow: 0 6px 20px rgba(6, 182, 212, 0.5);
+}
+
+.dotDev {
+  background-color: #8b5cf6;
+}
+
+.notificationDev {
+  border-left: 4px solid #8b5cf6;
+}
+
+.headerDev {
+  background-color: rgba(139, 92, 246, 0.1);
+}
+
+.titleDev {
+  color: #8b5cf6;
+}
+
+.operatorNameDev {
+  background-color: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.viewTasksBtnDev {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+.viewTasksBtnDev:hover {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+}
+
+.devResponse {
+  margin: 0 0 10px 0;
+  padding: 8px 10px;
+  background-color: rgba(139, 92, 246, 0.08);
+  border-radius: 6px;
+  color: #9e9e9e;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.devResponse strong {
+  color: #8b5cf6;
+}
+
 /* Responsive */
 @media (max-width: 480px) {
   .notificationContainer {

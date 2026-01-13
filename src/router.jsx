@@ -34,6 +34,8 @@ import Tasks from "./pages/Tasks";
 import MyTasks from "./pages/MyTasks";
 import MonthHistory from "./pages/MonthHistory";
 import BulkEmailSend from "./pages/BulkEmailSend";
+import TaskDevelopment from "./pages/TaskDevelopment";
+import TaskToDeveloper from "./pages/TaskToDeveloper";
 
 const AppRoutesContent = () => {
   const location = useLocation();
@@ -127,6 +129,15 @@ const AppRoutesContent = () => {
           }
         />
 
+        <Route
+          path="/tasktodeveloper"
+          element={
+            <Wrapper>
+              <TaskToDeveloper />
+            </Wrapper>
+          }
+        />
+
         <Route element={<ProtectedRoute requiredRole="Admin" />}>
           <Route
             path="/dashboardAdmin"
@@ -157,6 +168,14 @@ const AppRoutesContent = () => {
             element={
               <Wrapper>
                 <Tasks />
+              </Wrapper>
+            }
+          />
+          <Route
+            path="/taskdevelopment"
+            element={
+              <Wrapper>
+                <TaskDevelopment />
               </Wrapper>
             }
           />

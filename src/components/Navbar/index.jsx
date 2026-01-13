@@ -5,12 +5,15 @@ import Loader from "../Loader";
 import { MdOutlineLogin } from "react-icons/md";
 import { IoPersonCircleOutline } from "react-icons/io5";
 import { HiMenu, HiX } from "react-icons/hi";
-import { FaAngleDown } from "react-icons/fa";
+import { FaAngleDown, FaCode } from "react-icons/fa";
 
 import { AdminMenu, Navitens, OperadorMenu, RelatórioMenu } from "../Navitens";
 import supabase from "../../helper/superBaseClient";
 import getOperatorMeta from "../../helper/getOperatorMeta";
 import { navigateWithNewTab } from "../../utils/navigationUtils";
+
+// Tipos de operadores com acesso completo aos menus
+const FULL_ACCESS_TYPES = ["Admin", "Developer"];
 
 const Navbar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -21,6 +24,7 @@ const Navbar = () => {
   const [activeMobileDropdown, setActiveMobileDropdown] = useState(null);
   const [operatorMeta, setOperatorMeta] = useState([]);
   const [pendingTasksCount, setPendingTasksCount] = useState(0);
+  const [pendingDevTasksCount, setPendingDevTasksCount] = useState(0);
 
   const dropdownRef = useRef(null);
   const mobileMenuRef = useRef(null);
@@ -29,6 +33,11 @@ const Navbar = () => {
   const location = useLocation();
 
   const [operatorData, setOperatorData] = useState();
+
+  // Verifica se o operador tem acesso completo aos menus
+  const hasFullAccess = FULL_ACCESS_TYPES.includes(operatorData?.operator_type);
+  const isAdmin = operatorData?.operator_type === "Admin";
+  const isDeveloper = operatorData?.operator_type === "Developer";
 
   const fetchOperatorData = async (email) => {
     const username = email.split("@")[0];
@@ -77,7 +86,7 @@ const Navbar = () => {
   // Buscar contagem de tarefas pendentes para Admin
   useEffect(() => {
     const fetchPendingTasks = async () => {
-      if (operatorData?.operator_type === "Admin") {
+      if (isAdmin) {
         try {
           const { count, error } = await supabase
             .from("task_manager")
@@ -99,7 +108,34 @@ const Navbar = () => {
     const interval = setInterval(fetchPendingTasks, 30000);
 
     return () => clearInterval(interval);
-  }, [operatorData]);
+  }, [isAdmin]);
+
+  // Buscar contagem de tarefas de dev pendentes para Developer
+  useEffect(() => {
+    const fetchPendingDevTasks = async () => {
+      if (isDeveloper) {
+        try {
+          const { count, error } = await supabase
+            .from("developer_task")
+            .select("*", { count: "exact", head: true })
+            .in("status", ["pendente", "em_andamento"]);
+
+          if (!error) {
+            setPendingDevTasksCount(count || 0);
+          }
+        } catch (error) {
+          console.error("Erro ao buscar tarefas de dev pendentes:", error);
+        }
+      }
+    };
+
+    fetchPendingDevTasks();
+
+    // Atualizar a cada 30 segundos
+    const interval = setInterval(fetchPendingDevTasks, 30000);
+
+    return () => clearInterval(interval);
+  }, [isDeveloper]);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -204,10 +240,7 @@ const Navbar = () => {
       try {
         const { error } = await supabase.auth.signOut();
         
-        // Se houver erro, mas for relacionado a sessão já inválida, continuamos com o logout local
         if (error) {
-          // Se o erro for 403 ou AuthSessionMissingError, a sessão já está inválida
-          // então podemos continuar com a limpeza local
           const isSessionError = 
             error.message?.includes("Auth session missing") ||
             error.message?.includes("session") ||
@@ -215,15 +248,11 @@ const Navbar = () => {
           
           if (!isSessionError) {
             console.error("Erro ao fazer logout:", error);
-            // Para outros erros, ainda tentamos limpar localmente
           }
         }
       } catch (err) {
-        // Captura qualquer exceção não tratada
         console.error("Exceção ao fazer logout:", err);
-        // Mesmo com erro, continuamos com a limpeza local
       } finally {
-        // Sempre limpar o estado local, mesmo se o logout do Supabase falhar
         localStorage.removeItem("operatorData");
         setOperatorData(null);
         setIsAuthenticated(false);
@@ -247,6 +276,351 @@ const Navbar = () => {
     navigateWithNewTab(event, path, navigate);
   };
 
+  // Componente para renderizar o botão de Tarefas Dev (apenas Developer)
+  const DevTasksButton = ({ isMobile = false }) => {
+    if (!isDeveloper) return null;
+
+    if (isMobile) {
+      return (
+        <li className="mobile-nav-item">
+          <Link 
+            to="/tasktodeveloper" 
+            className="mobile-dev-tasks-btn"
+            onClick={(e) => {
+              if (e.ctrlKey || e.metaKey) {
+                e.preventDefault();
+                window.open('/tasktodeveloper', '_blank');
+              }
+              setMobileMenuOpen(false);
+            }}
+            title="Ctrl+Click para abrir em nova aba"
+          >
+            <FaCode />
+            <span>Tarefas Dev</span>
+            {pendingDevTasksCount > 0 && (
+              <span className="dev-task-badge">{pendingDevTasksCount}</span>
+            )}
+          </Link>
+        </li>
+      );
+    }
+
+    return (
+      <li className="nav-item">
+        <Link 
+          to="/tasktodeveloper" 
+          className="dev-tasks-btn"
+          onClick={(e) => {
+            if (e.ctrlKey || e.metaKey) {
+              e.preventDefault();
+              window.open('/tasktodeveloper', '_blank');
+            }
+          }}
+          title="Ctrl+Click para abrir em nova aba"
+        >
+          <FaCode />
+          <span>Tarefas Dev</span>
+          {pendingDevTasksCount > 0 && (
+            <span className="dev-task-badge">{pendingDevTasksCount}</span>
+          )}
+        </Link>
+      </li>
+    );
+  };
+
+  // Componente para renderizar o perfil do usuário
+  const UserProfile = () => (
+    <div
+      ref={dropdownRef}
+      className="user-profile desktop-only"
+      onMouseEnter={() => setShowDropdown("userIcon")}
+      onMouseLeave={() => setShowDropdown(null)}
+    >
+      <IoPersonCircleOutline
+        onClick={onClickUserIcon}
+        className="icon-user"
+      />
+
+      {isOpen && showDropdown === "userIcon" && (
+        <ul className="dropdown-admin user-dropdown">
+          {operatorData && (
+            <li className="nav-item operator-info">
+              <p>{operatorData?.operator_name}</p>
+              <p className="operator-type">
+                {operatorData?.operator_type}
+              </p>
+            </li>
+          )}
+          <li className="nav-item" onClick={signOut}>
+            {loading ? <Loader /> : "Sair"}
+          </li>
+        </ul>
+      )}
+    </div>
+  );
+
+  // Componente para renderizar itens de menu dropdown
+  const renderDropdownItems = (menuItems, showBadge = false) => (
+    <ul className="dropdown-admin" onClick={() => setShowDropdown(null)}>
+      {menuItems.map((item) => (
+        <li
+          key={item.id}
+          className={item.cName}
+          onClick={(e) => handleNavItemClick(item.path, e)}
+          title="Ctrl+Click para abrir em nova aba"
+        >
+          {item.title}
+          {showBadge && item.title === "Tarefas" && pendingTasksCount > 0 && (
+            <span className="task-badge">{pendingTasksCount}</span>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+
+  // Componente para renderizar menu desktop com acesso completo
+  const FullAccessDesktopMenu = () => (
+    <ul className="nav-items">
+      {/* Botão Tarefas Dev - apenas para Developer */}
+      <DevTasksButton />
+      
+      {Navitens.map((item) => (
+        <li
+          key={item.id}
+          className={item.cName}
+          onMouseEnter={() => setShowDropdown(item.title)}
+          onMouseLeave={() => setShowDropdown(null)}
+        >
+          <div className="nav-item-content">
+            <p>{item.title}</p>
+            <FaAngleDown className="dropdown-icon" />
+          </div>
+
+          {/* Dropdown Admin */}
+          {item.title === "Admin" && showDropdown === "Admin" && 
+            renderDropdownItems(AdminMenu, true)}
+
+          {/* Dropdown Relatório */}
+          {item.title === "Relatório" && showDropdown === "Relatório" && 
+            renderDropdownItems(RelatórioMenu)}
+
+          {/* Dropdown Operador */}
+          {item.title === "Operador" && showDropdown === "Operador" && 
+            renderDropdownItems(OperadorMenu)}
+        </li>
+      ))}
+    </ul>
+  );
+
+  // Componente para renderizar menu desktop com acesso limitado (operador comum)
+  const LimitedAccessDesktopMenu = () => (
+    <ul className="nav-items">
+      <li
+        key={Navitens[2].id}
+        className={Navitens[2].cName}
+        onMouseEnter={() => setShowDropdown(Navitens[2].title)}
+        onMouseLeave={() => setShowDropdown(null)}
+      >
+        <div className="nav-item-content">
+          <p>{Navitens[2].title}</p>
+          <FaAngleDown className="dropdown-icon" />
+        </div>
+
+        {Navitens[2].title === "Operador" && showDropdown === "Operador" && (
+          <ul className="dropdown-admin" onClick={() => setShowDropdown(null)}>
+            {OperadorMenu.map((admin) => (
+              <li key={admin.id} className={admin.cName}>
+                <Link 
+                  to={admin.path}
+                  onClick={(e) => {
+                    if (e.ctrlKey || e.metaKey) {
+                      e.preventDefault();
+                      window.open(admin.path, '_blank');
+                    }
+                  }}
+                  title="Ctrl+Click para abrir em nova aba"
+                >
+                  {admin.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </li>
+    </ul>
+  );
+
+  // Componente para renderizar menu mobile com acesso completo
+  const FullAccessMobileMenu = () => (
+    <div
+      ref={mobileMenuRef}
+      className={`mobile-menu ${mobileMenuOpen ? "active" : ""}`}
+    >
+      <ul className="mobile-nav-items">
+        {/* Botão Tarefas Dev Mobile - apenas para Developer */}
+        <DevTasksButton isMobile />
+
+        {Navitens.map((item) => (
+          <li key={item.id} className="mobile-nav-item">
+            <div
+              className="mobile-nav-header"
+              onClick={() => handleMobileDropdownClick(item.title)}
+            >
+              <p>{item.title}</p>
+              <FaAngleDown
+                className={`dropdown-icon ${
+                  activeMobileDropdown === item.title ? "rotated" : ""
+                }`}
+              />
+            </div>
+
+            {/* Mobile Dropdown Admin */}
+            {item.title === "Admin" && activeMobileDropdown === "Admin" && (
+              <ul className="mobile-dropdown">
+                {AdminMenu.map((admin) => (
+                  <li key={admin.id} className="mobile-dropdown-item">
+                    <Link
+                      to={admin.path}
+                      onClick={(e) => {
+                        if (e.ctrlKey || e.metaKey) {
+                          e.preventDefault();
+                          window.open(admin.path, '_blank');
+                        }
+                        setMobileMenuOpen(false);
+                      }}
+                      title="Ctrl+Click para abrir em nova aba"
+                    >
+                      {admin.title}
+                      {admin.title === "Tarefas" && pendingTasksCount > 0 && (
+                        <span className="task-badge">{pendingTasksCount}</span>
+                      )}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {/* Mobile Dropdown Relatório */}
+            {item.title === "Relatório" && activeMobileDropdown === "Relatório" && (
+              <ul className="mobile-dropdown">
+                {RelatórioMenu.map((admin) => (
+                  <li key={admin.id} className="mobile-dropdown-item">
+                    <Link
+                      to={admin.path}
+                      onClick={(e) => {
+                        if (e.ctrlKey || e.metaKey) {
+                          e.preventDefault();
+                          window.open(admin.path, '_blank');
+                        }
+                        setMobileMenuOpen(false);
+                      }}
+                      title="Ctrl+Click para abrir em nova aba"
+                    >
+                      {admin.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {/* Mobile Dropdown Operador */}
+            {item.title === "Operador" && activeMobileDropdown === "Operador" && (
+              <ul className="mobile-dropdown">
+                {OperadorMenu.map((admin) => (
+                  <li key={admin.id} className="mobile-dropdown-item">
+                    <Link
+                      to={admin.path}
+                      onClick={(e) => {
+                        if (e.ctrlKey || e.metaKey) {
+                          e.preventDefault();
+                          window.open(admin.path, '_blank');
+                        }
+                        setMobileMenuOpen(false);
+                      }}
+                      title="Ctrl+Click para abrir em nova aba"
+                    >
+                      {admin.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
+
+        <li className="mobile-nav-item sign-out" onClick={signOut}>
+          {operatorData && (
+            <div className="mobile-operator-info">
+              <p>{operatorData?.operator_name}</p>
+              <p className="operator-type">
+                {operatorData?.operator_type}
+              </p>
+            </div>
+          )}
+          {loading ? <Loader /> : "Sair"}
+        </li>
+      </ul>
+    </div>
+  );
+
+  // Componente para renderizar menu mobile com acesso limitado
+  const LimitedAccessMobileMenu = () => (
+    <div
+      ref={mobileMenuRef}
+      className={`mobile-menu ${mobileMenuOpen ? "active" : ""}`}
+    >
+      <ul className="mobile-nav-items">
+        <li key={Navitens[2].id} className="mobile-nav-item">
+          <div
+            className="mobile-nav-header"
+            onClick={() => handleMobileDropdownClick(Navitens[2].title)}
+          >
+            <p>{Navitens[2].title}</p>
+            <FaAngleDown
+              className={`dropdown-icon ${
+                activeMobileDropdown === Navitens[2].title ? "rotated" : ""
+              }`}
+            />
+          </div>
+
+          {Navitens[2].title === "Operador" && activeMobileDropdown === "Operador" && (
+            <ul className="mobile-dropdown">
+              {OperadorMenu.map((admin) => (
+                <li key={admin.id} className="mobile-dropdown-item">
+                  <Link
+                    to={admin.path}
+                    onClick={(e) => {
+                      if (e.ctrlKey || e.metaKey) {
+                        e.preventDefault();
+                        window.open(admin.path, '_blank');
+                      }
+                      setMobileMenuOpen(false);
+                    }}
+                    title="Ctrl+Click para abrir em nova aba"
+                  >
+                    {admin.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </li>
+
+        <li className="mobile-nav-item sign-out" onClick={signOut}>
+          {operatorData && (
+            <div className="mobile-operator-info">
+              <p>{operatorData?.operator_name}</p>
+              <p className="operator-type">
+                {operatorData?.operator_type}
+              </p>
+            </div>
+          )}
+          {loading ? <Loader /> : "Sair"}
+        </li>
+      </ul>
+    </div>
+  );
+
   return (
     <>
       <header className="header-nav">
@@ -257,9 +631,7 @@ const Navbar = () => {
                 <div
                   onClick={(e) =>
                     handleLogoClick(
-                      operatorData.operator_type === "Admin"
-                        ? "/dashboardAdmin"
-                        : "/dashboard",
+                      hasFullAccess ? "/dashboardAdmin" : "/dashboard",
                       e
                     )
                   }
@@ -281,201 +653,31 @@ const Navbar = () => {
               </Link>
             )}
           </div>
-          {(operatorData?.operator_type !== "Admin") && (
-              <div className="meta">
-                <label>
-                  META: R$ {operatorMeta?.[0]?.meta || "?"}
-                </label>
-              </div>
-            )}
 
-          {isAuthenticated && operatorData?.operator_type === "Admin" ? (
+          {/* META - apenas para operadores sem acesso completo */}
+          {operatorData && !hasFullAccess && (
+            <div className="meta">
+              <label>
+                META: R$ {operatorMeta?.[0]?.meta || "?"}
+              </label>
+            </div>
+          )}
+
+          {/* Menu Desktop */}
+          {isAuthenticated && hasFullAccess ? (
             <div className="menu-and-logo">
-              {/* Desktop menu */}
-              <ul className="nav-items">
-                {Navitens.map((item) => (
-                  <li
-                    key={item.id}
-                    className={item.cName}
-                    onMouseEnter={() => setShowDropdown(item.title)}
-                    onMouseLeave={() => setShowDropdown(null)}
-                  >
-                    <div className="nav-item-content">
-                      <p>{item.title}</p>
-                      <FaAngleDown className="dropdown-icon" />
-                    </div>
-
-                    {/* Dropdown Sob-menu AdminMenu */}
-                    {item.title === "Admin" && showDropdown === "Admin" && (
-                      <ul
-                        className="dropdown-admin"
-                        onClick={() => setShowDropdown(null)}
-                      >
-                        {AdminMenu.map((admin) => (
-                          <li
-                            key={admin.id}
-                            className={admin.cName}
-                            onClick={(e) => handleNavItemClick(admin.path, e)}
-                            title="Ctrl+Click para abrir em nova aba"
-                          >
-                            {admin.title}
-                            {admin.title === "Tarefas" && pendingTasksCount > 0 && (
-                              <span className="task-badge">{pendingTasksCount}</span>
-                            )}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-
-                    {/* Dropdown Sob-menu RelatórioMenu */}
-                    {item.title === "Relatório" &&
-                      showDropdown === "Relatório" && (
-                        <ul
-                          className="dropdown-admin"
-                          onClick={() => setShowDropdown(null)}
-                        >
-                          {RelatórioMenu.map((admin) => (
-                            <li
-                              key={admin.id}
-                              className={admin.cName}
-                              onClick={(e) => handleNavItemClick(admin.path, e)}
-                              title="Ctrl+Click para abrir em nova aba"
-                            >
-                              {admin.title}
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-
-                    {/* Dropdown Sob-menu OperadorMenu */}
-                    {item.title === "Operador" &&
-                      showDropdown === "Operador" && (
-                        <ul
-                          className="dropdown-admin"
-                          onClick={() => setShowDropdown(null)}
-                        >
-                          {OperadorMenu.map((admin) => (
-                            <li
-                              key={admin.id}
-                              className={admin.cName}
-                              onClick={(e) => handleNavItemClick(admin.path, e)}
-                              title="Ctrl+Click para abrir em nova aba"
-                            >
-                              {admin.title}
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                  </li>
-                ))}
-              </ul>
-              <div
-                ref={dropdownRef}
-                className="user-profile desktop-only"
-                onMouseEnter={() => setShowDropdown("userIcon")}
-                onMouseLeave={() => setShowDropdown(null)}
-              >
-                <IoPersonCircleOutline
-                  onClick={onClickUserIcon}
-                  className="icon-user"
-                />
-
-                {/*ATENÇÃO, ESSE SERÀ O PROXIMO*/}
-
-                {isOpen && showDropdown === "userIcon" && (
-                  <ul className="dropdown-admin user-dropdown">
-                    {operatorData && (
-                      <li className="nav-item operator-info">
-                        <p>{operatorData?.operator_name}</p>
-                        <p className="operator-type">
-                          {operatorData?.operator_type}
-                        </p>
-                      </li>
-                    )}
-                    <li className="nav-item" onClick={signOut}>
-                      {loading ? <Loader /> : "Sair"}
-                    </li>
-                  </ul>
-                )}
-              </div>
-
-              {/* Mobile menu button */}
+              <FullAccessDesktopMenu />
+              <UserProfile />
               <div className="mobile-menu-toggle">
                 <button onClick={handleMobileMenuClick}>
                   {mobileMenuOpen ? <HiX /> : <HiMenu />}
                 </button>
               </div>
             </div>
-          ) : isAuthenticated &&
-            (operatorData?.operator_type !== "Admin") ? (
+          ) : isAuthenticated && operatorData ? (
             <div className="menu-and-logo">
-              <ul className="nav-items">
-                <li
-                  key={Navitens[2].id}
-                  className={Navitens[2].cName}
-                  onMouseEnter={() => setShowDropdown(Navitens[2].title)}
-                  onMouseLeave={() => setShowDropdown(null)}
-                >
-                  <div className="nav-item-content">
-                    <p>{Navitens[2].title}</p>
-                    <FaAngleDown className="dropdown-icon" />
-                  </div>
-
-                  {Navitens[2].title === "Operador" &&
-                    showDropdown === "Operador" && (
-                      <ul
-                        className="dropdown-admin"
-                        onClick={() => setShowDropdown(null)}
-                      >
-                        {OperadorMenu.map((admin) => (
-                          <li key={admin.id} className={admin.cName}>
-                            <Link 
-                              to={admin.path}
-                              onClick={(e) => {
-                                if (e.ctrlKey || e.metaKey) {
-                                  e.preventDefault();
-                                  window.open(admin.path, '_blank');
-                                }
-                              }}
-                              title="Ctrl+Click para abrir em nova aba"
-                            >
-                              {admin.title}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                </li>
-              </ul>
-              <div
-                ref={dropdownRef}
-                className="user-profile desktop-only"
-                onMouseEnter={() => setShowDropdown("userIcon")}
-                onMouseLeave={() => setShowDropdown(null)}
-              >
-                <IoPersonCircleOutline
-                  onClick={onClickUserIcon}
-                  className="icon-user"
-                />
-
-                {/*ATENÇÃO, ESSE SERÀ O PROXIMO*/}
-
-                {isOpen && showDropdown === "userIcon" && (
-                  <ul className="dropdown-admin user-dropdown">
-                    {operatorData && (
-                      <li className="nav-item operator-info">
-                        <p>{operatorData?.operator_name}</p>
-                        <p className="operator-type">
-                          {operatorData?.operator_type}
-                        </p>
-                      </li>
-                    )}
-                    <li className="nav-item" onClick={signOut}>
-                      {loading ? <Loader /> : "Sair"}
-                    </li>
-                  </ul>
-                )}
-              </div>
+              <LimitedAccessDesktopMenu />
+              <UserProfile />
               <div className="mobile-menu-toggle">
                 <button onClick={handleMobileMenuClick}>
                   {mobileMenuOpen ? <HiX /> : <HiMenu />}
@@ -483,7 +685,6 @@ const Navbar = () => {
               </div>
             </div>
           ) : isAuthenticated ? (
-            // Show loading indicator while operatorData is being loaded
             <div className="menu-and-logo">
               <div
                 style={{
@@ -522,180 +723,13 @@ const Navbar = () => {
           )}
         </nav>
 
-        {/* Mobile menu */}
-        {isAuthenticated && operatorData?.operator_type === "Admin" ? (
-          <div
-            ref={mobileMenuRef}
-            className={`mobile-menu ${mobileMenuOpen ? "active" : ""}`}
-          >
-            <ul className="mobile-nav-items">
-              {Navitens.map((item) => (
-                <li key={item.id} className="mobile-nav-item">
-                  <div
-                    className="mobile-nav-header"
-                    onClick={() => handleMobileDropdownClick(item.title)}
-                  >
-                    <p>{item.title}</p>
-                    <FaAngleDown
-                      className={`dropdown-icon ${
-                        activeMobileDropdown === item.title ? "rotated" : ""
-                      }`}
-                    />
-                  </div>
-
-                  {/* Mobile Dropdown menus */}
-                  {item.title === "Admin" &&
-                    activeMobileDropdown === "Admin" && (
-                      <ul className="mobile-dropdown">
-                        {AdminMenu.map((admin) => (
-                          <li key={admin.id} className="mobile-dropdown-item">
-                            <Link
-                              to={admin.path}
-                              onClick={(e) => {
-                                if (e.ctrlKey || e.metaKey) {
-                                  e.preventDefault();
-                                  window.open(admin.path, '_blank');
-                                }
-                                setMobileMenuOpen(false);
-                              }}
-                              title="Ctrl+Click para abrir em nova aba"
-                            >
-                              {admin.title}
-                              {admin.title === "Tarefas" && pendingTasksCount > 0 && (
-                                <span className="task-badge">{pendingTasksCount}</span>
-                              )}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-
-                  {item.title === "Relatório" &&
-                    activeMobileDropdown === "Relatório" && (
-                      <ul className="mobile-dropdown">
-                        {RelatórioMenu.map((admin) => (
-                          <li key={admin.id} className="mobile-dropdown-item">
-                            <Link
-                              to={admin.path}
-                              onClick={(e) => {
-                                if (e.ctrlKey || e.metaKey) {
-                                  e.preventDefault();
-                                  window.open(admin.path, '_blank');
-                                }
-                                setMobileMenuOpen(false);
-                              }}
-                              title="Ctrl+Click para abrir em nova aba"
-                            >
-                              {admin.title}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-
-                  {item.title === "Operador" &&
-                    activeMobileDropdown === "Operador" && (
-                      <ul className="mobile-dropdown">
-                        {OperadorMenu.map((admin) => (
-                          <li key={admin.id} className="mobile-dropdown-item">
-                            <Link
-                              to={admin.path}
-                              onClick={(e) => {
-                                if (e.ctrlKey || e.metaKey) {
-                                  e.preventDefault();
-                                  window.open(admin.path, '_blank');
-                                }
-                                setMobileMenuOpen(false);
-                              }}
-                              title="Ctrl+Click para abrir em nova aba"
-                            >
-                              {admin.title}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                </li>
-              ))}
-              <li className="mobile-nav-item sign-out" onClick={signOut}>
-                {operatorData && (
-                  <div className="mobile-operator-info">
-                    <p>{operatorData?.operator_name}</p>
-                    <p className="operator-type">
-                      {operatorData?.operator_type}
-                    </p>
-                  </div>
-                )}
-                {loading ? <Loader /> : "Sair"}
-              </li>
-            </ul>
-          </div>
+        {/* Mobile Menu */}
+        {isAuthenticated && hasFullAccess ? (
+          <FullAccessMobileMenu />
         ) : (
-          isAuthenticated &&
-          (operatorData?.operator_type !== "Admin") && (
-            <div
-              ref={mobileMenuRef}
-              className={`mobile-menu ${mobileMenuOpen ? "active" : ""}`}
-            >
-              <ul className="mobile-nav-items">
-                <li key={Navitens[2].id} className="mobile-nav-item">
-                  <div
-                    className="mobile-nav-header"
-                    onClick={() => handleMobileDropdownClick(Navitens[2].title)}
-                  >
-                    <p>{Navitens[2].title}</p>
-                    <FaAngleDown
-                      className={`dropdown-icon ${
-                        activeMobileDropdown === Navitens[2].title
-                          ? "rotated"
-                          : ""
-                      }`}
-                    />
-                  </div>
-
-                  {/* Mobile Dropdown menus */}
-
-                  {Navitens[2].title === "Operador" &&
-                    activeMobileDropdown === "Operador" && (
-                      <ul className="mobile-dropdown">
-                        {OperadorMenu.map((admin) => (
-                          <li key={admin.id} className="mobile-dropdown-item">
-                            <Link
-                              to={admin.path}
-                              onClick={(e) => {
-                                if (e.ctrlKey || e.metaKey) {
-                                  e.preventDefault();
-                                  window.open(admin.path, '_blank');
-                                }
-                                setMobileMenuOpen(false);
-                              }}
-                              title="Ctrl+Click para abrir em nova aba"
-                            >
-                              {admin.title}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                </li>
-
-                <li className="mobile-nav-item sign-out" onClick={signOut}>
-                  {operatorData && (
-                    <div className="mobile-operator-info">
-                      <p>{operatorData?.operator_name}</p>
-                      <p className="operator-type">
-                        {operatorData?.operator_type}
-                      </p>
-                    </div>
-                  )}
-                  {loading ? <Loader /> : "Sair"}
-                </li>
-              </ul>
-            </div>
-          )
+          isAuthenticated && operatorData && <LimitedAccessMobileMenu />
         )}
       </header>
-      {/* <Outlet /> */}
     </>
   );
 };
