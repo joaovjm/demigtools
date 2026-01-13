@@ -622,6 +622,26 @@
   transform: translateY(-1px);
 }
 
+.btnDelete {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #c70000;
+  color: #faf5e9;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btnDelete:hover {
+  background-color: #a30000;
+  transform: translateY(-1px);
+}
+
 /* Expanded Details */
 .expandedDetails {
   margin-top: 16px;

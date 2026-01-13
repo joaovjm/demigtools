@@ -16,8 +16,10 @@ import {
   FaCheckCircle,
   FaClock,
   FaBan,
-  FaEye
+  FaEye,
+  FaTrash
 } from 'react-icons/fa';
+import { ModalConfirm } from '../../components/ModalConfirm';
 
 const TaskDevelopment = () => {
   const { operatorData } = useContext(UserContext);
@@ -36,6 +38,11 @@ const TaskDevelopment = () => {
   const [images, setImages] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
   const [uploading, setUploading] = useState(false);
+  
+  // Estado para modal de exclusão
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState(null);
+  const [deleting, setDeleting] = useState(false);
   
   const fileInputRef = useRef(null);
 
@@ -157,6 +164,34 @@ const TaskDevelopment = () => {
       setSending(false);
       setUploading(false);
     }
+  };
+
+  const handleDeleteClick = (task) => {
+    setTaskToDelete(task);
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!taskToDelete) return;
+
+    try {
+      setDeleting(true);
+      await developerTaskService.deleteTask(taskToDelete.id);
+      toast.success('Tarefa excluída com sucesso!');
+      setShowDeleteModal(false);
+      setTaskToDelete(null);
+      fetchTasks();
+    } catch (error) {
+      console.error('Erro ao excluir tarefa:', error);
+      toast.error('Erro ao excluir tarefa');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+    setTaskToDelete(null);
   };
 
   const getStatusColor = (status) => {
@@ -490,6 +525,15 @@ const TaskDevelopment = () => {
                 >
                   <FaEye /> {expandedTask === task.id ? 'Ocultar' : 'Ver Detalhes'}
                 </button>
+                {task.status === 'pendente' && (
+                  <button
+                    className={styles.btnDelete}
+                    onClick={() => handleDeleteClick(task)}
+                    title="Excluir tarefa"
+                  >
+                    <FaTrash /> Excluir
+                  </button>
+                )}
               </div>
 
               {/* Detalhes expandidos */}
@@ -524,6 +568,17 @@ const TaskDevelopment = () => {
           ))
         )}
       </div>
+
+      {/* Modal de confirmação de exclusão */}
+      <ModalConfirm
+        isOpen={showDeleteModal}
+        onClose={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+        title="Excluir Tarefa"
+        message={`Tem certeza que deseja excluir a tarefa "${taskToDelete?.title}"? Esta ação não pode ser desfeita.`}
+        confirmText={deleting ? "Excluindo..." : "Excluir"}
+        cancelText="Cancelar"
+      />
     </div>
   );
 };

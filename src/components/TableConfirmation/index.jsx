@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "./tableconfirmation.module.css";
 import { DataSelect } from "../DataTime";
 
@@ -9,6 +9,7 @@ const TableConfirmation = ({
   donationFilterPerId,
 }) => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+  const [expandedDonors, setExpandedDonors] = useState({});
 
   const handleClick = (donation) => {
     setDonationConfirmationOpen({
@@ -44,23 +45,62 @@ const TableConfirmation = ({
     setSortConfig({ key, direction });
   };
 
+  const toggleExpand = (donorId) => {
+    setExpandedDonors(prev => ({
+      ...prev,
+      [donorId]: !prev[donorId]
+    }));
+  };
+
   const filterDonationConfirmation = donationConfirmation.filter(
     (dc) => dc.operator_code_id === donationFilterPerId
   );
 
-  const getFilteredAndSortedData = () => {
-    const filtered = donationFilterPerId ? filterDonationConfirmation : donationConfirmation;
+  const getFilteredData = () => {
+    return donationFilterPerId ? filterDonationConfirmation : donationConfirmation;
+  };
+
+  // Agrupa doações por doador
+  const groupByDonor = (donations) => {
+    const grouped = {};
+    donations.forEach(donation => {
+      const donorId = donation.donor_id;
+      if (!grouped[donorId]) {
+        grouped[donorId] = {
+          donor_id: donorId,
+          donor_name: donation.donor_name,
+          donor_mensal_day: donation.donor_mensal_day,
+          donations: [],
+          totalValue: 0,
+          latestDate: null,
+        };
+      }
+      grouped[donorId].donations.push(donation);
+      grouped[donorId].totalValue += parseFloat(donation.donation_value || 0);
+      
+      const donationDate = new Date(donation.donation_day_to_receive || 0);
+      if (!grouped[donorId].latestDate || donationDate > grouped[donorId].latestDate) {
+        grouped[donorId].latestDate = donationDate;
+        grouped[donorId].latestDateStr = donation.donation_day_to_receive;
+      }
+    });
+    return Object.values(grouped);
+  };
+
+  const getSortedGroupedData = () => {
+    const filtered = getFilteredData();
+    const grouped = groupByDonor(filtered);
 
     if (!sortConfig.key) {
-      return filtered;
+      return grouped;
     }
 
-    return [...filtered].sort((a, b) => {
+    return [...grouped].sort((a, b) => {
       let aValue, bValue;
 
       if (sortConfig.key === 'date') {
-        aValue = new Date(a.donation_day_to_receive || 0).getTime();
-        bValue = new Date(b.donation_day_to_receive || 0).getTime();
+        aValue = a.latestDate ? a.latestDate.getTime() : 0;
+        bValue = b.latestDate ? b.latestDate.getTime() : 0;
       }
 
       if (sortConfig.key === 'day') {
@@ -69,8 +109,8 @@ const TableConfirmation = ({
       }
 
       if (sortConfig.key === 'value') {
-        aValue = parseFloat(a.donation_value || 0);
-        bValue = parseFloat(b.donation_value || 0);
+        aValue = a.totalValue;
+        bValue = b.totalValue;
       }
 
       if (sortConfig.key === 'name') {
@@ -88,21 +128,22 @@ const TableConfirmation = ({
     });
   };
 
-  const dataToShow = getFilteredAndSortedData();
+  const groupedData = getSortedGroupedData();
+  const totalDonations = getFilteredData().length;
 
   return (
     <div className={styles.tableConfirmationContainer}>
       <div className={styles.tableConfirmationContent}>
-        {dataToShow.length > 0 ? (
+        {groupedData.length > 0 ? (
           <div className={styles.tableConfirmationWrapper}>
             <div className={styles.tableConfirmationHeader}>
               <div className={styles.tableConfirmationStats}>
                 <span className={styles.statsItem}>
-                  <strong>{dataToShow.length}</strong> {dataToShow.length === 1 ? 'confirmação' : 'confirmações'} pendente{dataToShow.length === 1 ? '' : 's'}
+                  <strong>{groupedData.length}</strong> {groupedData.length === 1 ? 'doador' : 'doadores'} · <strong>{totalDonations}</strong> {totalDonations === 1 ? 'confirmação' : 'confirmações'}
                 </span>
                 <span className={styles.statsItem}>
                   Total: <strong>
-                    {dataToShow.reduce((acc, item) => acc + (parseFloat(item.donation_value) || 0), 0).toLocaleString("pt-BR", {
+                    {groupedData.reduce((acc, item) => acc + item.totalValue, 0).toLocaleString("pt-BR", {
                       style: "currency",
                       currency: "BRL",
                     })}
@@ -169,52 +210,129 @@ const TableConfirmation = ({
                   </tr>
                 </thead>
                 <tbody>
-                  {dataToShow.map((donation) => (
-                    <tr
-                      className={styles.tableConfirmationRow}
-                      key={donation.receipt_donation_id}
-                      onClick={() => handleClick(donation)}
-                    >
-                      <td className={styles.tableConfirmationCell}>
-                        <span className={styles.dateInfo}>
-                          {DataSelect(donation.donation_day_to_receive)}
-                        </span>
-                      </td>
-                      <td className={styles.tableConfirmationCell}>
-                        <span className={styles.dayInfo}>
-                          {donation.donor_mensal_day ? `Dia ${donation.donor_mensal_day}` : '-'}
-                        </span>
-                      </td>
-                      <td className={styles.tableConfirmationCell}>
-                        <span className={styles.donorName}>
-                          {donation.donor_name}
-                        </span>
-                      </td>
-                      <td className={styles.tableConfirmationCell}>
-                        <span className={styles.valueAmount}>
-                          {parseFloat(donation.donation_value || 0).toLocaleString("pt-BR", {
-                            style: "currency",
-                            currency: "BRL",
-                          })}
-                        </span>
-                      </td>
-                      <td className={styles.tableConfirmationCell}>
-                        <span className={styles.reasonText}>
-                          {donation.donor_confirmation_reason}
-                        </span>
-                      </td>
-                      <td className={styles.tableConfirmationCell}>
-                        <span className={`${styles.statusBadge} ${donation.confirmation_status === 'Agendado' ? styles.statusScheduled : donation.confirmation_status === 'Não Atendeu' ? styles.statusNotAttended : styles.statusNone}`}>
-                          {donation.confirmation_status || '-'}
-                        </span>
-                      </td>
-                      <td className={styles.tableConfirmationCell}>
-                        <span className={styles.scheduleDate}>
-                          {donation.confirmation_scheduled ? DataSelect(donation.confirmation_scheduled) : '-'}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
+                  {groupedData.map((group) => {
+                    const hasMultiple = group.donations.length > 1;
+                    const isExpanded = expandedDonors[group.donor_id];
+                    const firstDonation = group.donations[0];
+
+                    return (
+                      <React.Fragment key={group.donor_id}>
+                        {/* Linha principal do doador */}
+                        <tr
+                          className={`${styles.tableConfirmationRow} ${hasMultiple ? styles.groupRow : ''} ${isExpanded ? styles.groupRowExpanded : ''}`}
+                          onClick={() => {
+                            if (hasMultiple) {
+                              toggleExpand(group.donor_id);
+                            } else {
+                              handleClick(firstDonation);
+                            }
+                          }}
+                        >
+                          <td className={styles.tableConfirmationCell}>
+                            <span className={styles.dateInfo}>
+                              {DataSelect(group.latestDateStr)}
+                            </span>
+                          </td>
+                          <td className={styles.tableConfirmationCell}>
+                            <span className={styles.dayInfo}>
+                              {group.donor_mensal_day ? `Dia ${group.donor_mensal_day}` : '-'}
+                            </span>
+                          </td>
+                          <td className={styles.tableConfirmationCell}>
+                            <span className={styles.donorName}>
+                              {hasMultiple && (
+                                <span className={styles.expandIcon}>
+                                  {isExpanded ? '▼' : '▶'}
+                                </span>
+                              )}
+                              {group.donor_name}
+                              {hasMultiple && (
+                                <span className={styles.donationCount}>
+                                  {group.donations.length}
+                                </span>
+                              )}
+                            </span>
+                          </td>
+                          <td className={styles.tableConfirmationCell}>
+                            <span className={styles.valueAmount}>
+                              {group.totalValue.toLocaleString("pt-BR", {
+                                style: "currency",
+                                currency: "BRL",
+                              })}
+                            </span>
+                          </td>
+                          <td className={styles.tableConfirmationCell}>
+                            <span className={styles.reasonText}>
+                              {hasMultiple ? `${group.donations.length} doações` : firstDonation.donor_confirmation_reason}
+                            </span>
+                          </td>
+                          <td className={styles.tableConfirmationCell}>
+                            {hasMultiple ? (
+                              <span className={styles.statusMultiple}>Múltiplas</span>
+                            ) : (
+                              <span className={`${styles.statusBadge} ${firstDonation.confirmation_status === 'Agendado' ? styles.statusScheduled : firstDonation.confirmation_status === 'Não Atendeu' ? styles.statusNotAttended : styles.statusNone}`}>
+                                {firstDonation.confirmation_status || '-'}
+                              </span>
+                            )}
+                          </td>
+                          <td className={styles.tableConfirmationCell}>
+                            <span className={styles.scheduleDate}>
+                              {hasMultiple ? '-' : (firstDonation.confirmation_scheduled ? DataSelect(firstDonation.confirmation_scheduled) : '-')}
+                            </span>
+                          </td>
+                        </tr>
+
+                        {/* Linhas expandidas para doações individuais */}
+                        {hasMultiple && isExpanded && group.donations.map((donation) => (
+                          <tr
+                            className={`${styles.tableConfirmationRow} ${styles.subRow}`}
+                            key={donation.receipt_donation_id}
+                            onClick={() => handleClick(donation)}
+                          >
+                            <td className={styles.tableConfirmationCell}>
+                              <span className={styles.dateInfo}>
+                                {DataSelect(donation.donation_day_to_receive)}
+                              </span>
+                            </td>
+                            <td className={styles.tableConfirmationCell}>
+                              <span className={styles.dayInfo}>
+                                {donation.donor_mensal_day ? `Dia ${donation.donor_mensal_day}` : '-'}
+                              </span>
+                            </td>
+                            <td className={styles.tableConfirmationCell}>
+                              <span className={styles.subRowIndicator}>↳</span>
+                              <span className={styles.donorNameSub}>
+                                {donation.donor_name}
+                              </span>
+                            </td>
+                            <td className={styles.tableConfirmationCell}>
+                              <span className={styles.valueAmount}>
+                                {parseFloat(donation.donation_value || 0).toLocaleString("pt-BR", {
+                                  style: "currency",
+                                  currency: "BRL",
+                                })}
+                              </span>
+                            </td>
+                            <td className={styles.tableConfirmationCell}>
+                              <span className={styles.reasonText}>
+                                {donation.donor_confirmation_reason}
+                              </span>
+                            </td>
+                            <td className={styles.tableConfirmationCell}>
+                              <span className={`${styles.statusBadge} ${donation.confirmation_status === 'Agendado' ? styles.statusScheduled : donation.confirmation_status === 'Não Atendeu' ? styles.statusNotAttended : styles.statusNone}`}>
+                                {donation.confirmation_status || '-'}
+                              </span>
+                            </td>
+                            <td className={styles.tableConfirmationCell}>
+                              <span className={styles.scheduleDate}>
+                                {donation.confirmation_scheduled ? DataSelect(donation.confirmation_scheduled) : '-'}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </React.Fragment>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
