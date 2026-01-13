@@ -106,7 +106,7 @@ const Tasks = () => {
     .filter(task => {
       // Filtro por status/prioridade
       let matchesFilter = true
-      if (filterStatus === 'prioridade_alta') {
+      if (filterStatus === 'prioridade_alta' && task.status !== 'concluido') {
         matchesFilter = task.priority === 'alta'
       } else if (filterStatus !== 'all') {
         matchesFilter = task.status === filterStatus
@@ -199,7 +199,7 @@ const Tasks = () => {
           title="Filtrar tarefas com prioridade alta"
         >
           <span className={styles.statNumber} style={{ color: '#c70000' }}>
-            {tasks.filter(t => t.priority === 'alta').length}
+            {tasks.filter(t => t.priority === 'alta' && t.status !== 'concluido').length}
           </span>
           <span className={styles.statLabel}>Prioridade Alta</span>
         </button>
@@ -248,8 +248,8 @@ const Tasks = () => {
           filteredTasks.map((task) => (
             <div 
               key={task.id} 
-              className={`${styles.taskItemsContainer} ${task.priority === "alta" ? styles.priorityTask : ''}`}
-              style={{ borderLeftColor: task.priority === "alta" ? '#c70000' : getStatusColor(task.status) }}
+              className={`${styles.taskItemsContainer} ${task.priority === "alta" && task.status !== "concluido" ? styles.priorityTask : ''}`}
+              style={{ borderLeftColor: task.priority === "alta" && task.status !== "concluido" ? '#c70000' : getStatusColor(task.status) }}
             >
               {task.priority === "alta" && (
                 <span className={styles.priorityBadge}>
