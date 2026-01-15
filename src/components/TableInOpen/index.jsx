@@ -9,6 +9,8 @@ const TableInOpen = ({
   donationFilterPerId,
   filterType = "operator"
 }) => {
+
+  let dataToShow = [];
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
 
   const handleClick = (donation) => {
@@ -60,7 +62,12 @@ const TableInOpen = ({
     });
   };
 
-  const dataToShow = getFilteredAndSortedData();
+  if (donationFilterPerId === "") {
+    dataToShow = fullNotReceivedDonations;
+  } else {
+    dataToShow = getFilteredAndSortedData();
+  }
+  
 
   return (
     <div className={styles.tableInopenContainer}>

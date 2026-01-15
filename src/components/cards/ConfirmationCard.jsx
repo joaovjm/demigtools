@@ -40,7 +40,15 @@ const ConfirmationCard = ({ operatorCount, setDonationFilterPerId }) => {
 
   return (
     operators?.length > 0 ? (
-      operators.map((operator) => (
+      <>
+      <div className={`${styles.sectionOperatorsCard} ${active === "" ? styles.active : ""}`} onClick={() => handleClick("")}>
+        <div>Todos</div>
+        <div className={styles.sectionOperatorsCardValue}>
+          <label>{Object.values(count).reduce((acc, curr) => acc + curr, 0)}</label>
+          <label>R$ {Object.values(add).reduce((acc, curr) => acc + curr, 0)?.toFixed(2).replace('.',',') || '0,00'}</label>
+        </div>
+      </div>
+      {operators.map((operator) => (
       <div
         onClick={() => handleClick(operator.id)}
         className={`${styles.sectionOperatorsCard} ${active === operator.id ? styles.active : ""}`}
@@ -52,12 +60,11 @@ const ConfirmationCard = ({ operatorCount, setDonationFilterPerId }) => {
           <label>R$ {add[operator.id]}</label>
         </div>
       </div>
-    ))) : <></>
-    
-    
-  )
-  
-  
+    ))}
+    </>
+    ) : (
+      <></>
+    )
+  );
 };
-
 export default ConfirmationCard;

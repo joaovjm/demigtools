@@ -41,7 +41,15 @@ const CollectorCard = ({ operatorCount, setDonationFilterPerId }) => {
 
   return (
     collectors?.length > 0 ? (
-      collectors.map((collector) => (
+      <>
+      <div className={`${styles.sectionOperatorsCard} ${active === "" ? styles.active : ""}`} onClick={() => handleClick("")}>
+        <div>Todos</div>
+        <div className={styles.sectionOperatorsCardValue}>
+          <label>{Object.values(count).reduce((acc, curr) => acc + curr, 0)}</label>
+          <label>R$ {Object.values(add).reduce((acc, curr) => acc + curr, 0)?.toFixed(2).replace('.',',') || '0,00'}</label>
+        </div>
+      </div>
+      {collectors.map((collector) => (
       <div
         onClick={() => handleClick(collector.id)}
         className={`${styles.sectionOperatorsCard} ${active === collector.id ? styles.active : ""}`}
@@ -53,13 +61,10 @@ const CollectorCard = ({ operatorCount, setDonationFilterPerId }) => {
           <label>R$ {add[collector.id]?.toFixed(2).replace('.',',') || '0,00'}</label>
         </div>
       </div>
-    ))) : <></>
-    
-    
-  )
-  
-  
+    ))}
+    </>
+    ) : <></>
+  );
 };
 
 export default CollectorCard;
-

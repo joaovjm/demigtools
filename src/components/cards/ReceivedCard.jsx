@@ -2,17 +2,19 @@ import React, { useEffect, useState } from "react";
 import styles from "../../pages/DashboardAdmin/dashboardadmin.module.css";
 
 const ReceivedCard = ({ operatorCount, setDonationFilterPerId }) => {
-  console.log(operatorCount)
   const [operators, setOperators] = useState([]);
   const [count, setCount] = useState();
   const [add, setAdd] = useState();
   const [active, setActive] = useState();
-  
+
   const operatorInfo = [
     ...new Map(
       operatorCount?.map((operators) => [
         operators.operator_code_id,
-        { id: operators.operator_code_id, name: operators.operator_name.operator_name },
+        {
+          id: operators.operator_code_id,
+          name: operators.operator_name.operator_name,
+        },
       ])
     ).values(),
   ];
@@ -23,7 +25,8 @@ const ReceivedCard = ({ operatorCount, setDonationFilterPerId }) => {
   }, {});
 
   const countingValue = operatorCount?.reduce((add, item) => {
-    add[item.operator_code_id] = (add[item.operator_code_id] || 0) + item.donation_value;
+    add[item.operator_code_id] =
+      (add[item.operator_code_id] || 0) + item.donation_value;
     return add;
   }, {});
 
@@ -32,30 +35,55 @@ const ReceivedCard = ({ operatorCount, setDonationFilterPerId }) => {
     setCount(counting);
     setAdd(countingValue);
   }, []);
-  
 
   const handleClick = (id) => {
     setDonationFilterPerId(id);
     setActive(id);
   };
 
-  return (
-    operators?.length > 0 ? (
-      operators.map((operator) => (
+  return operators?.length > 0 ? (
+    <>
       <div
-        onClick={() => handleClick(operator.id)}
-        className={`${styles.sectionOperatorsCard} ${active === operator.id ? styles.active : ""}`}
-        key={operator.id}
+        className={`${styles.sectionOperatorsCard} ${
+          active === "" ? styles.active : ""
+        }`}
+        onClick={() => handleClick("")}
       >
-        <div>{operator.name}</div>
+        <div>Todos</div>
         <div className={styles.sectionOperatorsCardValue}>
-          <label>{count[operator.id]}</label>
-          <label>R$ {add[operator.id]?.toFixed(2).replace('.', ',') || '0,00'}</label>
+          <label>
+            {Object.values(count).reduce((acc, curr) => acc + curr, 0)}
+          </label>
+          <label>
+            R${" "}
+            {Object.values(add)
+              .reduce((acc, curr) => acc + curr, 0)
+              ?.toFixed(2)
+              .replace(".", ",") || "0,00"}
+          </label>
         </div>
       </div>
-    ))) : <></>
+      {operators.map((operator) => (
+        <div
+          onClick={() => handleClick(operator.id)}
+          className={`${styles.sectionOperatorsCard} ${
+            active === operator.id ? styles.active : ""
+          }`}
+          key={operator.id}
+        >
+          <div>{operator.name}</div>
+          <div className={styles.sectionOperatorsCardValue}>
+            <label>{count[operator.id]}</label>
+            <label>
+              R$ {add[operator.id]?.toFixed(2).replace(".", ",") || "0,00"}
+            </label>
+          </div>
+        </div>
+      ))}
+    </>
+  ) : (
+    <></>
   );
 };
 
 export default ReceivedCard;
-
