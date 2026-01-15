@@ -118,6 +118,11 @@ const TableConfirmation = ({
         bValue = (b.donor_name || '').toLowerCase();
       }
 
+      if (sortConfig.key === 'quantity') {
+        aValue = a.donations?.length || 0;
+        bValue = b.donations?.length || 0;
+      }
+
       if (aValue < bValue) {
         return sortConfig.direction === 'asc' ? -1 : 1;
       }
@@ -193,6 +198,18 @@ const TableConfirmation = ({
                       </span>
                     </th>
                     <th
+                      className={`${styles.tableConfirmationHead} ${styles.sortable} ${styles.quantityCol}`}
+                      onClick={() => handleSort('quantity')}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      Quatd.
+                      <span className={styles.sortArrow}>
+                        {sortConfig.key === 'quantity' ? (
+                          sortConfig.direction === 'asc' ? ' ↑' : ' ↓'
+                        ) : ' ↕'}
+                      </span>
+                    </th>
+                    <th
                       className={`${styles.tableConfirmationHead} ${styles.sortable}`}
                       onClick={() => handleSort('value')}
                       style={{ cursor: 'pointer' }}
@@ -246,11 +263,11 @@ const TableConfirmation = ({
                                 </span>
                               )}
                               {group.donor_name}
-                              {hasMultiple && (
-                                <span className={styles.donationCount}>
-                                  {group.donations.length}
-                                </span>
-                              )}
+                            </span>
+                          </td>
+                          <td className={`${styles.tableConfirmationCell} ${styles.quantityCol}`}>
+                            <span className={styles.donationCount}>
+                              {group.donations.length}
                             </span>
                           </td>
                           <td className={styles.tableConfirmationCell}>
@@ -304,6 +321,9 @@ const TableConfirmation = ({
                               <span className={styles.donorNameSub}>
                                 {donation.donor_name}
                               </span>
+                            </td>
+                            <td className={`${styles.tableConfirmationCell} ${styles.quantityCol}`}>
+                              -
                             </td>
                             <td className={styles.tableConfirmationCell}>
                               <span className={styles.valueAmount}>
