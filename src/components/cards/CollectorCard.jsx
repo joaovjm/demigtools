@@ -7,7 +7,7 @@ const CollectorCard = ({ operatorCount, setDonationFilterPerId }) => {
   const [collectors, setCollectors] = useState([])
   const [count, setCount] = useState()
   const [add, setAdd] = useState(0)
-  const [active, setActive] = useState()
+  const [active, setActive] = useState(""); // Todos
 
   const collectorInfo = [
     ...new Map(

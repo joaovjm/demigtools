@@ -5,7 +5,7 @@ const OperatorCard = ({ operatorCount, setDonationFilterPerId }) => {
   const [operators, setOperators] = useState([]);
   const [count, setCount] = useState();
   const [add, setAdd] = useState(0);
-  const [active, setActive] = useState();
+  const [active, setActive] = useState(""); // Todos
 
   const operatorInfo = [
     ...new Map(
