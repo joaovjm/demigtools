@@ -50,6 +50,7 @@ const TableReceived = ({ donationsOperator, operatorType }) => {
                     <th className={styles.tableReceivedHead}>Nome</th>
                     <th className={styles.tableReceivedHead}>{operatorType === "Operador Extra" ? "Valor Extra" : "Valor"}</th>
                     <th className={styles.tableReceivedHead}>Data Recebida</th>
+                    <th className={styles.tableReceivedHead}>Operador</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -71,6 +72,11 @@ const TableReceived = ({ donationsOperator, operatorType }) => {
                       <td className={styles.tableReceivedCell}>
                         <span className={styles.dateInfo}>
                           {DataSelect(item.donation_day_received)}
+                        </span>
+                      </td>
+                      <td className={styles.tableReceivedCell}>
+                        <span className={styles.operatorText}>
+                          {item.operator_name?.operator_name}
                         </span>
                       </td>
                     </tr>

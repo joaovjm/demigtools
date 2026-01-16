@@ -175,12 +175,6 @@
   font-size: 12px;
 }
 
-/* Coluna de quantidade (quatd.) */
-.quantityCol {
-  min-width: 70px;
-  text-align: center;
-}
-
 /* Contador de doações */
 .donationCount {
   display: inline-flex;

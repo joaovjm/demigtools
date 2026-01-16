@@ -7,11 +7,10 @@ const TableInOpen = ({
   setDonationOpen,
   setModalOpen,
   donationFilterPerId,
-  filterType = "operator"
+  filterType = "operator",
 }) => {
-
   let dataToShow = [];
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
   const handleClick = (donation) => {
     setDonationOpen(donation);
@@ -19,9 +18,9 @@ const TableInOpen = ({
   };
 
   const handleSort = (key) => {
-    let direction = 'asc';
-    if (sortConfig.key === key && sortConfig.direction === 'asc') {
-      direction = 'desc';
+    let direction = "asc";
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc";
     }
     setSortConfig({ key, direction });
   };
@@ -38,8 +37,11 @@ const TableInOpen = ({
   );
 
   const getFilteredAndSortedData = () => {
-    const filtered = donationFilterPerId !== undefined ? filterFullNotReceiverDonations : fullNotReceivedDonations;
-    
+    const filtered =
+      donationFilterPerId !== undefined
+        ? filterFullNotReceiverDonations
+        : fullNotReceivedDonations;
+
     if (!sortConfig.key) {
       return filtered;
     }
@@ -47,16 +49,16 @@ const TableInOpen = ({
     return [...filtered].sort((a, b) => {
       let aValue, bValue;
 
-      if (sortConfig.key === 'date') {
+      if (sortConfig.key === "date") {
         aValue = new Date(a.donation_day_to_receive || 0).getTime();
         bValue = new Date(b.donation_day_to_receive || 0).getTime();
       }
 
       if (aValue < bValue) {
-        return sortConfig.direction === 'asc' ? -1 : 1;
+        return sortConfig.direction === "asc" ? -1 : 1;
       }
       if (aValue > bValue) {
-        return sortConfig.direction === 'asc' ? 1 : -1;
+        return sortConfig.direction === "asc" ? 1 : -1;
       }
       return 0;
     });
@@ -64,28 +66,35 @@ const TableInOpen = ({
 
   if (donationFilterPerId === "") {
     dataToShow = fullNotReceivedDonations;
+    console.log(dataToShow)
   } else {
     dataToShow = getFilteredAndSortedData();
   }
-  
 
   return (
     <div className={styles.tableInopenContainer}>
       <div className={styles.tableInopenContent}>
-        
         {dataToShow.length > 0 ? (
           <div className={styles.tableInopenWrapper}>
             <div className={styles.tableInopenHeader}>
               <div className={styles.tableInopenStats}>
                 <span className={styles.statsItem}>
-                  <strong>{dataToShow.length}</strong> {dataToShow.length === 1 ? 'ficha' : 'fichas'} em aberto
+                  <strong>{dataToShow.length}</strong>{" "}
+                  {dataToShow.length === 1 ? "ficha" : "fichas"} em aberto
                 </span>
                 <span className={styles.statsItem}>
-                  Total: <strong>
-                    {dataToShow.reduce((acc, item) => acc + (parseFloat(item.donation_value) || 0), 0).toLocaleString("pt-BR", {
-                      style: "currency",
-                      currency: "BRL",
-                    })}
+                  Total:{" "}
+                  <strong>
+                    {dataToShow
+                      .reduce(
+                        (acc, item) =>
+                          acc + (parseFloat(item.donation_value) || 0),
+                        0
+                      )
+                      .toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}
                   </strong>
                 </span>
               </div>
@@ -95,22 +104,26 @@ const TableInOpen = ({
               <table className={styles.tableInopen}>
                 <thead>
                   <tr className={styles.tableInopenHeadRow}>
-                    <th 
+                    <th
                       className={`${styles.tableInopenHead} ${styles.sortable}`}
-                      onClick={() => handleSort('date')}
-                      style={{ cursor: 'pointer' }}
+                      onClick={() => handleSort("date")}
+                      style={{ cursor: "pointer" }}
                     >
                       A receber
                       <span className={styles.sortArrow}>
-                        {sortConfig.key === 'date' ? (
-                          sortConfig.direction === 'asc' ? ' ↑' : ' ↓'
-                        ) : ' ↕'}
+                        {sortConfig.key === "date"
+                          ? sortConfig.direction === "asc"
+                            ? " ↑"
+                            : " ↓"
+                          : " ↕"}
                       </span>
                     </th>
                     <th className={styles.tableInopenHead}>Recibo</th>
                     <th className={styles.tableInopenHead}>Nome</th>
                     <th className={styles.tableInopenHead}>Valor</th>
-                    <th className={styles.tableInopenHead}>Coletador</th>
+                    <th className={styles.tableInopenHead}>
+                      {filterType === "operator" ? "Operador" : "Coletador"}
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -137,7 +150,9 @@ const TableInOpen = ({
                       </td>
                       <td className={styles.tableInopenCell}>
                         <span className={styles.valueAmount}>
-                          {parseFloat(donation.donation_value || 0).toLocaleString("pt-BR", {
+                          {parseFloat(
+                            donation.donation_value || 0
+                          ).toLocaleString("pt-BR", {
                             style: "currency",
                             currency: "BRL",
                           })}
@@ -145,10 +160,17 @@ const TableInOpen = ({
                       </td>
                       <td className={styles.tableInopenCell}>
                         <div className={styles.collectorInfo}>
-                          <span className={styles.collectorId}>{donation.collector_code_id || "—"}</span>
-                          {donation.collector_name && (
-                            <span className={styles.collectorName}>{donation.collector_name}</span>
-                          )}
+                          <span className={styles.collectorId}>
+                            {filterType === "operator"
+                              ? donation.operator_code_id || "—"
+                              : donation.collector_code_id || "—"}
+                          </span>
+
+                          <span className={styles.collectorName}>
+                            {filterType === "operator"
+                              ? donation.operator_name
+                              : donation.collector_name}
+                          </span>
                         </div>
                       </td>
                     </tr>
